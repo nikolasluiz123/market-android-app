@@ -1,14 +1,12 @@
-package br.com.market.storage
+package br.com.market.storage.ui.activity
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
+import br.com.market.storage.R
 import br.com.market.storage.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

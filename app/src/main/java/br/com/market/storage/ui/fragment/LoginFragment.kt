@@ -1,4 +1,4 @@
-package br.com.market.storage
+package br.com.market.storage.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
