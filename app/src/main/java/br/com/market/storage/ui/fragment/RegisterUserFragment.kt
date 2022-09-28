@@ -5,25 +5,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import br.com.market.storage.R
-import br.com.market.storage.databinding.FragmentLoginBinding
+import br.com.market.storage.databinding.FragmentRegisterUserBinding
 import br.com.market.storage.extensions.showSnackBar
 import br.com.market.storage.model.User
 import br.com.market.storage.transferobject.TOUser
 import br.com.market.storage.ui.fragment.base.AbstractAuthenticableFragment
 
-class LoginFragment : AbstractAuthenticableFragment() {
+class RegisterUserFragment : AbstractAuthenticableFragment() {
 
-    private var _binding: FragmentLoginBinding? = null
+    private var _binding: FragmentRegisterUserBinding? = null
     private val binding get() = _binding!!
 
     private val toUser by lazy { TOUser() }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentLoginBinding.inflate(inflater, container, false)
+        _binding = FragmentRegisterUserBinding.inflate(inflater, container, false)
         binding.toUser = toUser
 
         return binding.root
@@ -32,20 +31,20 @@ class LoginFragment : AbstractAuthenticableFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        configureLoginButton()
         configureRegisterUserButton()
     }
 
-    private fun configureLoginButton() {
-        binding.loginButton.setOnClickListener {
+    private fun configureRegisterUserButton() {
+        binding.registerUserRegisterButton.setOnClickListener {
             toUser.getUser()?.let { user ->
                 if (validate(user)) {
-                    authenticationViewModel.login(user).observe(viewLifecycleOwner) { resource ->
+                    authenticationViewModel.save(user).observe(viewLifecycleOwner) { resource ->
                         if (resource.data) {
-                            navController.navigate(LoginFragmentDirections.actionLoginFragmentToListaProdutosFragment())
+                            view?.showSnackBar(getString(R.string.message_success_register_user))
+                            navController.popBackStack()
                         } else {
-                            val errorMessage =
-                                resource.error ?: getString(R.string.generic_error_message_login)
+                            val errorMessage = resource.error
+                                ?: getString(R.string.generic_error_message_register_user)
                             view?.showSnackBar(errorMessage)
                         }
                     }
@@ -60,12 +59,12 @@ class LoginFragment : AbstractAuthenticableFragment() {
         clearErrors()
 
         if (user.email.isBlank()) {
-            binding.loginInputLayoutEmail.error = getString(R.string.email_required)
+            binding.registerUserInputLayoutEmail.error = getString(R.string.email_required)
             valid = false
         }
 
         if (user.password.isBlank()) {
-            binding.loginInputLayoutPassword.error = getString(R.string.password_required)
+            binding.registerUserInputLayoutPassword.error = getString(R.string.password_required)
             valid = false
         }
 
@@ -73,18 +72,13 @@ class LoginFragment : AbstractAuthenticableFragment() {
     }
 
     private fun clearErrors() {
-        binding.loginInputLayoutEmail.error = null
-        binding.loginInputLayoutPassword.error = null
+        binding.registerUserInputLayoutEmail.error = null
+        binding.registerUserInputLayoutPassword.error = null
     }
 
-    private fun configureRegisterUserButton() {
-        binding.userRegisterButton.setOnClickListener {
-            navController.navigate(LoginFragmentDirections.actionLoginFragmentToRegisterUserFragment())
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onDestroy() {
+        super.onDestroy()
         _binding = null
     }
+
 }
