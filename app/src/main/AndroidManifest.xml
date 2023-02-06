@@ -12,9 +12,8 @@
         android:theme="@style/Theme.Storage"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".LoginActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.Storage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
