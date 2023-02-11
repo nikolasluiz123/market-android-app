@@ -47,6 +47,13 @@ android {
 }
 
 dependencies {
+    // Navegação entre composable screens
+    def nav_version = "2.5.3"
+    implementation "androidx.navigation:navigation-compose:$nav_version"
+
+    // Biblioteca para download de imagens via link
+    implementation 'io.coil-kt:coil-compose:2.2.0'
+
     // Dependência adicionada para solucionar um problema de duplicidade de classes
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
 

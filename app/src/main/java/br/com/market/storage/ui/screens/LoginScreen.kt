@@ -17,12 +17,12 @@ import br.com.market.storage.ui.theme.StorageTheme
 import br.com.market.storage.ui.viewmodels.LoginViewModel
 
 @Composable
-fun Login(
+fun LoginScreen(
     viewModel: LoginViewModel,
     onLoginClick: () -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsState()
-    Login(
+    LoginScreen(
         state = state,
         onLoginClick = onLoginClick
     )
@@ -30,7 +30,7 @@ fun Login(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Login(
+fun LoginScreen(
     state: LoginUiState = LoginUiState(),
     onLoginClick: () -> Unit = {}
 ) {
@@ -81,7 +81,7 @@ fun Login(
 fun LoginLightPreview() {
     StorageTheme {
         Surface {
-            Login(state = LoginUiState())
+            LoginScreen(state = LoginUiState())
         }
     }
 }
@@ -91,7 +91,7 @@ fun LoginLightPreview() {
 fun LoginDarkPreview() {
     StorageTheme {
         Surface {
-            Login(state = LoginUiState())
+            LoginScreen(state = LoginUiState())
         }
     }
 }
