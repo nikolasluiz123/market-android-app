@@ -1,8 +1,7 @@
 package br.com.market.storage.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
-import br.com.market.storage.models.Product
-import br.com.market.storage.sampledata.sampleProducts
+import br.com.market.storage.business.models.Product
 import br.com.market.storage.ui.states.StorageProductsUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -15,7 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.market.storage.R
-import br.com.market.storage.models.Product
+import br.com.market.storage.business.models.Product
 import br.com.market.storage.sampledata.sampleProducts
 import br.com.market.storage.ui.theme.StorageTheme
 import coil.compose.AsyncImage
