@@ -33,19 +33,18 @@ abstract class ProductDAO {
         deleteProduct(productId)
     }
 
-    @Query("delete from product_brand where product_id = :productId")
+    @Query("delete from products_brands where product_id = :productId")
     abstract suspend fun deleteProductBrand(productId: Long)
 
-    @Query("delete from brand where id in " +
-            "(select array(" +
-            "select pb.brand_id " +
-            "from product p " +
+    @Query("delete from brands where id in " +
+            "(select pb.brand_id " +
+            "from products p " +
             "inner join products_brands pb on pb.product_id = p.id " +
             "where p.id = :productId " +
-            "))")
+            ")")
     abstract suspend fun deleteBrand(productId: Long)
 
-    @Query("delete from product where id = :productId")
+    @Query("delete from products where id = :productId")
     abstract suspend fun deleteProduct(productId: Long)
 
     suspend fun inativateProductAndReferences(productId: Long) {
@@ -54,19 +53,18 @@ abstract class ProductDAO {
         inativateProduct(productId)
     }
 
-    @Query("update product_brand set active = 0 where product_id = :productId")
+    @Query("update products_brands set active = 0 where product_id = :productId")
     abstract suspend fun inativateProductBrand(productId: Long)
 
-    @Query("update brand set active = 0 where id in " +
-            "(select array(" +
-            "select pb.brand_id " +
-            "from product p " +
+    @Query("update brands set active = 0 where id in " +
+            "(select pb.brand_id " +
+            "from products p " +
             "inner join products_brands pb on pb.product_id = p.id " +
             "where p.id = :productId " +
-            "))")
+            ")")
     abstract suspend fun inativateBrand(productId: Long)
 
-    @Query("update product set active = 0 where id = :productId")
+    @Query("update products set active = 0 where id = :productId")
     abstract suspend fun inativateProduct(productId: Long)
 
 }
