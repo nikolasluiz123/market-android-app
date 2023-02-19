@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.devtools.ksp'
+    id 'org.jetbrains.kotlin.kapt'
     id 'com.google.dagger.hilt.android'
 }
 
@@ -51,8 +52,10 @@ android {
 dependencies {
     // Dependências do Hilt para injeção de dependências
     def hilt_version = "2.44"
+//    implementation "com.google.dagger:hilt-android:$hilt_version"
+//    ksp "com.google.dagger:hilt-android-compiler:$hilt_version"
     implementation "com.google.dagger:hilt-android:$hilt_version"
-    ksp "com.google.dagger:hilt-android-compiler:$hilt_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 
     // Dependências do Room e Retrofit para acesso a Banco e Serviço
     def retrofit_version = "2.9.0"

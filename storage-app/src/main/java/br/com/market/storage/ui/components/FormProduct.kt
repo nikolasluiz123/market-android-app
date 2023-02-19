@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.storage.R
+import br.com.market.storage.ui.domains.ProductDomain
 import br.com.market.storage.ui.states.FormProductUiState
 import br.com.market.storage.ui.theme.*
 import coil.compose.SubcomposeAsyncImage
@@ -28,13 +29,20 @@ import coil.request.ImageRequest
 @Composable
 fun FormProduct(
     state: FormProductUiState = FormProductUiState(),
-    onFABSaveProductClick: () -> Unit = { }
+    onFABSaveProductClick: (ProductDomain) -> Unit = { }
 ) {
     Scaffold(floatingActionButton = {
         FloatingActionButton(
             containerColor = MaterialTheme.colorScheme.primary,
             shape = RoundedCornerShape(100),
-            onClick = onFABSaveProductClick
+            onClick = {
+                onFABSaveProductClick(
+                    ProductDomain(
+                        name = state.productName,
+                        imageUrl = state.productImage
+                    )
+                )
+            }
         ) {
             Icon(
                 imageVector = Icons.Default.Check,
@@ -48,7 +56,7 @@ fun FormProduct(
                 .fillMaxSize()
                 .padding(it)
         ) {
-            val (imageRef, inputImage, inputProductName, fabSaveProductRef) = createRefs()
+            val (imageRef, inputImage, inputProductName) = createRefs()
 
             SubcomposeAsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)

@@ -1,13 +1,17 @@
 package br.com.market.storage.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
-import br.com.market.storage.business.models.Product
+import androidx.lifecycle.viewModelScope
+import br.com.market.storage.business.repository.ProductRepository
+import br.com.market.storage.ui.domains.ProductDomain
 import br.com.market.storage.ui.states.StorageProductsUiState
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class StorageProductsViewModel : ViewModel() {
+@HiltViewModel
+class StorageProductsViewModel @Inject constructor(private val productRepository: ProductRepository) : ViewModel() {
 
     private val _uiState: MutableStateFlow<StorageProductsUiState> = MutableStateFlow(StorageProductsUiState())
     val uiState get() = _uiState.asStateFlow()
@@ -15,24 +19,43 @@ class StorageProductsViewModel : ViewModel() {
     init {
         _uiState.update { currentState ->
             currentState.copy(
-                onSearchChange = {
-                    _uiState.value = _uiState.value.copy(
-                        searchText = it,
-                        products = searchedProducts()
-                    )
-                },
+                onSearchChange = ::onSearchProducts,
                 onToggleSearch = {
                     _uiState.value = _uiState.value.copy(openSearch = !_uiState.value.openSearch)
                 }
             )
         }
+
+        viewModelScope.launch {
+            productRepository.findAllProducts().collect { products ->
+                _uiState.value = _uiState.value.copy(
+                    products = products
+                )
+            }
+        }
     }
 
-    private fun searchedProducts(): List<Product> {
-        return _uiState.value.products.filter(::containsProductName)
+    private fun onSearchProducts(searchedText: String) {
+        if (searchedText.isEmpty()) {
+            viewModelScope.launch {
+                productRepository.findAllProducts().collect { products ->
+                    _uiState.value = _uiState.value.copy(
+                        searchText = searchedText,
+                        products = products
+                    )
+                }
+            }
+        } else {
+            _uiState.value = _uiState.value.copy(
+                searchText = searchedText,
+                products = _uiState.value.products.filter {
+                    containsProductName(it, searchedText)
+                }
+            )
+        }
     }
 
-    private fun containsProductName(product: Product): Boolean {
-        return product.name.contains(_uiState.value.searchText, ignoreCase = true)
+    private fun containsProductName(product: ProductDomain, searchedText: String): Boolean {
+        return product.name.contains(searchedText, ignoreCase = true)
     }
 }

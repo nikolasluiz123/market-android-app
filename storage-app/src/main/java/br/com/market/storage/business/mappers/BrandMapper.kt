@@ -5,6 +5,7 @@ import br.com.market.storage.business.sdo.brand.BrandViewSDO
 import br.com.market.storage.business.sdo.brand.NewBrandSDO
 import br.com.market.storage.business.sdo.brand.UpdateBrandSDO
 import br.com.market.storage.business.dto.ProductBrandDTO
+import br.com.market.storage.ui.domains.BrandDomain
 
 object BrandMapper {
 
@@ -18,5 +19,9 @@ object BrandMapper {
 
     fun toUpdateBrandSDO(brand: Brand): UpdateBrandSDO {
         return UpdateBrandSDO(id = brand.id, name = brand.name)
+    }
+
+    fun toBrandModel(brandDomain: BrandDomain): Brand {
+        return Brand(id = brandDomain.id, name = brandDomain.name)
     }
 }

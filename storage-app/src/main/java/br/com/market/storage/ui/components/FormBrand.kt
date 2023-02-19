@@ -21,7 +21,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import br.com.market.storage.ui.states.FormProductUiState
 import br.com.market.storage.ui.theme.CINZA_500
 import br.com.market.storage.ui.theme.StorageTheme
-import br.com.market.storage.ui.transferobjects.TOBrand
+import br.com.market.storage.ui.domains.BrandDomain
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -79,7 +79,7 @@ fun FormBrand(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     content = {
                         items(state.brands) { toBrand ->
-                            CardBrandItem(toBrand = toBrand)
+                            CardBrandItem(brandDomain = toBrand)
                         }
                     }
                 )
@@ -97,9 +97,9 @@ fun FormBrandPreview() {
             FormBrand(
                 state = FormProductUiState(
                     brands = listOf(
-                        TOBrand(name = "Arroz Dalfovo", count = 4),
-                        TOBrand(name = "Arroz Urbano", count = 15),
-                        TOBrand(name = "Arroz do Zé", count = 10)
+                        BrandDomain(name = "Arroz Dalfovo", count = 4),
+                        BrandDomain(name = "Arroz Urbano", count = 15),
+                        BrandDomain(name = "Arroz do Zé", count = 10)
                     )
                 ),
             )

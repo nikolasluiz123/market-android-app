@@ -26,7 +26,9 @@ import br.com.market.storage.ui.theme.StorageTheme
 import br.com.market.storage.ui.viewmodels.FormProductViewModel
 import br.com.market.storage.ui.viewmodels.LoginViewModel
 import br.com.market.storage.ui.viewmodels.StorageProductsViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LoginActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -12,6 +12,9 @@ abstract class ProductDAO {
     @Insert(onConflict = REPLACE)
     abstract suspend fun saveProduct(product: Product)
 
+    @Insert(onConflict = REPLACE)
+    abstract suspend fun saveProductBrands(productBrands: List<ProductBrand>)
+
     @Query("select * from products")
     abstract fun findAllProducts(): Flow<List<Product>>
 

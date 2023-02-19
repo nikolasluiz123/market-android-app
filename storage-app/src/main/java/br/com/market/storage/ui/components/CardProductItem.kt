@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -15,19 +14,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import br.com.market.storage.R
-import br.com.market.storage.business.models.Product
 import br.com.market.storage.sampledata.sampleProducts
+import br.com.market.storage.ui.domains.ProductDomain
 import br.com.market.storage.ui.theme.StorageTheme
 import br.com.market.storage.ui.theme.tertiary
 import coil.compose.AsyncImage
 
 @Composable
-fun CardProductItem(product: Product, onClick: () -> Unit = { }) {
+fun CardProductItem(product: ProductDomain, onClick: () -> Unit = { }) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() },
-        elevation = CardDefaults.cardElevation(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         colors = CardDefaults.cardColors(containerColor = tertiary)
     ) {
         ConstraintLayout(Modifier.fillMaxSize()) {

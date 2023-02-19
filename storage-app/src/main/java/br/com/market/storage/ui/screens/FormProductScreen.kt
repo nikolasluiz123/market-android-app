@@ -17,6 +17,7 @@ import androidx.constraintlayout.compose.Dimension
 import br.com.market.storage.ui.components.AppBarTextField
 import br.com.market.storage.ui.components.FormBrand
 import br.com.market.storage.ui.components.FormProduct
+import br.com.market.storage.ui.domains.ProductDomain
 import br.com.market.storage.ui.states.FormProductUiState
 import br.com.market.storage.ui.theme.StorageTheme
 import br.com.market.storage.ui.theme.secondary
@@ -33,7 +34,10 @@ fun FormProductScreen(
     FormProductScreen(
         state = state,
         onBackClick = onBackClick,
-        onLogoutClick = onLogoutClick
+        onLogoutClick = onLogoutClick,
+        onFABSaveProductClick = {
+            viewModel.saveProduct(it)
+        }
     )
 }
 
@@ -42,7 +46,8 @@ fun FormProductScreen(
 fun FormProductScreen(
     state: FormProductUiState = FormProductUiState(),
     onBackClick: () -> Unit = { },
-    onLogoutClick: () -> Unit = { }
+    onLogoutClick: () -> Unit = { },
+    onFABSaveProductClick: (ProductDomain) -> Unit = { }
 ) {
     var tabIndex by remember { mutableStateOf(0) }
 
@@ -165,9 +170,7 @@ fun FormProductScreen(
                     0 -> {
                         FormProduct(
                             state = state,
-                            onFABSaveProductClick = {
-                                // Salvar o produto
-                            }
+                            onFABSaveProductClick = onFABSaveProductClick
                         )
                     }
                     1 -> {

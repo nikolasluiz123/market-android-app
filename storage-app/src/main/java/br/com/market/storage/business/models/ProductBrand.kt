@@ -22,7 +22,7 @@ import androidx.room.PrimaryKey
 )
 data class ProductBrand(
     @PrimaryKey(autoGenerate = true)
-    val id: Long,
+    val id: Long? = null,
     @ColumnInfo(name = "product_id")
     val productId: Long,
     @ColumnInfo(name = "brand_id")

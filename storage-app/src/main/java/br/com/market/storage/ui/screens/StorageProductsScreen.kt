@@ -1,6 +1,5 @@
 package br.com.market.storage.ui.screens
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -23,6 +22,7 @@ import br.com.market.storage.sampledata.sampleProducts
 import br.com.market.storage.ui.components.AppBarTextField
 import br.com.market.storage.ui.components.CardProductItem
 import br.com.market.storage.ui.states.StorageProductsUiState
+import br.com.market.storage.ui.theme.CINZA_500
 import br.com.market.storage.ui.theme.StorageTheme
 import br.com.market.storage.ui.theme.secondary
 import br.com.market.storage.ui.viewmodels.StorageProductsViewModel
@@ -127,62 +127,85 @@ fun StorageProductsScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            val (searchRef, lazyColumnRef, lazyGridRef) = createRefs()
+            val (lazyColumnRef, lazyGridRef, emptyText) = createRefs()
 
-            if (state.isSearching()) {
-                LazyColumn(
-                    modifier = Modifier
-                        .constrainAs(lazyColumnRef) {
-                            start.linkTo(parent.start)
-                            top.linkTo(parent.top)
-                            end.linkTo(parent.end)
-                            bottom.linkTo(parent.bottom)
+            if (state.products.isNotEmpty()) {
+                if (state.isSearching()) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .constrainAs(lazyColumnRef) {
+                                start.linkTo(parent.start)
+                                top.linkTo(parent.top)
+                                end.linkTo(parent.end)
+                                bottom.linkTo(parent.bottom)
+                            }
+                            .fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        contentPadding = PaddingValues(16.dp)
+                    ) {
+                        items(items = state.products) { product ->
+                            CardProductItem(
+                                product = product,
+                                onClick = onItemClick
+                            )
                         }
-                        .fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    contentPadding = PaddingValues(16.dp)
-                ) {
-                    items(items = state.products) { product ->
-                        CardProductItem(
-                            product = product,
-                            onClick = onItemClick
-                        )
+                    }
+                } else {
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        modifier = Modifier
+                            .constrainAs(lazyGridRef) {
+                                start.linkTo(parent.start)
+                                top.linkTo(parent.top)
+                                end.linkTo(parent.end)
+                                bottom.linkTo(parent.bottom)
+                            }
+                            .fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        contentPadding = PaddingValues(16.dp)
+                    ) {
+                        items(items = state.products) { product ->
+                            CardProductItem(
+                                product = product,
+                                onClick = onItemClick
+                            )
+                        }
                     }
                 }
             } else {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    modifier = Modifier
-                        .constrainAs(lazyGridRef) {
-                            start.linkTo(parent.start)
-                            top.linkTo(parent.top)
-                            end.linkTo(parent.end)
-                            bottom.linkTo(parent.bottom)
-                        }
-                        .fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    contentPadding = PaddingValues(16.dp)
-                ) {
-                    items(items = state.products) { product ->
-                        CardProductItem(
-                            product = product,
-                            onClick = onItemClick
-                        )
-                    }
-                }
+                Text(
+                    modifier = Modifier.constrainAs(emptyText) {
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                    },
+                    text = "Não há Produtos Cadastrados",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = CINZA_500
+                )
             }
         }
     }
-
 }
 
 @Preview(showSystemUi = true)
 @Composable
-fun StorageProductsLightPreview() {
+fun StorageProductsPreview() {
     StorageTheme {
         Surface {
             StorageProductsScreen(state = StorageProductsUiState(products = sampleProducts))
+        }
+    }
+}
+
+@Preview(showSystemUi = true)
+@Composable
+fun StorageProductsEmptyPreview() {
+    StorageTheme {
+        Surface {
+            StorageProductsScreen()
         }
     }
 }

@@ -1,6 +1,6 @@
 package br.com.market.storage.ui.states
 
-import br.com.market.storage.ui.transferobjects.TOBrand
+import br.com.market.storage.ui.domains.BrandDomain
 
 data class FormProductUiState(
     val productName: String = "",
@@ -8,11 +8,11 @@ data class FormProductUiState(
     val brandName: String = "",
     val brandQtd: String = "",
     val openSearch: Boolean = false,
-    val brands: List<TOBrand> = mutableListOf(),
+    val brands: List<BrandDomain> = mutableListOf(),
     val searchText: String = "",
     val onProductNameChange: (String) -> Unit = { },
     val onProductImageChange: (String) -> Unit = { },
-    val onBrandsChange: (TOBrand) -> Unit = { },
+    val onBrandsChange: (BrandDomain) -> Unit = { },
     val onBrandNameChange: (String) -> Unit = { },
     val onBrandQtdChange: (String) -> Unit = { },
     val onToggleSearch: () -> Unit = { },
