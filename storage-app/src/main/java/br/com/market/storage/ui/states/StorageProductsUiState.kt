@@ -6,6 +6,8 @@ import br.com.market.storage.sampledata.sampleProducts
 data class StorageProductsUiState(
     val products: List<Product> = sampleProducts,
     val searchText: String = "",
+    val openSearch: Boolean = false,
+    val onToggleSearch: () -> Unit = { },
     val onSearchChange: (String) -> Unit = { }
 ) {
 

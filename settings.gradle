@@ -13,4 +13,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "storage"
-include ':app'
+include ':storage-app'

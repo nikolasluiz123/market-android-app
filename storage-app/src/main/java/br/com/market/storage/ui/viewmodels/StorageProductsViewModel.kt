@@ -14,12 +14,17 @@ class StorageProductsViewModel : ViewModel() {
 
     init {
         _uiState.update { currentState ->
-            currentState.copy(onSearchChange = {
-                _uiState.value = _uiState.value.copy(
-                    searchText = it,
-                    products = searchedProducts()
-                )
-            })
+            currentState.copy(
+                onSearchChange = {
+                    _uiState.value = _uiState.value.copy(
+                        searchText = it,
+                        products = searchedProducts()
+                    )
+                },
+                onToggleSearch = {
+                    _uiState.value = _uiState.value.copy(openSearch = !_uiState.value.openSearch)
+                }
+            )
         }
     }
 
