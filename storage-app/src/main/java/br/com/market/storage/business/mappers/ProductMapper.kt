@@ -58,7 +58,7 @@ object ProductMapper {
         )
     }
 
-    fun toProductTO(product: Product) : ProductDomain {
+    fun toProductDomain(product: Product) : ProductDomain {
         return ProductDomain(
             id = product.id,
             name = product.name,

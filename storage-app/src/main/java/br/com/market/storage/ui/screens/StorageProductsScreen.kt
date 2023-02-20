@@ -30,7 +30,7 @@ import br.com.market.storage.ui.viewmodels.StorageProductsViewModel
 @Composable
 fun StorageProductsScreen(
     viewModel: StorageProductsViewModel,
-    onItemClick: () -> Unit = { },
+    onItemClick: (Long) -> Unit = { },
     onLogoutClick: () -> Unit = { },
     onFABNewProductClick: () -> Unit = { }
 ) {
@@ -47,7 +47,7 @@ fun StorageProductsScreen(
 @Composable
 fun StorageProductsScreen(
     state: StorageProductsUiState = StorageProductsUiState(),
-    onItemClick: () -> Unit = { },
+    onItemClick: (Long) -> Unit = { },
     onLogoutClick: () -> Unit = { },
     onFABNewProductClick: () -> Unit = { }
 ) {

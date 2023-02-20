@@ -12,16 +12,17 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import br.com.market.storage.ui.screens.FormProductScreen
 import br.com.market.storage.ui.screens.LoginScreen
 import br.com.market.storage.ui.screens.StorageProductsScreen
-import br.com.market.storage.ui.screens.navigation.formProductNavRoute
-import br.com.market.storage.ui.screens.navigation.loginNavRoute
-import br.com.market.storage.ui.screens.navigation.storageProductsNavRoute
+import br.com.market.storage.ui.screens.navigation.AppDestinations
 import br.com.market.storage.ui.theme.StorageTheme
 import br.com.market.storage.ui.viewmodels.FormProductViewModel
 import br.com.market.storage.ui.viewmodels.LoginViewModel
@@ -41,35 +42,62 @@ class LoginActivity : ComponentActivity() {
                             val navController: NavHostController = rememberNavController()
 
                             NavHost(
-                                navController = navController, startDestination = loginNavRoute
+                                navController = navController, startDestination = AppDestinations.Login.route
                             ) {
-                                composable(route = loginNavRoute) {
+                                composable(route = AppDestinations.Login.route) {
                                     val loginViewModel by viewModels<LoginViewModel>()
 
                                     LoginScreen(
                                         viewModel = loginViewModel,
                                         onLoginClick = {
-                                            navController.navigate(storageProductsNavRoute)
+                                            navController.navigate(AppDestinations.StorageProducts.route) {
+                                                popUpTo(AppDestinations.Login.route) {
+                                                    inclusive = true
+                                                }
+                                            }
                                         }
                                     )
                                 }
 
-                                composable(route = storageProductsNavRoute) {
+                                composable(route = AppDestinations.StorageProducts.route) {
                                     val storageProductsViewModel by viewModels<StorageProductsViewModel>()
                                     StorageProductsScreen(
                                         viewModel = storageProductsViewModel,
-                                        onItemClick = { navController.navigate(formProductNavRoute) },
-                                        onLogoutClick = { navController.popBackStack(route = loginNavRoute, inclusive = false) },
-                                        onFABNewProductClick = { navController.navigate(formProductNavRoute) }
+                                        onItemClick = { productId ->
+                                            navController.navigate("${AppDestinations.FormProduct.route}?productId={$productId}")
+                                        },
+                                        onLogoutClick = {
+                                            navController.navigate(AppDestinations.Login.route) {
+                                                popUpTo(AppDestinations.StorageProducts.route) {
+                                                    inclusive = true
+                                                }
+                                            }
+                                        },
+                                        onFABNewProductClick = { navController.navigate(AppDestinations.FormProduct.route) }
                                     )
                                 }
 
-                                composable(route = formProductNavRoute) {
+                                composable(
+                                    route = "${AppDestinations.FormProduct.route}?productId={productId}",
+                                    arguments = listOf(
+                                        navArgument("productId") {
+                                            type = NavType.StringType
+                                            nullable = true
+                                        }
+                                    )
+                                ) { backstackEntry ->
                                     val formProductViewModel by viewModels<FormProductViewModel>()
+                                    val productId = backstackEntry.arguments?.getString("productId")
+                                    formProductViewModel.updateFormInfos(productId)
+
                                     FormProductScreen(
                                         viewModel = formProductViewModel,
                                         onLogoutClick = {
-                                            navController.popBackStack(route = loginNavRoute, inclusive = false)
+                                            navController.navigate(AppDestinations.Login.route) {
+                                                popUpTo(AppDestinations.StorageProducts.route) {
+                                                    inclusive = true
+                                                }
+                                            }
                                         },
                                         onBackClick = {
                                             navController.popBackStack()

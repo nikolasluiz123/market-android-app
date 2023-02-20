@@ -18,6 +18,9 @@ abstract class ProductDAO {
     @Query("select * from products")
     abstract fun findAllProducts(): Flow<List<Product>>
 
+    @Query("select * from products where id = :productId")
+    abstract fun findProductById(productId: Long?): Flow<Product?>
+
     @Query("select * from products where active = 0")
     abstract fun findAllProductsInativated(): Flow<List<Product>>
 

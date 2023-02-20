@@ -4,7 +4,8 @@ import br.com.market.storage.business.dao.BrandDAO
 import br.com.market.storage.business.dao.ProductDAO
 import br.com.market.storage.business.models.Product
 import br.com.market.storage.business.webclient.ProductWebClient
-import br.com.market.storage.extensions.toDomain
+import br.com.market.storage.extensions.toProductDomainList
+import br.com.market.storage.extensions.toProductDomain
 import br.com.market.storage.ui.domains.ProductDomain
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -16,7 +17,11 @@ class ProductRepository @Inject constructor(
 ) {
 
     fun findAllProducts(): Flow<List<ProductDomain>> {
-        return productDAO.findAllProducts().toDomain()
+        return productDAO.findAllProducts().toProductDomainList()
+    }
+
+    fun findProductById(productId: Long?): Flow<ProductDomain?> {
+        return productDAO.findProductById(productId).toProductDomain()
     }
 
 //    suspend fun sincronize() {

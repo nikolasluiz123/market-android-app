@@ -21,11 +21,13 @@ import br.com.market.storage.ui.theme.tertiary
 import coil.compose.AsyncImage
 
 @Composable
-fun CardProductItem(product: ProductDomain, onClick: () -> Unit = { }) {
+fun CardProductItem(product: ProductDomain, onClick: (Long) -> Unit = { }) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() },
+            .clickable {
+                onClick(product.id!!)
+            },
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         colors = CardDefaults.cardColors(containerColor = tertiary)
     ) {

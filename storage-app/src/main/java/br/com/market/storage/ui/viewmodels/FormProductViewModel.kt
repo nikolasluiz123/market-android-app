@@ -1,20 +1,22 @@
 package br.com.market.storage.ui.viewmodels
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.market.storage.business.mappers.ProductMapper
 import br.com.market.storage.business.repository.ProductRepository
+import br.com.market.storage.extensions.toLongNavParam
 import br.com.market.storage.ui.states.FormProductUiState
 import br.com.market.storage.ui.domains.ProductDomain
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class FormProductViewModel @Inject constructor(private val productRepository: ProductRepository) : ViewModel() {
+class FormProductViewModel @Inject constructor(
+    private val productRepository: ProductRepository
+) : ViewModel() {
 
     private val _uiState: MutableStateFlow<FormProductUiState> = MutableStateFlow(FormProductUiState())
     val uiState get() = _uiState.asStateFlow()
@@ -37,6 +39,24 @@ class FormProductViewModel @Inject constructor(private val productRepository: Pr
         viewModelScope.launch {
             val product = ProductMapper.toProductModel(productDomain)
             productRepository.save(product)
+        }
+    }
+
+    fun updateFormInfos(productId: String?) {
+        if (productId != null) {
+            val productDomainFlow = productRepository.findProductById(productId.toLongNavParam())
+
+            viewModelScope.launch {
+                productDomainFlow.collect {
+                    _uiState.value = _uiState.value.copy(productId = it?.id)
+                    _uiState.value = _uiState.value.copy(productName = it?.name ?: "")
+                    _uiState.value = _uiState.value.copy(productImage = it?.imageUrl ?: "")
+                }
+            }
+        } else {
+            _uiState.value = _uiState.value.copy(productId = null)
+            _uiState.value = _uiState.value.copy(productName = "")
+            _uiState.value = _uiState.value.copy(productImage = "")
         }
     }
 }
