@@ -3,7 +3,6 @@ package br.com.market.storage
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -12,7 +11,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -45,7 +44,7 @@ class LoginActivity : ComponentActivity() {
                                 navController = navController, startDestination = AppDestinations.Login.route
                             ) {
                                 composable(route = AppDestinations.Login.route) {
-                                    val loginViewModel by viewModels<LoginViewModel>()
+                                    val loginViewModel = hiltViewModel<LoginViewModel>()
 
                                     LoginScreen(
                                         viewModel = loginViewModel,
@@ -60,7 +59,7 @@ class LoginActivity : ComponentActivity() {
                                 }
 
                                 composable(route = AppDestinations.StorageProducts.route) {
-                                    val storageProductsViewModel by viewModels<StorageProductsViewModel>()
+                                    val storageProductsViewModel = hiltViewModel<StorageProductsViewModel>()
                                     StorageProductsScreen(
                                         viewModel = storageProductsViewModel,
                                         onItemClick = { productId ->
@@ -85,10 +84,8 @@ class LoginActivity : ComponentActivity() {
                                             nullable = true
                                         }
                                     )
-                                ) { backstackEntry ->
-                                    val formProductViewModel by viewModels<FormProductViewModel>()
-                                    val productId = backstackEntry.arguments?.getString("productId")
-                                    formProductViewModel.updateFormInfos(productId)
+                                ) {
+                                    val formProductViewModel = hiltViewModel<FormProductViewModel>()
 
                                     FormProductScreen(
                                         viewModel = formProductViewModel,
