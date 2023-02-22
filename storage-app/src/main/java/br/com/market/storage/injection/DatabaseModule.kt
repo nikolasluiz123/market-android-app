@@ -1,4 +1,4 @@
-package br.com.market.storage.inection
+package br.com.market.storage.injection
 
 import android.content.Context
 import androidx.room.Room

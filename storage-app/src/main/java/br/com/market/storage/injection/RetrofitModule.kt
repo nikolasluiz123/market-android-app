@@ -1,6 +1,5 @@
-package br.com.market.storage.inection
+package br.com.market.storage.injection
 
-import br.com.market.storage.business.models.Brand
 import br.com.market.storage.business.services.BrandService
 import br.com.market.storage.business.services.ProductService
 import dagger.Module

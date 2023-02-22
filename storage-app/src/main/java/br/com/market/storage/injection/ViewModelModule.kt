@@ -1,4 +1,4 @@
-package br.com.market.storage.inection
+package br.com.market.storage.injection
 
 import br.com.market.storage.business.dao.BrandDAO
 import br.com.market.storage.business.dao.ProductDAO

@@ -20,6 +20,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import br.com.market.storage.ui.screens.FormProductScreen
 import br.com.market.storage.ui.screens.LoginScreen
+import br.com.market.storage.ui.screens.SplashScreen
 import br.com.market.storage.ui.screens.StorageProductsScreen
 import br.com.market.storage.ui.screens.navigation.AppDestinations
 import br.com.market.storage.ui.theme.StorageTheme
@@ -41,8 +42,17 @@ class LoginActivity : ComponentActivity() {
                             val navController: NavHostController = rememberNavController()
 
                             NavHost(
-                                navController = navController, startDestination = AppDestinations.Login.route
+                                navController = navController, startDestination = AppDestinations.Splash.route
                             ) {
+
+                                composable(route = AppDestinations.Splash.route) {
+                                    SplashScreen(onBeforeDelay = {
+                                        navController.navigate(AppDestinations.Login.route) {
+                                            popUpTo(0)
+                                        }
+                                    })
+                                }
+
                                 composable(route = AppDestinations.Login.route) {
                                     val loginViewModel = hiltViewModel<LoginViewModel>()
 
