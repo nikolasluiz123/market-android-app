@@ -51,7 +51,7 @@ abstract class ProductDAO {
     abstract suspend fun deleteBrand(productId: Long)
 
     @Query("delete from products where id = :productId")
-    abstract suspend fun deleteProduct(productId: Long)
+    abstract suspend fun deleteProduct(productId: Long?)
 
     suspend fun inativateProductAndReferences(productId: Long) {
         inativateProductBrand(productId)

@@ -108,6 +108,9 @@ class LoginActivity : ComponentActivity() {
                                         },
                                         onBackClick = {
                                             navController.popBackStack()
+                                        },
+                                        onAfterDeletePoduct = {
+                                            navController.popBackStack()
                                         }
                                     )
                                 }

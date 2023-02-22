@@ -69,4 +69,10 @@ class FormProductViewModel @Inject constructor(
             _uiState.value = _uiState.value.copy(productImage = "")
         }
     }
+
+    fun deleteProduct(id: Long?) {
+        viewModelScope.launch {
+            productRepository.deleteProduct(id)
+        }
+    }
 }

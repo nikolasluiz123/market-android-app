@@ -24,6 +24,10 @@ class ProductRepository @Inject constructor(
         return productDAO.findProductById(productId).toProductDomain()
     }
 
+    suspend fun deleteProduct(id: Long?) {
+        productDAO.deleteProduct(id)
+    }
+
 //    suspend fun sincronize() {
 //        val productListInativated = productDAO.findAllProductsInativated().first()
 //        productListInativated.forEach { deleteProduct(it) }

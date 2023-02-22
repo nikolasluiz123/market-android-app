@@ -28,7 +28,8 @@ import kotlinx.coroutines.launch
 fun FormProductScreen(
     viewModel: FormProductViewModel,
     onBackClick: () -> Unit = { },
-    onLogoutClick: () -> Unit = { }
+    onLogoutClick: () -> Unit = { },
+    onAfterDeletePoduct: () -> Unit = { }
 ) {
     val state by viewModel.uiState.collectAsState()
     FormProductScreen(
@@ -37,6 +38,10 @@ fun FormProductScreen(
         onLogoutClick = onLogoutClick,
         onFABSaveProductClick = {
             viewModel.saveProduct(it)
+        },
+        onDeletePoduct = {
+            viewModel.deleteProduct(it)
+            onAfterDeletePoduct()
         }
     )
 }
@@ -47,7 +52,8 @@ fun FormProductScreen(
     state: FormProductUiState = FormProductUiState(),
     onBackClick: () -> Unit = { },
     onLogoutClick: () -> Unit = { },
-    onFABSaveProductClick: (ProductDomain) -> Unit = { }
+    onFABSaveProductClick: (ProductDomain) -> Unit = { },
+    onDeletePoduct: (Long?) -> Unit = { }
 ) {
     var tabIndex by remember { mutableStateOf(0) }
 
@@ -72,7 +78,7 @@ fun FormProductScreen(
             ),
             navigationIcon = {
                 IconButton(onClick = {
-                    if (state.openSearch){
+                    if (state.openSearch) {
                         state.onToggleSearch()
                     } else {
                         onBackClick()
@@ -87,12 +93,23 @@ fun FormProductScreen(
             actions = {
                 if (!state.openSearch) {
                     if (tabIndex == 0) {
-                        IconButton(onClick = onLogoutClick) {
-                            Icon(
-                                imageVector = Icons.Default.ExitToApp,
-                                contentDescription = "Logout"
-                            )
+
+                        if (state.productId != null) {
+                            IconButton(onClick = { onDeletePoduct(state.productId) }) {
+                                Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+                            }
                         }
+
+                        var showMenu by remember { mutableStateOf(false) }
+
+                        IconButton(onClick = { showMenu = !showMenu }) {
+                            Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
+                        }
+
+                        DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
+                            DropdownMenuItem(text = { Text("Logout") }, onClick = onLogoutClick)
+                        }
+
                     } else {
                         IconButton(onClick = state.onToggleSearch) {
                             Icon(
@@ -101,12 +118,16 @@ fun FormProductScreen(
                             )
                         }
 
-                        IconButton(onClick = onLogoutClick) {
-                            Icon(
-                                imageVector = Icons.Default.ExitToApp,
-                                contentDescription = "Logout"
-                            )
+                        var showMenu by remember { mutableStateOf(false) }
+
+                        IconButton(onClick = { showMenu = !showMenu }) {
+                            Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
                         }
+
+                        DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
+                            DropdownMenuItem(text = { Text("Logout") }, onClick = onLogoutClick)
+                        }
+
                     }
                 } else {
                     IconButton(onClick = { state.onSearchChange("") }) {
