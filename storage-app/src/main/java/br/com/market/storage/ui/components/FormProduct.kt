@@ -38,6 +38,7 @@ fun FormProduct(
             onClick = {
                 onFABSaveProductClick(
                     ProductDomain(
+                        id = state.productId,
                         name = state.productName,
                         imageUrl = state.productImage
                     )
