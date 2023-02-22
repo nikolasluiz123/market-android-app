@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import br.com.market.storage.business.mappers.ProductMapper
 import br.com.market.storage.business.repository.ProductRepository
 import br.com.market.storage.extensions.toLongNavParam
 import br.com.market.storage.ui.domains.ProductDomain
@@ -40,15 +39,29 @@ class FormProductViewModel @Inject constructor(
                 onBrandQtdChange = { _uiState.value = _uiState.value.copy(brandQtd = it) },
                 onBrandsChange = { _uiState.value = _uiState.value.copy(brands = _uiState.value.brands + it) },
                 onToggleSearch = { _uiState.value = _uiState.value.copy(openSearch = !_uiState.value.openSearch) },
-                onSearchChange = { _uiState.value = _uiState.value.copy(searchText = it) }
+                onSearchChange = { _uiState.value = _uiState.value.copy(searchText = it) },
+                onValidate = {
+                    var isValid = true
+
+                    if (_uiState.value.productName.isBlank()) {
+                        isValid = false
+                        _uiState.value = _uiState.value.copy(productNameErrorMessage = "Nome do Produto é Obrigatório.")
+                    }
+
+                    if (_uiState.value.productImage.isBlank()) {
+                        isValid = false
+                        _uiState.value = _uiState.value.copy(productImageErrorMessage = "Link da Imagem do Produto é Obrigatório.")
+                    }
+
+                    isValid
+                }
             )
         }
     }
 
     fun saveProduct(productDomain: ProductDomain) {
         viewModelScope.launch {
-            val product = ProductMapper.toProductModel(productDomain)
-            productRepository.save(product)
+            productRepository.save(productDomain)
         }
     }
 

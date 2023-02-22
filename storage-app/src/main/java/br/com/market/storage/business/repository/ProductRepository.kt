@@ -2,6 +2,7 @@ package br.com.market.storage.business.repository
 
 import br.com.market.storage.business.dao.BrandDAO
 import br.com.market.storage.business.dao.ProductDAO
+import br.com.market.storage.business.mappers.ProductMapper
 import br.com.market.storage.business.models.Product
 import br.com.market.storage.business.webclient.ProductWebClient
 import br.com.market.storage.extensions.toProductDomainList
@@ -39,7 +40,8 @@ class ProductRepository @Inject constructor(
 //        val brandsListNotSincronized = brandDAO.findAllBrandsNotSincronized().first()
 //    }
 
-    suspend fun save(product: Product) {
+    suspend fun save(productDomain: ProductDomain) {
+        val product = ProductMapper.toProductModel(productDomain)
         saveProductBrandsLocal(product)
 
 //        val response = productWebClient.saveProduct(product, brands)

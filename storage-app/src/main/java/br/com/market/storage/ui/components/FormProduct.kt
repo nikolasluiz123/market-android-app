@@ -36,13 +36,15 @@ fun FormProduct(
             containerColor = MaterialTheme.colorScheme.primary,
             shape = RoundedCornerShape(100),
             onClick = {
-                onFABSaveProductClick(
-                    ProductDomain(
-                        id = state.productId,
-                        name = state.productName,
-                        imageUrl = state.productImage
+                if(state.onValidate()) {
+                    onFABSaveProductClick(
+                        ProductDomain(
+                            id = state.productId,
+                            name = state.productName,
+                            imageUrl = state.productImage
+                        )
                     )
-                )
+                }
             }
         ) {
             Icon(
@@ -79,9 +81,10 @@ fun FormProduct(
                     .background(color = CINZA_300)
             )
 
-            OutlinedTextField(
+            OutlinedTextFieldValidation(
                 value = state.productImage,
                 onValueChange = state.onProductImageChange,
+                error = state.productImageErrorMessage,
                 label = {
                     Text("Link da Imagem")
                 },
@@ -98,9 +101,10 @@ fun FormProduct(
                 }
             )
 
-            OutlinedTextField(
+            OutlinedTextFieldValidation(
                 value = state.productName,
                 onValueChange = state.onProductNameChange,
+                error = state.productNameErrorMessage,
                 label = {
                     Text("Nome")
                 },
