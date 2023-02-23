@@ -29,12 +29,10 @@ class FormProductViewModel @Inject constructor(
     init {
         updateFormInfos(productId)
 
-        Log.i("TAG", "lero: $productId")
-
         _uiState.update { currentState ->
             currentState.copy(
-                onProductNameChange = { _uiState.value = _uiState.value.copy(productName = it) },
-                onProductImageChange = { _uiState.value = _uiState.value.copy(productImage = it) },
+                onProductNameChange = { _uiState.value = _uiState.value.copy(productName = it, productNameErrorMessage = "") },
+                onProductImageChange = { _uiState.value = _uiState.value.copy(productImage = it, productImageErrorMessage = "") },
                 onBrandNameChange = { _uiState.value = _uiState.value.copy(brandName = it) },
                 onBrandQtdChange = { _uiState.value = _uiState.value.copy(brandQtd = it) },
                 onBrandsChange = { _uiState.value = _uiState.value.copy(brands = _uiState.value.brands + it) },
@@ -45,12 +43,18 @@ class FormProductViewModel @Inject constructor(
 
                     if (_uiState.value.productName.isBlank()) {
                         isValid = false
-                        _uiState.value = _uiState.value.copy(productNameErrorMessage = "Nome do Produto é Obrigatório.")
+
+                        _uiState.value = _uiState.value.copy(
+                            productNameErrorMessage = "Nome do Produto é Obrigatório."
+                        )
                     }
 
                     if (_uiState.value.productImage.isBlank()) {
                         isValid = false
-                        _uiState.value = _uiState.value.copy(productImageErrorMessage = "Link da Imagem do Produto é Obrigatório.")
+
+                        _uiState.value = _uiState.value.copy(
+                            productImageErrorMessage = "Link da Imagem do Produto é Obrigatório."
+                        )
                     }
 
                     isValid

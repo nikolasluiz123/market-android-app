@@ -51,8 +51,7 @@ fun OutlinedTextFieldValidation(
 
 ) {
 
-    Column(modifier = modifier
-        .padding(8.dp)) {
+    Column(modifier = modifier) {
         OutlinedTextField(
             enabled = enabled,
             readOnly = readOnly,
@@ -67,6 +66,15 @@ fun OutlinedTextFieldValidation(
             leadingIcon = leadingIcon,
             trailingIcon = trailingIcon,
             isError = isError,
+            supportingText = {
+                if (error.isNotEmpty()) {
+                    Text(
+                        text = error,
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
+            },
             visualTransformation = visualTransformation,
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
@@ -75,14 +83,6 @@ fun OutlinedTextFieldValidation(
             shape = shape,
             colors = colors
         )
-        if (error.isNotEmpty()) {
-            Text(
-                text = error,
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.labelSmall,
-                modifier = Modifier.padding(start = 12.dp, top = 4.dp)
-            )
-        }
     }
 }
 
