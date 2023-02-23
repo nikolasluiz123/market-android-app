@@ -1,11 +1,12 @@
 package br.com.market.storage.ui.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import br.com.market.storage.business.repository.BrandRepository
 import br.com.market.storage.business.repository.ProductRepository
 import br.com.market.storage.extensions.toLongNavParam
+import br.com.market.storage.ui.domains.BrandDomain
 import br.com.market.storage.ui.domains.ProductDomain
 import br.com.market.storage.ui.states.FormProductUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class FormProductViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val productRepository: ProductRepository
+    private val productRepository: ProductRepository,
+    private val brandRepository: BrandRepository
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<FormProductUiState> = MutableStateFlow(FormProductUiState())
@@ -27,7 +29,8 @@ class FormProductViewModel @Inject constructor(
     private val productId = savedStateHandle.get<String>("productId")
 
     init {
-        updateFormInfos(productId)
+        updateProductFormInfos(productId)
+        updateProductBrandsInfos(productId)
 
         _uiState.update { currentState ->
             currentState.copy(
@@ -38,7 +41,8 @@ class FormProductViewModel @Inject constructor(
                 onBrandsChange = { _uiState.value = _uiState.value.copy(brands = _uiState.value.brands + it) },
                 onToggleSearch = { _uiState.value = _uiState.value.copy(openSearch = !_uiState.value.openSearch) },
                 onSearchChange = { _uiState.value = _uiState.value.copy(searchText = it) },
-                onValidate = {
+                onToggleBrandDialog = { _uiState.value = _uiState.value.copy(openBrandDialog = !_uiState.value.openBrandDialog) },
+                onValidateProduct = {
                     var isValid = true
 
                     if (_uiState.value.productName.isBlank()) {
@@ -69,27 +73,53 @@ class FormProductViewModel @Inject constructor(
         }
     }
 
-    private fun updateFormInfos(productId: String?) {
+    private fun updateProductFormInfos(productId: String?) {
         if (productId != null) {
             val productDomainFlow = productRepository.findProductById(productId.toLongNavParam())
 
             viewModelScope.launch {
                 productDomainFlow.collect {
-                    _uiState.value = _uiState.value.copy(productId = it?.id)
-                    _uiState.value = _uiState.value.copy(productName = it?.name ?: "")
-                    _uiState.value = _uiState.value.copy(productImage = it?.imageUrl ?: "")
+                    _uiState.value = _uiState.value.copy(
+                        productId = it?.id,
+                        productName = it?.name ?: "",
+                        productImage = it?.imageUrl ?: ""
+                    )
                 }
             }
         } else {
-            _uiState.value = _uiState.value.copy(productId = null)
-            _uiState.value = _uiState.value.copy(productName = "")
-            _uiState.value = _uiState.value.copy(productImage = "")
+            _uiState.value = _uiState.value.copy(
+                productId = null,
+                productName = "",
+                productImage = ""
+            )
+        }
+    }
+
+    private fun updateProductBrandsInfos(productId: String?) {
+        if (productId != null) {
+            val productBrandDomainFlow = brandRepository.findProductBrandsByProductId(productId.toLongNavParam()!!)
+
+            viewModelScope.launch {
+                productBrandDomainFlow.collect {
+                    _uiState.value = _uiState.value.copy(brands = it)
+                }
+            }
+        } else {
+            _uiState.value = _uiState.value.copy(brands = emptyList())
         }
     }
 
     fun deleteProduct(id: Long?) {
         viewModelScope.launch {
             productRepository.deleteProduct(id)
+        }
+    }
+
+    fun saveBrand(productId: Long?, brand: BrandDomain) {
+        productId?.let {
+            viewModelScope.launch {
+                brandRepository.saveBrand(productId, brand)
+            }
         }
     }
 }

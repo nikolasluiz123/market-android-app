@@ -17,10 +17,10 @@ import androidx.constraintlayout.compose.Dimension
 import br.com.market.storage.ui.components.AppBarTextField
 import br.com.market.storage.ui.components.FormBrand
 import br.com.market.storage.ui.components.FormProduct
+import br.com.market.storage.ui.domains.BrandDomain
 import br.com.market.storage.ui.domains.ProductDomain
 import br.com.market.storage.ui.states.FormProductUiState
 import br.com.market.storage.ui.theme.StorageTheme
-import br.com.market.storage.ui.theme.secondary
 import br.com.market.storage.ui.viewmodels.FormProductViewModel
 import kotlinx.coroutines.launch
 
@@ -42,6 +42,9 @@ fun FormProductScreen(
         onDeletePoduct = {
             viewModel.deleteProduct(it)
             onAfterDeletePoduct()
+        },
+        onDialogConfirmClick = { productId, brand ->
+            viewModel.saveBrand(productId, brand)
         }
     )
 }
@@ -53,7 +56,8 @@ fun FormProductScreen(
     onBackClick: () -> Unit = { },
     onLogoutClick: () -> Unit = { },
     onFABSaveProductClick: (ProductDomain) -> Unit = { },
-    onDeletePoduct: (Long?) -> Unit = { }
+    onDeletePoduct: (Long?) -> Unit = { },
+    onDialogConfirmClick: (Long?, BrandDomain) -> Unit = { p,b -> }
 ) {
     var tabIndex by remember { mutableStateOf(0) }
 
@@ -71,7 +75,7 @@ fun FormProductScreen(
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = secondary,
+                containerColor = MaterialTheme.colorScheme.secondary,
                 titleContentColor = Color.White,
                 actionIconContentColor = Color.White,
                 navigationIconContentColor = Color.White
@@ -196,7 +200,8 @@ fun FormProductScreen(
                     }
                     1 -> {
                         FormBrand(
-                            state = state
+                            state = state,
+                            onDialogConfirmClick = onDialogConfirmClick
                         )
                     }
                 }

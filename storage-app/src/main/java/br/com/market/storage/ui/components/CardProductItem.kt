@@ -2,7 +2,9 @@ package br.com.market.storage.ui.components
 
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,8 +18,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import br.com.market.storage.R
 import br.com.market.storage.sampledata.sampleProducts
 import br.com.market.storage.ui.domains.ProductDomain
-import br.com.market.storage.ui.theme.StorageTheme
-import br.com.market.storage.ui.theme.tertiary
+import br.com.market.storage.ui.theme.*
 import coil.compose.AsyncImage
 
 @Composable
@@ -29,7 +30,7 @@ fun CardProductItem(product: ProductDomain, onClick: (Long) -> Unit = { }) {
                 onClick(product.id!!)
             },
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        colors = CardDefaults.cardColors(containerColor = tertiary)
+        colors = CardDefaults.cardColors(containerColor = colorCard)
     ) {
         ConstraintLayout(Modifier.fillMaxSize()) {
 
@@ -57,8 +58,9 @@ fun CardProductItem(product: ProductDomain, onClick: (Long) -> Unit = { }) {
                     bottom.linkTo(parent.bottom, margin = 4.dp)
                 },
                 text = product.name,
-                color = Color.White,
-                fontSize = 18.sp
+                color = colorPrimary,
+                fontSize = 18.sp,
+                style = MaterialTheme.typography.titleMedium
             )
         }
     }

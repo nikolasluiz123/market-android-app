@@ -22,7 +22,6 @@ import br.com.market.storage.ui.components.CardProductItem
 import br.com.market.storage.ui.states.StorageProductsUiState
 import br.com.market.storage.ui.theme.CINZA_500
 import br.com.market.storage.ui.theme.StorageTheme
-import br.com.market.storage.ui.theme.secondary
 import br.com.market.storage.ui.viewmodels.StorageProductsViewModel
 
 @Composable
@@ -64,7 +63,7 @@ fun StorageProductsScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = secondary,
+                    containerColor = MaterialTheme.colorScheme.secondary,
                     titleContentColor = Color.White,
                     actionIconContentColor = Color.White,
                     navigationIconContentColor = Color.White

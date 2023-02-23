@@ -1,6 +1,5 @@
 package br.com.market.storage.ui.components
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -42,7 +41,7 @@ fun FormProduct(
             containerColor = MaterialTheme.colorScheme.primary,
             shape = RoundedCornerShape(100),
             onClick = {
-                if (state.onValidate()) {
+                if (state.onValidateProduct()) {
                     onFABSaveProductClick(
                         ProductDomain(
                             id = state.productId,

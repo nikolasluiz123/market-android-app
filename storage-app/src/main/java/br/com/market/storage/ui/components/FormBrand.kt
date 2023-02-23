@@ -11,30 +11,28 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import br.com.market.storage.ui.domains.BrandDomain
+import br.com.market.storage.ui.domains.ProductBrandDomain
 import br.com.market.storage.ui.states.FormProductUiState
 import br.com.market.storage.ui.theme.CINZA_500
 import br.com.market.storage.ui.theme.StorageTheme
-import br.com.market.storage.ui.domains.BrandDomain
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FormBrand(
-    state: FormProductUiState = FormProductUiState()
+    state: FormProductUiState = FormProductUiState(),
+    onDialogConfirmClick: (Long?, BrandDomain) -> Unit = { p, b -> }
 ) {
-    val openBrandDialog = remember { mutableStateOf(false) }
-
     Scaffold(floatingActionButton = {
         FloatingActionButton(
             containerColor = MaterialTheme.colorScheme.primary,
             shape = RoundedCornerShape(100),
-            onClick = { openBrandDialog.value = true }
+            onClick = state.onToggleBrandDialog
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
@@ -50,10 +48,12 @@ fun FormBrand(
         ) {
             val (brandsListRef, emptyText) = createRefs()
 
-            if (openBrandDialog.value) {
-                BrandDialog(state = state, onDissmissDialog = { open ->
-                    openBrandDialog.value = open
-                })
+            if (state.openBrandDialog) {
+                BrandDialog(
+                    state = state,
+                    onDissmissDialog = state.onToggleBrandDialog,
+                    onConfirmClick = onDialogConfirmClick
+                )
             }
 
             if (state.brands.isEmpty()) {
@@ -78,8 +78,8 @@ fun FormBrand(
                     contentPadding = PaddingValues(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     content = {
-                        items(state.brands) { toBrand ->
-                            CardBrandItem(brandDomain = toBrand)
+                        items(state.brands) { productBrandDomain ->
+                            CardBrandItem(productBrandDomain = productBrandDomain)
                         }
                     }
                 )
@@ -97,11 +97,11 @@ fun FormBrandPreview() {
             FormBrand(
                 state = FormProductUiState(
                     brands = listOf(
-                        BrandDomain(name = "Arroz Dalfovo", count = 4),
-                        BrandDomain(name = "Arroz Urbano", count = 15),
-                        BrandDomain(name = "Arroz do Zé", count = 10)
+                        ProductBrandDomain(productName = "Arroz", brandName = "Dalfovo", count = 4),
+                        ProductBrandDomain(productName = "Arroz", brandName = "Urbano", count = 15),
+                        ProductBrandDomain(productName = "Arroz", brandName = "do Zé", count = 10)
                     )
-                ),
+                )
             )
         }
     }

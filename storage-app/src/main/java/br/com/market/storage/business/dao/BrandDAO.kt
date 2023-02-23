@@ -7,6 +7,7 @@ import br.com.market.storage.business.exceptions.NoResultException
 import br.com.market.storage.business.models.Brand
 import br.com.market.storage.business.models.Product
 import br.com.market.storage.business.models.ProductBrand
+import br.com.market.storage.ui.domains.ProductBrandDomain
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -14,7 +15,22 @@ import kotlinx.coroutines.flow.StateFlow
 abstract class BrandDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun saveBrands(brands: List<Brand>)
+    abstract suspend fun saveBrand(brand: Brand): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract suspend fun saveProductBrand(productBrand: ProductBrand)
+
+    @Query(
+        " select b.id as brandId, " +
+                "p.name as productName, " +
+                "b.name as brandName, " +
+                "pb.count as count " +
+                "from products p " +
+                "inner join products_brands pb on pb.product_id = p.id " +
+                "inner join brands b on pb.brand_id = b.id " +
+                "where p.id = :productId "
+    )
+    abstract fun finProductBrandsByProductId(productId: Long): Flow<List<ProductBrandDomain>>
 
     @Query(
         "select b.id as brandId, " +
@@ -37,7 +53,7 @@ abstract class BrandDAO {
     abstract fun findByProductId(id: Long): Flow<List<ProductBrand>>
 
     suspend fun sumStorageCount(productId: Long, brandId: Long, count: Int) {
-        if (notHaveDataForUpdate(productId, brandId)){
+        if (notHaveDataForUpdate(productId, brandId)) {
             throw NoResultException("Não há registro de estoque para o Produto e/ou Marca especificado(s)")
         }
 
@@ -59,9 +75,11 @@ abstract class BrandDAO {
     @Query("select count < :count from products_brands where product_id = :productId and brand_id = :brandId")
     abstract fun newStorageCountIsInvalid(count: Int, productId: Long, brandId: Long): Boolean
 
-    @Query("select (" +
-            "not exists(select pb.id from products_brands pb where pb.product_id = :productId and pb.brand_id = :brandId)" +
-            ")")
+    @Query(
+        "select (" +
+                "not exists(select pb.id from products_brands pb where pb.product_id = :productId and pb.brand_id = :brandId)" +
+                ")"
+    )
     abstract fun notHaveDataForUpdate(productId: Long, brandId: Long): Boolean
 
     @Query("UPDATE products_brands set count = count + :count where product_id = :productId and brand_id = :brandId")

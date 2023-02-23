@@ -15,23 +15,27 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.constraintlayout.compose.ConstraintLayout
+import br.com.market.storage.ui.domains.BrandDomain
+import br.com.market.storage.ui.domains.ProductDomain
 import br.com.market.storage.ui.states.FormProductUiState
 import br.com.market.storage.ui.theme.StorageTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BrandDialog(
     state: FormProductUiState = FormProductUiState(),
-    onDissmissDialog: (Boolean) -> Unit = { },
+    onDissmissDialog: () -> Unit = { },
     onCancelClick: () -> Unit = { },
-    onConfirmClick: () -> Unit = { }
+    onConfirmClick: (Long?, BrandDomain) -> Unit  = { p, b -> }
 ) {
-    Dialog(onDismissRequest = { onDissmissDialog(false) }) {
+    Dialog(onDismissRequest = onDissmissDialog) {
         Card(
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(containerColor = Color.White)
         ) {
-            ConstraintLayout(Modifier.fillMaxWidth().wrapContentHeight()) {
+            ConstraintLayout(
+                Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()) {
                 val (titleRef, cancelButtonRef, confirmButtonRef,
                     inputNameRef, inputQdtRef) = createRefs()
 
@@ -45,7 +49,7 @@ fun BrandDialog(
                     style = MaterialTheme.typography.titleSmall
                 )
 
-                OutlinedTextField(
+                OutlinedTextFieldValidation(
                     modifier = Modifier.constrainAs(inputNameRef) {
                         start.linkTo(parent.start, margin = 8.dp)
                         end.linkTo(parent.end, margin = 8.dp)
@@ -63,7 +67,7 @@ fun BrandDialog(
                     )
                 )
 
-                OutlinedTextField(
+                OutlinedTextFieldValidation(
                     modifier = Modifier.constrainAs(inputQdtRef) {
                         start.linkTo(inputNameRef.start)
                         end.linkTo(inputNameRef.end)
@@ -87,7 +91,7 @@ fun BrandDialog(
                         top.linkTo(inputQdtRef.bottom, margin = 8.dp)
                     },
                     onClick = {
-                        onDissmissDialog(false)
+                        onDissmissDialog()
                         onCancelClick()
                     }
                 ) {
@@ -101,8 +105,16 @@ fun BrandDialog(
                         top.linkTo(inputQdtRef.bottom, margin = 8.dp)
                     },
                     onClick = {
-                        onDissmissDialog(false)
-                        onConfirmClick()
+                        if (state.onValidateBrand()) {
+                            onConfirmClick(
+                                state.productId,
+                                BrandDomain(
+                                    name = state.brandName,
+                                    count = state.brandQtd.toInt()
+                                )
+                            )
+                            onDissmissDialog()
+                        }
                     }
                 ) {
                     Text(text = "Confirmar")
