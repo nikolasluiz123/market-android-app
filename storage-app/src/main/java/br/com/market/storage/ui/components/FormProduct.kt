@@ -1,9 +1,14 @@
 package br.com.market.storage.ui.components
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.*
@@ -21,7 +26,8 @@ import androidx.constraintlayout.compose.Dimension
 import br.com.market.storage.R
 import br.com.market.storage.ui.domains.ProductDomain
 import br.com.market.storage.ui.states.FormProductUiState
-import br.com.market.storage.ui.theme.*
+import br.com.market.storage.ui.theme.CINZA_300
+import br.com.market.storage.ui.theme.StorageTheme
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 
@@ -36,7 +42,7 @@ fun FormProduct(
             containerColor = MaterialTheme.colorScheme.primary,
             shape = RoundedCornerShape(100),
             onClick = {
-                if(state.onValidate()) {
+                if (state.onValidate()) {
                     onFABSaveProductClick(
                         ProductDomain(
                             id = state.productId,
@@ -57,6 +63,7 @@ fun FormProduct(
         ConstraintLayout(
             Modifier
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .padding(it)
         ) {
             val (imageRef, inputImage, inputProductName) = createRefs()
@@ -122,7 +129,6 @@ fun FormProduct(
             )
         }
     }
-
 }
 
 @Preview(showSystemUi = true)
