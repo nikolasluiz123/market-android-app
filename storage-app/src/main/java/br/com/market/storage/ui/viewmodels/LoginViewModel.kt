@@ -1,15 +1,18 @@
 package br.com.market.storage.ui.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
+import br.com.market.storage.R
 import br.com.market.storage.ui.states.LoginUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor() : ViewModel() {
+class LoginViewModel @Inject constructor(@ApplicationContext context: Context) : ViewModel() {
 
     private val _uiState: MutableStateFlow<LoginUiState> = MutableStateFlow(LoginUiState())
     val uiState get() = _uiState.asStateFlow()
@@ -26,7 +29,7 @@ class LoginViewModel @Inject constructor() : ViewModel() {
                         isValid = false
 
                         _uiState.value = _uiState.value.copy(
-                            emailErrorMessage = "O e-mail é obrigatório."
+                            emailErrorMessage = context.getString(R.string.login_screen_email_required_validation_message)
                         )
                     }
 
@@ -34,7 +37,7 @@ class LoginViewModel @Inject constructor() : ViewModel() {
                         isValid = false
 
                         _uiState.value = _uiState.value.copy(
-                            passwordErrorMessage = "A senha é obrigatória."
+                            passwordErrorMessage = context.getString(R.string.login_screen_password_required_validation_message)
                         )
                     }
 
