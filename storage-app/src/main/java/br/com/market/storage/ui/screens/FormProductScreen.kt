@@ -20,6 +20,7 @@ import br.com.market.storage.ui.components.AppBarTextField
 import br.com.market.storage.ui.components.FormBrand
 import br.com.market.storage.ui.components.FormProduct
 import br.com.market.storage.ui.domains.BrandDomain
+import br.com.market.storage.ui.domains.ProductBrandDomain
 import br.com.market.storage.ui.domains.ProductDomain
 import br.com.market.storage.ui.states.FormProductUiState
 import br.com.market.storage.ui.theme.StorageTheme
@@ -49,7 +50,7 @@ fun FormProductScreen(
             ).show()
         },
         onDeletePoduct = {
-            viewModel.deleteProduct(it)
+            viewModel.deleteProduct()
             onAfterDeletePoduct()
         },
         onDialogConfirmClick = { brand ->
@@ -59,6 +60,9 @@ fun FormProductScreen(
                 "Marca Salva com Sucesso.",
                 Toast.LENGTH_LONG
             ).show()
+        },
+        onMenuItemDeleteBrandClick = {
+            viewModel.deleteBrand(it)
         }
     )
 }
@@ -70,8 +74,9 @@ fun FormProductScreen(
     onBackClick: () -> Unit = { },
     onLogoutClick: () -> Unit = { },
     onFABSaveProductClick: (ProductDomain) -> Unit = { },
-    onDeletePoduct: (Long) -> Unit = { },
-    onDialogConfirmClick: (BrandDomain) -> Unit = { b -> }
+    onDeletePoduct: () -> Unit = { },
+    onDialogConfirmClick: (BrandDomain) -> Unit = { b -> },
+    onMenuItemDeleteBrandClick: (Long) -> Unit = { }
 ) {
     var tabIndex by remember { mutableStateOf(0) }
 
@@ -113,7 +118,7 @@ fun FormProductScreen(
                     if (tabIndex == 0) {
 
                         if (state.productId != null) {
-                            IconButton(onClick = { onDeletePoduct(state.productId) }) {
+                            IconButton(onClick = onDeletePoduct ) {
                                 Icon(imageVector = Icons.Default.Delete, contentDescription = null)
                             }
                         }
@@ -215,7 +220,8 @@ fun FormProductScreen(
                     1 -> {
                         FormBrand(
                             state = state,
-                            onDialogConfirmClick = onDialogConfirmClick
+                            onDialogConfirmClick = onDialogConfirmClick,
+                            onMenuItemDeleteBrandClick = onMenuItemDeleteBrandClick
                         )
                     }
                 }

@@ -143,16 +143,24 @@ class FormProductViewModel @Inject constructor(
         }
     }
 
-    fun deleteProduct(id: Long) {
+    fun deleteProduct() {
+        productId?.let {
+            viewModelScope.launch {
+                productRepository.deleteProduct(it.toLongNavParam())
+            }
+        }
+    }
+
+    fun deleteBrand(brandId: Long) {
         viewModelScope.launch {
-            productRepository.deleteProduct(id)
+            productRepository.deleteBrandAndReferences(brandId)
         }
     }
 
     fun saveBrand(brand: BrandDomain) {
         productId?.let {
             viewModelScope.launch {
-                brandRepository.saveBrand(it.toLongNavParam()!!, brand)
+                brandRepository.saveBrand(it.toLongNavParam(), brand)
             }
         }
     }

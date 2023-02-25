@@ -34,9 +34,7 @@ fun BrandDialog(
             colors = CardDefaults.cardColors(containerColor = Color.White)
         ) {
             ConstraintLayout(
-                Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()) {
+                Modifier.fillMaxWidth()) {
                 val (titleRef, cancelButtonRef, confirmButtonRef,
                     inputNameRef, inputQdtRef) = createRefs()
 
@@ -60,6 +58,7 @@ fun BrandDialog(
                     },
                     value = state.brandName,
                     onValueChange = state.onBrandNameChange,
+                    error = state.brandNameErrorMessage,
                     label = {
                         Text(text = "Nome")
                     },
@@ -80,6 +79,7 @@ fun BrandDialog(
                     },
                     value = state.brandQtd,
                     onValueChange = state.onBrandQtdChange,
+                    error = state.qtdBrandErrorMessage,
                     label = {
                         Text(text = "Quantidade")
                     },

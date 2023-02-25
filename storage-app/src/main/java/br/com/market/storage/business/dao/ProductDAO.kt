@@ -35,13 +35,22 @@ abstract class ProductDAO {
 
     @Transaction
     open suspend fun deleteProductAndReferences(productId: Long) {
-        deleteProductBrand(productId)
-        deleteBrand(productId)
+        deleteAllProductBrandOfProduct(productId)
+        deleteAllBrandsOfProduct(productId)
         deleteProduct(productId)
     }
 
+    @Transaction
+    open suspend fun deleteBrandAndReferences(brandId: Long) {
+        deleteProductBrandOfBrand(brandId)
+        deleteBrand(brandId)
+    }
+
     @Query("delete from products_brands where product_id = :productId")
-    abstract suspend fun deleteProductBrand(productId: Long)
+    abstract suspend fun deleteAllProductBrandOfProduct(productId: Long)
+
+    @Query("delete from products_brands where brand_id = :brandId")
+    abstract suspend fun deleteProductBrandOfBrand(brandId: Long)
 
     @Query("delete from brands where id in " +
             "(select pb.brand_id " +
@@ -49,7 +58,10 @@ abstract class ProductDAO {
             "inner join products_brands pb on pb.product_id = p.id " +
             "where p.id = :productId " +
             ")")
-    abstract suspend fun deleteBrand(productId: Long)
+    abstract suspend fun deleteAllBrandsOfProduct(productId: Long)
+
+    @Query("delete from brands where id = :brandId ")
+    abstract suspend fun deleteBrand(brandId: Long)
 
     @Query("delete from products where id = :productId")
     abstract suspend fun deleteProduct(productId: Long?)

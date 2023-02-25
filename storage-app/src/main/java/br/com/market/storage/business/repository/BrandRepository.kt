@@ -17,11 +17,16 @@ class BrandRepository @Inject constructor(
         val brand = BrandMapper.toBrandModel(brandDomain)
         val brandId = brandDAO.saveBrand(brand)
 
-        val productBrand = ProductBrand(
-            productId = productId,
-            brandId = brandId,
-            count = brandDomain.count
-        )
+        val productBrand = if (brand.id != null) {
+            val pb = brandDAO.findProductBrandByBrandId(brand.id)
+            pb.copy(count = brandDomain.count)
+        } else {
+            ProductBrand(
+                productId = productId,
+                brandId = brandId,
+                count = brandDomain.count
+            )
+        }
 
         brandDAO.saveProductBrand(productBrand)
     }

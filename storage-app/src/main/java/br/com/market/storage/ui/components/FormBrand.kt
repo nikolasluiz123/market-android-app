@@ -26,7 +26,8 @@ import br.com.market.storage.ui.theme.StorageTheme
 @Composable
 fun FormBrand(
     state: FormProductUiState = FormProductUiState(),
-    onDialogConfirmClick: (BrandDomain) -> Unit = { b -> }
+    onDialogConfirmClick: (BrandDomain) -> Unit = { b -> },
+    onMenuItemDeleteBrandClick: (Long) -> Unit = { }
 ) {
     Scaffold(floatingActionButton = {
         FloatingActionButton(
@@ -81,9 +82,10 @@ fun FormBrand(
                         items(state.brands) { productBrandDomain ->
                             CardBrandItem(
                                 productBrandDomain = productBrandDomain,
-                                onClick = { itemClicked ->
+                                onItemClick = { itemClicked ->
                                     state.onShowBrandDialog(itemClicked)
-                                }
+                                },
+                                onMenuItemDeleteBrandClick = onMenuItemDeleteBrandClick
                             )
                         }
                     }
@@ -106,7 +108,7 @@ fun FormBrandPreview() {
                         ProductBrandDomain(productName = "Arroz", brandName = "Urbano", count = 15),
                         ProductBrandDomain(productName = "Arroz", brandName = "do Zé", count = 10)
                     )
-                )
+                ),
             )
         }
     }

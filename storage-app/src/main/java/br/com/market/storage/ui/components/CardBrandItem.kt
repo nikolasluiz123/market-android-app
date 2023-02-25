@@ -1,98 +1,142 @@
 package br.com.market.storage.ui.components
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import br.com.market.storage.ui.domains.BrandDomain
 import br.com.market.storage.ui.domains.ProductBrandDomain
-import br.com.market.storage.ui.theme.*
+import br.com.market.storage.ui.theme.StorageTheme
+import br.com.market.storage.ui.theme.colorCard
+import br.com.market.storage.ui.theme.colorPrimary
 
 @Composable
 fun CardBrandItem(
     productBrandDomain: ProductBrandDomain,
-    onClick: (ProductBrandDomain) -> Unit = { }
+    onItemClick: (ProductBrandDomain) -> Unit = { },
+    onMenuItemDeleteBrandClick: (Long) -> Unit = { }
 ) {
     Card(
         modifier = Modifier
             .fillMaxSize()
-            .clickable { onClick(productBrandDomain) },
+            .clickable { onItemClick(productBrandDomain) },
         elevation = CardDefaults.cardElevation(8.dp),
         colors = CardDefaults.cardColors(containerColor = colorCard)
     ) {
         ConstraintLayout(
-            Modifier
-                .fillMaxSize()
-                .padding(16.dp)
+            Modifier.fillMaxSize()
         ) {
-            val (brandLabelRef, brandNameRef, countRef, countLabelRef) = createRefs()
+            val (brandLabelRef, brandNameRef, countRef, countLabelRef, menuButtonRef) = createRefs()
 
-            createHorizontalChain(brandLabelRef, countLabelRef)
-            createHorizontalChain(brandNameRef, countRef)
+            createHorizontalChain(brandLabelRef, countLabelRef, menuButtonRef)
+            createHorizontalChain(brandNameRef, countRef, menuButtonRef)
 
             Text(
-                modifier = Modifier.constrainAs(brandLabelRef) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
+                modifier = Modifier
+                    .constrainAs(brandLabelRef) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
 
-                    horizontalChainWeight = 0.7F
+                        horizontalChainWeight = 0.6F
 
-                    width = Dimension.fillToConstraints
-                }.padding(end = 8.dp),
+                        width = Dimension.fillToConstraints
+                    }
+                    .padding(top = 8.dp, start = 8.dp, end = 8.dp),
                 style = MaterialTheme.typography.bodyMedium,
                 color = colorPrimary,
                 text = "Produto"
             )
 
             Text(
-                modifier = Modifier.constrainAs(brandNameRef) {
-                    top.linkTo(brandLabelRef.bottom)
-                    start.linkTo(brandLabelRef.start)
+                modifier = Modifier
+                    .constrainAs(brandNameRef) {
+                        top.linkTo(brandLabelRef.bottom)
+                        start.linkTo(brandLabelRef.start)
 
-                    horizontalChainWeight = 0.7F
+                        horizontalChainWeight = 0.6F
 
-                    width = Dimension.fillToConstraints
-                }.padding(end = 8.dp),
+                        width = Dimension.fillToConstraints
+                    }
+                    .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
                 style = MaterialTheme.typography.titleMedium,
                 color = colorPrimary,
                 text = "${productBrandDomain.productName} ${productBrandDomain.brandName}"
             )
 
             Text(
-                modifier = Modifier.constrainAs(countLabelRef) {
-                    top.linkTo(brandLabelRef.top)
-                    start.linkTo(brandLabelRef.end)
-                    end.linkTo(parent.end)
+                modifier = Modifier
+                    .constrainAs(countLabelRef) {
+                        top.linkTo(brandLabelRef.top)
+                        start.linkTo(brandLabelRef.end)
+                        end.linkTo(menuButtonRef.start)
 
-                    horizontalChainWeight = 0.3F
+                        horizontalChainWeight = 0.25F
 
-                    width = Dimension.fillToConstraints
-                },
+                        width = Dimension.fillToConstraints
+                    }
+                    .padding(top = 8.dp, end = 8.dp),
                 style = MaterialTheme.typography.bodyMedium,
                 color = colorPrimary,
                 text = "Quantidade"
             )
 
             Text(
-                modifier = Modifier.constrainAs(countRef) {
-                    top.linkTo(countLabelRef.bottom)
-                    end.linkTo(countLabelRef.end)
+                modifier = Modifier
+                    .constrainAs(countRef) {
+                        top.linkTo(countLabelRef.bottom)
+                        end.linkTo(countLabelRef.end)
 
-                    horizontalChainWeight = 0.3F
+                        horizontalChainWeight = 0.25F
 
-                    width = Dimension.fillToConstraints
-                },
+                        width = Dimension.fillToConstraints
+                    }
+                    .padding(end = 8.dp, bottom = 8.dp),
                 style = MaterialTheme.typography.titleMedium,
                 color = colorPrimary,
                 text = productBrandDomain.count.toString()
             )
+
+            Box(
+                modifier = Modifier
+                    .constrainAs(menuButtonRef) {
+                        end.linkTo(parent.end)
+                        top.linkTo(parent.top)
+
+                        horizontalChainWeight = 0.1F
+
+                        width = Dimension.fillToConstraints
+
+                    }) {
+                var showMenu by remember { mutableStateOf(false) }
+                IconButton(
+                    onClick = { showMenu = !showMenu }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = null
+                    )
+                }
+
+                DropdownMenu(
+                    expanded = showMenu,
+                    onDismissRequest = { showMenu = false },
+                    offset = DpOffset(x = (-66).dp, y = (-10).dp)
+                ) {
+                    DropdownMenuItem(text = { Text("Deletar") }, onClick = {
+                        onMenuItemDeleteBrandClick(productBrandDomain.brandId!!)
+                    })
+                }
+            }
+
         }
     }
 }

@@ -44,6 +44,9 @@ abstract class BrandDAO {
     @Query("select * from brands where sincronized = 0")
     abstract fun findAllBrandsNotSincronized(): Flow<List<Brand>>
 
+    @Query("select * from products_brands where brand_id = :brandId")
+    abstract suspend fun findProductBrandByBrandId(brandId: Long): ProductBrand
+
     @Delete
     abstract suspend fun deleteBrand(brand: Brand)
 

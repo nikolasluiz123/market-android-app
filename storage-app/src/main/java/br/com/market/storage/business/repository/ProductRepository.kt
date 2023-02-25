@@ -7,6 +7,7 @@ import br.com.market.storage.business.models.Product
 import br.com.market.storage.business.webclient.ProductWebClient
 import br.com.market.storage.extensions.toProductDomainList
 import br.com.market.storage.extensions.toProductDomain
+import br.com.market.storage.ui.domains.ProductBrandDomain
 import br.com.market.storage.ui.domains.ProductDomain
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -27,6 +28,10 @@ class ProductRepository @Inject constructor(
 
     suspend fun deleteProduct(id: Long) {
         productDAO.deleteProductAndReferences(id)
+    }
+
+    suspend fun deleteBrandAndReferences(productId: Long) {
+        productDAO.deleteBrandAndReferences(productId)
     }
 
 //    suspend fun sincronize() {
