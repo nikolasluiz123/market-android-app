@@ -164,4 +164,8 @@ class FormProductViewModel @Inject constructor(
             }
         }
     }
+
+    fun blockNavToBrand(): Boolean {
+        return productId != null
+    }
 }

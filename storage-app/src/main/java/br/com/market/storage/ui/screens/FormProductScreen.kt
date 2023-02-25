@@ -20,7 +20,6 @@ import br.com.market.storage.ui.components.AppBarTextField
 import br.com.market.storage.ui.components.FormBrand
 import br.com.market.storage.ui.components.FormProduct
 import br.com.market.storage.ui.domains.BrandDomain
-import br.com.market.storage.ui.domains.ProductBrandDomain
 import br.com.market.storage.ui.domains.ProductDomain
 import br.com.market.storage.ui.states.FormProductUiState
 import br.com.market.storage.ui.theme.StorageTheme
@@ -63,7 +62,8 @@ fun FormProductScreen(
         },
         onMenuItemDeleteBrandClick = {
             viewModel.deleteBrand(it)
-        }
+        },
+        permissionNavToBrand = viewModel::blockNavToBrand
     )
 }
 
@@ -76,7 +76,8 @@ fun FormProductScreen(
     onFABSaveProductClick: (ProductDomain) -> Unit = { },
     onDeletePoduct: () -> Unit = { },
     onDialogConfirmClick: (BrandDomain) -> Unit = { b -> },
-    onMenuItemDeleteBrandClick: (Long) -> Unit = { }
+    onMenuItemDeleteBrandClick: (Long) -> Unit = { },
+    permissionNavToBrand: () -> Boolean = { false }
 ) {
     var tabIndex by remember { mutableStateOf(0) }
 
@@ -90,7 +91,8 @@ fun FormProductScreen(
                         hint = "O que você procura?"
                     )
                 } else {
-                    Text(text = "Cadastrando um Produto", style = MaterialTheme.typography.titleMedium)
+                    val appBarTitle = state.productId?.let { "Alterando ${state.productName}" } ?: "Cadastrando um Produto"
+                    Text(text = appBarTitle, style = MaterialTheme.typography.titleMedium)
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(
@@ -118,7 +120,7 @@ fun FormProductScreen(
                     if (tabIndex == 0) {
 
                         if (state.productId != null) {
-                            IconButton(onClick = onDeletePoduct ) {
+                            IconButton(onClick = onDeletePoduct) {
                                 Icon(imageVector = Icons.Default.Delete, contentDescription = null)
                             }
                         }
@@ -134,11 +136,13 @@ fun FormProductScreen(
                         }
 
                     } else {
-                        IconButton(onClick = state.onToggleSearch) {
-                            Icon(
-                                imageVector = Icons.Default.Search,
-                                contentDescription = "Pesquisar"
-                            )
+                        if (state.brands.isNotEmpty()) {
+                            IconButton(onClick = state.onToggleSearch) {
+                                Icon(
+                                    imageVector = Icons.Default.Search,
+                                    contentDescription = "Pesquisar"
+                                )
+                            }
                         }
 
                         var showMenu by remember { mutableStateOf(false) }
@@ -190,7 +194,12 @@ fun FormProductScreen(
                                 pagerState.animateScrollToPage(index)
                             }
                         },
-                        text = { Text(text = title) }
+                        text = { Text(text = title) },
+                        enabled = when (index) {
+                            0 -> true
+                            1 -> permissionNavToBrand()
+                            else -> false
+                        }
                     )
                 }
             }
@@ -206,7 +215,12 @@ fun FormProductScreen(
                         bottom.linkTo(parent.bottom)
 
                         height = Dimension.fillToConstraints
-                    }
+                    },
+                userScrollEnabled = when (tabIndex) {
+                    0 -> true
+                    1 -> permissionNavToBrand()
+                    else -> false
+                }
             ) { index ->
                 tabIndex = index
 
