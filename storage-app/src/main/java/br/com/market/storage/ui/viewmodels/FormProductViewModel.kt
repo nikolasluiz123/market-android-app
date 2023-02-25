@@ -143,7 +143,7 @@ class FormProductViewModel @Inject constructor(
         }
     }
 
-    fun deleteProduct(id: Long?) {
+    fun deleteProduct(id: Long) {
         viewModelScope.launch {
             productRepository.deleteProduct(id)
         }

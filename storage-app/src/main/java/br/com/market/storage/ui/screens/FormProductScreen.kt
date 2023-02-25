@@ -70,7 +70,7 @@ fun FormProductScreen(
     onBackClick: () -> Unit = { },
     onLogoutClick: () -> Unit = { },
     onFABSaveProductClick: (ProductDomain) -> Unit = { },
-    onDeletePoduct: (Long?) -> Unit = { },
+    onDeletePoduct: (Long) -> Unit = { },
     onDialogConfirmClick: (BrandDomain) -> Unit = { b -> }
 ) {
     var tabIndex by remember { mutableStateOf(0) }

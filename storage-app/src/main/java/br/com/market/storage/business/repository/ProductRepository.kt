@@ -25,8 +25,8 @@ class ProductRepository @Inject constructor(
         return productDAO.findProductById(productId).toProductDomain()
     }
 
-    suspend fun deleteProduct(id: Long?) {
-        productDAO.deleteProduct(id)
+    suspend fun deleteProduct(id: Long) {
+        productDAO.deleteProductAndReferences(id)
     }
 
 //    suspend fun sincronize() {

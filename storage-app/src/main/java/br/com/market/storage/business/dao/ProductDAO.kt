@@ -33,7 +33,8 @@ abstract class ProductDAO {
     @Delete
     abstract suspend fun deleteProduct(product: Product)
 
-    suspend fun deleteProductAndReferences(productId: Long) {
+    @Transaction
+    open suspend fun deleteProductAndReferences(productId: Long) {
         deleteProductBrand(productId)
         deleteBrand(productId)
         deleteProduct(productId)
