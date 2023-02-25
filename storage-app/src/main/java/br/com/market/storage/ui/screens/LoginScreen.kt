@@ -12,6 +12,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import br.com.market.storage.ui.components.OutlinedTextFieldValidation
 import br.com.market.storage.ui.states.LoginUiState
 import br.com.market.storage.ui.theme.StorageTheme
 import br.com.market.storage.ui.viewmodels.LoginViewModel
@@ -41,12 +42,13 @@ fun LoginScreen(
         verticalArrangement = Arrangement.Center,
     ) {
 
-        OutlinedTextField(
+        OutlinedTextFieldValidation(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 8.dp),
             value = state.email,
             onValueChange = state.onEmailChange,
+            error = state.emailErrorMessage,
             label = { Text(text = "E-mail") },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
@@ -54,12 +56,13 @@ fun LoginScreen(
             )
         )
 
-        OutlinedTextField(
+        OutlinedTextFieldValidation(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 8.dp),
             value = state.password,
             onValueChange = state.onPasswordChange,
+            error = state.passwordErrorMessage,
             label = { Text(text = "Senha") },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
@@ -69,7 +72,11 @@ fun LoginScreen(
 
         Button(
             modifier = Modifier.fillMaxWidth(),
-            onClick = onLoginClick
+            onClick = {
+                if (state.onValidate()) {
+                    onLoginClick()
+                }
+            }
         ) {
             Text(text = "Login")
         }
@@ -78,17 +85,7 @@ fun LoginScreen(
 
 @Preview(showSystemUi = true)
 @Composable
-fun LoginLightPreview() {
-    StorageTheme {
-        Surface {
-            LoginScreen(state = LoginUiState())
-        }
-    }
-}
-
-@Preview(showSystemUi = true, uiMode = UI_MODE_NIGHT_YES)
-@Composable
-fun LoginDarkPreview() {
+fun LoginPreview() {
     StorageTheme {
         Surface {
             LoginScreen(state = LoginUiState())

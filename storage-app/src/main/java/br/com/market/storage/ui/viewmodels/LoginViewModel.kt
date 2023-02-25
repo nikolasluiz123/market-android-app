@@ -19,6 +19,27 @@ class LoginViewModel @Inject constructor() : ViewModel() {
             currentState.copy(
                 onEmailChange = { _uiState.value = _uiState.value.copy(email = it) },
                 onPasswordChange = { _uiState.value = _uiState.value.copy(password = it) },
+                onValidate = {
+                    var isValid = true
+
+                    if (_uiState.value.email.isBlank()) {
+                        isValid = false
+
+                        _uiState.value = _uiState.value.copy(
+                            emailErrorMessage = "O e-mail é obrigatório."
+                        )
+                    }
+
+                    if (_uiState.value.password.isBlank()) {
+                        isValid = false
+
+                        _uiState.value = _uiState.value.copy(
+                            passwordErrorMessage = "A senha é obrigatória."
+                        )
+                    }
+
+                    isValid
+                }
             )
         }
     }
