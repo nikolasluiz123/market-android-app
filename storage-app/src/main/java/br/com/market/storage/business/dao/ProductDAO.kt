@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 abstract class ProductDAO {
 
     @Insert(onConflict = REPLACE)
-    abstract suspend fun saveProduct(product: Product)
+    abstract suspend fun saveProduct(product: Product): Long
 
     @Insert(onConflict = REPLACE)
     abstract suspend fun saveProductBrands(productBrands: List<ProductBrand>)

@@ -26,13 +26,13 @@ import br.com.market.storage.ui.theme.StorageTheme
 @Composable
 fun FormBrand(
     state: FormProductUiState = FormProductUiState(),
-    onDialogConfirmClick: (Long?, BrandDomain) -> Unit = { p, b -> }
+    onDialogConfirmClick: (BrandDomain) -> Unit = { b -> }
 ) {
     Scaffold(floatingActionButton = {
         FloatingActionButton(
             containerColor = MaterialTheme.colorScheme.primary,
             shape = RoundedCornerShape(100),
-            onClick = state.onToggleBrandDialog
+            onClick = { state.onShowBrandDialog(null) }
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
@@ -51,7 +51,7 @@ fun FormBrand(
             if (state.openBrandDialog) {
                 BrandDialog(
                     state = state,
-                    onDissmissDialog = state.onToggleBrandDialog,
+                    onDissmissDialog = state.onHideBrandDialog,
                     onConfirmClick = onDialogConfirmClick
                 )
             }
@@ -79,7 +79,12 @@ fun FormBrand(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     content = {
                         items(state.brands) { productBrandDomain ->
-                            CardBrandItem(productBrandDomain = productBrandDomain)
+                            CardBrandItem(
+                                productBrandDomain = productBrandDomain,
+                                onClick = { itemClicked ->
+                                    state.onShowBrandDialog(itemClicked)
+                                }
+                            )
                         }
                     }
                 )

@@ -1,5 +1,6 @@
 package br.com.market.storage.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -11,6 +12,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -32,19 +34,31 @@ fun FormProductScreen(
     onAfterDeletePoduct: () -> Unit = { }
 ) {
     val state by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
+
     FormProductScreen(
         state = state,
         onBackClick = onBackClick,
         onLogoutClick = onLogoutClick,
         onFABSaveProductClick = {
             viewModel.saveProduct(it)
+            Toast.makeText(
+                context,
+                "Produto Salvo com Sucesso.",
+                Toast.LENGTH_LONG
+            ).show()
         },
         onDeletePoduct = {
             viewModel.deleteProduct(it)
             onAfterDeletePoduct()
         },
-        onDialogConfirmClick = { productId, brand ->
-            viewModel.saveBrand(productId, brand)
+        onDialogConfirmClick = { brand ->
+            viewModel.saveBrand(brand)
+            Toast.makeText(
+                context,
+                "Marca Salva com Sucesso.",
+                Toast.LENGTH_LONG
+            ).show()
         }
     )
 }
@@ -57,7 +71,7 @@ fun FormProductScreen(
     onLogoutClick: () -> Unit = { },
     onFABSaveProductClick: (ProductDomain) -> Unit = { },
     onDeletePoduct: (Long?) -> Unit = { },
-    onDialogConfirmClick: (Long?, BrandDomain) -> Unit = { p,b -> }
+    onDialogConfirmClick: (BrandDomain) -> Unit = { b -> }
 ) {
     var tabIndex by remember { mutableStateOf(0) }
 

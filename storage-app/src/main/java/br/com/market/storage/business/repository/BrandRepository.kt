@@ -26,8 +26,8 @@ class BrandRepository @Inject constructor(
         brandDAO.saveProductBrand(productBrand)
     }
 
-    fun findProductBrandsByProductId(productId: Long): Flow<List<ProductBrandDomain>> {
-        return brandDAO.finProductBrandsByProductId(productId)
+    fun findProductBrandsByProductId(productId: Long?): Flow<List<ProductBrandDomain>> {
+        return brandDAO.findProductBrandsByProductId(productId)
     }
 
 }

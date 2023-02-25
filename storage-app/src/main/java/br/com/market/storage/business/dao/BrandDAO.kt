@@ -5,11 +5,9 @@ import br.com.market.storage.business.dao.tuples.BrandTuple
 import br.com.market.storage.business.exceptions.InvalidStorageOperationException
 import br.com.market.storage.business.exceptions.NoResultException
 import br.com.market.storage.business.models.Brand
-import br.com.market.storage.business.models.Product
 import br.com.market.storage.business.models.ProductBrand
 import br.com.market.storage.ui.domains.ProductBrandDomain
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 
 @Dao
 abstract class BrandDAO {
@@ -30,7 +28,7 @@ abstract class BrandDAO {
                 "inner join brands b on pb.brand_id = b.id " +
                 "where p.id = :productId "
     )
-    abstract fun finProductBrandsByProductId(productId: Long): Flow<List<ProductBrandDomain>>
+    abstract fun findProductBrandsByProductId(productId: Long?): Flow<List<ProductBrandDomain>>
 
     @Query(
         "select b.id as brandId, " +

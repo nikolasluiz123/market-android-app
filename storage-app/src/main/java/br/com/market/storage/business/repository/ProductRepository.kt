@@ -40,9 +40,9 @@ class ProductRepository @Inject constructor(
 //        val brandsListNotSincronized = brandDAO.findAllBrandsNotSincronized().first()
 //    }
 
-    suspend fun save(productDomain: ProductDomain) {
+    suspend fun save(productDomain: ProductDomain): Long {
         val product = ProductMapper.toProductModel(productDomain)
-        saveProductBrandsLocal(product)
+        return saveProductBrandsLocal(product)
 
 //        val response = productWebClient.saveProduct(product, brands)
 //
@@ -67,8 +67,8 @@ class ProductRepository @Inject constructor(
 //        saveProductBrandsLocal(productSincronized, brandsSincronized)
 //    }
 
-    private suspend fun saveProductBrandsLocal(product: Product) {
-        productDAO.saveProduct(product)
+    private suspend fun saveProductBrandsLocal(product: Product): Long {
+        return productDAO.saveProduct(product)
 //        brandDAO.saveBrands(brands)
     }
 

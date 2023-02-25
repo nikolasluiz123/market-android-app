@@ -41,7 +41,11 @@ fun OutlinedTextFieldValidation(
     isError: Boolean = error.isNotEmpty(),
     trailingIcon: @Composable (() -> Unit)? = {
         if (error.isNotEmpty())
-            Icon(Icons.Default.Warning, "error", tint = MaterialTheme.colorScheme.error)
+            Icon(
+                Icons.Default.Warning,
+                "error",
+                tint = MaterialTheme.colorScheme.error
+            )
     },
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,

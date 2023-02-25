@@ -11,18 +11,19 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import br.com.market.storage.ui.domains.BrandDomain
 import br.com.market.storage.ui.domains.ProductBrandDomain
 import br.com.market.storage.ui.theme.*
 
 @Composable
 fun CardBrandItem(
     productBrandDomain: ProductBrandDomain,
-    onClick: () -> Unit = { }
+    onClick: (ProductBrandDomain) -> Unit = { }
 ) {
     Card(
         modifier = Modifier
             .fillMaxSize()
-            .clickable { onClick() },
+            .clickable { onClick(productBrandDomain) },
         elevation = CardDefaults.cardElevation(8.dp),
         colors = CardDefaults.cardColors(containerColor = colorCard)
     ) {

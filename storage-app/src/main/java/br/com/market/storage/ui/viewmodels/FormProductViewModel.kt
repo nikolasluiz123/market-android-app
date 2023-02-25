@@ -26,11 +26,11 @@ class FormProductViewModel @Inject constructor(
     private val _uiState: MutableStateFlow<FormProductUiState> = MutableStateFlow(FormProductUiState())
     val uiState get() = _uiState.asStateFlow()
 
-    private val productId = savedStateHandle.get<String>("productId")
+    private var productId = savedStateHandle.get<String>("productId")
 
     init {
-        updateProductFormInfos(productId)
-        updateProductBrandsInfos(productId)
+        updateProductFormInfos()
+        updateProductBrandsInfos()
 
         _uiState.update { currentState ->
             currentState.copy(
@@ -41,7 +41,15 @@ class FormProductViewModel @Inject constructor(
                 onBrandsChange = { _uiState.value = _uiState.value.copy(brands = _uiState.value.brands + it) },
                 onToggleSearch = { _uiState.value = _uiState.value.copy(openSearch = !_uiState.value.openSearch) },
                 onSearchChange = { _uiState.value = _uiState.value.copy(searchText = it) },
-                onToggleBrandDialog = { _uiState.value = _uiState.value.copy(openBrandDialog = !_uiState.value.openBrandDialog) },
+                onHideBrandDialog = { _uiState.value = _uiState.value.copy(openBrandDialog = false) },
+                onShowBrandDialog = { productBrandDomain ->
+                    _uiState.value = _uiState.value.copy(
+                        brandId = productBrandDomain?.brandId,
+                        brandName = productBrandDomain?.brandName ?: "",
+                        brandQtd = productBrandDomain?.count?.toString() ?: "",
+                        openBrandDialog = true
+                    )
+                },
                 onValidateProduct = {
                     var isValid = true
 
@@ -49,7 +57,7 @@ class FormProductViewModel @Inject constructor(
                         isValid = false
 
                         _uiState.value = _uiState.value.copy(
-                            productNameErrorMessage = "Nome do Produto é Obrigatório."
+                            productNameErrorMessage = "O nome do Produto é obrigatório."
                         )
                     }
 
@@ -57,7 +65,34 @@ class FormProductViewModel @Inject constructor(
                         isValid = false
 
                         _uiState.value = _uiState.value.copy(
-                            productImageErrorMessage = "Link da Imagem do Produto é Obrigatório."
+                            productImageErrorMessage = "O link da imagem do Produto é obrigatório."
+                        )
+                    }
+
+                    isValid
+                },
+                onValidateBrand = {
+                    var isValid = true
+
+                    if (_uiState.value.brandName.isBlank()) {
+                        isValid = false
+
+                        _uiState.value = _uiState.value.copy(
+                            brandNameErrorMessage = "O nome da Marca é obrigatório."
+                        )
+                    }
+
+                    if (_uiState.value.brandQtd.isBlank()) {
+                        isValid = false
+
+                        _uiState.value = _uiState.value.copy(
+                            qtdBrandErrorMessage = "A quantidade da Marca é obrigatória."
+                        )
+                    } else if (_uiState.value.brandQtd.toInt() <= 0) {
+                        isValid = false
+
+                        _uiState.value = _uiState.value.copy(
+                            qtdBrandErrorMessage = "A quantidade da Marca é inválida."
                         )
                     }
 
@@ -69,11 +104,12 @@ class FormProductViewModel @Inject constructor(
 
     fun saveProduct(productDomain: ProductDomain) {
         viewModelScope.launch {
-            productRepository.save(productDomain)
+            productId = productRepository.save(productDomain).toString()
+            updateProductBrandsInfos()
         }
     }
 
-    private fun updateProductFormInfos(productId: String?) {
+    private fun updateProductFormInfos() {
         if (productId != null) {
             val productDomainFlow = productRepository.findProductById(productId.toLongNavParam())
 
@@ -95,17 +131,15 @@ class FormProductViewModel @Inject constructor(
         }
     }
 
-    private fun updateProductBrandsInfos(productId: String?) {
+    private fun updateProductBrandsInfos() {
         if (productId != null) {
-            val productBrandDomainFlow = brandRepository.findProductBrandsByProductId(productId.toLongNavParam()!!)
+            val productBrandDomainFlow = brandRepository.findProductBrandsByProductId(productId.toLongNavParam())
 
             viewModelScope.launch {
                 productBrandDomainFlow.collect {
                     _uiState.value = _uiState.value.copy(brands = it)
                 }
             }
-        } else {
-            _uiState.value = _uiState.value.copy(brands = emptyList())
         }
     }
 
@@ -115,10 +149,10 @@ class FormProductViewModel @Inject constructor(
         }
     }
 
-    fun saveBrand(productId: Long?, brand: BrandDomain) {
+    fun saveBrand(brand: BrandDomain) {
         productId?.let {
             viewModelScope.launch {
-                brandRepository.saveBrand(productId, brand)
+                brandRepository.saveBrand(it.toLongNavParam()!!, brand)
             }
         }
     }
