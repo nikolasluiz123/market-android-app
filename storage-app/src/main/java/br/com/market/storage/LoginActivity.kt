@@ -22,7 +22,7 @@ import br.com.market.storage.ui.screens.FormProductScreen
 import br.com.market.storage.ui.screens.LoginScreen
 import br.com.market.storage.ui.screens.SplashScreen
 import br.com.market.storage.ui.screens.StorageProductsScreen
-import br.com.market.storage.ui.screens.navigation.AppDestinations
+import br.com.market.storage.ui.navigation.AppDestinations
 import br.com.market.storage.ui.theme.StorageTheme
 import br.com.market.storage.ui.viewmodels.FormProductViewModel
 import br.com.market.storage.ui.viewmodels.LoginViewModel

@@ -14,4 +14,16 @@
     <string name="label_adicionar">Adicionar</string>
     <string name="text_empty_state_default">Não há Registros Cadastrados</string>
     <string name="storage_products_screen_empty_state">Não há Produtos Cadastrados</string>
+    <string name="label_save">Salvar</string>
+    <string name="label_image">Imagem</string>
+    <string name="form_product_screen_tab_product_label_link_image">Link da Imagem</string>
+    <string name="form_product_screen_tab_product_label_name">Nome</string>
+    <string name="form_product_screen_tab_brand_empty_state_text">Não há Marcas para esse Produto</string>
+    <string name="card_brand_item_label_product">Produto</string>
+    <string name="card_brand_item_label_qtd">Quantidade</string>
+    <string name="dialog_button_cancel_label">Cancelar</string>
+    <string name="dialog_button_confirm_label">Confirmar</string>
+    <string name="brand_dialog_title">Criando uma Marca</string>
+    <string name="brand_dialog_label_name">Nome</string>
+    <string name="brand_dialog_label_qtd">Quantidade</string>
 </resources>

@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.storage.ui.components.AppBarTextField
-import br.com.market.storage.ui.components.FormBrand
+import br.com.market.storage.ui.components.TabBrand
 import br.com.market.storage.ui.components.FormProduct
 import br.com.market.storage.ui.domains.BrandDomain
 import br.com.market.storage.ui.domains.ProductDomain
@@ -232,7 +232,7 @@ fun FormProductScreen(
                         )
                     }
                     1 -> {
-                        FormBrand(
+                        TabBrand(
                             state = state,
                             onDialogConfirmClick = onDialogConfirmClick,
                             onMenuItemDeleteBrandClick = onMenuItemDeleteBrandClick

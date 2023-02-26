@@ -36,9 +36,7 @@ fun CardProductItem(product: ProductDomain, onClick: (Long) -> Unit = { }) {
 
             val (imageRef, textRef) = createRefs()
 
-            AsyncImage(
-                model = product.imageUrl,
-                contentDescription = null,
+            CoilImageViewer(
                 modifier = Modifier
                     .constrainAs(imageRef) {
                         start.linkTo(parent.start)
@@ -46,8 +44,7 @@ fun CardProductItem(product: ProductDomain, onClick: (Long) -> Unit = { }) {
                         top.linkTo(parent.top)
                     }
                     .height(100.dp),
-                placeholder = painterResource(id = R.drawable.placeholder),
-                contentScale = ContentScale.Crop
+                data = product.imageUrl
             )
 
             Text(
@@ -59,7 +56,6 @@ fun CardProductItem(product: ProductDomain, onClick: (Long) -> Unit = { }) {
                 },
                 text = product.name,
                 color = colorPrimary,
-                fontSize = 18.sp,
                 style = MaterialTheme.typography.titleMedium
             )
         }

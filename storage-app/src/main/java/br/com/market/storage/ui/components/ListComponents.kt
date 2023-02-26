@@ -25,6 +25,44 @@ import br.com.market.storage.ui.theme.CINZA_500
 import br.com.market.storage.ui.theme.StorageTheme
 
 @Composable
+fun <T> LazyVerticalListComponent(
+    modifier: Modifier = Modifier,
+    items: List<T>,
+    emptyStateText: String = stringResource(R.string.text_empty_state_default),
+    itemList: @Composable (T) -> Unit
+) {
+    ConstraintLayout(modifier = modifier) {
+        val (lazyColumnRef, emptyText) = createRefs()
+
+        if (items.isNotEmpty()) {
+            LazyVerticalList(
+                modifier = Modifier
+                    .constrainAs(lazyColumnRef) {
+                        start.linkTo(parent.start)
+                        top.linkTo(parent.top)
+                        end.linkTo(parent.end)
+                        bottom.linkTo(parent.bottom)
+                    }
+                    .fillMaxSize(),
+                items = items
+            ) {
+                itemList(it)
+            }
+        } else {
+            EmptyState(
+                modifier = Modifier.constrainAs(emptyText) {
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
+                },
+                text = emptyStateText
+            )
+        }
+    }
+}
+
+@Composable
 fun <T> LazyVerticalGridComponent(
     modifier: Modifier = Modifier,
     items: List<T>,

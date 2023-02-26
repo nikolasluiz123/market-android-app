@@ -1,13 +1,13 @@
-package br.com.market.storage.ui.components
+package br.com.market.storage.ui.screens.formproduct
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -16,8 +16,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import br.com.market.storage.R
+import br.com.market.storage.ui.components.OutlinedTextFieldValidation
 import br.com.market.storage.ui.domains.BrandDomain
-import br.com.market.storage.ui.domains.ProductDomain
 import br.com.market.storage.ui.states.FormProductUiState
 import br.com.market.storage.ui.theme.StorageTheme
 
@@ -26,7 +27,7 @@ fun BrandDialog(
     state: FormProductUiState = FormProductUiState(),
     onDissmissDialog: () -> Unit = { },
     onCancelClick: () -> Unit = { },
-    onConfirmClick: (BrandDomain) -> Unit  = { b -> }
+    onConfirmClick: (BrandDomain) -> Unit = { b -> }
 ) {
     Dialog(onDismissRequest = onDissmissDialog) {
         Card(
@@ -34,7 +35,8 @@ fun BrandDialog(
             colors = CardDefaults.cardColors(containerColor = Color.White)
         ) {
             ConstraintLayout(
-                Modifier.fillMaxWidth()) {
+                Modifier.fillMaxWidth()
+            ) {
                 val (titleRef, cancelButtonRef, confirmButtonRef,
                     inputNameRef, inputQdtRef) = createRefs()
 
@@ -44,7 +46,7 @@ fun BrandDialog(
                         end.linkTo(parent.end, margin = 8.dp)
                         top.linkTo(parent.top, margin = 8.dp)
                     },
-                    text = "Criando uma Marca",
+                    text = stringResource(R.string.brand_dialog_title),
                     style = MaterialTheme.typography.titleSmall
                 )
 
@@ -60,7 +62,7 @@ fun BrandDialog(
                     onValueChange = state.onBrandNameChange,
                     error = state.brandNameErrorMessage,
                     label = {
-                        Text(text = "Nome")
+                        Text(text = stringResource(R.string.brand_dialog_label_name))
                     },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text,
@@ -81,7 +83,7 @@ fun BrandDialog(
                     onValueChange = state.onBrandQtdChange,
                     error = state.qtdBrandErrorMessage,
                     label = {
-                        Text(text = "Quantidade")
+                        Text(text = stringResource(R.string.brand_dialog_label_qtd))
                     },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
@@ -100,7 +102,7 @@ fun BrandDialog(
                         onCancelClick()
                     }
                 ) {
-                    Text(text = "Cancelar")
+                    Text(text = stringResource(id = R.string.dialog_button_cancel_label))
                 }
 
                 TextButton(
@@ -122,7 +124,7 @@ fun BrandDialog(
                         }
                     }
                 ) {
-                    Text(text = "Confirmar")
+                    Text(text = stringResource(id = R.string.dialog_button_confirm_label))
                 }
 
             }

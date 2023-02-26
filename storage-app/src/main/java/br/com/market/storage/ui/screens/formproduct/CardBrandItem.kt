@@ -9,11 +9,14 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import br.com.market.storage.R
+import br.com.market.storage.ui.components.buttons.MenuIconButton
 import br.com.market.storage.ui.domains.ProductBrandDomain
 import br.com.market.storage.ui.theme.StorageTheme
 import br.com.market.storage.ui.theme.colorCard
@@ -53,7 +56,7 @@ fun CardBrandItem(
                     .padding(top = 8.dp, start = 8.dp, end = 8.dp),
                 style = MaterialTheme.typography.bodyMedium,
                 color = colorPrimary,
-                text = "Produto"
+                text = stringResource(R.string.card_brand_item_label_product)
             )
 
             Text(
@@ -86,7 +89,7 @@ fun CardBrandItem(
                     .padding(top = 8.dp, end = 8.dp),
                 style = MaterialTheme.typography.bodyMedium,
                 color = colorPrimary,
-                text = "Quantidade"
+                text = stringResource(R.string.card_brand_item_label_qtd)
             )
 
             Text(
@@ -116,27 +119,13 @@ fun CardBrandItem(
                         width = Dimension.fillToConstraints
 
                     }) {
-                var showMenu by remember { mutableStateOf(false) }
-                IconButton(
-                    onClick = { showMenu = !showMenu }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.MoreVert,
-                        contentDescription = null
-                    )
-                }
 
-                DropdownMenu(
-                    expanded = showMenu,
-                    onDismissRequest = { showMenu = false },
-                    offset = DpOffset(x = (-66).dp, y = (-10).dp)
-                ) {
+                MenuIconButton {
                     DropdownMenuItem(text = { Text("Deletar") }, onClick = {
                         onMenuItemDeleteBrandClick(productBrandDomain.brandId!!)
                     })
                 }
             }
-
         }
     }
 }

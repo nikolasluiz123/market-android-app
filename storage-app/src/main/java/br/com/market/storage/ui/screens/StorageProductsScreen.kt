@@ -7,7 +7,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.constraintlayout.compose.ConstraintLayout
 import br.com.market.storage.R
 import br.com.market.storage.sampledata.sampleProducts
 import br.com.market.storage.ui.components.*
