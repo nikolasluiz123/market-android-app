@@ -5,4 +5,13 @@
     <string name="login_screen_label_button_login">Login</string>
     <string name="login_screen_email_required_validation_message">O e-mail é obrigatório.</string>
     <string name="login_screen_password_required_validation_message">A senha é obrigatória.</string>
+    <string name="top_app_bar_text_field_hint">O que você procura?</string>
+    <string name="label_voltar">Voltar</string>
+    <string name="label_pesquisar">Pesquisar</string>
+    <string name="label_logout">Logout</string>
+    <string name="label_limpar_pesquisa">Limpar Pesquisa</string>
+    <string name="storage_products_screen_app_bar_title">Produtos em Estoque</string>
+    <string name="label_adicionar">Adicionar</string>
+    <string name="text_empty_state_default">Não há Registros Cadastrados</string>
+    <string name="storage_products_screen_empty_state">Não há Produtos Cadastrados</string>
 </resources>

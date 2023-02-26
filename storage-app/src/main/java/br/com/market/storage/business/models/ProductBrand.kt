@@ -1,9 +1,6 @@
 package br.com.market.storage.business.models
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import androidx.room.*
 
 @Entity(
     tableName = "products_brands",
@@ -18,7 +15,8 @@ import androidx.room.PrimaryKey
             parentColumns = ["id"],
             childColumns = ["brand_id"]
         )
-    ]
+    ],
+    indices = [Index(value = ["product_id"]), Index(value = ["brand_id"], unique = true)]
 )
 data class ProductBrand(
     @PrimaryKey(autoGenerate = true)

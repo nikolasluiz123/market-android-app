@@ -7,6 +7,7 @@ import br.com.market.storage.business.repository.BrandRepository
 import br.com.market.storage.business.repository.ProductRepository
 import br.com.market.storage.extensions.toLongNavParam
 import br.com.market.storage.ui.domains.BrandDomain
+import br.com.market.storage.ui.domains.ProductBrandDomain
 import br.com.market.storage.ui.domains.ProductDomain
 import br.com.market.storage.ui.states.FormProductUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -40,7 +41,7 @@ class FormProductViewModel @Inject constructor(
                 onBrandQtdChange = { _uiState.value = _uiState.value.copy(brandQtd = it) },
                 onBrandsChange = { _uiState.value = _uiState.value.copy(brands = _uiState.value.brands + it) },
                 onToggleSearch = { _uiState.value = _uiState.value.copy(openSearch = !_uiState.value.openSearch) },
-                onSearchChange = { _uiState.value = _uiState.value.copy(searchText = it) },
+                onSearchChange = ::updateProductBrandsInfos,
                 onHideBrandDialog = { _uiState.value = _uiState.value.copy(openBrandDialog = false) },
                 onShowBrandDialog = { productBrandDomain ->
                     _uiState.value = _uiState.value.copy(
@@ -109,40 +110,6 @@ class FormProductViewModel @Inject constructor(
         }
     }
 
-    private fun updateProductFormInfos() {
-        if (productId != null) {
-            val productDomainFlow = productRepository.findProductById(productId.toLongNavParam())
-
-            viewModelScope.launch {
-                productDomainFlow.collect {
-                    _uiState.value = _uiState.value.copy(
-                        productId = it?.id,
-                        productName = it?.name ?: "",
-                        productImage = it?.imageUrl ?: ""
-                    )
-                }
-            }
-        } else {
-            _uiState.value = _uiState.value.copy(
-                productId = null,
-                productName = "",
-                productImage = ""
-            )
-        }
-    }
-
-    private fun updateProductBrandsInfos() {
-        if (productId != null) {
-            val productBrandDomainFlow = brandRepository.findProductBrandsByProductId(productId.toLongNavParam())
-
-            viewModelScope.launch {
-                productBrandDomainFlow.collect {
-                    _uiState.value = _uiState.value.copy(brands = it)
-                }
-            }
-        }
-    }
-
     fun deleteProduct() {
         productId?.let {
             viewModelScope.launch {
@@ -165,7 +132,57 @@ class FormProductViewModel @Inject constructor(
         }
     }
 
-    fun blockNavToBrand(): Boolean {
+    fun permissionNavToBrand(): Boolean {
         return productId != null
+    }
+
+    private fun updateProductFormInfos() {
+        if (productId != null) {
+            val productDomainFlow = productRepository.findProductById(productId.toLongNavParam())
+
+            viewModelScope.launch {
+                productDomainFlow.collect {
+                    _uiState.value = _uiState.value.copy(
+                        productId = it?.id,
+                        productName = it?.name ?: "",
+                        productImage = it?.imageUrl ?: ""
+                    )
+                }
+            }
+        } else {
+            _uiState.value = _uiState.value.copy(
+                productId = null,
+                productName = "",
+                productImage = ""
+            )
+        }
+    }
+
+    private fun updateProductBrandsInfos(searchedText: String = "") {
+        if (productId != null) {
+            val productBrandDomainFlow = brandRepository.findProductBrandsByProductId(productId.toLongNavParam())
+
+            viewModelScope.launch {
+                productBrandDomainFlow.collect { productBrandDomainList ->
+                    val brands = if (searchedText.isNotEmpty()) {
+                        productBrandDomainList.filter { productBrandDomain ->
+                            containsProductNameOrBrandName(productBrandDomain, searchedText)
+                        }
+                    } else {
+                        productBrandDomainList
+                    }
+
+                    _uiState.value = _uiState.value.copy(
+                        searchText = searchedText,
+                        brands = brands
+                    )
+                }
+            }
+        }
+    }
+
+    private fun containsProductNameOrBrandName(product: ProductBrandDomain, searchedText: String): Boolean {
+        return product.productName.contains(searchedText, ignoreCase = true) ||
+                product.brandName.contains(searchedText, ignoreCase = true)
     }
 }

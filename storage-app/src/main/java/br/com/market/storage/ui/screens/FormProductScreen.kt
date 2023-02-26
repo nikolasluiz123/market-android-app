@@ -63,7 +63,7 @@ fun FormProductScreen(
         onMenuItemDeleteBrandClick = {
             viewModel.deleteBrand(it)
         },
-        permissionNavToBrand = viewModel::blockNavToBrand
+        permissionNavToBrand = viewModel::permissionNavToBrand
     )
 }
 
