@@ -3,9 +3,11 @@ package br.com.market.storage.business.repository
 import br.com.market.storage.business.dao.BrandDAO
 import br.com.market.storage.business.dao.ProductDAO
 import br.com.market.storage.business.mappers.ProductMapper
+import br.com.market.storage.business.models.Product
 import br.com.market.storage.extensions.toProductDomain
 import br.com.market.storage.extensions.toProductDomainList
 import br.com.market.storage.ui.domains.ProductDomain
+import br.com.market.storage.utils.TransformClassHelper
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -15,7 +17,9 @@ class ProductRepository @Inject constructor(
 ) {
 
     suspend fun save(productDomain: ProductDomain): Long {
-        val product = ProductMapper.toProductModel(productDomain)
+        val product = Product()
+        TransformClassHelper.domainToModel(domain = productDomain, model = product)
+
         return productDAO.saveProduct(product)
     }
 

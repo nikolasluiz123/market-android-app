@@ -1,8 +1,8 @@
 package br.com.market.storage.ui.domains
 
 data class ProductBrandDomain(
-    val brandId: Long? = null,
-    val productName: String = "",
-    val brandName: String = "",
-    val count: Int = 0
+    var brandId: Long? = null,
+    var productName: String = "",
+    var brandName: String = "",
+    var count: Int = 0
 )

@@ -41,20 +41,4 @@ object ProductMapper {
             imageUrl = productViewSDO.imageUrl
         )
     }
-
-    fun toProductModel(productDomain: ProductDomain): Product {
-        return Product(
-            id = productDomain.id,
-            name = productDomain.name,
-            imageUrl = productDomain.imageUrl
-        )
-    }
-
-    fun toProductDomain(product: Product) : ProductDomain {
-        return ProductDomain(
-            id = product.id,
-            name = product.name,
-            imageUrl = product.imageUrl
-        )
-    }
 }

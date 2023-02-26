@@ -20,12 +20,12 @@ import androidx.room.*
 )
 data class ProductBrand(
     @PrimaryKey(autoGenerate = true)
-    val id: Long? = null,
+    var id: Long? = null,
     @ColumnInfo(name = "product_id")
-    val productId: Long,
+    var productId: Long? = null,
     @ColumnInfo(name = "brand_id")
-    val brandId: Long,
-    val count: Int,
-    override val synchronized: Boolean = false,
-    override val active: Boolean = true
+    var brandId: Long? = null,
+    var count: Int = 0,
+    override var synchronized: Boolean = false,
+    override var active: Boolean = true
 ): BaseModel()

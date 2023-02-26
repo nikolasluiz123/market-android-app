@@ -20,8 +20,4 @@ object BrandMapper {
     fun toUpdateBrandSDO(brand: Brand): UpdateBrandSDO {
         return UpdateBrandSDO(id = brand.id, name = brand.name)
     }
-
-    fun toBrandModel(brandDomain: BrandDomain): Brand {
-        return Brand(id = brandDomain.id, name = brandDomain.name)
-    }
 }
