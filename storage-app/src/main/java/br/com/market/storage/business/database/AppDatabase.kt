@@ -9,7 +9,7 @@ import br.com.market.storage.business.models.Product
 import br.com.market.storage.business.models.ProductBrand
 
 @Database(
-    version = 4,
+    version = 5,
     entities = [Product::class, Brand::class, ProductBrand::class],
     exportSchema = true
 )
