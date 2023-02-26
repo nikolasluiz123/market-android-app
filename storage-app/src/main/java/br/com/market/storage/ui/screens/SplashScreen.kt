@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,10 +22,10 @@ import br.com.market.storage.ui.theme.colorSecondary
 import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen(onBeforeDelay: () -> Unit = { }) {
+fun SplashScreen(onAfterDelay: () -> Unit = { }) {
     LaunchedEffect(key1 = true) {
         delay(1000)
-        onBeforeDelay()
+        onAfterDelay()
     }
 
     Box(
