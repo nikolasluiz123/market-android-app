@@ -8,6 +8,6 @@ data class Brand(
     @PrimaryKey(autoGenerate = true)
     val id: Long? = null,
     val name: String = "",
-    override val sincronized: Boolean = false,
+    override val synchronized: Boolean = false,
     override val active: Boolean = true
 ): BaseModel()

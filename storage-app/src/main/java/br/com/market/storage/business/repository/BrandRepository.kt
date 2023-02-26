@@ -10,8 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class BrandRepository @Inject constructor(
-    private val brandDAO: BrandDAO,
-    private val brandWebClient: BrandWebClient
+    private val brandDAO: BrandDAO
 ) {
     suspend fun saveBrand(productId: Long, brandDomain: BrandDomain) {
         val brand = BrandMapper.toBrandModel(brandDomain)

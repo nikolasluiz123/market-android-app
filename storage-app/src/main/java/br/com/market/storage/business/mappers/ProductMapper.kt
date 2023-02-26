@@ -50,14 +50,6 @@ object ProductMapper {
         )
     }
 
-    fun toProductBrandModel(productDomain: ProductDomain, brandDomain: BrandDomain): ProductBrand {
-        return ProductBrand(
-            productId = productDomain.id!!,
-            brandId = brandDomain.id!!,
-            count = brandDomain.count
-        )
-    }
-
     fun toProductDomain(product: Product) : ProductDomain {
         return ProductDomain(
             id = product.id,

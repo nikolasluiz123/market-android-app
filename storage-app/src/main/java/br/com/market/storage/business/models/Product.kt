@@ -9,6 +9,6 @@ data class Product(
     val id: Long? = null,
     val name: String = "",
     val imageUrl: String = "",
-    override val sincronized: Boolean = false,
+    override val synchronized: Boolean = false,
     override val active: Boolean = true
 ) : BaseModel()

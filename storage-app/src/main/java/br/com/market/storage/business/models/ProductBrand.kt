@@ -26,6 +26,6 @@ data class ProductBrand(
     @ColumnInfo(name = "brand_id")
     val brandId: Long,
     val count: Int,
-    override val sincronized: Boolean = false,
+    override val synchronized: Boolean = false,
     override val active: Boolean = true
 ): BaseModel()
