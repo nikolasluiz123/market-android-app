@@ -18,7 +18,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.storage.ui.components.AppBarTextField
 import br.com.market.storage.ui.screens.formproduct.TabBrand
-import br.com.market.storage.ui.components.FormProduct
+import br.com.market.storage.ui.screens.formproduct.FormProduct
 import br.com.market.storage.ui.domains.BrandDomain
 import br.com.market.storage.ui.domains.ProductDomain
 import br.com.market.storage.ui.states.FormProductUiState

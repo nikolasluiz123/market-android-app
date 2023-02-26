@@ -11,6 +11,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import br.com.market.storage.R
 import br.com.market.storage.ui.components.CardBrandItem
 import br.com.market.storage.ui.components.LazyVerticalListComponent
+import br.com.market.storage.ui.components.buttons.FloatingActionButtonAdd
 import br.com.market.storage.ui.components.buttons.FloatingActionButtonSave
 import br.com.market.storage.ui.domains.BrandDomain
 import br.com.market.storage.ui.domains.ProductBrandDomain
@@ -26,7 +27,7 @@ fun TabBrand(
 ) {
     Scaffold(
         floatingActionButton = {
-            FloatingActionButtonSave { state.onShowBrandDialog(null) }
+            FloatingActionButtonAdd { state.onShowBrandDialog(null) }
         }
     ) {
         ConstraintLayout(
@@ -49,7 +50,7 @@ fun TabBrand(
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                     linkTo(top = parent.top, bottom = parent.bottom, bias = 0F)
-                },
+                }.fillMaxSize(),
                 items = state.brands,
                 emptyStateText = stringResource(R.string.form_product_screen_tab_brand_empty_state_text)
             ) { productBrandDomain ->

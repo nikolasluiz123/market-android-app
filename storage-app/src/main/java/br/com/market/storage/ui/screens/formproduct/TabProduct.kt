@@ -1,4 +1,4 @@
-package br.com.market.storage.ui.components
+package br.com.market.storage.ui.screens.formproduct
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -17,7 +17,9 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.storage.R
-import br.com.market.storage.ui.components.buttons.FloatingActionButtonAdd
+import br.com.market.storage.ui.components.CoilImageViewer
+import br.com.market.storage.ui.components.OutlinedTextFieldValidation
+import br.com.market.storage.ui.components.buttons.FloatingActionButtonSave
 import br.com.market.storage.ui.domains.ProductDomain
 import br.com.market.storage.ui.states.FormProductUiState
 import br.com.market.storage.ui.theme.StorageTheme
@@ -30,7 +32,7 @@ fun FormProduct(
 ) {
     Scaffold(
         floatingActionButton = {
-            FloatingActionButtonAdd {
+            FloatingActionButtonSave {
                 if (state.onValidateProduct()) {
                     onFABSaveProductClick(
                         ProductDomain(
