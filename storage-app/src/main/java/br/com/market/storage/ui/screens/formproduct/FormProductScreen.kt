@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.storage.ui.components.AppBarTextField
-import br.com.market.storage.ui.components.TabBrand
+import br.com.market.storage.ui.screens.formproduct.TabBrand
 import br.com.market.storage.ui.components.FormProduct
 import br.com.market.storage.ui.domains.BrandDomain
 import br.com.market.storage.ui.domains.ProductDomain
@@ -75,7 +75,7 @@ fun FormProductScreen(
     onLogoutClick: () -> Unit = { },
     onFABSaveProductClick: (ProductDomain) -> Unit = { },
     onDeletePoduct: () -> Unit = { },
-    onDialogConfirmClick: (BrandDomain) -> Unit = { b -> },
+    onDialogConfirmClick: (BrandDomain) -> Unit = { },
     onMenuItemDeleteBrandClick: (Long) -> Unit = { },
     permissionNavToBrand: () -> Boolean = { false }
 ) {

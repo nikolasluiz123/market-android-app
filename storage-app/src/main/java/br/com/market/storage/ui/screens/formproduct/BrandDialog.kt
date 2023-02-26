@@ -27,7 +27,7 @@ fun BrandDialog(
     state: FormProductUiState = FormProductUiState(),
     onDissmissDialog: () -> Unit = { },
     onCancelClick: () -> Unit = { },
-    onConfirmClick: (BrandDomain) -> Unit = { b -> }
+    onConfirmClick: (BrandDomain) -> Unit = { }
 ) {
     Dialog(onDismissRequest = onDissmissDialog) {
         Card(

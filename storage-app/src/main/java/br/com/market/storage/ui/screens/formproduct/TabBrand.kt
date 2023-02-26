@@ -1,4 +1,4 @@
-package br.com.market.storage.ui.components
+package br.com.market.storage.ui.screens.formproduct
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -9,10 +9,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import br.com.market.storage.R
+import br.com.market.storage.ui.components.CardBrandItem
+import br.com.market.storage.ui.components.LazyVerticalListComponent
 import br.com.market.storage.ui.components.buttons.FloatingActionButtonSave
 import br.com.market.storage.ui.domains.BrandDomain
 import br.com.market.storage.ui.domains.ProductBrandDomain
-import br.com.market.storage.ui.screens.formproduct.BrandDialog
 import br.com.market.storage.ui.states.FormProductUiState
 import br.com.market.storage.ui.theme.StorageTheme
 
@@ -20,7 +21,7 @@ import br.com.market.storage.ui.theme.StorageTheme
 @Composable
 fun TabBrand(
     state: FormProductUiState = FormProductUiState(),
-    onDialogConfirmClick: (BrandDomain) -> Unit = { b -> },
+    onDialogConfirmClick: (BrandDomain) -> Unit = { },
     onMenuItemDeleteBrandClick: (Long) -> Unit = { }
 ) {
     Scaffold(
