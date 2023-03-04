@@ -5,22 +5,19 @@ import br.com.market.storage.business.sdo.product.NewProductSDO
 import br.com.market.storage.business.sdo.product.ProductViewSDO
 import br.com.market.storage.business.sdo.product.UpdateProductSDO
 import retrofit2.Response
-import retrofit2.http.DELETE
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.PUT
+import retrofit2.http.*
 
 interface ProductService {
 
     @GET("product")
-    suspend fun findAllProducts(): List<ProductViewSDO>
+    suspend fun findAllProducts(@Header("Authorization") token: String): List<ProductViewSDO>
 
     @POST("product")
-    suspend fun saveProduct(productDTO: NewProductSDO): Response<Void>
+    suspend fun saveProduct(@Header("Authorization") token: String, productDTO: NewProductSDO): Response<Void>
 
     @PUT("product")
-    suspend fun updateProduct(productDTO: UpdateProductSDO): Response<Void>
+    suspend fun updateProduct(@Header("Authorization") token: String, productDTO: UpdateProductSDO): Response<Void>
 
     @DELETE("product")
-    suspend fun deleteProduct(productDTO: DeleteProductSDO): Response<Void>
+    suspend fun deleteProduct(@Header("Authorization") token: String, productDTO: DeleteProductSDO): Response<Void>
 }

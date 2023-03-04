@@ -10,15 +10,18 @@ import br.com.market.storage.ui.viewmodels.LoginViewModel
 fun NavGraphBuilder.loginGraph(
     navController: NavHostController
 ) {
-    composable(route = StorrageAppDestinations.Login.route) {
+    composable(route = StorageAppDestinations.Login.route) {
         val loginViewModel = hiltViewModel<LoginViewModel>()
 
         LoginScreen(
             viewModel = loginViewModel,
-            onLoginClick = {
+            onRegisterUserClick = {
+                navController.navigate(StorageAppDestinations.RegisterUser.route)
+            },
+            onAuthenticateSuccess = {
                 navController.inclusiveNavigation(
-                    originRoute = StorrageAppDestinations.Login.route,
-                    destinyRoute = StorrageAppDestinations.StorageProducts.route
+                    originRoute = StorageAppDestinations.Login.route,
+                    destinyRoute = StorageAppDestinations.StorageProducts.route
                 )
             }
         )

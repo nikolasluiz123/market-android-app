@@ -11,23 +11,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import br.com.market.storage.ui.navigation.StorageAppNavHost
-import br.com.market.storage.ui.screens.FormProductScreen
 import br.com.market.storage.ui.screens.LoginScreen
-import br.com.market.storage.ui.screens.SplashScreen
-import br.com.market.storage.ui.screens.StorageProductsScreen
-import br.com.market.storage.ui.navigation.StorrageAppDestinations
 import br.com.market.storage.ui.theme.StorageTheme
-import br.com.market.storage.ui.viewmodels.FormProductViewModel
-import br.com.market.storage.ui.viewmodels.LoginViewModel
-import br.com.market.storage.ui.viewmodels.StorageProductsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

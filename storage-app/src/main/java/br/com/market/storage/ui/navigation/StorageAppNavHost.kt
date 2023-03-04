@@ -12,11 +12,12 @@ fun StorageAppNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = StorrageAppDestinations.Splash.route,
+        startDestination = StorageAppDestinations.Splash.route,
         modifier = modifier
     ) {
         splashGraph(navController)
         loginGraph(navController)
+        registerUserGraph(navController)
         storageProductsGraph(navController)
         formProductGraph(navController)
     }

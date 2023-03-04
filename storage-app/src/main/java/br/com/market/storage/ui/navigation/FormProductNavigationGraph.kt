@@ -8,12 +8,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import br.com.market.storage.ui.screens.FormProductScreen
 import br.com.market.storage.ui.viewmodels.FormProductViewModel
+import br.com.market.storage.ui.viewmodels.LoginViewModel
 
 fun NavGraphBuilder.formProductGraph(
     navController: NavHostController
 ) {
     composable(
-        route = "${StorrageAppDestinations.FormProduct.route}?productId={productId}",
+        route = "${StorageAppDestinations.FormProduct.route}?productId={productId}",
         arguments = listOf(
             navArgument("productId") {
                 type = NavType.StringType
@@ -22,13 +23,16 @@ fun NavGraphBuilder.formProductGraph(
         )
     ) {
         val formProductViewModel = hiltViewModel<FormProductViewModel>()
+        val loginViewModel = hiltViewModel<LoginViewModel>()
 
         FormProductScreen(
             viewModel = formProductViewModel,
             onLogoutClick = {
+                loginViewModel.logout()
+
                 navController.inclusiveNavigation(
-                    originRoute = StorrageAppDestinations.StorageProducts.route,
-                    destinyRoute = StorrageAppDestinations.Login.route
+                    originRoute = StorageAppDestinations.StorageProducts.route,
+                    destinyRoute = StorageAppDestinations.Login.route
                 )
             },
             onBackClick = {

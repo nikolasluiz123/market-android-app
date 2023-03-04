@@ -2,6 +2,7 @@ package br.com.market.storage.injection
 
 import br.com.market.storage.business.services.BrandService
 import br.com.market.storage.business.services.ProductService
+import br.com.market.storage.business.services.UserService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,7 +20,7 @@ class RetrofitModule {
     fun provideRetrofit(): Retrofit {
         return Retrofit
             .Builder()
-            .baseUrl("http://localhost:8080/api/v1/")
+            .baseUrl("http://192.168.0.49:8080/api/v1/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
@@ -34,6 +35,12 @@ class RetrofitModule {
     @Singleton
     fun provideBrandService(retrofit: Retrofit): BrandService {
         return retrofit.create(BrandService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserService(retrofit: Retrofit): UserService {
+        return retrofit.create(UserService::class.java)
     }
 
 }

@@ -70,6 +70,13 @@ class FormProductViewModel @Inject constructor(
                         )
                     }
 
+                    if (isValid) {
+                        _uiState.value = _uiState.value.copy(
+                            productNameErrorMessage = "",
+                            productImageErrorMessage = "",
+                        )
+                    }
+
                     isValid
                 },
                 onValidateBrand = {
@@ -94,6 +101,13 @@ class FormProductViewModel @Inject constructor(
 
                         _uiState.value = _uiState.value.copy(
                             qtdBrandErrorMessage = "A quantidade da Marca é inválida."
+                        )
+                    }
+
+                    if (isValid) {
+                        _uiState.value = _uiState.value.copy(
+                            brandNameErrorMessage = "",
+                            qtdBrandErrorMessage = ""
                         )
                     }
 

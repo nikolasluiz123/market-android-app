@@ -3,6 +3,7 @@ package br.com.market.storage.ui.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.market.storage.business.repository.ProductRepository
+import br.com.market.storage.business.repository.UserRepository
 import br.com.market.storage.ui.domains.ProductDomain
 import br.com.market.storage.ui.states.StorageProductsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,7 +12,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class StorageProductsViewModel @Inject constructor(private val productRepository: ProductRepository) : ViewModel() {
+class StorageProductsViewModel @Inject constructor(
+    private val productRepository: ProductRepository,
+    private val userRepository: UserRepository
+) : ViewModel() {
 
     private val _uiState: MutableStateFlow<StorageProductsUiState> = MutableStateFlow(StorageProductsUiState())
     val uiState get() = _uiState.asStateFlow()

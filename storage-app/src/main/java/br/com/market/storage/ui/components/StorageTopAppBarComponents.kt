@@ -14,7 +14,7 @@ import br.com.market.storage.ui.theme.StorageTheme
 fun StorageTopAppBar(
     title: @Composable () -> Unit,
     onNavigationIconClick: () -> Unit,
-    onLogoutClick: () -> Unit,
+    onLogoutClick: () -> Unit = { },
     actions: @Composable () -> Unit = { },
     menuItems: @Composable () -> Unit = { },
     colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(
