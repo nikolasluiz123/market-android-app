@@ -10,5 +10,10 @@ data class RegisterUserUIState(
     val onNameChange: (String) -> Unit = { },
     val onEmailChange: (String) -> Unit = { },
     val onPasswordChange: (String) -> Unit = { },
-    val onValidate: () -> Boolean = { false }
-)
+    override val serverError: String = "",
+    override val showErrorDialog: Boolean = false,
+    override val onToggleErrorDialog: (String) -> Unit = { },
+    override val showLoading: Boolean = false,
+    override val onToggleLoading: () -> Unit = { },
+    override val onValidate: () -> Boolean = { false },
+) : BaseUiState()

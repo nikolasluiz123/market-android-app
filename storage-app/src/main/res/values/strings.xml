@@ -41,4 +41,11 @@
     <string name="register_user_socket_timeout_error_message">Ocorreu um erro inesperado durante o cadastro do usário, é possível que o serviço esteja sobrecarregado ou indisponível no momento. Para mais informações contate o suporte.</string>
     <string name="error_dialog_title">Erro</string>
     <string name="login_screen_label_button_register_user">Cadastrar-se</string>
+    <string name="register_user_screen_email_invalid_validation_message">O e-mail é inválido.</string>
+    <string name="form_product_screen_tab_product_required_product_name_message">O nome do Produto é obrigatório.</string>
+    <string name="form_product_screen_tab_product_required_product_image_message">O link da imagem do Produto é obrigatório.</string>
+    <string name="form_product_screen_tab_brand_required_brand_name_message">O nome da Marca é obrigatório.</string>
+    <string name="form_product_screen_tab_brand_required_brand_qtd_message">A quantidade da Marca é obrigatória.</string>
+    <string name="form_product_screen_tab_brand_invalid_brand_qtd_message">A quantidade da Marca é inválida.</string>
+    <string name="login_screen_email_invalid_validation_message">O e-mail é inválido.</string>
 </resources>

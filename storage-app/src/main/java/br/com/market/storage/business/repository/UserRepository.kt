@@ -19,7 +19,15 @@ class UserRepository @Inject constructor(
     }
 
     suspend fun authenticate(userDomain: UserDomain): AuthenticationResponse {
-        return userWebClient.authenticate(userDomain = userDomain)
+        val response = userWebClient.authenticate(userDomain = userDomain)
+
+        if (response.success) {
+            context.dataStore.edit { preferences ->
+                preferences[PreferencesKey.TOKEN] = response.token!!
+            }
+        }
+
+        return response
     }
 
     suspend fun logout() {

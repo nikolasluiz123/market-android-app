@@ -18,9 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.storage.R
-import br.com.market.storage.ui.components.OutlinedTextFieldPasswordValidation
-import br.com.market.storage.ui.components.OutlinedTextFieldValidation
-import br.com.market.storage.ui.components.StorageTopAppBar
+import br.com.market.storage.ui.components.*
 import br.com.market.storage.ui.domains.UserDomain
 import br.com.market.storage.ui.states.RegisterUserUIState
 import br.com.market.storage.ui.theme.StorageTheme
@@ -30,7 +28,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun RegisterUserScreen(
     viewModel: RegisterUserViewModel,
-    onNavigationClick: () -> Unit = { }
+    onNavigationClick: () -> Unit = { },
+    onRegisterSuccess: () -> Unit = { }
 ) {
     val state by viewModel.uiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
@@ -39,7 +38,16 @@ fun RegisterUserScreen(
         state = state,
         onButtonSaveClick = {
             coroutineScope.launch {
-                viewModel.registerUser(it)
+                state.onToggleLoading()
+                val response = viewModel.registerUser(it)
+
+                if (response.success) {
+                    onRegisterSuccess()
+                } else {
+                    state.onToggleErrorDialog(response.error ?: "")
+                }
+
+                state.onToggleLoading()
             }
         },
         onNavigationClick = onNavigationClick
@@ -72,13 +80,29 @@ fun RegisterUserScreen(
                 .fillMaxSize()
                 .padding(it)
         ) {
-            val (nameRef, emailRef, passwordRef, registerButtonRef) = createRefs()
+            val (nameRef, emailRef, passwordRef, registerButtonRef, loadingRef) = createRefs()
+
+            StorageAppLinearProgressIndicator(
+                state.showLoading,
+                Modifier
+                    .constrainAs(loadingRef) {
+                        start.linkTo(parent.start)
+                        top.linkTo(parent.top)
+                        end.linkTo(parent.end)
+                    }
+            )
+
+            DialogError(
+                show = state.showErrorDialog,
+                onDismissRequest = { state.onToggleErrorDialog("") },
+                errorMessage = state.serverError
+            )
 
             OutlinedTextFieldValidation(
                 modifier = Modifier.constrainAs(nameRef) {
                     start.linkTo(parent.start, margin = 8.dp)
                     end.linkTo(parent.end, margin = 8.dp)
-                    top.linkTo(parent.top, margin = 8.dp)
+                    top.linkTo(loadingRef.bottom, margin = 8.dp)
 
                     width = Dimension.fillToConstraints
                 },

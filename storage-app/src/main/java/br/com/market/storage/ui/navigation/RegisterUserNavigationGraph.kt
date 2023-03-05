@@ -14,7 +14,13 @@ fun NavGraphBuilder.registerUserGraph(
         val registerUserViewModel = hiltViewModel<RegisterUserViewModel>()
         RegisterUserScreen(
             viewModel = registerUserViewModel,
-            onNavigationClick = { navController.popBackStack() }
+            onNavigationClick = { navController.popBackStack() },
+            onRegisterSuccess = {
+                navController.inclusiveNavigation(
+                    originRoute = StorageAppDestinations.RegisterUser.route,
+                    destinyRoute = StorageAppDestinations.Login.route
+                )
+            }
         )
     }
 }

@@ -1,6 +1,7 @@
 package br.com.market.storage.ui.viewmodels
 
 import android.content.Context
+import android.util.Patterns.EMAIL_ADDRESS
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.market.storage.R
@@ -32,6 +33,13 @@ class RegisterUserViewModel @Inject constructor(
                 onNameChange = { _uiState.value = _uiState.value.copy(name = it) },
                 onEmailChange = { _uiState.value = _uiState.value.copy(email = it) },
                 onPasswordChange = { _uiState.value = _uiState.value.copy(password = it) },
+                onToggleErrorDialog = { errorMessage ->
+                    _uiState.value = _uiState.value.copy(
+                        showErrorDialog = !_uiState.value.showErrorDialog,
+                        serverError = errorMessage
+                    )
+                },
+                onToggleLoading = { _uiState.value = _uiState.value.copy(showLoading = !_uiState.value.showLoading) },
                 onValidate = {
                     var isValid = true
 
@@ -41,6 +49,10 @@ class RegisterUserViewModel @Inject constructor(
                         _uiState.value = _uiState.value.copy(
                             nameErrorMessage = context.getString(R.string.register_user_screen_name_required_validation_message)
                         )
+                    } else {
+                        _uiState.value = _uiState.value.copy(
+                            nameErrorMessage = ""
+                        )
                     }
 
                     if (_uiState.value.email.isBlank()) {
@@ -48,6 +60,16 @@ class RegisterUserViewModel @Inject constructor(
 
                         _uiState.value = _uiState.value.copy(
                             emailErrorMessage = context.getString(R.string.register_user_screen_email_required_validation_message)
+                        )
+                    } else if (!EMAIL_ADDRESS.matcher(_uiState.value.email).matches()){
+                        isValid = false
+
+                        _uiState.value = _uiState.value.copy(
+                            emailErrorMessage = context.getString(R.string.register_user_screen_email_invalid_validation_message)
+                        )
+                    } else {
+                        _uiState.value = _uiState.value.copy(
+                            emailErrorMessage = ""
                         )
                     }
 
@@ -57,12 +79,8 @@ class RegisterUserViewModel @Inject constructor(
                         _uiState.value = _uiState.value.copy(
                             passwordErrorMessage = context.getString(R.string.register_user_screen_password_required_validation_message)
                         )
-                    }
-
-                    if (isValid) {
+                    } else {
                         _uiState.value = _uiState.value.copy(
-                            nameErrorMessage = "",
-                            emailErrorMessage = "",
                             passwordErrorMessage = ""
                         )
                     }

@@ -1,6 +1,7 @@
 package br.com.market.storage.ui.viewmodels
 
 import android.content.Context
+import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.market.storage.R
@@ -46,6 +47,16 @@ class LoginViewModel @Inject constructor(
                         _uiState.value = _uiState.value.copy(
                             emailErrorMessage = context.getString(R.string.login_screen_email_required_validation_message)
                         )
+                    } else if (!Patterns.EMAIL_ADDRESS.matcher(_uiState.value.email).matches()) {
+                        isValid = false
+
+                        _uiState.value = _uiState.value.copy(
+                            emailErrorMessage = context.getString(R.string.login_screen_email_invalid_validation_message)
+                        )
+                    } else {
+                        _uiState.value = _uiState.value.copy(
+                            emailErrorMessage = ""
+                        )
                     }
 
                     if (_uiState.value.password.isBlank()) {
@@ -54,11 +65,8 @@ class LoginViewModel @Inject constructor(
                         _uiState.value = _uiState.value.copy(
                             passwordErrorMessage = context.getString(R.string.login_screen_password_required_validation_message)
                         )
-                    }
-
-                    if (isValid) {
+                    } else {
                         _uiState.value = _uiState.value.copy(
-                            emailErrorMessage = "",
                             passwordErrorMessage = ""
                         )
                     }

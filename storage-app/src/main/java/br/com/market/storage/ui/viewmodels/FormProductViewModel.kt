@@ -1,8 +1,10 @@
 package br.com.market.storage.ui.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import br.com.market.storage.R
 import br.com.market.storage.business.repository.BrandRepository
 import br.com.market.storage.business.repository.ProductRepository
 import br.com.market.storage.extensions.toLongNavParam
@@ -11,6 +13,7 @@ import br.com.market.storage.ui.domains.ProductBrandDomain
 import br.com.market.storage.ui.domains.ProductDomain
 import br.com.market.storage.ui.states.FormProductUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -19,6 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FormProductViewModel @Inject constructor(
+    @ApplicationContext context: Context,
     savedStateHandle: SavedStateHandle,
     private val productRepository: ProductRepository,
     private val brandRepository: BrandRepository
@@ -58,7 +62,7 @@ class FormProductViewModel @Inject constructor(
                         isValid = false
 
                         _uiState.value = _uiState.value.copy(
-                            productNameErrorMessage = "O nome do Produto é obrigatório."
+                            productNameErrorMessage = context.getString(R.string.form_product_screen_tab_product_required_product_name_message)
                         )
                     }
 
@@ -66,7 +70,7 @@ class FormProductViewModel @Inject constructor(
                         isValid = false
 
                         _uiState.value = _uiState.value.copy(
-                            productImageErrorMessage = "O link da imagem do Produto é obrigatório."
+                            productImageErrorMessage = context.getString(R.string.form_product_screen_tab_product_required_product_image_message)
                         )
                     }
 
@@ -86,7 +90,11 @@ class FormProductViewModel @Inject constructor(
                         isValid = false
 
                         _uiState.value = _uiState.value.copy(
-                            brandNameErrorMessage = "O nome da Marca é obrigatório."
+                            brandNameErrorMessage = context.getString(R.string.form_product_screen_tab_brand_required_brand_name_message)
+                        )
+                    } else {
+                        _uiState.value = _uiState.value.copy(
+                            brandNameErrorMessage = ""
                         )
                     }
 
@@ -94,19 +102,16 @@ class FormProductViewModel @Inject constructor(
                         isValid = false
 
                         _uiState.value = _uiState.value.copy(
-                            qtdBrandErrorMessage = "A quantidade da Marca é obrigatória."
+                            qtdBrandErrorMessage = context.getString(R.string.form_product_screen_tab_brand_required_brand_qtd_message)
                         )
                     } else if (_uiState.value.brandQtd.toInt() <= 0) {
                         isValid = false
 
                         _uiState.value = _uiState.value.copy(
-                            qtdBrandErrorMessage = "A quantidade da Marca é inválida."
+                            qtdBrandErrorMessage = context.getString(R.string.form_product_screen_tab_brand_invalid_brand_qtd_message)
                         )
-                    }
-
-                    if (isValid) {
+                    } else {
                         _uiState.value = _uiState.value.copy(
-                            brandNameErrorMessage = "",
                             qtdBrandErrorMessage = ""
                         )
                     }
