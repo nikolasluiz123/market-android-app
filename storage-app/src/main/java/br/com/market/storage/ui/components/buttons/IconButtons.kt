@@ -1,10 +1,7 @@
 package br.com.market.storage.ui.components.buttons
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.res.stringResource
@@ -43,6 +40,16 @@ fun IconButtonClose(onClick: () -> Unit) {
         Icon(
             imageVector = Icons.Default.Close,
             contentDescription = stringResource(R.string.label_limpar_pesquisa)
+        )
+    }
+}
+
+@Composable
+fun IconButtonDelete(onClick: () -> Unit) {
+    IconButton(onClick = onClick) {
+        Icon(
+            imageVector = Icons.Default.Delete,
+            contentDescription = stringResource(R.string.label_delete)
         )
     }
 }

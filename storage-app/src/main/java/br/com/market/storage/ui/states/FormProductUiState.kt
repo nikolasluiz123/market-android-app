@@ -27,5 +27,11 @@ data class FormProductUiState(
     val onBrandNameChange: (String) -> Unit = { },
     val onBrandQtdChange: (String) -> Unit = { },
     val onToggleSearch: () -> Unit = { },
-    val onSearchChange: (String) -> Unit = { }
-)
+    val onSearchChange: (String) -> Unit = { },
+    override val serverMessage: String = "",
+    override val showDialogMessage: Boolean = false,
+    override val onToggleMessageDialog: (String) -> Unit = { },
+    override val showLoading: Boolean = false,
+    override val onToggleLoading: () -> Unit = { },
+    override val onValidate: () -> Boolean = { false },
+): BaseUiState()

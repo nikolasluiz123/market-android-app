@@ -6,7 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import br.com.market.storage.ui.screens.FormProductScreen
+import br.com.market.storage.ui.screens.formproduct.FormProductScreen
 import br.com.market.storage.ui.viewmodels.FormProductViewModel
 import br.com.market.storage.ui.viewmodels.LoginViewModel
 
@@ -38,7 +38,7 @@ fun NavGraphBuilder.formProductGraph(
             onBackClick = {
                 navController.popBackStack()
             },
-            onAfterDeletePoduct = {
+            onAfterDeleteProduct = {
                 navController.popBackStack()
             }
         )

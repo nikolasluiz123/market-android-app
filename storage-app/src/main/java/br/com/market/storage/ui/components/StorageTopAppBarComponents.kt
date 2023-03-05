@@ -50,10 +50,14 @@ fun SearchableStorageTopAppBar(
     openSearch: Boolean,
     searchText: String,
     title: String,
+    showNavigationIcon: Boolean = false,
     onSearchChange: (String) -> Unit,
     onToggleSearch: () -> Unit,
     onLogoutClick: () -> Unit,
-    appBarTextFieldHint: String = stringResource(R.string.top_app_bar_text_field_hint)
+    onNavigationIconClick: () -> Unit = { },
+    appBarTextFieldHint: String = stringResource(R.string.top_app_bar_text_field_hint),
+    showOnlyCustomActions: Boolean = false,
+    customActions: @Composable () -> Unit = { }
 ) {
     StorageTopAppBar(
         title = {
@@ -65,14 +69,18 @@ fun SearchableStorageTopAppBar(
                 appBarTextFieldHint = appBarTextFieldHint
             )
         },
-        showNavigationIcon = openSearch,
-        onNavigationIconClick = onToggleSearch,
+        showNavigationIcon = openSearch || showNavigationIcon,
+        onNavigationIconClick = if (openSearch) onToggleSearch else onNavigationIconClick,
         actions = {
-            if (!openSearch) {
-                IconButtonSearch(onClick = onToggleSearch)
-            } else {
-                IconButtonClose { onSearchChange("") }
+            if (!showOnlyCustomActions) {
+                if (!openSearch) {
+                    IconButtonSearch(onClick = onToggleSearch)
+                } else {
+                    IconButtonClose { onSearchChange("") }
+                }
             }
+            
+            customActions()
         },
         onLogoutClick = onLogoutClick
     )

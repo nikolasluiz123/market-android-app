@@ -1,23 +1,39 @@
 package br.com.market.storage.business.webclient
 
-import br.com.market.storage.business.mappers.ProductMapper
-import br.com.market.storage.business.models.Brand
+import android.content.Context
+import br.com.market.storage.R
 import br.com.market.storage.business.models.Product
-import br.com.market.storage.business.sdo.product.DeleteProductSDO
+import br.com.market.storage.business.sdo.product.NewProductSDO
 import br.com.market.storage.business.services.ProductService
-import retrofit2.Response
+import br.com.market.storage.business.services.response.PersistenceResponse
+import dagger.hilt.android.qualifiers.ApplicationContext
+import retrofit2.http.POST
+import java.net.HttpURLConnection
+import java.net.SocketTimeoutException
 import javax.inject.Inject
 
-class ProductWebClient @Inject constructor(private val productService: ProductService) {
+class ProductWebClient @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val productService: ProductService
+) {
 
 //    suspend fun findAllProducts(): List<Product> {
 //        return productService.findAllProducts().map(ProductMapper::toProductModel)
 //    }
 
-//    suspend fun saveProduct(product: Product, brands: List<Brand>): Response<Void> {
-//        val newProductSDO = ProductMapper.toNewProductSDO(product, brands)
-//        return productService.saveProduct(newProductSDO)
-//    }
+    @POST("product")
+    suspend fun saveProduct(token: String, product: Product): PersistenceResponse {
+        return try {
+            val newProductSDO = NewProductSDO(name = product.name, imageUrl = product.imageUrl)
+            productService.saveProduct(token, newProductSDO).body()!!
+        } catch (e: SocketTimeoutException) {
+            PersistenceResponse(
+                code = HttpURLConnection.HTTP_INTERNAL_ERROR,
+                success = false,
+                error = context.getString(R.string.save_product_socket_timeout_error_message)
+            )
+        }
+    }
 //
 //    suspend fun updateProduct(product: Product, brands: List<Brand>): Response<Void> {
 //        val updateProductSDO = ProductMapper.toUpdateProductSDO(product, brands)

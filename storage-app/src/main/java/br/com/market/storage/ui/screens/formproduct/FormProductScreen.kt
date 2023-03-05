@@ -1,24 +1,27 @@
-package br.com.market.storage.ui.screens
+package br.com.market.storage.ui.screens.formproduct
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import br.com.market.storage.ui.components.AppBarTextField
-import br.com.market.storage.ui.screens.formproduct.TabBrand
-import br.com.market.storage.ui.screens.formproduct.FormProduct
+import br.com.market.storage.R
+import br.com.market.storage.ui.components.DialogMessage
+import br.com.market.storage.ui.components.SearchableStorageTopAppBar
+import br.com.market.storage.ui.components.StorageAppLinearProgressIndicator
+import br.com.market.storage.ui.components.buttons.IconButtonClose
+import br.com.market.storage.ui.components.buttons.IconButtonDelete
+import br.com.market.storage.ui.components.buttons.IconButtonSearch
 import br.com.market.storage.ui.domains.BrandDomain
 import br.com.market.storage.ui.domains.ProductDomain
 import br.com.market.storage.ui.states.FormProductUiState
@@ -31,26 +34,37 @@ fun FormProductScreen(
     viewModel: FormProductViewModel,
     onBackClick: () -> Unit = { },
     onLogoutClick: () -> Unit = { },
-    onAfterDeletePoduct: () -> Unit = { }
+    onAfterDeleteProduct: () -> Unit = { }
 ) {
     val state by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
     FormProductScreen(
         state = state,
         onBackClick = onBackClick,
         onLogoutClick = onLogoutClick,
         onFABSaveProductClick = {
-            viewModel.saveProduct(it)
-            Toast.makeText(
-                context,
-                "Produto Salvo com Sucesso.",
-                Toast.LENGTH_LONG
-            ).show()
+            coroutineScope.launch {
+                state.onToggleLoading()
+                val response = viewModel.saveProduct(it)
+                if (response.success) {
+                    Toast.makeText(
+                        context,
+                        "Produto Salvo com Sucesso.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else {
+                    state.onToggleMessageDialog(response.error ?: "")
+                }
+                Log.i("teste", "showLoading: ${state.showLoading}")
+                state.onToggleLoading()
+                Log.i("teste", "showLoading: ${state.showLoading}")
+            }
         },
         onDeletePoduct = {
             viewModel.deleteProduct()
-            onAfterDeletePoduct()
+            onAfterDeleteProduct()
         },
         onDialogConfirmClick = { brand ->
             viewModel.saveBrand(brand)
@@ -82,87 +96,27 @@ fun FormProductScreen(
     var tabIndex by remember { mutableStateOf(0) }
 
     Scaffold(topBar = {
-        TopAppBar(
-            title = {
-                if (state.openSearch) {
-                    AppBarTextField(
-                        value = state.searchText,
-                        onValueChange = state.onSearchChange,
-                        hint = "O que você procura?"
-                    )
-                } else {
-                    val appBarTitle = state.productId?.let { "Alterando ${state.productName}" } ?: "Cadastrando um Produto"
-                    Text(text = appBarTitle, style = MaterialTheme.typography.titleMedium)
-                }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.secondary,
-                titleContentColor = Color.White,
-                actionIconContentColor = Color.White,
-                navigationIconContentColor = Color.White
-            ),
-            navigationIcon = {
-                IconButton(onClick = {
-                    if (state.openSearch) {
-                        state.onToggleSearch()
-                    } else {
-                        onBackClick()
-                    }
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Voltar"
-                    )
-                }
-            },
-            actions = {
+        SearchableStorageTopAppBar(
+            openSearch = state.openSearch,
+            searchText = state.searchText,
+            title = state.productId?.let {
+                stringResource(R.string.form_product_screen_top_app_bar_title_update, state.productName)
+            } ?: stringResource(R.string.form_product_screen_top_app_bar_title_register),
+            onSearchChange = state.onSearchChange,
+            onToggleSearch = state.onToggleSearch,
+            onLogoutClick = onLogoutClick,
+            onNavigationIconClick = onBackClick,
+            showNavigationIcon = true,
+            showOnlyCustomActions = true,
+            customActions = {
                 if (!state.openSearch) {
-                    if (tabIndex == 0) {
-
-                        if (state.productId != null) {
-                            IconButton(onClick = onDeletePoduct) {
-                                Icon(imageVector = Icons.Default.Delete, contentDescription = null)
-                            }
-                        }
-
-                        var showMenu by remember { mutableStateOf(false) }
-
-                        IconButton(onClick = { showMenu = !showMenu }) {
-                            Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
-                        }
-
-                        DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
-                            DropdownMenuItem(text = { Text("Logout") }, onClick = onLogoutClick)
-                        }
-
-                    } else {
-                        if (state.brands.isNotEmpty()) {
-                            IconButton(onClick = state.onToggleSearch) {
-                                Icon(
-                                    imageVector = Icons.Default.Search,
-                                    contentDescription = "Pesquisar"
-                                )
-                            }
-                        }
-
-                        var showMenu by remember { mutableStateOf(false) }
-
-                        IconButton(onClick = { showMenu = !showMenu }) {
-                            Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
-                        }
-
-                        DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
-                            DropdownMenuItem(text = { Text("Logout") }, onClick = onLogoutClick)
-                        }
-
+                    if (tabIndex == 0 && state.productId != null) {
+                        IconButtonDelete(onDeletePoduct)
+                    } else if (state.brands.isNotEmpty()) {
+                        IconButtonSearch(state.onToggleSearch)
                     }
                 } else {
-                    IconButton(onClick = { state.onSearchChange("") }) {
-                        Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = "Limpar Pesquisa"
-                        )
-                    }
+                    IconButtonClose { state.onSearchChange("") }
                 }
             }
         )
@@ -172,15 +126,32 @@ fun FormProductScreen(
                 .fillMaxSize()
                 .padding(it)
         ) {
-            val (tabRowRef, horizontalPagerRef) = createRefs()
+            val (tabRowRef, horizontalPagerRef, loadingRef) = createRefs()
             val tabTitles = listOf("Produto", "Marca")
             val pagerState = rememberPagerState()
             val coroutineScope = rememberCoroutineScope()
 
+            StorageAppLinearProgressIndicator(
+                state.showLoading,
+                Modifier
+                    .constrainAs(loadingRef) {
+                        start.linkTo(parent.start)
+                        top.linkTo(parent.top)
+                        end.linkTo(parent.end)
+                    }
+            )
+
+            DialogMessage(
+                title = stringResource(R.string.warning_dialog_title),
+                show = state.showDialogMessage,
+                onDismissRequest = { state.onToggleMessageDialog("") },
+                message = state.serverMessage
+            )
+
             TabRow(
                 modifier = Modifier.constrainAs(tabRowRef) {
                     start.linkTo(parent.start)
-                    top.linkTo(parent.top)
+                    top.linkTo(loadingRef.bottom)
                     end.linkTo(parent.end)
                 },
                 selectedTabIndex = tabIndex

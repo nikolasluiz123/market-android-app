@@ -14,13 +14,12 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.storage.R
-import br.com.market.storage.ui.components.DialogError
+import br.com.market.storage.ui.components.DialogMessage
 import br.com.market.storage.ui.components.OutlinedTextFieldPasswordValidation
 import br.com.market.storage.ui.components.OutlinedTextFieldValidation
 import br.com.market.storage.ui.components.StorageAppLinearProgressIndicator
 import br.com.market.storage.ui.domains.UserDomain
 import br.com.market.storage.ui.states.LoginUiState
-import br.com.market.storage.ui.theme.BLUE_900
 import br.com.market.storage.ui.theme.StorageTheme
 import br.com.market.storage.ui.theme.colorPrimary
 import br.com.market.storage.ui.viewmodels.LoginViewModel
@@ -45,7 +44,7 @@ fun LoginScreen(
                 if (response.success) {
                     onAuthenticateSuccess()
                 } else {
-                    state.onToggleErrorDialog(response.error ?: "")
+                    state.onToggleMessageDialog(response.error ?: "")
                 }
                 state.onToggleLoading()
             }
@@ -86,10 +85,11 @@ fun LoginScreen(
         ConstraintLayout(Modifier.fillMaxWidth()) {
             val (emailRef, passwordRef, loginButtonRef, registerButtonRef) = createRefs()
 
-            DialogError(
-                show = state.showErrorDialog,
-                onDismissRequest = { state.onToggleErrorDialog("") },
-                errorMessage = state.serverError
+            DialogMessage(
+                title =  stringResource(R.string.error_dialog_title),
+                show = state.showDialogMessage,
+                onDismissRequest = { state.onToggleMessageDialog("") },
+                message = state.serverMessage
             )
 
             OutlinedTextFieldValidation(

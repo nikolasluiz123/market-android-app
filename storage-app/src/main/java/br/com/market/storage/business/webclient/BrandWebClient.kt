@@ -1,10 +1,6 @@
 package br.com.market.storage.business.webclient
 
 import br.com.market.storage.business.services.BrandService
-import br.com.market.storage.business.dto.ProductBrandDTO
-import br.com.market.storage.business.mappers.BrandMapper
-import br.com.market.storage.business.sdo.brand.UpdateStorageSDO
-import retrofit2.Response
 import javax.inject.Inject
 
 class BrandWebClient @Inject constructor(private val brandService: BrandService) {

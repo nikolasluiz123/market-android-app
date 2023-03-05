@@ -3,7 +3,6 @@ package br.com.market.storage.ui.viewmodels
 import android.content.Context
 import android.util.Patterns.EMAIL_ADDRESS
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import br.com.market.storage.R
 import br.com.market.storage.business.repository.UserRepository
 import br.com.market.storage.business.services.response.AuthenticationResponse
@@ -14,7 +13,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,10 +31,10 @@ class RegisterUserViewModel @Inject constructor(
                 onNameChange = { _uiState.value = _uiState.value.copy(name = it) },
                 onEmailChange = { _uiState.value = _uiState.value.copy(email = it) },
                 onPasswordChange = { _uiState.value = _uiState.value.copy(password = it) },
-                onToggleErrorDialog = { errorMessage ->
+                onToggleMessageDialog = { errorMessage ->
                     _uiState.value = _uiState.value.copy(
-                        showErrorDialog = !_uiState.value.showErrorDialog,
-                        serverError = errorMessage
+                        showDialogMessage = !_uiState.value.showDialogMessage,
+                        serverMessage = errorMessage
                     )
                 },
                 onToggleLoading = { _uiState.value = _uiState.value.copy(showLoading = !_uiState.value.showLoading) },

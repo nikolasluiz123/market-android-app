@@ -31,10 +31,10 @@ class LoginViewModel @Inject constructor(
             currentState.copy(
                 onEmailChange = { _uiState.value = _uiState.value.copy(email = it) },
                 onPasswordChange = { _uiState.value = _uiState.value.copy(password = it) },
-                onToggleErrorDialog = { errorMessage ->
+                onToggleMessageDialog = { errorMessage ->
                     _uiState.value = _uiState.value.copy(
-                        showErrorDialog = !_uiState.value.showErrorDialog,
-                        serverError = errorMessage
+                        showDialogMessage = !_uiState.value.showDialogMessage,
+                        serverMessage = errorMessage
                     )
                 },
                 onToggleLoading = { _uiState.value = _uiState.value.copy(showLoading = !_uiState.value.showLoading) },

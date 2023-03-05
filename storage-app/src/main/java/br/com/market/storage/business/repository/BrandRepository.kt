@@ -1,10 +1,8 @@
 package br.com.market.storage.business.repository
 
 import br.com.market.storage.business.dao.BrandDAO
-import br.com.market.storage.business.mappers.BrandMapper
 import br.com.market.storage.business.models.Brand
 import br.com.market.storage.business.models.ProductBrand
-import br.com.market.storage.business.webclient.BrandWebClient
 import br.com.market.storage.ui.domains.BrandDomain
 import br.com.market.storage.ui.domains.ProductBrandDomain
 import br.com.market.storage.utils.TransformClassHelper

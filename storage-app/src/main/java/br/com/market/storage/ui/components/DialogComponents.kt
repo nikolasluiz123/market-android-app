@@ -12,10 +12,11 @@ import br.com.market.storage.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DialogError(
+fun DialogMessage(
+    title: String,
     show: Boolean,
     onDismissRequest: () -> Unit,
-    errorMessage: String
+    message: String
 ) {
     if (show) {
         AlertDialog(
@@ -36,7 +37,7 @@ fun DialogError(
 
                             width = Dimension.fillToConstraints
                         },
-                        text = stringResource(R.string.error_dialog_title),
+                        text = title,
                         style = MaterialTheme.typography.headlineMedium
                     )
 
@@ -49,7 +50,7 @@ fun DialogError(
 
                             width = Dimension.fillToConstraints
                         },
-                        text = errorMessage,
+                        text = message,
                         style = MaterialTheme.typography.bodyMedium
                     )
 

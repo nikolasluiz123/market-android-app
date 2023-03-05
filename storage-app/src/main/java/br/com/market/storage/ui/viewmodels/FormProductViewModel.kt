@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import br.com.market.storage.R
 import br.com.market.storage.business.repository.BrandRepository
 import br.com.market.storage.business.repository.ProductRepository
+import br.com.market.storage.business.services.response.PersistenceResponse
 import br.com.market.storage.extensions.toLongNavParam
 import br.com.market.storage.ui.domains.BrandDomain
 import br.com.market.storage.ui.domains.ProductBrandDomain
@@ -55,6 +56,13 @@ class FormProductViewModel @Inject constructor(
                         openBrandDialog = true
                     )
                 },
+                onToggleMessageDialog = { errorMessage ->
+                    _uiState.value = _uiState.value.copy(
+                        showDialogMessage = !_uiState.value.showDialogMessage,
+                        serverMessage = errorMessage
+                    )
+                },
+                onToggleLoading = { _uiState.value = _uiState.value.copy(showLoading = !_uiState.value.showLoading) },
                 onValidateProduct = {
                     var isValid = true
 
@@ -64,6 +72,10 @@ class FormProductViewModel @Inject constructor(
                         _uiState.value = _uiState.value.copy(
                             productNameErrorMessage = context.getString(R.string.form_product_screen_tab_product_required_product_name_message)
                         )
+                    } else {
+                        _uiState.value = _uiState.value.copy(
+                            productNameErrorMessage = ""
+                        )
                     }
 
                     if (_uiState.value.productImage.isBlank()) {
@@ -71,6 +83,10 @@ class FormProductViewModel @Inject constructor(
 
                         _uiState.value = _uiState.value.copy(
                             productImageErrorMessage = context.getString(R.string.form_product_screen_tab_product_required_product_image_message)
+                        )
+                    } else {
+                        _uiState.value = _uiState.value.copy(
+                            productImageErrorMessage = ""
                         )
                     }
 
@@ -122,11 +138,13 @@ class FormProductViewModel @Inject constructor(
         }
     }
 
-    fun saveProduct(productDomain: ProductDomain) {
-        viewModelScope.launch {
-            productId = productRepository.save(productDomain).toString()
-            updateProductBrandsInfos()
-        }
+    suspend fun saveProduct(productDomain: ProductDomain): PersistenceResponse {
+        val response = productRepository.save(productDomain)
+        productId = response.idLocal.toString()
+
+//        updateProductBrandsInfos()
+
+        return response
     }
 
     fun deleteProduct() {

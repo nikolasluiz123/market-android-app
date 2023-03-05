@@ -44,7 +44,7 @@ fun RegisterUserScreen(
                 if (response.success) {
                     onRegisterSuccess()
                 } else {
-                    state.onToggleErrorDialog(response.error ?: "")
+                    state.onToggleMessageDialog(response.error ?: "")
                 }
 
                 state.onToggleLoading()
@@ -92,10 +92,11 @@ fun RegisterUserScreen(
                     }
             )
 
-            DialogError(
-                show = state.showErrorDialog,
-                onDismissRequest = { state.onToggleErrorDialog("") },
-                errorMessage = state.serverError
+            DialogMessage(
+                title = stringResource(R.string.error_dialog_title),
+                show = state.showDialogMessage,
+                onDismissRequest = { state.onToggleMessageDialog("") },
+                message = state.serverMessage
             )
 
             OutlinedTextFieldValidation(

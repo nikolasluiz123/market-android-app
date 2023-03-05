@@ -7,9 +7,9 @@ data class LoginUiState(
     val passwordErrorMessage: String = "",
     val onEmailChange: (String) -> Unit = {},
     val onPasswordChange: (String) -> Unit = {},
-    override val serverError: String = "",
-    override val showErrorDialog: Boolean = false,
-    override val onToggleErrorDialog: (String) -> Unit = { },
+    override val serverMessage: String = "",
+    override val showDialogMessage: Boolean = false,
+    override val onToggleMessageDialog: (String) -> Unit = { },
     override val showLoading: Boolean = false,
     override val onToggleLoading: () -> Unit = { },
     override val onValidate: () -> Boolean = { false }

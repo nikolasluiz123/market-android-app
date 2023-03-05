@@ -48,4 +48,9 @@
     <string name="form_product_screen_tab_brand_required_brand_qtd_message">A quantidade da Marca é obrigatória.</string>
     <string name="form_product_screen_tab_brand_invalid_brand_qtd_message">A quantidade da Marca é inválida.</string>
     <string name="login_screen_email_invalid_validation_message">O e-mail é inválido.</string>
+    <string name="save_product_socket_timeout_error_message">O produto foi salvo apenas localmente, você deve sincronizar seu dispositivo quando tiver acesso a internet.</string>
+    <string name="label_delete">Deletar</string>
+    <string name="form_product_screen_top_app_bar_title_register">Cadastrando um Produto</string>
+    <string name="form_product_screen_top_app_bar_title_update">Alterando %s</string>
+    <string name="warning_dialog_title">Aviso</string>
 </resources>

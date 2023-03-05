@@ -23,9 +23,11 @@ class ViewModelModule {
     @Provides
     @ViewModelScoped
     fun provideProductRepository(
+        @ApplicationContext context: Context,
         productDAO: ProductDAO,
+        productWebClient: ProductWebClient,
         brandDAO: BrandDAO
-    ): ProductRepository = ProductRepository(productDAO, brandDAO)
+    ): ProductRepository = ProductRepository(context, productDAO, productWebClient, brandDAO)
 
     @Provides
     @ViewModelScoped
