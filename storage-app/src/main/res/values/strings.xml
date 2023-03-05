@@ -39,4 +39,6 @@
     <string name="dialog_button_ok_label">OK</string>
     <string name="authenticate_user_socket_timeout_error_message">Ocorreu um erro inesperado durante a autenticação, é possível que o serviço esteja sobrecarregado ou indisponível no momento. Para mais informações contate o suporte.</string>
     <string name="register_user_socket_timeout_error_message">Ocorreu um erro inesperado durante o cadastro do usário, é possível que o serviço esteja sobrecarregado ou indisponível no momento. Para mais informações contate o suporte.</string>
+    <string name="error_dialog_title">Erro</string>
+    <string name="login_screen_label_button_register_user">Cadastrar-se</string>
 </resources>

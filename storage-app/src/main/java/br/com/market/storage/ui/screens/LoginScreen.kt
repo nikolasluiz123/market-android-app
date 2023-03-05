@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.storage.R
+import br.com.market.storage.ui.components.DialogError
 import br.com.market.storage.ui.components.OutlinedTextFieldPasswordValidation
 import br.com.market.storage.ui.components.OutlinedTextFieldValidation
 import br.com.market.storage.ui.components.StorageAppLinearProgressIndicator
@@ -85,55 +86,11 @@ fun LoginScreen(
         ConstraintLayout(Modifier.fillMaxWidth()) {
             val (emailRef, passwordRef, loginButtonRef, registerButtonRef) = createRefs()
 
-            if (state.showErrorDialog) {
-                AlertDialog(
-                    modifier = Modifier.fillMaxWidth(),
-                    onDismissRequest = { state.onToggleErrorDialog("") }
-                ) {
-                    Surface(
-                        shape = MaterialTheme.shapes.large
-                    ) {
-                        ConstraintLayout {
-                            val (titleRef, messageRef, okButtonRef) = createRefs()
-
-                            Text(
-                                modifier = Modifier.constrainAs(titleRef) {
-                                    start.linkTo(parent.start, margin = 16.dp)
-                                    end.linkTo(parent.end)
-                                    top.linkTo(parent.top, margin = 8.dp)
-
-                                    width = Dimension.fillToConstraints
-                                },
-                                text = "Erro",
-                                style = MaterialTheme.typography.headlineMedium
-                            )
-
-                            Text(
-                                modifier = Modifier.constrainAs(messageRef) {
-                                    start.linkTo(parent.start, margin = 16.dp)
-                                    end.linkTo(parent.end, margin = 16.dp)
-                                    top.linkTo(titleRef.bottom, margin = 8.dp)
-                                    bottom.linkTo(okButtonRef.top)
-
-                                    width = Dimension.fillToConstraints
-                                },
-                                text = state.serverError,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-
-                            TextButton(
-                                modifier = Modifier.constrainAs(okButtonRef) {
-                                    end.linkTo(parent.end)
-                                    bottom.linkTo(parent.bottom)
-                                },
-                                onClick = { state.onToggleErrorDialog("") }
-                            ) {
-                                Text(text = stringResource(id = R.string.dialog_button_ok_label))
-                            }
-                        }
-                    }
-                }
-            }
+            DialogError(
+                show = state.showErrorDialog,
+                onDismissRequest = { state.onToggleErrorDialog("") },
+                errorMessage = state.serverError
+            )
 
             OutlinedTextFieldValidation(
                 modifier = Modifier.constrainAs(emailRef) {
@@ -188,7 +145,7 @@ fun LoginScreen(
                 border = BorderStroke(1.0.dp, colorPrimary),
                 enabled = !state.showLoading
             ) {
-                Text(text = "Cadastrar-se")
+                Text(text = stringResource(R.string.login_screen_label_button_register_user))
             }
 
             Button(
