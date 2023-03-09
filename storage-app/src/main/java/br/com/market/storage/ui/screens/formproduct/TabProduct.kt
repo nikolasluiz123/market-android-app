@@ -28,20 +28,12 @@ import br.com.market.storage.ui.theme.StorageTheme
 @Composable
 fun FormProduct(
     state: FormProductUiState = FormProductUiState(),
-    onFABSaveProductClick: (ProductDomain) -> Unit = { }
+    onFABSaveProductClick: () -> Unit = { }
 ) {
     Scaffold(
         floatingActionButton = {
             FloatingActionButtonSave {
-                if (state.onValidateProduct()) {
-                    onFABSaveProductClick(
-                        ProductDomain(
-                            id = state.productId,
-                            name = state.productName,
-                            imageUrl = state.productImage
-                        )
-                    )
-                }
+               onFABSaveProductClick()
             }
         }
     ) {

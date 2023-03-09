@@ -24,7 +24,9 @@ fun StorageTopAppBar(
         navigationIconContentColor = Color.White
     ),
     showNavigationIcon: Boolean = true,
-    showMenuWithLogout: Boolean = true
+    showMenuWithLogout: Boolean = true,
+    registersCountToSync: Long = 0,
+    onSynchronizeClick: () -> Unit = { }
 ) {
     TopAppBar(
         title = title,
@@ -38,7 +40,12 @@ fun StorageTopAppBar(
             actions()
 
             if (showMenuWithLogout) {
-                MenuIconButtonWithLogout(onLogoutClick = onLogoutClick, menuItens = menuItems)
+                MenuIconButtonWithDefaultActions(
+                    onLogoutClick = onLogoutClick,
+                    menuItens = menuItems,
+                    registersCountToSinc = registersCountToSync,
+                    onSynchronizeClick = onSynchronizeClick
+                )
             }
         }
     )
@@ -57,6 +64,8 @@ fun SearchableStorageTopAppBar(
     onNavigationIconClick: () -> Unit = { },
     appBarTextFieldHint: String = stringResource(R.string.top_app_bar_text_field_hint),
     showOnlyCustomActions: Boolean = false,
+    registersCountToSync: Long = 0,
+    onSynchronizeClick: () -> Unit = { },
     customActions: @Composable () -> Unit = { }
 ) {
     StorageTopAppBar(
@@ -82,7 +91,9 @@ fun SearchableStorageTopAppBar(
             
             customActions()
         },
-        onLogoutClick = onLogoutClick
+        onLogoutClick = onLogoutClick,
+        registersCountToSync = registersCountToSync,
+        onSynchronizeClick = onSynchronizeClick
     )
 }
 

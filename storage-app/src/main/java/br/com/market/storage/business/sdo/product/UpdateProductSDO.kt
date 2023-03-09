@@ -1,10 +1,8 @@
 package br.com.market.storage.business.sdo.product
 
-import br.com.market.storage.business.sdo.brand.UpdateBrandSDO
-
 data class UpdateProductSDO(
-    var id: Long?,
+    var id: Long? = null,
+    var idLocal: Long? = null,
     var name: String,
-    var imageUrl: String = "",
-    var brands: List<UpdateBrandSDO>
+    var imageUrl: String = ""
 )

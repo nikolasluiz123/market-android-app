@@ -38,4 +38,12 @@ abstract class ProductDAO {
     @Query("delete from products where id = :productId")
     abstract suspend fun deleteProduct(productId: Long?)
 
+    @Query("select (select count(*) from products where synchronized = false) + " +
+            "(select count(*) from brands where synchronized = false) + " +
+            "(select count(*) from products_brands where synchronized = false)")
+    abstract fun findCountOfNotSynchronizedRegisters(): Flow<Long>
+
+    @Query("select * from products where synchronized = false")
+    abstract suspend fun findAllProductsNotSynchronized(): List<Product>
+
 }

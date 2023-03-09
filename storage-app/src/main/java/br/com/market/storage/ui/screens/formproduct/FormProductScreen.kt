@@ -1,6 +1,5 @@
 package br.com.market.storage.ui.screens.formproduct
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.storage.R
+import br.com.market.storage.extensions.navParamToLong
 import br.com.market.storage.ui.components.DialogMessage
 import br.com.market.storage.ui.components.SearchableStorageTopAppBar
 import br.com.market.storage.ui.components.StorageAppLinearProgressIndicator
@@ -42,24 +42,31 @@ fun FormProductScreen(
 
     FormProductScreen(
         state = state,
+        isEditing = !viewModel.productId.isNullOrEmpty(),
         onBackClick = onBackClick,
         onLogoutClick = onLogoutClick,
         onFABSaveProductClick = {
             coroutineScope.launch {
-                state.onToggleLoading()
-                val response = viewModel.saveProduct(it)
-                if (response.success) {
-                    Toast.makeText(
-                        context,
-                        "Produto Salvo com Sucesso.",
-                        Toast.LENGTH_LONG
-                    ).show()
-                } else {
-                    state.onToggleMessageDialog(response.error ?: "")
+                if (state.onValidateProduct()) {
+
+                    state.onToggleLoading()
+
+                    val productDomain = ProductDomain(
+                        id = viewModel.productId.navParamToLong(),
+                        name = state.productName,
+                        imageUrl = state.productImage
+                    )
+
+                    val response = viewModel.saveProduct(productDomain)
+
+                    if (response.success) {
+                        Toast.makeText(context, "Produto Salvo com Sucesso.", Toast.LENGTH_LONG).show()
+                    } else {
+                        state.onToggleMessageDialog(response.error ?: "")
+                    }
+
+                    state.onToggleLoading()
                 }
-                Log.i("teste", "showLoading: ${state.showLoading}")
-                state.onToggleLoading()
-                Log.i("teste", "showLoading: ${state.showLoading}")
             }
         },
         onDeletePoduct = {
@@ -85,9 +92,10 @@ fun FormProductScreen(
 @Composable
 fun FormProductScreen(
     state: FormProductUiState = FormProductUiState(),
+    isEditing: Boolean = false,
     onBackClick: () -> Unit = { },
     onLogoutClick: () -> Unit = { },
-    onFABSaveProductClick: (ProductDomain) -> Unit = { },
+    onFABSaveProductClick: () -> Unit = { },
     onDeletePoduct: () -> Unit = { },
     onDialogConfirmClick: (BrandDomain) -> Unit = { },
     onMenuItemDeleteBrandClick: (Long) -> Unit = { },
@@ -99,9 +107,8 @@ fun FormProductScreen(
         SearchableStorageTopAppBar(
             openSearch = state.openSearch,
             searchText = state.searchText,
-            title = state.productId?.let {
-                stringResource(R.string.form_product_screen_top_app_bar_title_update, state.productName)
-            } ?: stringResource(R.string.form_product_screen_top_app_bar_title_register),
+            title = if (isEditing) stringResource(R.string.form_product_screen_top_app_bar_title_update)
+            else stringResource(R.string.form_product_screen_top_app_bar_title_register),
             onSearchChange = state.onSearchChange,
             onToggleSearch = state.onToggleSearch,
             onLogoutClick = onLogoutClick,
@@ -110,7 +117,7 @@ fun FormProductScreen(
             showOnlyCustomActions = true,
             customActions = {
                 if (!state.openSearch) {
-                    if (tabIndex == 0 && state.productId != null) {
+                    if (tabIndex == 0 && isEditing) {
                         IconButtonDelete(onDeletePoduct)
                     } else if (state.brands.isNotEmpty()) {
                         IconButtonSearch(state.onToggleSearch)

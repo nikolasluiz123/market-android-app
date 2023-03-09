@@ -8,7 +8,7 @@ import br.com.market.storage.R
 import br.com.market.storage.business.repository.BrandRepository
 import br.com.market.storage.business.repository.ProductRepository
 import br.com.market.storage.business.services.response.PersistenceResponse
-import br.com.market.storage.extensions.toLongNavParam
+import br.com.market.storage.extensions.navParamToLong
 import br.com.market.storage.ui.domains.BrandDomain
 import br.com.market.storage.ui.domains.ProductBrandDomain
 import br.com.market.storage.ui.domains.ProductDomain
@@ -21,6 +21,16 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel da tela de manutenção do estoque.
+ *
+ * @property productRepository
+ * @property brandRepository
+ * @constructor
+ *
+ * @param context
+ * @param savedStateHandle
+ */
 @HiltViewModel
 class FormProductViewModel @Inject constructor(
     @ApplicationContext context: Context,
@@ -32,7 +42,8 @@ class FormProductViewModel @Inject constructor(
     private val _uiState: MutableStateFlow<FormProductUiState> = MutableStateFlow(FormProductUiState())
     val uiState get() = _uiState.asStateFlow()
 
-    private var productId = savedStateHandle.get<String>("productId")
+    var productId = savedStateHandle.get<String>("productId")
+        private set
 
     init {
         updateProductFormInfos()
@@ -150,7 +161,7 @@ class FormProductViewModel @Inject constructor(
     fun deleteProduct() {
         productId?.let {
             viewModelScope.launch {
-                productRepository.deleteProduct(it.toLongNavParam())
+                productRepository.deleteProduct(it.navParamToLong())
             }
         }
     }
@@ -164,7 +175,7 @@ class FormProductViewModel @Inject constructor(
     fun saveBrand(brand: BrandDomain) {
         productId?.let {
             viewModelScope.launch {
-                brandRepository.saveBrand(it.toLongNavParam(), brand)
+                brandRepository.saveBrand(it.navParamToLong(), brand)
             }
         }
     }
@@ -175,12 +186,11 @@ class FormProductViewModel @Inject constructor(
 
     private fun updateProductFormInfos() {
         if (productId != null) {
-            val productDomainFlow = productRepository.findProductById(productId.toLongNavParam())
+            val productDomainFlow = productRepository.findProductById(productId.navParamToLong())
 
             viewModelScope.launch {
                 productDomainFlow.collect {
                     _uiState.value = _uiState.value.copy(
-                        productId = it?.id,
                         productName = it?.name ?: "",
                         productImage = it?.imageUrl ?: ""
                     )
@@ -188,7 +198,6 @@ class FormProductViewModel @Inject constructor(
             }
         } else {
             _uiState.value = _uiState.value.copy(
-                productId = null,
                 productName = "",
                 productImage = ""
             )
@@ -197,7 +206,7 @@ class FormProductViewModel @Inject constructor(
 
     private fun updateProductBrandsInfos(searchedText: String = "") {
         if (productId != null) {
-            val productBrandDomainFlow = brandRepository.findProductBrandsByProductId(productId.toLongNavParam())
+            val productBrandDomainFlow = brandRepository.findProductBrandsByProductId(productId.navParamToLong())
 
             viewModelScope.launch {
                 productBrandDomainFlow.collect { productBrandDomainList ->

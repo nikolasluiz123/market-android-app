@@ -6,13 +6,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.res.stringResource
 import br.com.market.storage.R
+import br.com.market.storage.ui.theme.colorPrimary
 
 @Composable
 fun IconButtonArrowBack(onClick: () -> Unit = { }) {
     IconButton(onClick = onClick) {
         Icon(
-            imageVector = Icons.Default.ArrowBack,
-            contentDescription = stringResource(R.string.label_voltar)
+            imageVector = Icons.Default.ArrowBack, contentDescription = stringResource(R.string.label_voltar)
         )
     }
 }
@@ -21,8 +21,7 @@ fun IconButtonArrowBack(onClick: () -> Unit = { }) {
 fun IconButtonSearch(onClick: () -> Unit) {
     IconButton(onClick = onClick) {
         Icon(
-            imageVector = Icons.Default.Search,
-            contentDescription = stringResource(R.string.label_pesquisar)
+            imageVector = Icons.Default.Search, contentDescription = stringResource(R.string.label_pesquisar)
         )
     }
 }
@@ -38,8 +37,7 @@ fun IconButtonMoreVert(onClick: () -> Unit) {
 fun IconButtonClose(onClick: () -> Unit) {
     IconButton(onClick = onClick) {
         Icon(
-            imageVector = Icons.Default.Close,
-            contentDescription = stringResource(R.string.label_limpar_pesquisa)
+            imageVector = Icons.Default.Close, contentDescription = stringResource(R.string.label_limpar_pesquisa)
         )
     }
 }
@@ -48,8 +46,7 @@ fun IconButtonClose(onClick: () -> Unit) {
 fun IconButtonDelete(onClick: () -> Unit) {
     IconButton(onClick = onClick) {
         Icon(
-            imageVector = Icons.Default.Delete,
-            contentDescription = stringResource(R.string.label_delete)
+            imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.label_delete)
         )
     }
 }
@@ -67,13 +64,27 @@ fun MenuIconButton(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MenuIconButtonWithLogout(
+fun MenuIconButtonWithDefaultActions(
     onLogoutClick: () -> Unit,
-    menuItens: @Composable () -> Unit = { }
+    menuItens: @Composable () -> Unit = { },
+    registersCountToSinc: Long = 0,
+    onSynchronizeClick: () -> Unit = { }
 ) {
     MenuIconButton {
+        DropdownMenuItem(
+            text = {
+                BadgedBox(badge = { Badge(containerColor = colorPrimary) { Text(registersCountToSinc.toString()) } }) {
+                    Text(stringResource(R.string.label_sinc))
+                }
+            },
+            onClick = onSynchronizeClick,
+            enabled = registersCountToSinc > 0
+        )
+
         DropdownMenuItem(text = { Text(stringResource(R.string.label_logout)) }, onClick = onLogoutClick)
-        menuItens()
     }
+
+    menuItens()
 }

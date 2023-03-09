@@ -48,9 +48,14 @@
     <string name="form_product_screen_tab_brand_required_brand_qtd_message">A quantidade da Marca é obrigatória.</string>
     <string name="form_product_screen_tab_brand_invalid_brand_qtd_message">A quantidade da Marca é inválida.</string>
     <string name="login_screen_email_invalid_validation_message">O e-mail é inválido.</string>
-    <string name="save_product_socket_timeout_error_message">O produto foi salvo apenas localmente, você deve sincronizar seu dispositivo quando tiver acesso a internet.</string>
+    <string name="save_product_service_down_error_message">Houve algum problema para conectar-se com o serviço, o produto foi salvo apenas localmente, você deve sincronizar os dados.</string>
+    <string name="save_product_no_connection_error_message">Você está sem conexão com a internet, o produto foi salvo apenas localmente. Quando puder se conectar, sincronize os dados.</string>
     <string name="label_delete">Deletar</string>
     <string name="form_product_screen_top_app_bar_title_register">Cadastrando um Produto</string>
-    <string name="form_product_screen_top_app_bar_title_update">Alterando %s</string>
+    <string name="form_product_screen_top_app_bar_title_update">Alterando um Produto</string>
     <string name="warning_dialog_title">Aviso</string>
+    <string name="label_sinc">Sincronizar</string>
+    <string name="sync_products_service_error_message">Não foi possível sincronizar os produtos pois o serviço demorou a responder, tente novamente mais tarde, se o erro persistir, contate o suporte.</string>
+    <string name="sync_products_conection_error_message">Não foi possível sincronizar os produtos, você precisa estar conectado a internet para realizar essa operação.</string>
+    <string name="label_sync">Sincronizando...</string>
 </resources>

@@ -3,7 +3,6 @@ package br.com.market.storage.ui.states
 import br.com.market.storage.ui.domains.ProductBrandDomain
 
 data class FormProductUiState(
-    val productId: Long? = null,
     val productName: String = "",
     val productImage: String = "",
     val brandId: Long? = null,

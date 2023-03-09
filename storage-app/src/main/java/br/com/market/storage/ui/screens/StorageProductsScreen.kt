@@ -1,10 +1,12 @@
 package br.com.market.storage.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.market.storage.R
@@ -14,6 +16,7 @@ import br.com.market.storage.ui.components.buttons.FloatingActionButtonAdd
 import br.com.market.storage.ui.states.StorageProductsUiState
 import br.com.market.storage.ui.theme.StorageTheme
 import br.com.market.storage.ui.viewmodels.StorageProductsViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun StorageProductsScreen(
@@ -23,11 +26,29 @@ fun StorageProductsScreen(
     onFABNewProductClick: () -> Unit = { }
 ) {
     val state by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+
     StorageProductsScreen(
         state = state,
         onItemClick = onItemClick,
         onLogoutClick = onLogoutClick,
-        onFABNewProductClick = onFABNewProductClick
+        onFABNewProductClick = onFABNewProductClick,
+        onSynchronizeClick = {
+            coroutineScope.launch {
+                state.onToggleLoading()
+
+                val response = viewModel.syncProducts()
+
+                state.onToggleLoading()
+
+                if (response.success) {
+                    Toast.makeText(context, "Produtos Sincronizados com Sucesso.", Toast.LENGTH_LONG).show()
+                } else {
+                    state.onToggleMessageDialog(response.error ?: "")
+                }
+            }
+        }
     )
 }
 
@@ -37,7 +58,8 @@ fun StorageProductsScreen(
     state: StorageProductsUiState = StorageProductsUiState(),
     onItemClick: (Long) -> Unit = { },
     onLogoutClick: () -> Unit = { },
-    onFABNewProductClick: () -> Unit = { }
+    onFABNewProductClick: () -> Unit = { },
+    onSynchronizeClick: () -> Unit = { }
 ) {
     Scaffold(
         topBar = {
@@ -47,11 +69,20 @@ fun StorageProductsScreen(
                 title = stringResource(R.string.storage_products_screen_app_bar_title),
                 onSearchChange = state.onSearchChange,
                 onToggleSearch = state.onToggleSearch,
-                onLogoutClick = onLogoutClick
+                onLogoutClick = onLogoutClick,
+                registersCountToSync = state.registersCountToSync,
+                onSynchronizeClick = onSynchronizeClick
             )
         },
         floatingActionButton = { FloatingActionButtonAdd(onClick = onFABNewProductClick) }
     ) { paddingValues ->
+
+        DialogMessage(
+            title = stringResource(R.string.error_dialog_title),
+            show = state.showDialogMessage,
+            onDismissRequest = { state.onToggleMessageDialog("") },
+            message = state.serverMessage
+        )
 
         LazyVerticalGridComponent(
             modifier = Modifier
@@ -66,6 +97,11 @@ fun StorageProductsScreen(
                 onClick = onItemClick
             )
         }
+
+        StorageAppCircularBlockUIProgressIndicator(
+            state.showLoading,
+            stringResource(R.string.label_sync)
+        )
     }
 }
 
