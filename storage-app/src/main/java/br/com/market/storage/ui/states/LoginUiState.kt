@@ -1,5 +1,17 @@
 package br.com.market.storage.ui.states
 
+/**
+ * Classe de estado da tela de login
+ *
+ * @property email E-mail digitado
+ * @property password Senha digitada
+ * @property emailErrorMessage Mensagem de erro do e-mail
+ * @property passwordErrorMessage Mensagem de erro da senha
+ * @property onEmailChange Listener executado quando o e-mail é alterado no campo de texto
+ * @property onPasswordChange Listener executado quando a senha é altarada no campo de texto
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 data class LoginUiState(
     val email: String = "",
     val password: String = "",

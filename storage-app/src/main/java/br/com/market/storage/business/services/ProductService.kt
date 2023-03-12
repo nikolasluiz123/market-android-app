@@ -73,8 +73,7 @@ interface ProductService {
     suspend fun deleteProducts(@Header("Authorization") token: String, @Body productSDOs: List<DeleteProductSDO>): Response<MarketServiceResponse>
 
     /**
-     * Função que sincroniza as informações dos produtos, enviando quem foi criado e quem foi alterado
-     * para a base remota.
+     * Função que sincronizar as informações locais e remotas referentes ao produto.
      *
      * @param token Token recebido ao logar que é usado em todas as requisições ao serviço.
      * @param productSDOs Lista de produtos com os atributos que o serviço precisa.

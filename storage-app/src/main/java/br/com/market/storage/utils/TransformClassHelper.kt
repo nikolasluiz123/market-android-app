@@ -3,8 +3,24 @@ package br.com.market.storage.utils
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KProperty
 
+/**
+ * Classe que pode ser utilizada para transferir dados de um
+ * objeto para outro, sendo de diferentes tipos ou não.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 object TransformClassHelper {
 
+    /**
+     * Função para converter um modelo e domínio.
+     *
+     * @param M Tipo do Modelo
+     * @param D Tipo do Domínio
+     * @param model Objeto modelo
+     * @param domain Objeto domínio
+     *
+     * @author Nikolas Luiz Schmitt
+     */
     fun <M: Any, D: Any> modelToDomain(model: M, domain: D) {
         val modelClass = model::class
         val domainClass = domain::class
@@ -22,6 +38,16 @@ object TransformClassHelper {
         }
     }
 
+    /**
+     * Função para converter um domínio em modelo
+     *
+     * @param M Tipo do Modelo
+     * @param D Tipo do Domínio
+     * @param model Objeto modelo
+     * @param domain Objeto domínio
+     *
+     * @author Nikolas Luiz Schmitt
+     */
     fun <M : Any, D: Any> domainToModel(domain: D, model: M) {
         val domainClass = domain::class
         val modelClass = model::class

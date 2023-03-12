@@ -25,6 +25,15 @@ import br.com.market.storage.ui.theme.colorPrimary
 import br.com.market.storage.ui.viewmodels.LoginViewModel
 import kotlinx.coroutines.launch
 
+/**
+ * Tela de login stateless.
+ *
+ * @param viewModel ViewModel da tela de login.
+ * @param onAuthenticateSuccess Listener executado ao logar com sucesso.
+ * @param onRegisterUserClick Listener executado ao clicar no botão de cadastrar-se.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel,
@@ -36,7 +45,7 @@ fun LoginScreen(
 
     LoginScreen(
         state = state,
-        onExecuteLoginOperations = {
+        onAuthenticate = {
             coroutineScope.launch {
                 state.onToggleLoading()
                 val response = viewModel.authenticate(it)
@@ -53,11 +62,19 @@ fun LoginScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+/**
+ * Tela de login statefull.
+ *
+ * @param state Estado da tela de login.
+ * @param onAuthenticate Listener executado ao clicar em login.
+ * @param onRegisterUserClick Listener executado ao clicar em cadastrar-se
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Composable
 fun LoginScreen(
     state: LoginUiState = LoginUiState(),
-    onExecuteLoginOperations: (UserDomain) -> Unit = {},
+    onAuthenticate: (UserDomain) -> Unit = {},
     onRegisterUserClick: () -> Unit = { }
 ) {
     ConstraintLayout(
@@ -159,7 +176,7 @@ fun LoginScreen(
                 },
                 onClick = {
                     if (state.onValidate()) {
-                        onExecuteLoginOperations(UserDomain(email = state.email, password = state.password))
+                        onAuthenticate(UserDomain(email = state.email, password = state.password))
                     }
                 },
                 enabled = !state.showLoading

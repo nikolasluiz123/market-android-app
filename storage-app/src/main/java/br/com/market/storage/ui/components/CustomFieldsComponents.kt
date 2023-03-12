@@ -32,6 +32,18 @@ import androidx.compose.ui.unit.sp
 import br.com.market.storage.R
 import br.com.market.storage.ui.theme.StorageTheme
 
+/**
+ * Um campo de texto que pode ser posto dentro da AppBar.
+ *
+ * @param value Value digitado.
+ * @param modifier Modificadores do componente.
+ * @param onValueChange Listener para alteração do valor.
+ * @param hint Dica do que deve ser inserido no campo.
+ * @param keyboardOptions Opções de teclado.
+ * @param keyboardActions Ações específicas que deverão ser exibidas no teclado.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBarTextField(
@@ -44,24 +56,20 @@ fun AppBarTextField(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val textStyle = MaterialTheme.typography.bodyLarge
-    // make sure there is no background color in the decoration box
     val colors = TextFieldDefaults.textFieldColors(containerColor = Color.Unspecified, textColor = Color.White)
 
-    // If color is not provided via the text style, use content color as a default
     val textColor = Color.White
     val mergedTextStyle = textStyle.merge(TextStyle(color = textColor, lineHeight = 50.sp))
 
-    // request focus when this composable is first initialized
     val focusRequester = FocusRequester()
     SideEffect {
         focusRequester.requestFocus()
     }
 
-    // set the correct cursor position when this composable is first initialized
     var textFieldValue by remember {
         mutableStateOf(TextFieldValue(value, TextRange(value.length)))
     }
-    textFieldValue = textFieldValue.copy(text = value) // make sure to keep the value updated
+    textFieldValue = textFieldValue.copy(text = value)
 
     CompositionLocalProvider(
         LocalTextSelectionColors provides LocalTextSelectionColors.current
@@ -70,7 +78,6 @@ fun AppBarTextField(
             value = textFieldValue,
             onValueChange = {
                 textFieldValue = it
-                // remove newlines to avoid strange layout issues, and also because singleLine=true
                 onValueChange(it.text.replace("\n", ""))
             },
             modifier = modifier
@@ -90,7 +97,6 @@ fun AppBarTextField(
             interactionSource = interactionSource,
             singleLine = true,
             decorationBox = { innerTextField ->
-                // places text field with placeholder and appropriate bottom padding
                 TextFieldDefaults.TextFieldDecorationBox(
                     value = value,
                     visualTransformation = VisualTransformation.None,
@@ -108,6 +114,32 @@ fun AppBarTextField(
     }
 }
 
+/**
+ * Campo de texto com comportamentos necessários para feedback de validações.
+ *
+ * @param value Valor digitado.
+ * @param onValueChange Listener executado ao alterar o valor.
+ * @param modifier Modificadores do componente.
+ * @param enabled Flag para habilitar ou desabilitar o campo.
+ * @param readOnly Flag para bloquear a escrita.
+ * @param textStyle Estilo do texto.
+ * @param label Label do campo.
+ * @param placeholder Texto exibido como dica.
+ * @param leadingIcon Ícone a direita.
+ * @param error Mensagem de erro de alguma validação.
+ * @param isError Flag que indica se o campo está com erro.
+ * @param trailingIcon Ícone a esquerda do campo.
+ * @param visualTransformation Alterações visuais da saída do texto digitado no campo.
+ * @param keyboardOptions Opções de teclado.
+ * @param keyboardActions Ações específicas que deverão ser exibidas no teclado.
+ * @param singleLine Flag que indica se o campo se expandirá ao digitar mais que uma linha.
+ * @param maxLines Número máximo de linhas que o campo poderá se expandir. Caso single line seja false.
+ * @param interactionSource Personalização da aparência ou comportamento do campo dependendo do estado.
+ * @param shape Forma do campo.
+ * @param colors Cores do campo.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OutlinedTextFieldValidation(
@@ -173,6 +205,18 @@ fun OutlinedTextFieldValidation(
     )
 }
 
+/**
+ * Campo de texto com comportamento padrão para manipulação de senhas.
+ *
+ * @param value Valor digitado.
+ * @param onValueChange Listener executado ao alterar o valor.
+ * @param modifier Modificadores do componente.
+ * @param label Label do campo.
+ * @param error Mensagem de erro de alguma validação.
+ * @param keyboardOptions Opções de teclado.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Composable
 fun OutlinedTextFieldPasswordValidation(
     value: String,
@@ -217,15 +261,36 @@ fun OutlinedTextFieldValidationPreview() {
     StorageTheme {
         Surface {
             OutlinedTextFieldValidation(
-                value = "Batata",
+                label = {
+                    Text("Label")
+                },
+                value = "Valor digitado pelo usuário",
                 onValueChange = { },
-                error = "Não gostamos de batata"
+                error = "Mensagem de erro."
             )
         }
     }
 }
 
-@Preview(showSystemUi = true)
+@Preview
+@Composable
+fun OutlinedTextFieldValidationWithoutErrorPreview() {
+    StorageTheme {
+        Surface {
+            OutlinedTextFieldValidation(
+                label = {
+                    Text("Label")
+                },
+                value = "Valor digitado pelo usuário",
+                onValueChange = { }
+            )
+        }
+    }
+}
+
+
+
+@Preview
 @Composable
 fun AppBarTextFieldPreview() {
     StorageTheme {

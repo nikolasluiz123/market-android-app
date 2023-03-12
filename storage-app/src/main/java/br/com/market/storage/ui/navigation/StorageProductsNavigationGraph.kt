@@ -8,6 +8,14 @@ import br.com.market.storage.ui.screens.StorageProductsScreen
 import br.com.market.storage.ui.viewmodels.LoginViewModel
 import br.com.market.storage.ui.viewmodels.StorageProductsViewModel
 
+/**
+ * Função que realiza as definições da navegação para a
+ * tela de Listagem do Produtos em Estoque.
+ *
+ * @param navController Controlador da navegação do compose.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 fun NavGraphBuilder.storageProductsGraph(
     navController: NavHostController
 ) {

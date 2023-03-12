@@ -16,6 +16,15 @@ import br.com.market.storage.ui.domains.ProductBrandDomain
 import br.com.market.storage.ui.states.FormProductUiState
 import br.com.market.storage.ui.theme.StorageTheme
 
+/**
+ * Tab de Marcas
+ *
+ * @param state Estado da tela onde a tab é usada.
+ * @param onDialogConfirmClick Listener executado ao clicar em confirmar na dialog de marcas.
+ * @param onMenuItemDeleteBrandClick Listener executado ao clicar no item Deletar do menu das marcas.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TabBrand(
@@ -38,7 +47,7 @@ fun TabBrand(
             if (state.openBrandDialog) {
                 BrandDialog(
                     state = state,
-                    onDissmissDialog = state.onHideBrandDialog,
+                    onDismissDialog = state.onHideBrandDialog,
                     onConfirmClick = onDialogConfirmClick
                 )
             }

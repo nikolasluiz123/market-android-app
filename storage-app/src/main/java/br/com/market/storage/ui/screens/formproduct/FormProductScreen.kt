@@ -27,9 +27,19 @@ import br.com.market.storage.ui.domains.ProductDomain
 import br.com.market.storage.ui.states.FormProductUiState
 import br.com.market.storage.ui.theme.StorageTheme
 import br.com.market.storage.ui.viewmodels.FormProductViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+/**
+ * Tela de manutenção do produto e das marcas. Esse é o composable stateless,
+ * mantem tudo que é estado da tela dentro o viewModel.
+ *
+ * @param viewModel ViewModel da tela.
+ * @param onBackClick Listener executado ao clicar no botão de voltar.
+ * @param onLogoutClick Listener executado ao clicar no item de menu de logout.
+ * @param onSuccessDeleteProduct Listener executado ao deletar um produto com sucesso.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Composable
 fun FormProductScreen(
     viewModel: FormProductViewModel,
@@ -70,7 +80,7 @@ fun FormProductScreen(
                 }
             }
         },
-        onDeletePoduct = {
+        onDeleteProduct = {
             coroutineScope.launch {
                 state.onToggleLoading()
 
@@ -118,6 +128,23 @@ fun FormProductScreen(
     )
 }
 
+/**
+ * Tela de manutenção do produto e das marcas. Esse é o composable statefull,
+ * ele trabalha diretamente com a classe de estado.
+ *
+ * @param state Objeto de estado da tela.
+ * @param isEditing Flag que indica se está editando.
+ * @param onBackClick Listener executado ao clicar no botão de voltar.
+ * @param onLogoutClick Listener executado ao clicar no item de menu de logout.
+ * @param onFABSaveProductClick Listener executado ao clicar no FAB de salvar o produto.
+ * @param onDeleteProduct  Listener executado ao deletar um produto.
+ * @param onDialogConfirmClick Listener executado ao clicar no botão confirmar na dialog de marca.
+ * @param onMenuItemDeleteBrandClick Listener executado ao clicar no menu Delete no item da lista de marcas.
+ * @param permissionNavToBrand Flag que define se tem permissão para navegar para a tab de brands.
+ * @param onSuccessDeleteProduct Listener executado ao deletar um produto com sucesso.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun FormProductScreen(
@@ -126,7 +153,7 @@ fun FormProductScreen(
     onBackClick: () -> Unit = { },
     onLogoutClick: () -> Unit = { },
     onFABSaveProductClick: () -> Unit = { },
-    onDeletePoduct: () -> Unit = { },
+    onDeleteProduct: () -> Unit = { },
     onDialogConfirmClick: (BrandDomain) -> Unit = { },
     onMenuItemDeleteBrandClick: (Long) -> Unit = { },
     permissionNavToBrand: () -> Boolean = { false },
@@ -152,7 +179,7 @@ fun FormProductScreen(
                 if (!state.openSearch) {
                     if (tabIndex == 0 && isEditing) {
                         IconButtonDelete {
-                            onDeletePoduct()
+                            onDeleteProduct()
                             isDelete = true
                         }
                     } else if (state.brands.isNotEmpty()) {
@@ -245,7 +272,7 @@ fun FormProductScreen(
 
                 when (tabIndex) {
                     0 -> {
-                        FormProduct(
+                        TabProduct(
                             state = state,
                             onFABSaveProductClick = onFABSaveProductClick
                         )

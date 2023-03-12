@@ -55,7 +55,7 @@ class StorageProductsViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            productRepository.findAllProducts().collect { products ->
+            productRepository.findActiveAllProducts().collect { products ->
                 _uiState.value = _uiState.value.copy(
                     products = products
                 )
@@ -88,7 +88,7 @@ class StorageProductsViewModel @Inject constructor(
     private fun onSearchProducts(searchedText: String) {
         if (searchedText.isEmpty()) {
             viewModelScope.launch {
-                productRepository.findAllProducts().collect { products ->
+                productRepository.findActiveAllProducts().collect { products ->
                     _uiState.value = _uiState.value.copy(
                         searchText = searchedText,
                         products = products

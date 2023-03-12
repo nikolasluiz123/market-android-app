@@ -10,6 +10,15 @@ import br.com.market.storage.preferences.dataStore
 import br.com.market.storage.ui.screens.SplashScreen
 import kotlinx.coroutines.launch
 
+/**
+ * Função que realiza as definições da navegação para a
+ * tela da SplashArt exibida enquanto decide-se para qual tela
+ * levar o usuário.
+ *
+ * @param navController Controlador da navegação do compose.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 fun NavGraphBuilder.splashGraph(
     navController: NavHostController
 ) {

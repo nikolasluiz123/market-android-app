@@ -10,20 +10,18 @@ import br.com.market.storage.business.services.response.MarketServiceResponse
 import br.com.market.storage.business.services.response.PersistenceResponse
 import br.com.market.storage.business.webclient.extensions.getPersistenceResponseBody
 import br.com.market.storage.business.webclient.extensions.getResponseBody
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.net.ConnectException
-import java.net.HttpURLConnection
 import java.net.SocketTimeoutException
 import javax.inject.Inject
 
 
 /**
- * Classe usada para realizar operações no serviço.
+ * Classe usada para realizar operações dos end points do produto.
  *
  * @author Nikolas Luiz Schmitt
  *
+ * @property context Contexto de uso diversificado
  * @property productService Interface para acesso do serviço.
  *
  */
@@ -39,19 +37,11 @@ class ProductWebClient @Inject constructor(
      *
      * @param product Produto que deseja salvar na base remota.
      *
-     * @exception SocketTimeoutException Pode ocorrer essa exceção quando o serviço demorar para responder,
-     * nesse caso podemos considerar como sucesso pois nós salvamos o produto localmente e permitimos uma
-     * sincronização dos dados.
-     *
-     * @exception ConnectException Pode ocorrer essa exceção quando o usuário não possuir conexão de internet
-     * no dispositivo, nesse caso podemos considerar como sucesso pois nós salvamos o produto localmente e permitimos
-     * uma sincronização dos dados.
-     *
      */
     suspend fun saveProduct(product: Product): PersistenceResponse {
         return persistenceServiceErrorHandlingBlock(
             codeBlock = {
-                val newProductSDO = NewProductSDO(idLocal = product.id, name = product.name, imageUrl = product.imageUrl)
+                val newProductSDO = NewProductSDO(localProductId = product.id, name = product.name, imageUrl = product.imageUrl)
                 productService.saveProduct(getToken(), newProductSDO).getPersistenceResponseBody()
             }
         )
@@ -67,7 +57,7 @@ class ProductWebClient @Inject constructor(
     suspend fun updateProduct(product: Product): PersistenceResponse {
         return persistenceServiceErrorHandlingBlock(
             codeBlock = {
-                val updateProductSDO = UpdateProductSDO(idLocal = product.id, name = product.name, imageUrl = product.imageUrl)
+                val updateProductSDO = UpdateProductSDO(localProductId = product.id, name = product.name, imageUrl = product.imageUrl)
                 productService.updateProduct(getToken(), updateProductSDO).getPersistenceResponseBody()
             }
         )
@@ -118,7 +108,7 @@ class ProductWebClient @Inject constructor(
     suspend fun syncProducts(products: List<Product>): MarketServiceResponse {
         return serviceErrorHandlingBlock(
             codeBlock = {
-                val dtoList = products.map { NewProductSDO(idLocal = it.id, name = it.name, imageUrl = it.imageUrl) }
+                val dtoList = products.map { NewProductSDO(localProductId = it.id, name = it.name, imageUrl = it.imageUrl) }
                 productService.syncProducts(getToken(), dtoList).getResponseBody()
             }
         )

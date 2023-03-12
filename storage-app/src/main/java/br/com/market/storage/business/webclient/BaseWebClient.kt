@@ -3,6 +3,7 @@ package br.com.market.storage.business.webclient
 import android.content.Context
 import android.util.Log
 import br.com.market.storage.R
+import br.com.market.storage.business.services.response.AuthenticationResponse
 import br.com.market.storage.business.services.response.MarketServiceResponse
 import br.com.market.storage.business.services.response.PersistenceResponse
 import br.com.market.storage.preferences.dataStore
@@ -85,6 +86,68 @@ open class BaseWebClient(private val context: Context) {
                 }
                 is ConnectException -> {
                     PersistenceResponse(
+                        code = HttpURLConnection.HTTP_UNAVAILABLE,
+                        success = false,
+                        error = context.getString(R.string.connection_server_error_message)
+                    )
+                }
+                else -> customExceptions(e)
+            }
+        }
+    }
+
+    /**
+     * Função que pode ser utilizada para envolver o bloco de código em um tratamento padrão
+     * de exceções que podem ocorrer ao tentar estabelecer uma conexão com o serviço.
+     *
+     * A função permite que sejam adicionados novos tratamentos específicos de uma rotina,
+     * esses tratamentos específicos devem seguir um padrão:
+     *
+     * Para realizar o tratamento, utilize o when da mesma forma como é feito nessa implementação,
+     * além disso, seus tratamentos deverão sempre terminar tratando uma Exception, pois, da forma
+     * que é feito atualmente está localizada no else do when, e é onde as Exceptions cairiam pro
+     * padrão.
+     *
+     * Essa função é preparada para o cenário de Autenticação, note que ela obriga o retorno de
+     * uma AuthenticationResponse, portanto, utilize-a nesses cenários.
+     *
+     * @param codeBlock Bloco de código que deseja executar e tratar.
+     * @param customExceptions Caso haja necessidade de tratar exceções em um caso específico, use este atributo.
+     *
+     * @exception SocketTimeoutException Pode ocorrer essa exceção quando o serviço demorar para responder,
+     * nesse caso podemos considerar como sucesso pois nós salvamos as alterações do produto localmente e permitimos uma
+     * sincronização dos dados.
+     *
+     * @exception ConnectException Pode ocorrer essa exceção quando o usuário não possuir conexão de internet
+     * no dispositivo, nesse caso podemos considerar como sucesso pois nós salvamos as alterações do produto localmente e permitimos
+     * uma sincronização dos dados.
+     *
+     * @author Nikolas Luiz Schmitt
+     */
+    suspend fun authenticationServiceErrorHandlingBlock(
+        codeBlock: suspend () -> AuthenticationResponse,
+        customExceptions: (e: Exception) -> AuthenticationResponse = {
+            Log.e("Error", "authenticationServiceErrorHandlingBlock: ", it)
+
+            AuthenticationResponse(
+                code = HttpURLConnection.HTTP_INTERNAL_ERROR,
+                error = context.getString(R.string.unknown_error_message, it.message)
+            )
+        }
+    ): AuthenticationResponse {
+        return try {
+            codeBlock()
+        } catch (e: Exception) {
+            when (e) {
+                is SocketTimeoutException -> {
+                    AuthenticationResponse(
+                        code = HttpURLConnection.HTTP_UNAVAILABLE,
+                        success = false,
+                        error = context.getString(R.string.connection_server_error_message)
+                    )
+                }
+                is ConnectException -> {
+                    AuthenticationResponse(
                         code = HttpURLConnection.HTTP_UNAVAILABLE,
                         success = false,
                         error = context.getString(R.string.connection_server_error_message)

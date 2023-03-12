@@ -13,11 +13,31 @@ import kotlinx.coroutines.flow.Flow
 import java.net.HttpURLConnection
 import javax.inject.Inject
 
+/**
+ * Classe Repository responsável pela manipulação de dados
+ * referentes a Brand e ProductBrand.
+ *
+ * @property brandWebClient WebClient para acesso dos End Points referentes a Marca.
+ * @property brandDAO DAO responsável pelo acesso ao dados locais referentes a Marca.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 class BrandRepository @Inject constructor(
     private val brandWebClient: BrandWebClient,
     private val brandDAO: BrandDAO
 ) {
 
+    /**
+     * Função responsável por salvar uma Marca localmente e remotamente.
+     *
+     * Caso ocorra algum erro ao salvar remotamente o registro será salvo
+     * somente localmente para ser futuramente sincronizado.
+     *
+     * @param productId Id do produto ao qual está se atribuindo uma nova marca ou alterando uma existente
+     * @param brandDomain Classe de domínio com as informações da tela.
+     *
+     * @author Nikolas Luiz Schmitt
+     */
     suspend fun save(productId: Long, brandDomain: BrandDomain): PersistenceResponse {
         val brand = Brand()
         TransformClassHelper.domainToModel(domain = brandDomain, model = brand)
@@ -61,6 +81,17 @@ class BrandRepository @Inject constructor(
         return response
     }
 
+    /**
+     * Função responsável por realizar a exclusão de uma marca.
+     *
+     * Primeiramente os registros são inativados, em seguida,
+     * tenta-se realizar a operação de exclusão dos registros no
+     * serviço, caso obtiver sucesso, ai sim são excluídos localmente.
+     *
+     * @param localBrandId Id da marca
+     *
+     * @author Nikolas Luiz Schmitt
+     */
     suspend fun deleteBrand(localBrandId: Long): MarketServiceResponse {
         brandDAO.inactivateBrandAndReferences(localBrandId)
 
@@ -77,6 +108,19 @@ class BrandRepository @Inject constructor(
         return response
     }
 
+    /**
+     * Função responsável por sincronizar as informações das Marcas das bases de dados.
+     *
+     * Primeiramente são recuperados todos os registros que não estão sincronizados mas estão
+     * ativos. Esses registros serão enviados para serem persistidos ou alterados na base remota,
+     * se ocorrer sucesso, são marcados como sincronizados na base lcoal.
+     *
+     * Depois são recuperados registros que foram inativados mas não foram sincronizados. Esses registros
+     * serão enviados para o serviço para que sejam excluídos, se o retorno for sucesso, serão excluídos da base
+     * local também.
+     *
+     * @author Nikolas Luiz Schmitt
+     */
     suspend fun syncBrands(): MarketServiceResponse {
         val activeBrandsToSync = brandDAO.findAllActiveBrandsNotSynchronized()
         val activeProductsBrandsToSync = brandDAO.findAllActiveProductsBrandsNotSynchronized()
@@ -111,8 +155,16 @@ class BrandRepository @Inject constructor(
         }
     }
 
-    fun findProductBrandsByProductId(productId: Long?): Flow<List<ProductBrandDomain>> {
-        return brandDAO.findProductBrandsByProductId(productId)
+    /**
+     * Função para recuperar todos os ProductBrand ativos pelo id de
+     * um Product específico.
+     *
+     * @param productId Id do produto.
+     *
+     * @author Nikolas Luiz Schmitt
+     */
+    fun findAllActiveProductBrandsByProductId(productId: Long?): Flow<List<ProductBrandDomain>> {
+        return brandDAO.findAllActiveProductBrandsByProductId(productId)
     }
 
 }

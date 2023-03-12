@@ -2,6 +2,11 @@ package br.com.market.storage.sampledata
 
 import br.com.market.storage.ui.domains.ProductDomain
 
+/**
+ * Produtos de exemplo que são usados nos previews do compose.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 val sampleProducts = listOf(
     ProductDomain(
         id = 1,

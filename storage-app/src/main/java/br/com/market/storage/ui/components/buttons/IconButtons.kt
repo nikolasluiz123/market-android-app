@@ -5,9 +5,17 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import br.com.market.storage.R
-import br.com.market.storage.ui.theme.colorPrimary
+import br.com.market.storage.ui.theme.StorageTheme
 
+/**
+ * Botão com ícone de voltar.
+ *
+ * @param onClick Ação ao clicar.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Composable
 fun IconButtonArrowBack(onClick: () -> Unit = { }) {
     IconButton(onClick = onClick) {
@@ -17,8 +25,15 @@ fun IconButtonArrowBack(onClick: () -> Unit = { }) {
     }
 }
 
+/**
+ * Botão com ícone de pesquisa.
+ *
+ * @param onClick Ação ao clicar.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Composable
-fun IconButtonSearch(onClick: () -> Unit) {
+fun IconButtonSearch(onClick: () -> Unit = { }) {
     IconButton(onClick = onClick) {
         Icon(
             imageVector = Icons.Default.Search, contentDescription = stringResource(R.string.label_pesquisar)
@@ -26,15 +41,29 @@ fun IconButtonSearch(onClick: () -> Unit) {
     }
 }
 
+/**
+ * Botão com ícone de mais opções.
+ *
+ * @param onClick Ação ao clicar.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Composable
-fun IconButtonMoreVert(onClick: () -> Unit) {
+fun IconButtonMoreVert(onClick: () -> Unit = { }) {
     IconButton(onClick = onClick) {
         Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
     }
 }
 
+/**
+ * Botão com ícone de fechar.
+ *
+ * @param onClick Ação ao clicar.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Composable
-fun IconButtonClose(onClick: () -> Unit) {
+fun IconButtonClose(onClick: () -> Unit = { }) {
     IconButton(onClick = onClick) {
         Icon(
             imageVector = Icons.Default.Close, contentDescription = stringResource(R.string.label_limpar_pesquisa)
@@ -42,8 +71,15 @@ fun IconButtonClose(onClick: () -> Unit) {
     }
 }
 
+/**
+ * Botão com ícone de deletar.
+ *
+ * @param onClick Ação ao clicar.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Composable
-fun IconButtonDelete(onClick: () -> Unit) {
+fun IconButtonDelete(onClick: () -> Unit = { }) {
     IconButton(onClick = onClick) {
         Icon(
             imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.label_delete)
@@ -51,26 +87,92 @@ fun IconButtonDelete(onClick: () -> Unit) {
     }
 }
 
+/**
+ * Menu de mais opções.
+ *
+ * @param menuItems
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Composable
 fun MenuIconButton(
-    menuItens: @Composable () -> Unit = { }
+    menuItems: @Composable () -> Unit = { }
 ) {
     var showMenu by remember { mutableStateOf(false) }
 
     IconButtonMoreVert { showMenu = !showMenu }
 
     DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
-        menuItens()
+        menuItems()
     }
 }
 
+/**
+ * Menu de mais opções com a ação de logout, que é uma
+ * ação comum.
+ *
+ * @param onLogoutClick
+ * @param menuItems
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Composable
 fun MenuIconButtonWithDefaultActions(
-    onLogoutClick: () -> Unit,
-    menuItens: @Composable () -> Unit = { }
+    onLogoutClick: () -> Unit = { },
+    menuItems: @Composable () -> Unit = { }
 ) {
     MenuIconButton {
-        menuItens()
+        menuItems()
         DropdownMenuItem(text = { Text(stringResource(R.string.label_logout)) }, onClick = onLogoutClick)
+    }
+}
+
+@Preview
+@Composable
+fun IconButtonArrowBackPreview() {
+    StorageTheme {
+        Surface {
+            IconButtonArrowBack()
+        }
+    }
+}
+
+@Preview
+@Composable
+fun IconButtonSearchPreview() {
+    StorageTheme {
+        Surface {
+            IconButtonSearch()
+        }
+    }
+}
+
+@Preview
+@Composable
+fun IconButtonMoreVertPreview() {
+    StorageTheme {
+        Surface {
+            IconButtonMoreVert()
+        }
+    }
+}
+
+@Preview
+@Composable
+fun IconButtonClosePreview() {
+    StorageTheme {
+        Surface {
+            IconButtonClose()
+        }
+    }
+}
+
+@Preview
+@Composable
+fun IconButtonDeletePreview() {
+    StorageTheme {
+        Surface {
+            IconButtonDelete()
+        }
     }
 }

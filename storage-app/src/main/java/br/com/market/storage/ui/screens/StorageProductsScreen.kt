@@ -13,12 +13,23 @@ import br.com.market.storage.R
 import br.com.market.storage.sampledata.sampleProducts
 import br.com.market.storage.ui.components.*
 import br.com.market.storage.ui.components.buttons.FloatingActionButtonAdd
+import br.com.market.storage.ui.screens.formproduct.CardProductItem
 import br.com.market.storage.ui.states.StorageProductsUiState
 import br.com.market.storage.ui.theme.StorageTheme
 import br.com.market.storage.ui.theme.colorPrimary
 import br.com.market.storage.ui.viewmodels.StorageProductsViewModel
 import kotlinx.coroutines.launch
 
+/**
+ * Tela de listagem dos produtos em estoque stateless.
+ *
+ * @param viewModel ViewModel da tela.
+ * @param onItemClick Listener executado ao clicar em um item da lista.
+ * @param onLogoutClick Listener executado ao clicar no item de menu Logout.
+ * @param onFABNewProductClick Listener executado ao clicar no FAB de novo produto.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Composable
 fun StorageProductsScreen(
     viewModel: StorageProductsViewModel,
@@ -59,6 +70,17 @@ fun StorageProductsScreen(
     )
 }
 
+/**
+ * Tela de listagem dos produtos em estoque statefull.
+ *
+ * @param state Objeto de estado da tela.
+ * @param onItemClick Listener executado ao clicar em um item da lista.
+ * @param onLogoutClick Listener executado ao clicar no item de menu Logout.
+ * @param onFABNewProductClick Listener executado ao clicar no FAB de novo produto.
+ * @param onSynchronizeClick Listener executado ao clicar no item de menu Sincronizar.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StorageProductsScreen(

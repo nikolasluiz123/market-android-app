@@ -2,6 +2,18 @@ package br.com.market.storage.business.models
 
 import androidx.room.*
 
+/**
+ * Uma classe que representa uma tabela intermediária entre Produto e Marca.
+ *
+ * Ela é utilizada para armazenar dados que dependem de ambas as entidades.
+ *
+ * @property id Identificador da Entidade.
+ * @property productId Id do Produto
+ * @property brandId Id da Marca
+ * @property count Quantidade que há no estoque de um Produto de uma Marca específica.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Entity(
     tableName = "products_brands",
     foreignKeys = [

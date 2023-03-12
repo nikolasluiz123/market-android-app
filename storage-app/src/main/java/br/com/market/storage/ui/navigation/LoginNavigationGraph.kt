@@ -7,6 +7,14 @@ import androidx.navigation.compose.composable
 import br.com.market.storage.ui.screens.LoginScreen
 import br.com.market.storage.ui.viewmodels.LoginViewModel
 
+/**
+ * Função que realiza as definições da navegação para a
+ * tela de Login.
+ *
+ * @param navController Controlador da navegação do compose.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 fun NavGraphBuilder.loginGraph(
     navController: NavHostController
 ) {

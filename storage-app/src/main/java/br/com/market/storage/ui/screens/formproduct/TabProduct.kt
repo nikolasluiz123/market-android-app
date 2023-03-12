@@ -20,13 +20,20 @@ import br.com.market.storage.R
 import br.com.market.storage.ui.components.CoilImageViewer
 import br.com.market.storage.ui.components.OutlinedTextFieldValidation
 import br.com.market.storage.ui.components.buttons.FloatingActionButtonSave
-import br.com.market.storage.ui.domains.ProductDomain
 import br.com.market.storage.ui.states.FormProductUiState
 import br.com.market.storage.ui.theme.StorageTheme
 
+/**
+ * Tab do Produto
+ *
+ * @param state Estado da tela onde a tab é usada.
+ * @param onFABSaveProductClick Listener executado ao clicar no botão de salvar o produto.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FormProduct(
+fun TabProduct(
     state: FormProductUiState = FormProductUiState(),
     onFABSaveProductClick: () -> Unit = { }
 ) {
@@ -99,10 +106,10 @@ fun FormProduct(
 
 @Preview(showSystemUi = true)
 @Composable
-fun FormProductPreview() {
+fun TabProductPreview() {
     StorageTheme {
         Surface {
-            FormProduct(FormProductUiState())
+            TabProduct(FormProductUiState())
         }
     }
 }

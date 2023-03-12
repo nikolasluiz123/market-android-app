@@ -17,6 +17,15 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel da tela de login
+ *
+ * @property userRepository Classe responsável por realizar operações referentes ao Usuário.
+ *
+ * @param context Contexto do APP
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     @ApplicationContext context: Context,

@@ -1,5 +1,15 @@
 package br.com.market.storage.ui.domains
 
+/**
+ * Classe de domínio do usuário.
+ *
+ * @property id Identificador do usuário.
+ * @property name Nome do usuário.
+ * @property email E-mail do usuário.
+ * @property password Senha do usuário.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 data class UserDomain(
     var id: Long? = null,
     var name: String = "",

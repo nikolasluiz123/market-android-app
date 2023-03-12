@@ -145,14 +145,22 @@ class ProductRepository @Inject constructor(
         }
     }
 
-    suspend fun deleteBrandAndReferences(productId: Long) {
-        brandDAO.deleteBrandAndReferences(productId)
-    }
-
-    fun findAllProducts(): Flow<List<ProductDomain>> {
+    /**
+     * Função que retorna todos os produtos que devem ser exibidos.
+     *
+     * @author Nikolas Luiz Schmitt
+     */
+    fun findActiveAllProducts(): Flow<List<ProductDomain>> {
         return productDAO.findActiveAllProducts().toProductDomainList()
     }
 
+    /**
+     * Função que retorna um produto específico.
+     *
+     * @param productId Id do produto.
+     *
+     * @author Nikolas Luiz Schmitt
+     */
     fun findProductById(productId: Long?): Flow<ProductDomain?> {
         return productDAO.findProductById(productId).toProductDomain()
     }

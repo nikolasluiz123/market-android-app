@@ -2,6 +2,18 @@ package br.com.market.storage.ui.states
 
 import br.com.market.storage.ui.domains.ProductDomain
 
+/**
+ * Classe de estado da tela de listagem dos produtos em estoque
+ *
+ * @property products Produtos exibidos na tela
+ * @property searchText Texto pesquisado
+ * @property openSearch Flag que indica se a pesquisa está aberta
+ * @property onToggleSearch Listener executado para escoder e exibir a pesquisa
+ * @property onSearchChange Listener executado quando o texto é alterado no campo de pesquisa
+ * @property registersCountToSync Quantidade de registros que precisam ser sincronizados
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 data class StorageProductsUiState(
     val products: List<ProductDomain> = emptyList(),
     val searchText: String = "",

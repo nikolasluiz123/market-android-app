@@ -21,9 +21,21 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import br.com.market.storage.R
 import br.com.market.storage.sampledata.sampleProducts
 import br.com.market.storage.ui.domains.ProductDomain
+import br.com.market.storage.ui.screens.formproduct.CardProductItem
 import br.com.market.storage.ui.theme.CINZA_500
 import br.com.market.storage.ui.theme.StorageTheme
 
+/**
+ * Componente de listagem vertical.
+ *
+ * @param T Tipo do dado exibido.
+ * @param modifier Modificadores específicos.
+ * @param items Lista de itens que serão carregados.
+ * @param emptyStateText Texto exibido quando a lista for vazia.
+ * @param itemList Composable que define qual será o card do item. Pode ser usado outro tipo de container além do card.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Composable
 fun <T> LazyVerticalListComponent(
     modifier: Modifier = Modifier,
@@ -62,6 +74,18 @@ fun <T> LazyVerticalListComponent(
     }
 }
 
+/**
+ * Componente de listagem vertical em colunas, normalmente duas colunas.
+ *
+ * @param T Tipo do dado exibido.
+ * @param modifier Modificadores específicos.
+ * @param items Lista de itens que serão carregados.
+ * @param isSearching Flag que indica se está pesquisando para alterar o tipo de visualização.
+ * @param emptyStateText Texto exibido quando a lista for vazia.
+ * @param itemList Composable que define qual será o card do item. Pode ser usado outro tipo de container além do card.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Composable
 fun <T> LazyVerticalGridComponent(
     modifier: Modifier = Modifier,
@@ -117,6 +141,18 @@ fun <T> LazyVerticalGridComponent(
     }
 }
 
+/**
+ * Componente de listagem vertical.
+ *
+ * @param T Tipo do dado exibido.
+ * @param modifier Modificadores específicos.
+ * @param items Lista de itens que serão carregados.
+ * @param verticalArrangementSpace Espaço entre cada item.
+ * @param contentPadding Espaço ao redor da lista.
+ * @param itemList Composable que define qual será o card do item. Pode ser usado outro tipo de container além do card.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Composable
 private fun <T> LazyVerticalList(
     modifier: Modifier = Modifier,
@@ -136,6 +172,18 @@ private fun <T> LazyVerticalList(
     }
 }
 
+/**
+ * Lazy vertical grid list
+ *
+ * @param T Tipo do dado exibido.
+ * @param modifier Modificadores específicos.
+ * @param items Lista de itens que serão carregados.
+ * @param numberColumns Número de colunas.
+ * @param arrangementSpace Espaçamento vertical e horizontal em cada item.
+ * @param contentPadding Espaço ao redor da lista.
+ * @param itemList Composable que define qual será o card do item. Pode ser usado outro tipo de container além do card.
+ * @receiver
+ */
 @Composable
 private fun <T> LazyVerticalGridList(
     modifier: Modifier = Modifier,
@@ -158,6 +206,14 @@ private fun <T> LazyVerticalGridList(
     }
 }
 
+/**
+ * Componente que exibe um texto quando a lista está vazia.
+ *
+ * @param modifier Modificadores específicos.
+ * @param text Text a ser exibido.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Composable
 private fun EmptyState(
     modifier: Modifier = Modifier,

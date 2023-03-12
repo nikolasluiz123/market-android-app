@@ -21,6 +21,13 @@ import br.com.market.storage.ui.theme.StorageTheme
 import br.com.market.storage.ui.theme.colorSecondary
 import kotlinx.coroutines.delay
 
+/**
+ * SplashScreen do APP
+ *
+ * @param onAfterDelay Listener executado após um delay de 1 segundo.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Composable
 fun SplashScreen(onAfterDelay: () -> Unit = { }) {
     LaunchedEffect(key1 = true) {

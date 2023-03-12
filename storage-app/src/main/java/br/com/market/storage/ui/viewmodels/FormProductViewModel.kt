@@ -25,12 +25,13 @@ import javax.inject.Inject
 /**
  * ViewModel da tela de manutenção do estoque.
  *
- * @property productRepository
+ * @property productRepository Classe responsável por realizar operações referentes ao Produto.
  * @property brandRepository
- * @constructor
  *
- * @param context
- * @param savedStateHandle
+ * @param context Contexto do APP
+ * @param savedStateHandle Utilizado para recuperar atributos de navegação
+ *
+ * @author Nikolas Luiz Schmitt
  */
 @HiltViewModel
 class FormProductViewModel @Inject constructor(
@@ -197,7 +198,7 @@ class FormProductViewModel @Inject constructor(
 
     private fun updateProductBrandsInfos(searchedText: String = "") {
         if (productId != null) {
-            val productBrandDomainFlow = brandRepository.findProductBrandsByProductId(productId.navParamToLong())
+            val productBrandDomainFlow = brandRepository.findAllActiveProductBrandsByProductId(productId.navParamToLong())
 
             viewModelScope.launch {
                 productBrandDomainFlow.collect { productBrandDomainList ->

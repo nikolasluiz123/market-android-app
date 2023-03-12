@@ -22,14 +22,24 @@ import br.com.market.storage.ui.domains.BrandDomain
 import br.com.market.storage.ui.states.FormProductUiState
 import br.com.market.storage.ui.theme.StorageTheme
 
+/**
+ * Dialog de manutenção da marca.
+ *
+ * @param state UIState da tela.
+ * @param onDismissDialog Listener executado ao fechar a dialog.
+ * @param onCancelClick Listener executado ao clicar em cancelar.
+ * @param onConfirmClick Listener executado ao clicar em confirmar.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Composable
 fun BrandDialog(
     state: FormProductUiState = FormProductUiState(),
-    onDissmissDialog: () -> Unit = { },
+    onDismissDialog: () -> Unit = { },
     onCancelClick: () -> Unit = { },
     onConfirmClick: (BrandDomain) -> Unit = { }
 ) {
-    Dialog(onDismissRequest = onDissmissDialog) {
+    Dialog(onDismissRequest = onDismissDialog) {
         Card(
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(containerColor = Color.White)
@@ -98,7 +108,7 @@ fun BrandDialog(
                         top.linkTo(inputQdtRef.bottom, margin = 8.dp)
                     },
                     onClick = {
-                        onDissmissDialog()
+                        onDismissDialog()
                         onCancelClick()
                     }
                 ) {
@@ -120,7 +130,7 @@ fun BrandDialog(
                                     count = state.brandQtd.toInt()
                                 )
                             )
-                            onDissmissDialog()
+                            onDismissDialog()
                         }
                     }
                 ) {

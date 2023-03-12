@@ -10,6 +10,17 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.storage.R
 
+/**
+ * Dialog para exibição de mensagens
+ *
+ * @param title Título da dialog.
+ * @param show Flag para exibir a dialog ou não.
+ * @param onDismissRequest Ação ao fechar a dialog
+ * @param message Mensagem
+ * @param onDialogOkClick Ação específica ao clicar no botão OK.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DialogMessage(

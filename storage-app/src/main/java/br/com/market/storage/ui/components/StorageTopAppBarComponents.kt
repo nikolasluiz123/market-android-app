@@ -9,6 +9,20 @@ import br.com.market.storage.R
 import br.com.market.storage.ui.components.buttons.*
 import br.com.market.storage.ui.theme.StorageTheme
 
+/**
+ * TopAppBar padrão do APP.
+ *
+ * @param title Título da app bar
+ * @param onNavigationIconClick Ação ao clicar no ícone da esquerda.
+ * @param onLogoutClick Ação ao clicar no item de menu Logout.
+ * @param actions Ações exibidas a direita da barra.
+ * @param menuItems Itens de menu exibidos dentro do MoreOptions.
+ * @param colors Cores da barra.
+ * @param showNavigationIcon Flag para exibir ícone de navação ou não.
+ * @param showMenuWithLogout Flag para exibir o menu com a opção de Logout.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StorageTopAppBar(
@@ -40,13 +54,31 @@ fun StorageTopAppBar(
             if (showMenuWithLogout) {
                 MenuIconButtonWithDefaultActions(
                     onLogoutClick = onLogoutClick,
-                    menuItens = menuItems,
+                    menuItems = menuItems,
                 )
             }
         }
     )
 }
 
+/**
+ * Searchable storage top app bar
+ *
+ * @param openSearch Flag que indica se deve ser aberto o campo de pesquisa e ajustados os itens de menu.
+ * @param searchText Texto pesquisado.
+ * @param title Título da app bar
+ * @param showNavigationIcon Flag para exibir ícone de navação ou não.
+ * @param onSearchChange Listener executado ao alterar o texto do campo de pesquisa.
+ * @param onToggleSearch Exibir ou esconder o campo de pesquisa.
+ * @param onLogoutClick Ação ao clicar no item de menu Logout.
+ * @param onNavigationIconClick Ação ao clicar no ícone da esquerda.
+ * @param appBarTextFieldHint Hint do campo de pesquisa.
+ * @param showOnlyCustomActions Flag para exibir apenas ações específicas da tela no menu a direita.
+ * @param customActions Ações específicas de uma tela.
+ * @param menuItems Itens de menu exibidos dentro do MoreOptions.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchableStorageTopAppBar(
@@ -91,6 +123,17 @@ fun SearchableStorageTopAppBar(
     )
 }
 
+/**
+ * Title searchable top app bar
+ *
+ * @param openSearch Flag que indica se deve ser aberto o campo de pesquisa e ajustados os itens de menu.
+ * @param searchText Texto pesquisado.
+ * @param onSearchChange Listener executado ao alterar o texto do campo de pesquisa.
+ * @param title Título da app bar
+ * @param appBarTextFieldHint Hint do campo de pesquisa.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Composable
 fun TitleSearchableTopAppBar(
     openSearch: Boolean,

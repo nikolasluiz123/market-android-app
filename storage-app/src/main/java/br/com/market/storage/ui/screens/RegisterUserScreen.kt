@@ -25,6 +25,15 @@ import br.com.market.storage.ui.theme.StorageTheme
 import br.com.market.storage.ui.viewmodels.RegisterUserViewModel
 import kotlinx.coroutines.launch
 
+/**
+ * Tela de cadastro do usuário stateless.
+ *
+ * @param viewModel ViewModel da tela.
+ * @param onNavigationClick Listener executado a oclicar no ícone de voltar.
+ * @param onRegisterSuccess Listener executado ao registrar-se com sucesso.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Composable
 fun RegisterUserScreen(
     viewModel: RegisterUserViewModel,
@@ -54,6 +63,15 @@ fun RegisterUserScreen(
     )
 }
 
+/**
+ * Tela de cadastro do usuário statefull
+ *
+ * @param state Objeto de estado da tela.
+ * @param onButtonSaveClick Listener executado quando clicar em salvar.
+ * @param onNavigationClick Listener executado quando clicar no botão de voltar.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterUserScreen(

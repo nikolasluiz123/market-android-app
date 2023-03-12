@@ -10,6 +10,14 @@ import br.com.market.storage.ui.screens.formproduct.FormProductScreen
 import br.com.market.storage.ui.viewmodels.FormProductViewModel
 import br.com.market.storage.ui.viewmodels.LoginViewModel
 
+/**
+ * Função que realiza as definições da navegação para a
+ * tela de Criação / Editação do Produto e das Marcas.
+ *
+ * @param navController Controlador da navegação do compose.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 fun NavGraphBuilder.formProductGraph(
     navController: NavHostController
 ) {

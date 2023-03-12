@@ -15,6 +15,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
+/**
+ * ViewModel da tela de cadastro de usuários
+ *
+ * @property userRepository Classe responsável por realizar operações referentes ao Usuário.
+ *
+ * @param context Contexto do APP
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @HiltViewModel
 class RegisterUserViewModel @Inject constructor(
     @ApplicationContext context: Context,

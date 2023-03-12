@@ -19,6 +19,15 @@ import br.com.market.storage.ui.theme.StorageTheme
 import br.com.market.storage.ui.theme.colorCard
 import br.com.market.storage.ui.theme.colorPrimary
 
+/**
+ * Card do item da lista de marcas.
+ *
+ * @param productBrandDomain Objeto com os dados a serem exibidos no card.
+ * @param onItemClick Listener executado ao clicar no item.
+ * @param onMenuItemDeleteBrandClick Listener executado ao clicar na opção Delete do menu.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Composable
 fun CardBrandItem(
     productBrandDomain: ProductBrandDomain,

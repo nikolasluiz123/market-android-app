@@ -20,6 +20,14 @@ import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ConstraintLayout
 import br.com.market.storage.ui.theme.BLUE_900
 
+/**
+ * Indicador de progresso em linha.
+ *
+ * @param show Flag que indica se deve ou não ser exibido o componente.
+ * @param modifier Modificadores específicos.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Composable
 fun StorageAppLinearProgressIndicator(show: Boolean, modifier: Modifier = Modifier) {
     if (show) {
@@ -27,6 +35,15 @@ fun StorageAppLinearProgressIndicator(show: Boolean, modifier: Modifier = Modifi
     }
 }
 
+/**
+ * Indicador de progesso circular.
+ *
+ * @param show Flag que indica se deve ou não ser exibido o componente.
+ * @param label Texto exibido abaixo do indicador.
+ * @param modifier Modificadores específicos.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Composable
 fun StorageAppCircularBlockUIProgressIndicator(
     show: Boolean,

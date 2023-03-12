@@ -17,11 +17,28 @@ import br.com.market.storage.business.webclient.extensions.getResponseBody
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
+/**
+ * Classe usada para realizar operações dos end points da marca.
+ *
+ * @property context Contexto de uso diversificado
+ * @property brandService Interface para acesso do serviço.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 class BrandWebClient @Inject constructor(
     @ApplicationContext private val context: Context,
     private val brandService: BrandService
 ) : BaseWebClient(context) {
 
+    /**
+     * Função utilizada para salvar uma marca.
+     *
+     * @param productId Id do produto que está sendo editado.
+     * @param brand Brand que já foi salva localmente.
+     * @param productBrand ProductBrand que já foi salva localmente,
+     *
+     * @author Nikolas Luiz Schmitt
+     */
     suspend fun saveBrand(productId: Long, brand: Brand, productBrand: ProductBrand): PersistenceResponse {
         return persistenceServiceErrorHandlingBlock(
             codeBlock = {
@@ -31,6 +48,14 @@ class BrandWebClient @Inject constructor(
         )
     }
 
+    /**
+     * Função para atualizar uma marca.
+     *
+     * @param brand Brand que deseja atualizar.
+     * @param productBrand ProductBrand que deseja atualizar.
+     *
+     * @author Nikolas Luiz Schmitt
+     */
     suspend fun updateBrand(brand: Brand, productBrand: ProductBrand): PersistenceResponse {
         return persistenceServiceErrorHandlingBlock(
             codeBlock = {
@@ -40,6 +65,13 @@ class BrandWebClient @Inject constructor(
         )
     }
 
+    /**
+     * Função para deletar uma marca.
+     *
+     * @param localBrandId Id da marca que deseja deletar
+     *
+     * @author Nikolas Luiz Schmitt
+     */
     suspend fun deleteBrand(localBrandId: Long): MarketServiceResponse {
         return serviceErrorHandlingBlock(
             codeBlock = {
@@ -49,6 +81,15 @@ class BrandWebClient @Inject constructor(
         )
     }
 
+    /**
+     * Função que sincroniza as informações das Marcas, enviando quem foi criado e quem foi alterado
+     * para a base remota.
+     *
+     * @param activeBrandsToSync Brands que deseja sincronizar.
+     * @param activeProductsBrandsToSync ProductBrands que deseja sincronizar.
+     *
+     * @author Nikolas Luiz Schmitt
+     */
     suspend fun syncBrands(activeBrandsToSync: List<Brand>, activeProductsBrandsToSync: List<ProductBrand>): MarketServiceResponse {
         return serviceErrorHandlingBlock(
             codeBlock = {
@@ -64,9 +105,14 @@ class BrandWebClient @Inject constructor(
         )
     }
 
-    suspend fun deleteBrands(
-        inactiveAndNotSynchronizedBrands: List<Brand>,
-    ): MarketServiceResponse {
+    /**
+     * Função para deletar 'N' brands.
+     *
+     * @param inactiveAndNotSynchronizedBrands Brands que deseja deletar
+     *
+     * @author Nikolas Luiz Schmitt
+     */
+    suspend fun deleteBrands(inactiveAndNotSynchronizedBrands: List<Brand>): MarketServiceResponse {
         return serviceErrorHandlingBlock(
             codeBlock = {
                 val brandsDTOs = inactiveAndNotSynchronizedBrands.map { DeleteBrandSDO(it.id!!) }
