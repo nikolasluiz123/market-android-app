@@ -58,7 +58,7 @@
   <div class="breadcrumbs"><a href="../../../index.html">storage-app</a><span class="delimiter">/</span><a href="../index.html">br.com.market.storage.business.dao</a><span class="delimiter">/</span><span class="current">BrandDAO</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Brand</span><wbr></wbr><span><span>DAO</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":storage-app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">class </span><a href="index.html">BrandDAO</a></div></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":storage-app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">class </span><a href="index.html">BrandDAO</a></div><p class="paragraph">Classe para manipulação dos dados da base local</p><span class="kdoc-tag"><h4 class="">Author</h4><p class="paragraph">Nikolas Luiz Schmitt</p></span></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,FUNCTION,PROPERTY">Members</button></div>
@@ -94,7 +94,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":storage-app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="delete-brand.html"><span class="token function">deleteBrand</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">brandId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":storage-app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="delete-brand.html"><span class="token function">deleteBrand</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">brandId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Função para excluir uma Brand de id específico</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -109,7 +109,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":storage-app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="delete-brand-and-references.html"><span class="token function">deleteBrandAndReferences</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">brandId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":storage-app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="delete-brand-and-references.html"><span class="token function">deleteBrandAndReferences</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">brandId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Função para excluir fisicamente os registros da brand especificada e suas referências. Essa função está em uma transação para que não haja uma exclusão parcial devido a erros.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -124,7 +124,67 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":storage-app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="delete-product-brand-of-brand.html"><span class="token function">deleteProductBrandOfBrand</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">brandId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":storage-app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="delete-product-brand-of-brand.html"><span class="token function">deleteProductBrandOfBrand</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">brandId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Função para excluir uma ProductBrand pelo id da Brand</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1482154269%2FFunctions%2F137329327" anchor-label="findAllActiveBrandsNotSynchronized" id="1482154269%2FFunctions%2F137329327" data-filterable-set=":storage-app:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":storage-app:dokkaHtml/release" data-filterable-set=":storage-app:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="find-all-active-brands-not-synchronized.html"><span>find</span><wbr></wbr><span>All</span><wbr></wbr><span>Active</span><wbr></wbr><span>Brands</span><wbr></wbr><span>Not</span><wbr></wbr><span><span>Synchronized</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1482154269%2FFunctions%2F137329327"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":storage-app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="find-all-active-brands-not-synchronized.html"><span class="token function">findAllActiveBrandsNotSynchronized</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../br.com.market.storage.business.models/-brand/index.html">Brand</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Função para buscar todas as Brands que estão ativas e não foram enviadas para o serviço.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="483790420%2FFunctions%2F137329327" anchor-label="findAllActiveProductBrandsByProductId" id="483790420%2FFunctions%2F137329327" data-filterable-set=":storage-app:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":storage-app:dokkaHtml/release" data-filterable-set=":storage-app:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="find-all-active-product-brands-by-product-id.html"><span>find</span><wbr></wbr><span>All</span><wbr></wbr><span>Active</span><wbr></wbr><span>Product</span><wbr></wbr><span>Brands</span><wbr></wbr><span>By</span><wbr></wbr><span>Product</span><wbr></wbr><span><span>Id</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="483790420%2FFunctions%2F137329327"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":storage-app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="find-all-active-product-brands-by-product-id.html"><span class="token function">findAllActiveProductBrandsByProductId</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">productId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../br.com.market.storage.ui.domains/-product-brand-domain/index.html">ProductBrandDomain</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Função utilizada para recuperar todas as marcas ativas para exibir na tela.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1162994849%2FFunctions%2F137329327" anchor-label="findAllActiveProductsBrandsNotSynchronized" id="1162994849%2FFunctions%2F137329327" data-filterable-set=":storage-app:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":storage-app:dokkaHtml/release" data-filterable-set=":storage-app:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="find-all-active-products-brands-not-synchronized.html"><span>find</span><wbr></wbr><span>All</span><wbr></wbr><span>Active</span><wbr></wbr><span>Products</span><wbr></wbr><span>Brands</span><wbr></wbr><span>Not</span><wbr></wbr><span><span>Synchronized</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1162994849%2FFunctions%2F137329327"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":storage-app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="find-all-active-products-brands-not-synchronized.html"><span class="token function">findAllActiveProductsBrandsNotSynchronized</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../br.com.market.storage.business.models/-product-brand/index.html">ProductBrand</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Função para buscar todas as ProductBrand que estão ativas e não foram enviadas para o serviço.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1357900767%2FFunctions%2F137329327" anchor-label="findAllInactiveAndNotSynchronizedBrands" id="-1357900767%2FFunctions%2F137329327" data-filterable-set=":storage-app:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":storage-app:dokkaHtml/release" data-filterable-set=":storage-app:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="find-all-inactive-and-not-synchronized-brands.html"><span>find</span><wbr></wbr><span>All</span><wbr></wbr><span>Inactive</span><wbr></wbr><span>And</span><wbr></wbr><span>Not</span><wbr></wbr><span>Synchronized</span><wbr></wbr><span><span>Brands</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1357900767%2FFunctions%2F137329327"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":storage-app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="find-all-inactive-and-not-synchronized-brands.html"><span class="token function">findAllInactiveAndNotSynchronizedBrands</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../br.com.market.storage.business.models/-brand/index.html">Brand</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Função para buscar todas as Brand que estão inativas e não foram enviadas para o serviço realizar a exclusão.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -139,22 +199,52 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":storage-app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="find-product-brand-by-brand-id.html"><span class="token function">findProductBrandByBrandId</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">brandId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../br.com.market.storage.business.models/-product-brand/index.html">ProductBrand</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":storage-app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="find-product-brand-by-brand-id.html"><span class="token function">findProductBrandByBrandId</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">brandId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../br.com.market.storage.business.models/-product-brand/index.html">ProductBrand</a></div><div class="brief "><p class="paragraph">Função para recuperar um ProductBrand pelo ID da Brand.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1348697341%2FFunctions%2F137329327" anchor-label="findProductBrandsByProductId" id="-1348697341%2FFunctions%2F137329327" data-filterable-set=":storage-app:dokkaHtml/release"></a>
+<a data-name="-548486824%2FFunctions%2F137329327" anchor-label="inactivateBrand" id="-548486824%2FFunctions%2F137329327" data-filterable-set=":storage-app:dokkaHtml/release"></a>
           <div class="table-row" data-filterable-current=":storage-app:dokkaHtml/release" data-filterable-set=":storage-app:dokkaHtml/release">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="find-product-brands-by-product-id.html"><span>find</span><wbr></wbr><span>Product</span><wbr></wbr><span>Brands</span><wbr></wbr><span>By</span><wbr></wbr><span>Product</span><wbr></wbr><span><span>Id</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1348697341%2FFunctions%2F137329327"></span>
+                  <div><a href="inactivate-brand.html"><span>inactivate</span><wbr></wbr><span><span>Brand</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-548486824%2FFunctions%2F137329327"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":storage-app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="find-product-brands-by-product-id.html"><span class="token function">findProductBrandsByProductId</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">productId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../br.com.market.storage.ui.domains/-product-brand-domain/index.html">ProductBrandDomain</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":storage-app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="inactivate-brand.html"><span class="token function">inactivateBrand</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">brandId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Função que inativa a Brand.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1081877247%2FFunctions%2F137329327" anchor-label="inactivateBrandAndReferences" id="1081877247%2FFunctions%2F137329327" data-filterable-set=":storage-app:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":storage-app:dokkaHtml/release" data-filterable-set=":storage-app:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="inactivate-brand-and-references.html"><span>inactivate</span><wbr></wbr><span>Brand</span><wbr></wbr><span>And</span><wbr></wbr><span><span>References</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1081877247%2FFunctions%2F137329327"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":storage-app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="inactivate-brand-and-references.html"><span class="token function">inactivateBrandAndReferences</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">brandId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Função para inativar uma marca e as suas referências. Essa função está dentro de uma transação para que, caso ocorra um erro, não sejam inativados registros de forma parcial.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2109446775%2FFunctions%2F137329327" anchor-label="inactivateProductBrandOfBrand" id="-2109446775%2FFunctions%2F137329327" data-filterable-set=":storage-app:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":storage-app:dokkaHtml/release" data-filterable-set=":storage-app:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="inactivate-product-brand-of-brand.html"><span>inactivate</span><wbr></wbr><span>Product</span><wbr></wbr><span>Brand</span><wbr></wbr><span>Of</span><wbr></wbr><span><span>Brand</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2109446775%2FFunctions%2F137329327"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":storage-app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="inactivate-product-brand-of-brand.html"><span class="token function">inactivateProductBrandOfBrand</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">brandId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Função que inativa um ProductBrand que tenha o id da brand especificado.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -169,7 +259,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":storage-app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="save-brand.html"><span class="token function">saveBrand</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">brand<span class="token operator">: </span><a href="../../br.com.market.storage.business.models/-brand/index.html">Brand</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":storage-app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="save-brand.html"><span class="token function">saveBrand</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">brand<span class="token operator">: </span><a href="../../br.com.market.storage.business.models/-brand/index.html">Brand</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a></div><div class="brief "><p class="paragraph">Função para salvar uma marca, ocorrer um conflito, ou seja, dois IDs iguais, será realizada a substituição de uma entidade pela outra.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -184,7 +274,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":storage-app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="save-product-brand.html"><span class="token function">saveProductBrand</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">productBrand<span class="token operator">: </span><a href="../../br.com.market.storage.business.models/-product-brand/index.html">ProductBrand</a></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":storage-app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="save-product-brand.html"><span class="token function">saveProductBrand</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">productBrand<span class="token operator">: </span><a href="../../br.com.market.storage.business.models/-product-brand/index.html">ProductBrand</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Função para salvar a entidade intermediária ProductBrand</p></div></div></div>
                 </div>
               </div>
             </div>
