@@ -16,7 +16,8 @@ fun DialogMessage(
     title: String,
     show: Boolean,
     onDismissRequest: () -> Unit,
-    message: String
+    message: String,
+    onDialogOkClick: () -> Unit = { }
 ) {
     if (show) {
         AlertDialog(
@@ -59,7 +60,10 @@ fun DialogMessage(
                             end.linkTo(parent.end)
                             bottom.linkTo(parent.bottom)
                         },
-                        onClick = onDismissRequest
+                        onClick = {
+                            onDismissRequest()
+                            onDialogOkClick()
+                        }
                     ) {
                         Text(text = stringResource(id = R.string.dialog_button_ok_label))
                     }

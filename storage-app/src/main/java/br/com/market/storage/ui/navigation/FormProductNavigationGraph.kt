@@ -38,7 +38,7 @@ fun NavGraphBuilder.formProductGraph(
             onBackClick = {
                 navController.popBackStack()
             },
-            onAfterDeleteProduct = {
+            onSuccessDeleteProduct = {
                 navController.popBackStack()
             }
         )

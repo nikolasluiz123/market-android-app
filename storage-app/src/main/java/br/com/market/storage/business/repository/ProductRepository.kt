@@ -6,17 +6,12 @@ import br.com.market.storage.business.dao.ProductDAO
 import br.com.market.storage.business.models.Product
 import br.com.market.storage.business.services.response.MarketServiceResponse
 import br.com.market.storage.business.services.response.PersistenceResponse
-import br.com.market.storage.utils.TokenUtils
 import br.com.market.storage.business.webclient.ProductWebClient
 import br.com.market.storage.extensions.toProductDomain
 import br.com.market.storage.extensions.toProductDomainList
-import br.com.market.storage.preferences.PreferencesKey.TOKEN
-import br.com.market.storage.preferences.dataStore
-import br.com.market.storage.preferences.getToken
 import br.com.market.storage.ui.domains.ProductDomain
 import br.com.market.storage.utils.TransformClassHelper
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import java.net.HttpURLConnection
 import javax.inject.Inject
 
@@ -61,25 +56,39 @@ class ProductRepository @Inject constructor(
 
         product.synchronized = response.success && response.code != HttpURLConnection.HTTP_UNAVAILABLE
 
+        // Fazendo isso para que quando não conseguir se conectar com o servidor retorne sucesso
+        // por conta da persistência local
+        response.success = response.success || response.code != HttpURLConnection.HTTP_UNAVAILABLE
+
         response = response.copy(idLocal = idLocalProduct, idRemote = response.idRemote)
 
         return response
     }
 
-    fun findAllProducts(): Flow<List<ProductDomain>> {
-        return productDAO.findAllProducts().toProductDomainList()
-    }
+    /**
+     * Função para realizar as operações de remoção do produto, dependendo do cenário
+     * ele será removido fisicamente na base local e remota, mas, há tratativas para caso
+     * o serviço retorne algum erro, o registro ficará inativo na base local e pendente de
+     * sincronismo.
+     *
+     * @param productLocalId Id do produto na base local.
+     *
+     * @author Nikolas Luiz Schmitt
+     */
+    suspend fun deleteProduct(productLocalId: Long): MarketServiceResponse {
+        productDAO.inactivateProductAndReferences(productLocalId)
 
-    fun findProductById(productId: Long?): Flow<ProductDomain?> {
-        return productDAO.findProductById(productId).toProductDomain()
-    }
+        val response = productWebClient.deleteProduct(productLocalId)
 
-    suspend fun deleteProduct(id: Long) {
-        productDAO.deleteProductAndReferences(id)
-    }
+        if (response.success) {
+            productDAO.deleteProductAndReferences(productLocalId)
+        }
 
-    suspend fun deleteBrandAndReferences(productId: Long) {
-        brandDAO.deleteBrandAndReferences(productId)
+        // Fazendo isso para que quando não conseguir se conectar com o servidor retorne sucesso
+        // por conta da inativação local
+        response.success = response.success || response.code != HttpURLConnection.HTTP_UNAVAILABLE
+
+        return response
     }
 
     /**
@@ -95,19 +104,54 @@ class ProductRepository @Inject constructor(
     /**
      * Função responsável por realizar o sincronismo dos produtos.
      *
+     * Os produtos criados e alterados localmente serão enviados para a base remota
+     * e, caso seja bem sucedido o envio, os dados são marcados como sincronizados
+     * nos registros locais.
+     *
+     * Os produtos que foram inativados localmente serão enviados para o servido e lá
+     * serão excluidos, se a execução for bem sucedida, os dados serão excluídos localmente
+     * também.
+     *
+     * É feito um tratamento para que, caso haja um erro na primeira etapa (salvar ou alterar os registros),
+     * não seja sobrescrita a resposta que contém o erro.
+     *
      * @author Nikolas Luiz Schmitt
      */
     suspend fun syncProducts(): MarketServiceResponse {
-        val productsToSync = productDAO.findAllProductsNotSynchronized()
-        val response = productWebClient.syncProducts(productsToSync)
+        val activeProductsToSync = productDAO.findAllActiveProductsNotSynchronized()
+        val syncResponse = productWebClient.syncProducts(activeProductsToSync)
 
-        if (response.success) {
-            productsToSync.forEach {
+        if (syncResponse.success) {
+            activeProductsToSync.forEach {
                 val product = it.copy(synchronized = true)
                 productDAO.saveProduct(product)
             }
-        }
 
-        return response
+            val inactiveAndNotSynchronizedProducts = productDAO.findAllInactiveAndNotSynchronizedProducts()
+            val deleteResponse = productWebClient.deleteProducts(inactiveAndNotSynchronizedProducts)
+
+            if (deleteResponse.success) {
+                inactiveAndNotSynchronizedProducts.forEach {
+                    productDAO.deleteProductAndReferences(it.id!!)
+                }
+            }
+
+            return deleteResponse
+
+        } else {
+            return syncResponse
+        }
+    }
+
+    suspend fun deleteBrandAndReferences(productId: Long) {
+        brandDAO.deleteBrandAndReferences(productId)
+    }
+
+    fun findAllProducts(): Flow<List<ProductDomain>> {
+        return productDAO.findActiveAllProducts().toProductDomainList()
+    }
+
+    fun findProductById(productId: Long?): Flow<ProductDomain?> {
+        return productDAO.findProductById(productId).toProductDomain()
     }
 }

@@ -55,7 +55,8 @@
     <string name="form_product_screen_top_app_bar_title_update">Alterando um Produto</string>
     <string name="warning_dialog_title">Aviso</string>
     <string name="label_sinc">Sincronizar</string>
-    <string name="sync_products_service_error_message">Não foi possível sincronizar os produtos pois o serviço demorou a responder, tente novamente mais tarde, se o erro persistir, contate o suporte.</string>
-    <string name="sync_products_conection_error_message">Não foi possível sincronizar os produtos, você precisa estar conectado a internet para realizar essa operação.</string>
+    <string name="connection_server_error_message">Não foi possível enviar os dados para o servidor, a operação foi realizada apenas localmente, tente novamente mais tarde, se o erro persistir, contate o suporte.</string>
     <string name="label_sync">Sincronizando...</string>
+    <string name="unknown_error_message">Ocorreu um erro não tratado. \n %s</string>
+    <string name="product_saved_message">Produto Salvo com Sucesso.</string>
 </resources>

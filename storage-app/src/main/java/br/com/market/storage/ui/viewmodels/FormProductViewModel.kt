@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import br.com.market.storage.R
 import br.com.market.storage.business.repository.BrandRepository
 import br.com.market.storage.business.repository.ProductRepository
+import br.com.market.storage.business.services.response.MarketServiceResponse
 import br.com.market.storage.business.services.response.PersistenceResponse
 import br.com.market.storage.extensions.navParamToLong
 import br.com.market.storage.ui.domains.BrandDomain
@@ -158,12 +159,8 @@ class FormProductViewModel @Inject constructor(
         return response
     }
 
-    fun deleteProduct() {
-        productId?.let {
-            viewModelScope.launch {
-                productRepository.deleteProduct(it.navParamToLong())
-            }
-        }
+    suspend fun deleteProduct(): MarketServiceResponse {
+        return productRepository.deleteProduct(productId!!.navParamToLong())
     }
 
     fun deleteBrand(brandId: Long) {

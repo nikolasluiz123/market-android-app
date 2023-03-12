@@ -1,5 +1,6 @@
 package br.com.market.storage.business.services
 
+import br.com.market.storage.business.sdo.product.DeleteProductSDO
 import br.com.market.storage.business.sdo.product.NewProductSDO
 import br.com.market.storage.business.sdo.product.UpdateProductSDO
 import br.com.market.storage.business.services.response.MarketServiceResponse
@@ -18,37 +19,69 @@ interface ProductService {
     /**
      * Função para salvar um produto na base de dados remota.
      *
-     * @author Nikolas Luiz Schmitt
      *
      * @param token Token recebido ao logar que é usado em todas as requisições ao serviço.
-     * @param productDTO Produto com os atributos que o serviço precisa.
+     * @param productSDO Produto com os atributos que o serviço precisa.
+     *
+     * @author Nikolas Luiz Schmitt
      *
      */
     @POST("product")
-    suspend fun saveProduct(@Header("Authorization") token: String, @Body productDTO: NewProductSDO): Response<PersistenceResponse>
+    suspend fun saveProduct(@Header("Authorization") token: String, @Body productSDO: NewProductSDO): Response<PersistenceResponse>
 
     /**
      * Função para atualizar um produto na base de dados remota.
      *
-     * @author
-     *
      * @param token Token recebido ao logar que é usado em todas as requisições ao serviço.
-     * @param productDTO Produto com os atributos que o serviço precisa.
-     *
-     */
-    @PUT("product")
-    suspend fun updateProduct(@Header("Authorization") token: String, @Body productDTO: UpdateProductSDO): Response<PersistenceResponse>
-
-    /**
-     * Função para sincronizar os produtos que foram salvos ou alterados apenas localmente.
+     * @param productSDO Produto com os atributos que o serviço precisa.
      *
      * @author Nikolas Luiz Schmitt
      *
-     * @param token Token recebido ao logar que é usado em todas as requisições ao serviço.
-     * @param productDTOs Lista de produtos com os atributos que o serviço precisa.
+     */
+    @PUT("product")
+    suspend fun updateProduct(@Header("Authorization") token: String, @Body productSDO: UpdateProductSDO): Response<PersistenceResponse>
+
+    /**
+     * Função para remover um Produto e os dados com referência a ele.
      *
+     * OBS: Está sendo usado o método HTTP Post pois adotei o padrão de passagem de um Body,
+     * mas o DELETE não suporta. Isso foi feito devido a necessidade de deletar mais de uma entidade
+     * no sincronismo dai não ficamos com dois padrões de DELETE.
+     *
+     * @param token Token recebido ao logar que é usado em todas as requisições ao serviço.
+     * @param productSDO Produto com os atributos que o serviço precisa.
+     *
+     * @author Nikolas Luiz Schmitt
+     */
+    @POST("product/delete")
+    suspend fun deleteProduct(@Header("Authorization") token: String, @Body productSDO: DeleteProductSDO): Response<MarketServiceResponse>
+
+    /**
+     * Função para remover 'N' Produtos e os dados com referência a ele.
+     *
+     * Utilizada no sincronismos das bases de dados.
+     *
+     * OBS: Está sendo usado o método HTTP Post pois adotei o padrão de passagem de um Body,
+     * se isso não fosse feito teriam de ser passados os 'N' ids por GET
+     *
+     * @param token Token recebido ao logar que é usado em todas as requisições ao serviço.
+     * @param productSDOs Produtos com os atributos que o serviço precisa.
+     *
+     * @author Nikolas Luiz Schmitt
+     */
+    @POST("product/synchronize/delete")
+    suspend fun deleteProducts(@Header("Authorization") token: String, @Body productSDOs: List<DeleteProductSDO>): Response<MarketServiceResponse>
+
+    /**
+     * Função que sincroniza as informações dos produtos, enviando quem foi criado e quem foi alterado
+     * para a base remota.
+     *
+     * @param token Token recebido ao logar que é usado em todas as requisições ao serviço.
+     * @param productSDOs Lista de produtos com os atributos que o serviço precisa.
+     *
+     * @author Nikolas Luiz Schmitt
      */
     @POST("product/synchronize")
-    suspend fun syncProducts(@Header("Authorization") token: String, @Body productDTOs: List<NewProductSDO>): Response<MarketServiceResponse>
+    suspend fun syncProducts(@Header("Authorization") token: String, @Body productSDOs: List<NewProductSDO>): Response<MarketServiceResponse>
 
 }

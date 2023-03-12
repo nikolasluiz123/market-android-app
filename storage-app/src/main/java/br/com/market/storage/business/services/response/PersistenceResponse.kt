@@ -1,9 +1,24 @@
 package br.com.market.storage.business.services.response
 
+/**
+ * Classe que representa uma resposta de persistência,
+ * por ser utilizada, por exemplo, como retorno de uma função
+ * que salva ou atualiza uma entidade.
+ *
+ * Ela tem como objetivo conter as chaves primárias de uma entidade
+ * para que, se for necessário, possamos fazer operações com esses dados,
+ * por exemplo, realizar alguma busca ou outra operação que necessite do
+ * ID.
+ *
+ * @property idLocal Id da entidade na base local (do dispositivo móvel)
+ * @property idRemote Id da entidade na base remota (do serviço)
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 data class PersistenceResponse(
     var idLocal: Long? = null,
     var idRemote: Long? = null,
-    override var code: Int = 0,
+    override var code: Int,
     override var success: Boolean = false,
     override var error: String? = null
 ): IMarketServiceResponse

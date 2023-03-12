@@ -34,7 +34,7 @@ fun FormProductScreen(
     viewModel: FormProductViewModel,
     onBackClick: () -> Unit = { },
     onLogoutClick: () -> Unit = { },
-    onAfterDeleteProduct: () -> Unit = { }
+    onSuccessDeleteProduct: () -> Unit = { }
 ) {
     val state by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -60,7 +60,7 @@ fun FormProductScreen(
                     val response = viewModel.saveProduct(productDomain)
 
                     if (response.success) {
-                        Toast.makeText(context, "Produto Salvo com Sucesso.", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, context.getString(R.string.product_saved_message), Toast.LENGTH_LONG).show()
                     } else {
                         state.onToggleMessageDialog(response.error ?: "")
                     }
@@ -70,8 +70,19 @@ fun FormProductScreen(
             }
         },
         onDeletePoduct = {
-            viewModel.deleteProduct()
-            onAfterDeleteProduct()
+            coroutineScope.launch {
+                state.onToggleLoading()
+
+                val response = viewModel.deleteProduct()
+
+                if (response.success) {
+                    onSuccessDeleteProduct()
+                } else {
+                    state.onToggleMessageDialog(response.error ?: "")
+                }
+
+                state.onToggleLoading()
+            }
         },
         onDialogConfirmClick = { brand ->
             viewModel.saveBrand(brand)
@@ -84,7 +95,8 @@ fun FormProductScreen(
         onMenuItemDeleteBrandClick = {
             viewModel.deleteBrand(it)
         },
-        permissionNavToBrand = viewModel::permissionNavToBrand
+        permissionNavToBrand = viewModel::permissionNavToBrand,
+        onSuccessDeleteProduct = onSuccessDeleteProduct
     )
 }
 
@@ -99,9 +111,12 @@ fun FormProductScreen(
     onDeletePoduct: () -> Unit = { },
     onDialogConfirmClick: (BrandDomain) -> Unit = { },
     onMenuItemDeleteBrandClick: (Long) -> Unit = { },
-    permissionNavToBrand: () -> Boolean = { false }
+    permissionNavToBrand: () -> Boolean = { false },
+    onSuccessDeleteProduct: () -> Unit = { },
+
 ) {
     var tabIndex by remember { mutableStateOf(0) }
+    var isDelete = false
 
     Scaffold(topBar = {
         SearchableStorageTopAppBar(
@@ -118,7 +133,10 @@ fun FormProductScreen(
             customActions = {
                 if (!state.openSearch) {
                     if (tabIndex == 0 && isEditing) {
-                        IconButtonDelete(onDeletePoduct)
+                        IconButtonDelete {
+                            onDeletePoduct()
+                            isDelete = true
+                        }
                     } else if (state.brands.isNotEmpty()) {
                         IconButtonSearch(state.onToggleSearch)
                     }
@@ -152,7 +170,12 @@ fun FormProductScreen(
                 title = stringResource(R.string.warning_dialog_title),
                 show = state.showDialogMessage,
                 onDismissRequest = { state.onToggleMessageDialog("") },
-                message = state.serverMessage
+                message = state.serverMessage,
+                onDialogOkClick = {
+                    if (isDelete) {
+                        onSuccessDeleteProduct()
+                    }
+                }
             )
 
             TabRow(
