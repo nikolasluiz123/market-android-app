@@ -32,8 +32,9 @@ class ViewModelModule {
     @Provides
     @ViewModelScoped
     fun provideBrandRepository(
+        brandWebClient: BrandWebClient,
         brandDAO: BrandDAO
-    ): BrandRepository = BrandRepository(brandDAO)
+    ): BrandRepository = BrandRepository(brandWebClient, brandDAO)
 
     @Provides
     @ViewModelScoped

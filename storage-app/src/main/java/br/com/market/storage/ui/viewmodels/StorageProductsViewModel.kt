@@ -2,6 +2,7 @@ package br.com.market.storage.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import br.com.market.storage.business.repository.BrandRepository
 import br.com.market.storage.business.repository.ProductRepository
 import br.com.market.storage.business.repository.UserRepository
 import br.com.market.storage.business.services.response.MarketServiceResponse
@@ -23,6 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class StorageProductsViewModel @Inject constructor(
     private val productRepository: ProductRepository,
+    private val brandRepository: BrandRepository,
     private val userRepository: UserRepository
 ) : ViewModel() {
 
@@ -77,6 +79,10 @@ class StorageProductsViewModel @Inject constructor(
      */
     suspend fun syncProducts(): MarketServiceResponse {
         return productRepository.syncProducts()
+    }
+
+    suspend fun syncBrands(): MarketServiceResponse {
+        return brandRepository.syncBrands()
     }
 
     private fun onSearchProducts(searchedText: String) {

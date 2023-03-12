@@ -1,7 +1,7 @@
 package br.com.market.storage.business.sdo.brand
 
 data class UpdateBrandSDO(
-    var id: Long?,
+    var localBrandId: Long,
     var name: String,
-    var sumCount: Int = 0
+    var count: Int = 0
 )

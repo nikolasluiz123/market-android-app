@@ -23,12 +23,24 @@ abstract class BrandDAO {
                 "from products p " +
                 "inner join products_brands pb on pb.product_id = p.id " +
                 "inner join brands b on pb.brand_id = b.id " +
-                "where p.id = :productId "
+                "where p.id = :productId and b.active = true"
     )
     abstract fun findProductBrandsByProductId(productId: Long?): Flow<List<ProductBrandDomain>>
 
     @Query("select * from products_brands where brand_id = :brandId")
     abstract suspend fun findProductBrandByBrandId(brandId: Long): ProductBrand
+
+    @Transaction
+    open suspend fun inactivateBrandAndReferences(brandId: Long) {
+        inactivateProductBrandOfBrand(brandId)
+        inactivateBrand(brandId)
+    }
+
+    @Query("update products_brands set active = false, synchronized = false where brand_id = :brandId")
+    abstract suspend fun inactivateProductBrandOfBrand(brandId: Long)
+
+    @Query("update brands set active = false, synchronized = false where id = :brandId ")
+    abstract suspend fun inactivateBrand(brandId: Long)
 
     @Transaction
     open suspend fun deleteBrandAndReferences(brandId: Long) {
@@ -41,5 +53,14 @@ abstract class BrandDAO {
 
     @Query("delete from brands where id = :brandId ")
     abstract suspend fun deleteBrand(brandId: Long)
+
+    @Query("select * from brands where active = true and synchronized = false")
+    abstract suspend fun findAllActiveBrandsNotSynchronized(): List<Brand>
+
+    @Query("select * from products_brands where active = true and synchronized = false")
+    abstract suspend fun findAllActiveProductsBrandsNotSynchronized(): List<ProductBrand>
+
+    @Query("select * from brands where active = false and synchronized = false")
+    abstract suspend fun findAllInactiveAndNotSynchronizedBrands(): List<Brand>
 
 }

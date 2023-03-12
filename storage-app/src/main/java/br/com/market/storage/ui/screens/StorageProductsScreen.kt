@@ -15,6 +15,7 @@ import br.com.market.storage.ui.components.*
 import br.com.market.storage.ui.components.buttons.FloatingActionButtonAdd
 import br.com.market.storage.ui.states.StorageProductsUiState
 import br.com.market.storage.ui.theme.StorageTheme
+import br.com.market.storage.ui.theme.colorPrimary
 import br.com.market.storage.ui.viewmodels.StorageProductsViewModel
 import kotlinx.coroutines.launch
 
@@ -38,15 +39,21 @@ fun StorageProductsScreen(
             coroutineScope.launch {
                 state.onToggleLoading()
 
-                val response = viewModel.syncProducts()
+                val responseSyncProducts = viewModel.syncProducts()
+
+                if (responseSyncProducts.success) {
+                    val responseSyncBrands = viewModel.syncBrands()
+
+                    if (responseSyncBrands.success) {
+                        Toast.makeText(context, "Produtos Sincronizados com Sucesso.", Toast.LENGTH_LONG).show()
+                    } else {
+                        state.onToggleMessageDialog(responseSyncProducts.error ?: "")
+                    }
+                } else {
+                    state.onToggleMessageDialog(responseSyncProducts.error ?: "")
+                }
 
                 state.onToggleLoading()
-
-                if (response.success) {
-                    Toast.makeText(context, "Produtos Sincronizados com Sucesso.", Toast.LENGTH_LONG).show()
-                } else {
-                    state.onToggleMessageDialog(response.error ?: "")
-                }
             }
         }
     )
@@ -70,8 +77,17 @@ fun StorageProductsScreen(
                 onSearchChange = state.onSearchChange,
                 onToggleSearch = state.onToggleSearch,
                 onLogoutClick = onLogoutClick,
-                registersCountToSync = state.registersCountToSync,
-                onSynchronizeClick = onSynchronizeClick
+                menuItems = {
+                    DropdownMenuItem(
+                        text = {
+                            BadgedBox(badge = { Badge(containerColor = colorPrimary) { Text(state.registersCountToSync.toString()) } }) {
+                                Text(stringResource(R.string.label_sinc))
+                            }
+                        },
+                        onClick = onSynchronizeClick,
+                        enabled = state.registersCountToSync > 0
+                    )
+                }
             )
         },
         floatingActionButton = { FloatingActionButtonAdd(onClick = onFABNewProductClick) }

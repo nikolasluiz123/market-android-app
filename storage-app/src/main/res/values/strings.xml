@@ -59,4 +59,5 @@
     <string name="label_sync">Sincronizando...</string>
     <string name="unknown_error_message">Ocorreu um erro não tratado. \n %s</string>
     <string name="product_saved_message">Produto Salvo com Sucesso.</string>
+    <string name="save_brand_success_message">Marca Salva com Sucesso.</string>
 </resources>

@@ -27,6 +27,7 @@ import br.com.market.storage.ui.domains.ProductDomain
 import br.com.market.storage.ui.states.FormProductUiState
 import br.com.market.storage.ui.theme.StorageTheme
 import br.com.market.storage.ui.viewmodels.FormProductViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -85,15 +86,32 @@ fun FormProductScreen(
             }
         },
         onDialogConfirmClick = { brand ->
-            viewModel.saveBrand(brand)
-            Toast.makeText(
-                context,
-                "Marca Salva com Sucesso.",
-                Toast.LENGTH_LONG
-            ).show()
+            coroutineScope.launch {
+                state.onToggleLoading()
+
+                val response = viewModel.saveBrand(brand)
+
+                if (response.success) {
+                    Toast.makeText(context, context.getString(R.string.save_brand_success_message), Toast.LENGTH_LONG).show()
+                } else {
+                    state.onToggleMessageDialog(response.error ?: "")
+                }
+
+                state.onToggleLoading()
+            }
         },
         onMenuItemDeleteBrandClick = {
-            viewModel.deleteBrand(it)
+            coroutineScope.launch {
+                state.onToggleLoading()
+
+                val response = viewModel.deleteBrand(it)
+
+                if (!response.success) {
+                    state.onToggleMessageDialog(response.error ?: "")
+                }
+
+                state.onToggleLoading()
+            }
         },
         permissionNavToBrand = viewModel::permissionNavToBrand,
         onSuccessDeleteProduct = onSuccessDeleteProduct
@@ -114,7 +132,7 @@ fun FormProductScreen(
     permissionNavToBrand: () -> Boolean = { false },
     onSuccessDeleteProduct: () -> Unit = { },
 
-) {
+    ) {
     var tabIndex by remember { mutableStateOf(0) }
     var isDelete = false
 

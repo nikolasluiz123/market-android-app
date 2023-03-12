@@ -9,7 +9,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import br.com.market.storage.R
-import br.com.market.storage.ui.components.CardBrandItem
 import br.com.market.storage.ui.components.LazyVerticalListComponent
 import br.com.market.storage.ui.components.buttons.FloatingActionButtonAdd
 import br.com.market.storage.ui.domains.BrandDomain

@@ -54,11 +54,13 @@ class ProductRepository @Inject constructor(
             productWebClient.updateProduct(product)
         }
 
-        product.synchronized = response.success && response.code != HttpURLConnection.HTTP_UNAVAILABLE
+        product.synchronized = response.success && response.code == HttpURLConnection.HTTP_UNAVAILABLE
+
+        productDAO.saveProduct(product)
 
         // Fazendo isso para que quando não conseguir se conectar com o servidor retorne sucesso
         // por conta da persistência local
-        response.success = response.success || response.code != HttpURLConnection.HTTP_UNAVAILABLE
+        response.success = response.success || response.code == HttpURLConnection.HTTP_UNAVAILABLE
 
         response = response.copy(idLocal = idLocalProduct, idRemote = response.idRemote)
 
@@ -86,7 +88,7 @@ class ProductRepository @Inject constructor(
 
         // Fazendo isso para que quando não conseguir se conectar com o servidor retorne sucesso
         // por conta da inativação local
-        response.success = response.success || response.code != HttpURLConnection.HTTP_UNAVAILABLE
+        response.success = response.success || response.code == HttpURLConnection.HTTP_UNAVAILABLE
 
         return response
     }

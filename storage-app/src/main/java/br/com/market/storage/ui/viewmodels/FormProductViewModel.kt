@@ -154,7 +154,7 @@ class FormProductViewModel @Inject constructor(
         val response = productRepository.save(productDomain)
         productId = response.idLocal.toString()
 
-//        updateProductBrandsInfos()
+        updateProductBrandsInfos()
 
         return response
     }
@@ -163,18 +163,12 @@ class FormProductViewModel @Inject constructor(
         return productRepository.deleteProduct(productId!!.navParamToLong())
     }
 
-    fun deleteBrand(brandId: Long) {
-        viewModelScope.launch {
-            productRepository.deleteBrandAndReferences(brandId)
-        }
+    suspend fun deleteBrand(brandId: Long): MarketServiceResponse {
+        return brandRepository.deleteBrand(brandId)
     }
 
-    fun saveBrand(brand: BrandDomain) {
-        productId?.let {
-            viewModelScope.launch {
-                brandRepository.saveBrand(it.navParamToLong(), brand)
-            }
-        }
+    suspend fun saveBrand(brand: BrandDomain): PersistenceResponse {
+        return brandRepository.save(productId!!.navParamToLong(), brand)
     }
 
     fun permissionNavToBrand(): Boolean {

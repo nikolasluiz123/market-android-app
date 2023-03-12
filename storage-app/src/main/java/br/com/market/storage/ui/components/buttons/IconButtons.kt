@@ -64,27 +64,13 @@ fun MenuIconButton(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MenuIconButtonWithDefaultActions(
     onLogoutClick: () -> Unit,
-    menuItens: @Composable () -> Unit = { },
-    registersCountToSinc: Long = 0,
-    onSynchronizeClick: () -> Unit = { }
+    menuItens: @Composable () -> Unit = { }
 ) {
     MenuIconButton {
-        DropdownMenuItem(
-            text = {
-                BadgedBox(badge = { Badge(containerColor = colorPrimary) { Text(registersCountToSinc.toString()) } }) {
-                    Text(stringResource(R.string.label_sinc))
-                }
-            },
-            onClick = onSynchronizeClick,
-            enabled = registersCountToSinc > 0
-        )
-
+        menuItens()
         DropdownMenuItem(text = { Text(stringResource(R.string.label_logout)) }, onClick = onLogoutClick)
     }
-
-    menuItens()
 }
