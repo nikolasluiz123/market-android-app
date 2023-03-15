@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -16,12 +18,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import br.com.market.core.theme.MarketTheme
+import br.com.market.core.ui.components.CoilImageViewer
+import br.com.market.core.ui.components.OutlinedTextFieldValidation
+import br.com.market.core.ui.components.buttons.FloatingActionButtonSave
 import br.com.market.storage.R
-import br.com.market.storage.ui.components.CoilImageViewer
-import br.com.market.storage.ui.components.OutlinedTextFieldValidation
-import br.com.market.storage.ui.components.buttons.FloatingActionButtonSave
 import br.com.market.storage.ui.states.FormProductUiState
-import br.com.market.storage.ui.theme.StorageTheme
 
 /**
  * Tab do Produto
@@ -31,7 +33,6 @@ import br.com.market.storage.ui.theme.StorageTheme
  *
  * @author Nikolas Luiz Schmitt
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TabProduct(
     state: FormProductUiState = FormProductUiState(),
@@ -107,7 +108,7 @@ fun TabProduct(
 @Preview(showSystemUi = true)
 @Composable
 fun TabProductPreview() {
-    StorageTheme {
+    MarketTheme {
         Surface {
             TabProduct(FormProductUiState())
         }

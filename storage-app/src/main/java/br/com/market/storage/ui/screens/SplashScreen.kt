@@ -16,9 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import br.com.market.core.theme.MarketTheme
+import br.com.market.core.theme.colorSecondary
 import br.com.market.storage.R
-import br.com.market.storage.ui.theme.StorageTheme
-import br.com.market.storage.ui.theme.colorSecondary
 import kotlinx.coroutines.delay
 
 /**
@@ -63,7 +63,7 @@ fun SplashScreen(onAfterDelay: () -> Unit = { }) {
 @Preview
 @Composable
 fun SplashScreenPreview() {
-    StorageTheme {
+    MarketTheme {
         Surface {
             SplashScreen()
         }

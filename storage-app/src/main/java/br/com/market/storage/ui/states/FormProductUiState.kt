@@ -1,6 +1,8 @@
 package br.com.market.storage.ui.states
 
-import br.com.market.storage.ui.domains.ProductBrandDomain
+import br.com.market.core.ui.states.BaseUiState
+import br.com.market.domain.ProductBrandDomain
+import java.util.*
 
 /**
  * Classe de estado da tela de manutenção do produto e das marcas.
@@ -35,7 +37,7 @@ import br.com.market.storage.ui.domains.ProductBrandDomain
 data class FormProductUiState(
     val productName: String = "",
     val productImage: String = "",
-    val brandId: Long? = null,
+    val brandId: UUID? = null,
     val brandName: String = "",
     val brandQtd: String = "",
     val openSearch: Boolean = false,

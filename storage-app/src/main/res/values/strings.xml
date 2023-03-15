@@ -5,17 +5,8 @@
     <string name="login_screen_label_button_login">Login</string>
     <string name="login_screen_email_required_validation_message">O e-mail é obrigatório.</string>
     <string name="login_screen_password_required_validation_message">A senha é obrigatória.</string>
-    <string name="top_app_bar_text_field_hint">O que você procura?</string>
-    <string name="label_voltar">Voltar</string>
-    <string name="label_pesquisar">Pesquisar</string>
-    <string name="label_logout">Logout</string>
-    <string name="label_limpar_pesquisa">Limpar Pesquisa</string>
     <string name="storage_products_screen_app_bar_title">Produtos em Estoque</string>
-    <string name="label_adicionar">Adicionar</string>
-    <string name="text_empty_state_default">Não há Registros Cadastrados</string>
     <string name="storage_products_screen_empty_state">Não há Produtos Cadastrados</string>
-    <string name="label_save">Salvar</string>
-    <string name="label_image">Imagem</string>
     <string name="form_product_screen_tab_product_label_link_image">Link da Imagem</string>
     <string name="form_product_screen_tab_product_label_name">Nome</string>
     <string name="form_product_screen_tab_brand_empty_state_text">Não há Marcas para esse Produto</string>
@@ -34,11 +25,6 @@
     <string name="register_user_screen_password_required_validation_message">A senha é obrigatória.</string>
     <string name="register_user_screen_label_button_register">Cadastrar</string>
     <string name="register_user_screen_top_app_bar_title">Cadastrando um Usuário</string>
-    <string name="description_icon_hide_password">Hide password</string>
-    <string name="description_icon_show_password">Show password</string>
-    <string name="dialog_button_ok_label">OK</string>
-    <string name="authenticate_user_socket_timeout_error_message">Ocorreu um erro inesperado durante a autenticação, é possível que o serviço esteja sobrecarregado ou indisponível no momento. Para mais informações contate o suporte.</string>
-    <string name="register_user_socket_timeout_error_message">Ocorreu um erro inesperado durante o cadastro do usário, é possível que o serviço esteja sobrecarregado ou indisponível no momento. Para mais informações contate o suporte.</string>
     <string name="error_dialog_title">Erro</string>
     <string name="login_screen_label_button_register_user">Cadastrar-se</string>
     <string name="register_user_screen_email_invalid_validation_message">O e-mail é inválido.</string>
@@ -50,14 +36,10 @@
     <string name="login_screen_email_invalid_validation_message">O e-mail é inválido.</string>
     <string name="save_product_service_down_error_message">Houve algum problema para conectar-se com o serviço, o produto foi salvo apenas localmente, você deve sincronizar os dados.</string>
     <string name="save_product_no_connection_error_message">Você está sem conexão com a internet, o produto foi salvo apenas localmente. Quando puder se conectar, sincronize os dados.</string>
-    <string name="label_delete">Deletar</string>
     <string name="form_product_screen_top_app_bar_title_register">Cadastrando um Produto</string>
     <string name="form_product_screen_top_app_bar_title_update">Alterando um Produto</string>
     <string name="warning_dialog_title">Aviso</string>
     <string name="label_sinc">Sincronizar</string>
-    <string name="connection_server_error_message">Não foi possível enviar os dados para o servidor, a operação foi realizada apenas localmente, tente novamente mais tarde, se o erro persistir, contate o suporte.</string>
-    <string name="label_sync">Sincronizando...</string>
-    <string name="unknown_error_message">Ocorreu um erro não tratado. \n %s</string>
     <string name="product_saved_message">Produto Salvo com Sucesso.</string>
     <string name="save_brand_success_message">Marca Salva com Sucesso.</string>
 </resources>

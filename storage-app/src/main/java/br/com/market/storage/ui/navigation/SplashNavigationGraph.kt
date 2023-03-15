@@ -5,8 +5,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import br.com.market.storage.preferences.PreferencesKey
-import br.com.market.storage.preferences.dataStore
+import br.com.market.core.preferences.PreferencesKey
+import br.com.market.core.preferences.dataStore
 import br.com.market.storage.ui.screens.SplashScreen
 import kotlinx.coroutines.launch
 

@@ -1,14 +1,14 @@
 package br.com.market.storage.injection
 
 import android.content.Context
-import br.com.market.storage.business.dao.BrandDAO
-import br.com.market.storage.business.dao.ProductDAO
-import br.com.market.storage.business.repository.BrandRepository
-import br.com.market.storage.business.repository.ProductRepository
-import br.com.market.storage.business.repository.UserRepository
-import br.com.market.storage.business.webclient.BrandWebClient
-import br.com.market.storage.business.webclient.ProductWebClient
-import br.com.market.storage.business.webclient.UserWebClient
+import br.com.market.localdataaccess.dao.BrandDAO
+import br.com.market.localdataaccess.dao.ProductDAO
+import br.com.market.servicedataaccess.webclients.BrandWebClient
+import br.com.market.servicedataaccess.webclients.ProductWebClient
+import br.com.market.servicedataaccess.webclients.UserWebClient
+import br.com.market.storage.repository.BrandRepository
+import br.com.market.storage.repository.ProductRepository
+import br.com.market.storage.repository.UserRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

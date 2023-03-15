@@ -17,11 +17,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import br.com.market.core.theme.MarketTheme
+import br.com.market.core.ui.components.*
+import br.com.market.domain.UserDomain
 import br.com.market.storage.R
-import br.com.market.storage.ui.components.*
-import br.com.market.storage.ui.domains.UserDomain
 import br.com.market.storage.ui.states.RegisterUserUIState
-import br.com.market.storage.ui.theme.StorageTheme
 import br.com.market.storage.ui.viewmodels.RegisterUserViewModel
 import kotlinx.coroutines.launch
 
@@ -81,7 +81,7 @@ fun RegisterUserScreen(
 ) {
     Scaffold(
         topBar = {
-            StorageTopAppBar(
+            MarketTopAppBar(
                 title = {
                     Text(
                         text = stringResource(R.string.register_user_screen_top_app_bar_title),
@@ -100,7 +100,7 @@ fun RegisterUserScreen(
         ) {
             val (nameRef, emailRef, passwordRef, registerButtonRef, loadingRef) = createRefs()
 
-            StorageAppLinearProgressIndicator(
+            MarketLinearProgressIndicator(
                 state.showLoading,
                 Modifier
                     .constrainAs(loadingRef) {
@@ -202,7 +202,7 @@ fun RegisterUserScreen(
 @Preview
 @Composable
 fun RegisterUserPreview() {
-    StorageTheme {
+    MarketTheme {
         Surface {
             RegisterUserScreen()
         }

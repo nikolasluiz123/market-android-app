@@ -14,20 +14,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import br.com.market.core.extensions.navParamToString
+import br.com.market.core.theme.MarketTheme
+import br.com.market.core.ui.components.DialogMessage
+import br.com.market.core.ui.components.MarketLinearProgressIndicator
+import br.com.market.core.ui.components.SearchableMarketTopAppBar
+import br.com.market.core.ui.components.buttons.IconButtonClose
+import br.com.market.core.ui.components.buttons.IconButtonDelete
+import br.com.market.core.ui.components.buttons.IconButtonSearch
+import br.com.market.domain.BrandDomain
+import br.com.market.domain.ProductDomain
 import br.com.market.storage.R
-import br.com.market.storage.extensions.navParamToLong
-import br.com.market.storage.ui.components.DialogMessage
-import br.com.market.storage.ui.components.SearchableStorageTopAppBar
-import br.com.market.storage.ui.components.StorageAppLinearProgressIndicator
-import br.com.market.storage.ui.components.buttons.IconButtonClose
-import br.com.market.storage.ui.components.buttons.IconButtonDelete
-import br.com.market.storage.ui.components.buttons.IconButtonSearch
-import br.com.market.storage.ui.domains.BrandDomain
-import br.com.market.storage.ui.domains.ProductDomain
 import br.com.market.storage.ui.states.FormProductUiState
-import br.com.market.storage.ui.theme.StorageTheme
 import br.com.market.storage.ui.viewmodels.FormProductViewModel
 import kotlinx.coroutines.launch
+import java.util.*
 
 /**
  * Tela de manutenção do produto e das marcas. Esse é o composable stateless,
@@ -63,7 +64,7 @@ fun FormProductScreen(
                     state.onToggleLoading()
 
                     val productDomain = ProductDomain(
-                        id = viewModel.productId.navParamToLong(),
+                        id = viewModel.productId?.let { UUID.fromString(it.navParamToString()) },
                         name = state.productName,
                         imageUrl = state.productImage
                     )
@@ -155,7 +156,7 @@ fun FormProductScreen(
     onFABSaveProductClick: () -> Unit = { },
     onDeleteProduct: () -> Unit = { },
     onDialogConfirmClick: (BrandDomain) -> Unit = { },
-    onMenuItemDeleteBrandClick: (Long) -> Unit = { },
+    onMenuItemDeleteBrandClick: (UUID) -> Unit = { },
     permissionNavToBrand: () -> Boolean = { false },
     onSuccessDeleteProduct: () -> Unit = { },
 
@@ -164,7 +165,7 @@ fun FormProductScreen(
     var isDelete = false
 
     Scaffold(topBar = {
-        SearchableStorageTopAppBar(
+        SearchableMarketTopAppBar(
             openSearch = state.openSearch,
             searchText = state.searchText,
             title = if (isEditing) stringResource(R.string.form_product_screen_top_app_bar_title_update)
@@ -201,7 +202,7 @@ fun FormProductScreen(
             val pagerState = rememberPagerState()
             val coroutineScope = rememberCoroutineScope()
 
-            StorageAppLinearProgressIndicator(
+            MarketLinearProgressIndicator(
                 state.showLoading,
                 Modifier
                     .constrainAs(loadingRef) {
@@ -293,7 +294,7 @@ fun FormProductScreen(
 @Preview(showSystemUi = true)
 @Composable
 fun FormProductScreenPreview() {
-    StorageTheme {
+    MarketTheme {
         Surface {
             FormProductScreen()
         }

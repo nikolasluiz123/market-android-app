@@ -4,15 +4,15 @@ import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import br.com.market.core.extensions.navParamToString
+import br.com.market.domain.BrandDomain
+import br.com.market.domain.ProductBrandDomain
+import br.com.market.domain.ProductDomain
+import br.com.market.servicedataaccess.responses.MarketServiceResponse
+import br.com.market.servicedataaccess.responses.PersistenceResponse
 import br.com.market.storage.R
-import br.com.market.storage.business.repository.BrandRepository
-import br.com.market.storage.business.repository.ProductRepository
-import br.com.market.storage.business.services.response.MarketServiceResponse
-import br.com.market.storage.business.services.response.PersistenceResponse
-import br.com.market.storage.extensions.navParamToLong
-import br.com.market.storage.ui.domains.BrandDomain
-import br.com.market.storage.ui.domains.ProductBrandDomain
-import br.com.market.storage.ui.domains.ProductDomain
+import br.com.market.storage.repository.BrandRepository
+import br.com.market.storage.repository.ProductRepository
 import br.com.market.storage.ui.states.FormProductUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -161,15 +162,15 @@ class FormProductViewModel @Inject constructor(
     }
 
     suspend fun deleteProduct(): MarketServiceResponse {
-        return productRepository.deleteProduct(productId!!.navParamToLong())
+        return productRepository.deleteProduct(UUID.fromString(productId!!.navParamToString()))
     }
 
-    suspend fun deleteBrand(brandId: Long): MarketServiceResponse {
+    suspend fun deleteBrand(brandId: UUID): MarketServiceResponse {
         return brandRepository.deleteBrand(brandId)
     }
 
     suspend fun saveBrand(brand: BrandDomain): PersistenceResponse {
-        return brandRepository.save(productId!!.navParamToLong(), brand)
+        return brandRepository.save(UUID.fromString(productId!!.navParamToString()), brand)
     }
 
     fun permissionNavToBrand(): Boolean {
@@ -178,7 +179,7 @@ class FormProductViewModel @Inject constructor(
 
     private fun updateProductFormInfos() {
         if (productId != null) {
-            val productDomainFlow = productRepository.findProductById(productId.navParamToLong())
+            val productDomainFlow = productRepository.findProductById(UUID.fromString(productId!!.navParamToString()))
 
             viewModelScope.launch {
                 productDomainFlow.collect {
@@ -198,7 +199,7 @@ class FormProductViewModel @Inject constructor(
 
     private fun updateProductBrandsInfos(searchedText: String = "") {
         if (productId != null) {
-            val productBrandDomainFlow = brandRepository.findAllActiveProductBrandsByProductId(productId.navParamToLong())
+            val productBrandDomainFlow = brandRepository.findAllActiveProductBrandsByProductId(UUID.fromString(productId!!.navParamToString()))
 
             viewModelScope.launch {
                 productBrandDomainFlow.collect { productBrandDomainList ->

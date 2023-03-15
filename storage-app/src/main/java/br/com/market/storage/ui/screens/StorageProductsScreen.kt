@@ -9,16 +9,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import br.com.market.core.theme.MarketTheme
+import br.com.market.core.theme.colorPrimary
+import br.com.market.core.ui.components.DialogMessage
+import br.com.market.core.ui.components.LazyVerticalGridComponent
+import br.com.market.core.ui.components.MarketCircularBlockUIProgressIndicator
+import br.com.market.core.ui.components.SearchableMarketTopAppBar
+import br.com.market.core.ui.components.buttons.FloatingActionButtonAdd
 import br.com.market.storage.R
 import br.com.market.storage.sampledata.sampleProducts
-import br.com.market.storage.ui.components.*
-import br.com.market.storage.ui.components.buttons.FloatingActionButtonAdd
 import br.com.market.storage.ui.screens.formproduct.CardProductItem
 import br.com.market.storage.ui.states.StorageProductsUiState
-import br.com.market.storage.ui.theme.StorageTheme
-import br.com.market.storage.ui.theme.colorPrimary
 import br.com.market.storage.ui.viewmodels.StorageProductsViewModel
 import kotlinx.coroutines.launch
+import java.util.*
 
 /**
  * Tela de listagem dos produtos em estoque stateless.
@@ -33,7 +37,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun StorageProductsScreen(
     viewModel: StorageProductsViewModel,
-    onItemClick: (Long) -> Unit = { },
+    onItemClick: (UUID) -> Unit = { },
     onLogoutClick: () -> Unit = { },
     onFABNewProductClick: () -> Unit = { }
 ) {
@@ -85,14 +89,14 @@ fun StorageProductsScreen(
 @Composable
 fun StorageProductsScreen(
     state: StorageProductsUiState = StorageProductsUiState(),
-    onItemClick: (Long) -> Unit = { },
+    onItemClick: (UUID) -> Unit = { },
     onLogoutClick: () -> Unit = { },
     onFABNewProductClick: () -> Unit = { },
     onSynchronizeClick: () -> Unit = { }
 ) {
     Scaffold(
         topBar = {
-            SearchableStorageTopAppBar(
+            SearchableMarketTopAppBar(
                 openSearch = state.openSearch,
                 searchText = state.searchText,
                 title = stringResource(R.string.storage_products_screen_app_bar_title),
@@ -136,9 +140,9 @@ fun StorageProductsScreen(
             )
         }
 
-        StorageAppCircularBlockUIProgressIndicator(
+        MarketCircularBlockUIProgressIndicator(
             state.showLoading,
-            stringResource(R.string.label_sync)
+            stringResource(br.com.market.core.R.string.label_sync)
         )
     }
 }
@@ -146,7 +150,7 @@ fun StorageProductsScreen(
 @Preview(showSystemUi = true)
 @Composable
 fun StorageProductsPreview() {
-    StorageTheme {
+    MarketTheme {
         Surface {
             StorageProductsScreen(state = StorageProductsUiState(products = sampleProducts))
         }
@@ -156,7 +160,7 @@ fun StorageProductsPreview() {
 @Preview(showSystemUi = true)
 @Composable
 fun StorageProductsEmptyPreview() {
-    StorageTheme {
+    MarketTheme {
         Surface {
             StorageProductsScreen()
         }

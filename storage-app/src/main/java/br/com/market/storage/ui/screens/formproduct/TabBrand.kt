@@ -2,19 +2,21 @@ package br.com.market.storage.ui.screens.formproduct
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.*
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
+import br.com.market.core.theme.MarketTheme
+import br.com.market.core.ui.components.LazyVerticalListComponent
+import br.com.market.core.ui.components.buttons.FloatingActionButtonAdd
+import br.com.market.domain.BrandDomain
+import br.com.market.domain.ProductBrandDomain
 import br.com.market.storage.R
-import br.com.market.storage.ui.components.LazyVerticalListComponent
-import br.com.market.storage.ui.components.buttons.FloatingActionButtonAdd
-import br.com.market.storage.ui.domains.BrandDomain
-import br.com.market.storage.ui.domains.ProductBrandDomain
 import br.com.market.storage.ui.states.FormProductUiState
-import br.com.market.storage.ui.theme.StorageTheme
+import java.util.*
 
 /**
  * Tab de Marcas
@@ -25,12 +27,11 @@ import br.com.market.storage.ui.theme.StorageTheme
  *
  * @author Nikolas Luiz Schmitt
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TabBrand(
     state: FormProductUiState = FormProductUiState(),
     onDialogConfirmClick: (BrandDomain) -> Unit = { },
-    onMenuItemDeleteBrandClick: (Long) -> Unit = { }
+    onMenuItemDeleteBrandClick: (UUID) -> Unit = { }
 ) {
     Scaffold(
         floatingActionButton = {
@@ -77,7 +78,7 @@ fun TabBrand(
 @Preview(showSystemUi = true)
 @Composable
 fun FormBrandPreview() {
-    StorageTheme {
+    MarketTheme {
         Surface {
             TabBrand(
                 state = FormProductUiState(
@@ -95,7 +96,7 @@ fun FormBrandPreview() {
 @Preview(showSystemUi = true)
 @Composable
 fun FormBrandEmptyListPreview() {
-    StorageTheme {
+    MarketTheme {
         Surface {
             TabBrand()
         }

@@ -4,10 +4,10 @@ import android.content.Context
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import br.com.market.domain.UserDomain
+import br.com.market.servicedataaccess.responses.AuthenticationResponse
 import br.com.market.storage.R
-import br.com.market.storage.business.repository.UserRepository
-import br.com.market.storage.business.services.response.AuthenticationResponse
-import br.com.market.storage.ui.domains.UserDomain
+import br.com.market.storage.repository.UserRepository
 import br.com.market.storage.ui.states.LoginUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext

@@ -3,8 +3,14 @@ package br.com.market.storage.ui.screens
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -13,15 +19,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import br.com.market.core.theme.MarketTheme
+import br.com.market.core.theme.colorPrimary
+import br.com.market.core.ui.components.DialogMessage
+import br.com.market.core.ui.components.MarketLinearProgressIndicator
+import br.com.market.core.ui.components.OutlinedTextFieldPasswordValidation
+import br.com.market.core.ui.components.OutlinedTextFieldValidation
+import br.com.market.domain.UserDomain
 import br.com.market.storage.R
-import br.com.market.storage.ui.components.DialogMessage
-import br.com.market.storage.ui.components.OutlinedTextFieldPasswordValidation
-import br.com.market.storage.ui.components.OutlinedTextFieldValidation
-import br.com.market.storage.ui.components.StorageAppLinearProgressIndicator
-import br.com.market.storage.ui.domains.UserDomain
 import br.com.market.storage.ui.states.LoginUiState
-import br.com.market.storage.ui.theme.StorageTheme
-import br.com.market.storage.ui.theme.colorPrimary
 import br.com.market.storage.ui.viewmodels.LoginViewModel
 import kotlinx.coroutines.launch
 
@@ -82,7 +88,7 @@ fun LoginScreen(
     ) {
         val (loadingRef) = createRefs()
 
-        StorageAppLinearProgressIndicator(
+        MarketLinearProgressIndicator(
             state.showLoading,
             Modifier
                 .constrainAs(loadingRef) {
@@ -191,7 +197,7 @@ fun LoginScreen(
 @Preview(showSystemUi = true)
 @Composable
 fun LoginPreview() {
-    StorageTheme {
+    MarketTheme {
         Surface {
             LoginScreen(state = LoginUiState())
         }

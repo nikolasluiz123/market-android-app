@@ -1,5 +1,7 @@
 package br.com.market.storage.ui.states
 
+import br.com.market.core.ui.states.BaseUiState
+
 /**
  * Classe de estado da tela de cadastro do usuário
  *

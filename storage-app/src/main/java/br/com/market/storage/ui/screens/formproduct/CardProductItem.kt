@@ -11,10 +11,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import br.com.market.core.theme.MarketTheme
+import br.com.market.core.theme.colorCard
+import br.com.market.core.theme.colorPrimary
+import br.com.market.core.ui.components.CoilImageViewer
+import br.com.market.domain.ProductDomain
 import br.com.market.storage.sampledata.sampleProducts
-import br.com.market.storage.ui.components.CoilImageViewer
-import br.com.market.storage.ui.domains.ProductDomain
-import br.com.market.storage.ui.theme.*
+import java.util.*
 
 /**
  * Card do item da lista de produtos em estoque.
@@ -25,7 +28,7 @@ import br.com.market.storage.ui.theme.*
  * @author Nikolas Luiz Schmitt
  */
 @Composable
-fun CardProductItem(product: ProductDomain, onClick: (Long) -> Unit = { }) {
+fun CardProductItem(product: ProductDomain, onClick: (UUID) -> Unit = { }) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -68,7 +71,7 @@ fun CardProductItem(product: ProductDomain, onClick: (Long) -> Unit = { }) {
 @Preview(showSystemUi = true)
 @Composable
 fun CardProductItemLightPreview() {
-    StorageTheme {
+    MarketTheme {
         Surface {
             CardProductItem(product = sampleProducts[0])
         }
@@ -78,7 +81,7 @@ fun CardProductItemLightPreview() {
 @Preview(showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun CardProductItemDarkPreview() {
-    StorageTheme {
+    MarketTheme {
         Surface {
             CardProductItem(product = sampleProducts[0])
         }

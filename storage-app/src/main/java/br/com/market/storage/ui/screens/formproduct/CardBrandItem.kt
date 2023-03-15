@@ -5,19 +5,20 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import br.com.market.core.theme.MarketTheme
+import br.com.market.core.theme.colorCard
+import br.com.market.core.theme.colorPrimary
+import br.com.market.core.ui.components.buttons.MenuIconButton
+import br.com.market.domain.ProductBrandDomain
 import br.com.market.storage.R
-import br.com.market.storage.ui.components.buttons.MenuIconButton
-import br.com.market.storage.ui.domains.ProductBrandDomain
-import br.com.market.storage.ui.theme.StorageTheme
-import br.com.market.storage.ui.theme.colorCard
-import br.com.market.storage.ui.theme.colorPrimary
+import java.util.*
 
 /**
  * Card do item da lista de marcas.
@@ -32,7 +33,7 @@ import br.com.market.storage.ui.theme.colorPrimary
 fun CardBrandItem(
     productBrandDomain: ProductBrandDomain,
     onItemClick: (ProductBrandDomain) -> Unit = { },
-    onMenuItemDeleteBrandClick: (Long) -> Unit = { }
+    onMenuItemDeleteBrandClick: (UUID) -> Unit = { }
 ) {
     Card(
         modifier = Modifier
@@ -139,7 +140,7 @@ fun CardBrandItem(
 @Preview
 @Composable
 fun CardBrandItemPreview() {
-    StorageTheme {
+    MarketTheme {
         Surface {
             CardBrandItem(ProductBrandDomain(productName = "Arroz", brandName = "Dalfovo", count = 4))
         }

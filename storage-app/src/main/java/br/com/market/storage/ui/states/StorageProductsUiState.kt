@@ -1,6 +1,7 @@
 package br.com.market.storage.ui.states
 
-import br.com.market.storage.ui.domains.ProductDomain
+import br.com.market.core.ui.states.BaseUiState
+import br.com.market.domain.ProductDomain
 
 /**
  * Classe de estado da tela de listagem dos produtos em estoque

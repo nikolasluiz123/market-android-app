@@ -2,14 +2,17 @@ package br.com.market.storage.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import br.com.market.storage.business.repository.BrandRepository
-import br.com.market.storage.business.repository.ProductRepository
-import br.com.market.storage.business.repository.UserRepository
-import br.com.market.storage.business.services.response.MarketServiceResponse
-import br.com.market.storage.ui.domains.ProductDomain
+import br.com.market.domain.ProductDomain
+import br.com.market.servicedataaccess.responses.MarketServiceResponse
+import br.com.market.storage.repository.BrandRepository
+import br.com.market.storage.repository.ProductRepository
+import br.com.market.storage.repository.UserRepository
 import br.com.market.storage.ui.states.StorageProductsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

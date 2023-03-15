@@ -16,11 +16,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import br.com.market.core.theme.MarketTheme
+import br.com.market.core.ui.components.OutlinedTextFieldValidation
+import br.com.market.domain.BrandDomain
 import br.com.market.storage.R
-import br.com.market.storage.ui.components.OutlinedTextFieldValidation
-import br.com.market.storage.ui.domains.BrandDomain
 import br.com.market.storage.ui.states.FormProductUiState
-import br.com.market.storage.ui.theme.StorageTheme
 
 /**
  * Dialog de manutenção da marca.
@@ -145,7 +145,7 @@ fun BrandDialog(
 @Preview
 @Composable
 fun BrandDialogPreview() {
-    StorageTheme {
+    MarketTheme {
         Surface {
             BrandDialog()
         }
