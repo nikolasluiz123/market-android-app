@@ -12,7 +12,7 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "storage"
+rootProject.name = "market-android-app"
 include ':storage-app'
 include ':market-core'
 include ':market-models'
