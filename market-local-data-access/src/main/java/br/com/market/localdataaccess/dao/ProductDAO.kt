@@ -56,6 +56,14 @@ abstract class ProductDAO {
     @Query("select * from products where id = :productId")
     abstract fun findProductById(productId: UUID): Flow<Product?>
 
+    /**
+     * Find brand ids by product id
+     *
+     * testeeeee
+     *
+     * @param productId
+     * @return
+     */
     @Query("select b.id " +
             "from brands b " +
             "inner join products_brands pb on pb.brand_id = b.id " +
