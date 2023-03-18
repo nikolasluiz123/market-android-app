@@ -7,9 +7,11 @@ import br.com.market.sdo.brand.DeleteBrandSDO
 import br.com.market.sdo.brand.NewBrandSDO
 import br.com.market.sdo.brand.UpdateBrandSDO
 import br.com.market.servicedataaccess.extensions.getPersistenceResponseBody
+import br.com.market.servicedataaccess.extensions.getReadResponseBody
 import br.com.market.servicedataaccess.extensions.getResponseBody
 import br.com.market.servicedataaccess.responses.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.PersistenceResponse
+import br.com.market.servicedataaccess.responses.ReadResponse
 import br.com.market.servicedataaccess.services.BrandService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.*
@@ -40,7 +42,13 @@ class BrandWebClient @Inject constructor(
     suspend fun saveBrand(productId: UUID, brand: Brand, productBrand: ProductBrand): PersistenceResponse {
         return persistenceServiceErrorHandlingBlock(
             codeBlock = {
-                val newBrandSDO = NewBrandSDO(localProductId = productId, localBrandId = brand.id, name = brand.name, count = productBrand.count)
+                val newBrandSDO = NewBrandSDO(
+                    localProductBrandId = productBrand.id,
+                    localProductId = productId,
+                    localBrandId = brand.id,
+                    name = brand.name,
+                    count = productBrand.count
+                )
                 brandService.saveBrand(getToken(), newBrandSDO).getPersistenceResponseBody()
             }
         )
@@ -57,7 +65,7 @@ class BrandWebClient @Inject constructor(
     suspend fun updateBrand(brand: Brand, productBrand: ProductBrand): PersistenceResponse {
         return persistenceServiceErrorHandlingBlock(
             codeBlock = {
-                val updateBrandSDO = UpdateBrandSDO(brand.id!!, brand.name, productBrand.count)
+                val updateBrandSDO = UpdateBrandSDO(brand.id, brand.name, productBrand.count)
                 brandService.updateBrand(getToken(), updateBrandSDO).getPersistenceResponseBody()
             }
         )
@@ -95,7 +103,7 @@ class BrandWebClient @Inject constructor(
 
                 for (brand in activeBrandsToSync) {
                     val productBrand = activeProductsBrandsToSync.find { it.brandId == brand.id }!!
-                    brandsDTOs.add(NewBrandSDO(productBrand.productId, brand.id, brand.name, productBrand.count))
+                    brandsDTOs.add(NewBrandSDO(productBrand.id, productBrand.productId, brand.id, brand.name, productBrand.count))
                 }
 
                 brandService.syncBrands(getToken(), brandsDTOs).getResponseBody()
@@ -113,8 +121,36 @@ class BrandWebClient @Inject constructor(
     suspend fun deleteBrands(inactiveAndNotSynchronizedBrands: List<Brand>): MarketServiceResponse {
         return serviceErrorHandlingBlock(
             codeBlock = {
-                val brandsDTOs = inactiveAndNotSynchronizedBrands.map { DeleteBrandSDO(it.id!!) }
+                val brandsDTOs = inactiveAndNotSynchronizedBrands.map { DeleteBrandSDO(it.id) }
                 brandService.deleteBrands(getToken(), brandsDTOs).getResponseBody()
+            }
+        )
+    }
+
+    suspend fun findAllBrands(): ReadResponse<Brand> {
+        return readServiceErrorHandlingBlock(
+            codeBlock = {
+                val readResponse = brandService.findAllBrands(getToken()).getReadResponseBody()
+                val values = readResponse.values.map { Brand(id = it.localBrandId, name = it.name, synchronized = true) }
+                ReadResponse(values, readResponse.code, readResponse.success, readResponse.error)
+            }
+        )
+    }
+
+    suspend fun findAllProductBrands(): ReadResponse<ProductBrand> {
+        return readServiceErrorHandlingBlock(
+            codeBlock = {
+                val readResponse = brandService.findAllProductBrands(getToken()).getReadResponseBody()
+                val values = readResponse.values.map {
+                    ProductBrand(
+                        id = it.localId,
+                        productId = it.localProductId,
+                        brandId = it.localBrandId,
+                        count = it.count,
+                        synchronized = true
+                    )
+                }
+                ReadResponse(values, readResponse.code, readResponse.success, readResponse.error)
             }
         )
     }

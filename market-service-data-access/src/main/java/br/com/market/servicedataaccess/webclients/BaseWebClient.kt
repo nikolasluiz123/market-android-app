@@ -9,6 +9,7 @@ import br.com.market.core.utils.TokenUtils
 import br.com.market.servicedataaccess.responses.AuthenticationResponse
 import br.com.market.servicedataaccess.responses.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.PersistenceResponse
+import br.com.market.servicedataaccess.responses.ReadResponse
 import java.net.ConnectException
 import java.net.HttpURLConnection
 import java.net.SocketTimeoutException
@@ -148,6 +149,41 @@ open class BaseWebClient(private val context: Context) {
                 }
                 is ConnectException -> {
                     AuthenticationResponse(
+                        code = HttpURLConnection.HTTP_UNAVAILABLE,
+                        success = false,
+                        error = context.getString(R.string.connection_server_error_message)
+                    )
+                }
+                else -> customExceptions(e)
+            }
+        }
+    }
+
+    suspend fun <SDO> readServiceErrorHandlingBlock(
+        codeBlock: suspend () -> ReadResponse<SDO>,
+        customExceptions: (e: Exception) -> ReadResponse<SDO> = {
+            Log.e("Error", "readServiceErrorHandlingBlock: ", it)
+
+            ReadResponse(
+                code = HttpURLConnection.HTTP_INTERNAL_ERROR,
+                success = false,
+                error = context.getString(R.string.unknown_error_message, it.message),
+            )
+        }
+    ): ReadResponse<SDO> {
+        return try {
+            codeBlock()
+        } catch (e: Exception) {
+            when (e) {
+                is SocketTimeoutException -> {
+                    ReadResponse(
+                        code = HttpURLConnection.HTTP_UNAVAILABLE,
+                        success = false,
+                        error = context.getString(R.string.connection_server_error_message)
+                    )
+                }
+                is ConnectException -> {
+                    ReadResponse(
                         code = HttpURLConnection.HTTP_UNAVAILABLE,
                         success = false,
                         error = context.getString(R.string.connection_server_error_message)

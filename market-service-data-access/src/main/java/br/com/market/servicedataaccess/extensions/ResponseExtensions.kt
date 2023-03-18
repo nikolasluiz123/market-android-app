@@ -3,6 +3,7 @@ package br.com.market.servicedataaccess.extensions
 import br.com.market.servicedataaccess.responses.AuthenticationResponse
 import br.com.market.servicedataaccess.responses.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.PersistenceResponse
+import br.com.market.servicedataaccess.responses.ReadResponse
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import retrofit2.Response
@@ -30,6 +31,11 @@ fun Response<PersistenceResponse>.getPersistenceResponseBody(): PersistenceRespo
  */
 fun Response<AuthenticationResponse>.getAuthenticationResponseBody(): AuthenticationResponse {
     val type = object : TypeToken<AuthenticationResponse>() {}.type
+    return this.body() ?: Gson().fromJson(this.errorBody()!!.charStream(), type)
+}
+
+fun <SDO> Response<ReadResponse<SDO>>.getReadResponseBody(): ReadResponse<SDO> {
+    val type = object : TypeToken<ReadResponse<SDO>>() {}.type
     return this.body() ?: Gson().fromJson(this.errorBody()!!.charStream(), type)
 }
 

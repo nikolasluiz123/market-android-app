@@ -2,9 +2,11 @@ package br.com.market.servicedataaccess.services
 
 import br.com.market.sdo.product.DeleteProductSDO
 import br.com.market.sdo.product.NewProductSDO
+import br.com.market.sdo.product.SyncProductDTO
 import br.com.market.sdo.product.UpdateProductSDO
 import br.com.market.servicedataaccess.responses.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.PersistenceResponse
+import br.com.market.servicedataaccess.responses.ReadResponse
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -82,5 +84,8 @@ interface ProductService {
      */
     @POST("product/synchronize")
     suspend fun syncProducts(@Header("Authorization") token: String, @Body productSDOs: List<NewProductSDO>): Response<MarketServiceResponse>
+
+    @GET("product")
+    suspend fun findAllProducts(@Header("Authorization") token: String): Response<ReadResponse<SyncProductDTO>>
 
 }

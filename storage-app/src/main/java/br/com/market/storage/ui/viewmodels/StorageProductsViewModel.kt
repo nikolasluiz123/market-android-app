@@ -9,7 +9,6 @@ import br.com.market.storage.repository.ProductRepository
 import br.com.market.storage.repository.UserRepository
 import br.com.market.storage.ui.states.StorageProductsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -35,12 +34,6 @@ class StorageProductsViewModel @Inject constructor(
     val uiState get() = _uiState.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            findCountOfNotSynchronizedRegisters().collect {
-                _uiState.value = _uiState.value.copy(registersCountToSync = it)
-            }
-        }
-
         _uiState.update { currentState ->
             currentState.copy(
                 onToggleMessageDialog = { errorMessage ->
@@ -64,15 +57,6 @@ class StorageProductsViewModel @Inject constructor(
                 )
             }
         }
-    }
-
-    /**
-     * Função para realizar a contagem de registros a serem sincronizados.
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-    private fun findCountOfNotSynchronizedRegisters(): Flow<Long> {
-        return productRepository.findCountOfNotSynchronizedRegisters()
     }
 
     /**

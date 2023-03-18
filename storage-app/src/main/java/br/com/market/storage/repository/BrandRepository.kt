@@ -133,13 +133,25 @@ class BrandRepository @Inject constructor(
 
             val deleteResponse = brandWebClient.deleteBrands(inactiveAndNotSynchronizedBrands)
 
-            if (deleteResponse.success) {
+            return if (deleteResponse.success) {
                 inactiveAndNotSynchronizedBrands.forEach {
                     brandDAO.deleteBrandAndReferences(it.id)
                 }
-            }
 
-            return deleteResponse
+                val findAllBrandsResponse = brandWebClient.findAllBrands()
+                findAllBrandsResponse.values.forEach { brandDAO.saveBrand(it) }
+
+                return if (findAllBrandsResponse.success) {
+                    val findAllProductBrandsResponse = brandWebClient.findAllProductBrands()
+                    findAllProductBrandsResponse.values.forEach { brandDAO.saveProductBrand(it) }
+
+                    findAllProductBrandsResponse.toBaseResponse()
+                } else {
+                    findAllBrandsResponse.toBaseResponse()
+                }
+            } else {
+                deleteResponse
+            }
 
         } else {
             return syncResponse

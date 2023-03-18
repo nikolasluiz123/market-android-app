@@ -1,15 +1,11 @@
 package br.com.market.servicedataaccess.services
 
-import br.com.market.sdo.brand.DeleteBrandSDO
-import br.com.market.sdo.brand.NewBrandSDO
-import br.com.market.sdo.brand.UpdateBrandSDO
+import br.com.market.sdo.brand.*
 import br.com.market.servicedataaccess.responses.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.PersistenceResponse
+import br.com.market.servicedataaccess.responses.ReadResponse
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.Header
-import retrofit2.http.POST
-import retrofit2.http.PUT
+import retrofit2.http.*
 
 
 /**
@@ -81,5 +77,11 @@ interface BrandService {
      */
     @POST("brand/synchronize/delete")
     suspend fun deleteBrands(@Header("Authorization") token: String, @Body brandsDTOList: List<DeleteBrandSDO>): Response<MarketServiceResponse>
+
+    @GET("brand")
+    suspend fun findAllBrands(@Header("Authorization") token: String): Response<ReadResponse<SyncBrandSDO>>
+
+    @GET("brand/productBrands")
+    suspend fun findAllProductBrands(@Header("Authorization") token: String): Response<ReadResponse<SyncProductBrandSDO>>
 
 }

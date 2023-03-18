@@ -13,8 +13,9 @@ import java.util.*
  * @author Nikolas Luiz Schmitt
  */
 data class NewBrandSDO(
-    var localProductId: UUID? = null,
-    var localBrandId: UUID? = null,
+    var localProductBrandId: UUID,
+    var localProductId: UUID,
+    var localBrandId: UUID,
     var name: String,
     var count: Int = 0
 )

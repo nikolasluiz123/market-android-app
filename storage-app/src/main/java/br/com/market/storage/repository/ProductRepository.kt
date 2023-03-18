@@ -93,16 +93,6 @@ class ProductRepository @Inject constructor(
     }
 
     /**
-     * Função responsável por contar os registros que foram criados ou
-     * alterados apenas localmente.
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-    fun findCountOfNotSynchronizedRegisters(): Flow<Long> {
-        return productDAO.findCountOfNotSynchronizedRegisters()
-    }
-
-    /**
      * Função responsável por realizar o sincronismo dos produtos.
      *
      * Os produtos criados e alterados localmente serão enviados para a base remota
@@ -131,14 +121,18 @@ class ProductRepository @Inject constructor(
             val inactiveAndNotSynchronizedProducts = productDAO.findAllInactiveAndNotSynchronizedProducts()
             val deleteResponse = productWebClient.deleteProducts(inactiveAndNotSynchronizedProducts)
 
-            if (deleteResponse.success) {
+            return if (deleteResponse.success) {
                 inactiveAndNotSynchronizedProducts.forEach {
                     productDAO.deleteProductAndReferences(it.id)
                 }
+
+                val findProductsResponse = productWebClient.findAllProducts()
+                findProductsResponse.values.forEach { productDAO.saveProduct(it) }
+
+                findProductsResponse.toBaseResponse()
+            } else {
+                deleteResponse
             }
-
-            return deleteResponse
-
         } else {
             return syncResponse
         }

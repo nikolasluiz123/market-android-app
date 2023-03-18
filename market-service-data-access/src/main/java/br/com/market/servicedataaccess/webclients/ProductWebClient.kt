@@ -6,9 +6,11 @@ import br.com.market.sdo.product.DeleteProductSDO
 import br.com.market.sdo.product.NewProductSDO
 import br.com.market.sdo.product.UpdateProductSDO
 import br.com.market.servicedataaccess.extensions.getPersistenceResponseBody
+import br.com.market.servicedataaccess.extensions.getReadResponseBody
 import br.com.market.servicedataaccess.extensions.getResponseBody
 import br.com.market.servicedataaccess.responses.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.PersistenceResponse
+import br.com.market.servicedataaccess.responses.ReadResponse
 import br.com.market.servicedataaccess.services.ProductService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.*
@@ -56,7 +58,7 @@ class ProductWebClient @Inject constructor(
     suspend fun updateProduct(product: Product): PersistenceResponse {
         return persistenceServiceErrorHandlingBlock(
             codeBlock = {
-                val updateProductSDO = UpdateProductSDO(localProductId = product.id!!, name = product.name, imageUrl = product.imageUrl)
+                val updateProductSDO = UpdateProductSDO(localProductId = product.id, name = product.name, imageUrl = product.imageUrl)
                 productService.updateProduct(getToken(), updateProductSDO).getPersistenceResponseBody()
             }
         )
@@ -86,7 +88,7 @@ class ProductWebClient @Inject constructor(
      * @author Nikolas Luiz Schmitt
      */
     suspend fun deleteProducts(products: List<Product>): MarketServiceResponse {
-        val productSDOs = products.map { DeleteProductSDO(it.id!!) }
+        val productSDOs = products.map { DeleteProductSDO(it.id) }
 
         return serviceErrorHandlingBlock(
             codeBlock = {
@@ -107,9 +109,20 @@ class ProductWebClient @Inject constructor(
     suspend fun syncProducts(products: List<Product>): MarketServiceResponse {
         return serviceErrorHandlingBlock(
             codeBlock = {
-                val dtoList = products.map { NewProductSDO(localProductId = it.id!!, name = it.name, imageUrl = it.imageUrl) }
+                val dtoList = products.map { NewProductSDO(localProductId = it.id, name = it.name, imageUrl = it.imageUrl) }
                 productService.syncProducts(getToken(), dtoList).getResponseBody()
             }
         )
     }
+
+    suspend fun findAllProducts(): ReadResponse<Product> {
+        return readServiceErrorHandlingBlock(
+            codeBlock = {
+                val readResponse = productService.findAllProducts(getToken()).getReadResponseBody()
+                val values = readResponse.values.map { Product(id = it.localProductId, name = it.name, imageUrl = it.imageUrl, synchronized = true) }
+                ReadResponse(values, readResponse.code, readResponse.success, readResponse.error)
+            }
+        )
+    }
+
 }

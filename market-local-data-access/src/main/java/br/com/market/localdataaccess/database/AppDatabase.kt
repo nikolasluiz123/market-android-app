@@ -17,7 +17,7 @@ import br.com.market.models.ProductBrand
  * @author Nikolas Luiz Schmitt
  */
 @Database(
-    version = 7,
+    version = 8,
     entities = [Product::class, Brand::class, ProductBrand::class],
     exportSchema = true
 )

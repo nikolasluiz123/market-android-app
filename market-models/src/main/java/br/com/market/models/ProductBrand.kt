@@ -35,10 +35,10 @@ data class ProductBrand(
     @PrimaryKey
     var id: UUID = UUID.randomUUID(),
     @ColumnInfo(name = "product_id")
-    var productId: UUID? = null,
+    var productId: UUID,
     @ColumnInfo(name = "brand_id")
-    var brandId: UUID? = null,
-    var count: Int = 0,
+    var brandId: UUID,
+    var count: Int,
     override var synchronized: Boolean = false,
     override var active: Boolean = true
 ): BaseModel()

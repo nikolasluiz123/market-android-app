@@ -11,7 +11,6 @@ import br.com.market.domain.ProductDomain
  * @property openSearch Flag que indica se a pesquisa está aberta
  * @property onToggleSearch Listener executado para escoder e exibir a pesquisa
  * @property onSearchChange Listener executado quando o texto é alterado no campo de pesquisa
- * @property registersCountToSync Quantidade de registros que precisam ser sincronizados
  *
  * @author Nikolas Luiz Schmitt
  */
@@ -21,7 +20,6 @@ data class StorageProductsUiState(
     val openSearch: Boolean = false,
     val onToggleSearch: () -> Unit = { },
     val onSearchChange: (String) -> Unit = { },
-    val registersCountToSync: Long = 0,
     override val serverMessage: String = "",
     override val showDialogMessage: Boolean = false,
     override val onToggleMessageDialog: (String) -> Unit = { },

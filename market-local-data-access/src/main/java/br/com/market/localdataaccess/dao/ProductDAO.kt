@@ -177,18 +177,6 @@ abstract class ProductDAO {
     abstract suspend fun inactivateProduct(productId: UUID)
 
     /**
-     * Função responsável por retornar quantos registros não estão sincronizados
-     * com a base de dados remota. É dessa forma que damos o feedback para o usuário
-     * que ele precisa enviar as informações que estão presentes apenas em seu dispositivo.
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-    @Query("select (select count(*) from products where synchronized = false) + " +
-            "(select count(*) from brands where synchronized = false) + " +
-            "(select count(*) from products_brands where synchronized = false)")
-    abstract fun findCountOfNotSynchronizedRegisters(): Flow<Long>
-
-    /**
      * Função responsável por retornar todos os produtos que precisam ser
      * sincronizados.
      *

@@ -14,4 +14,7 @@ interface IMarketServiceResponse {
     var code: Int
     var success: Boolean
     var error: String?
+
+    fun toBaseResponse() = MarketServiceResponse(code, success, error)
+
 }
