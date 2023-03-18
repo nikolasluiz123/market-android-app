@@ -1,6 +1,7 @@
 package br.com.market.storage.ui.screens.formproduct
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
@@ -45,7 +46,7 @@ fun BrandDialog(
             colors = CardDefaults.cardColors(containerColor = Color.White)
         ) {
             ConstraintLayout(
-                Modifier.fillMaxWidth()
+                Modifier.fillMaxWidth().wrapContentHeight()
             ) {
                 val (titleRef, cancelButtonRef, confirmButtonRef,
                     inputNameRef, inputQdtRef) = createRefs()

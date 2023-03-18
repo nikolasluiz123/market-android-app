@@ -140,6 +140,12 @@ class FormProductViewModel @Inject constructor(
                         _uiState.value = _uiState.value.copy(
                             qtdBrandErrorMessage = context.getString(R.string.form_product_screen_tab_brand_invalid_brand_qtd_message)
                         )
+                    } else if (!countIsValid(_uiState.value.brandId, _uiState.value.brandQtd.toInt())) {
+                        isValid = false
+
+                        _uiState.value = _uiState.value.copy(
+                            qtdBrandErrorMessage = context.getString(R.string.form_product_screen_tab_brand_qtd_less_then_storage_message)
+                        )
                     } else {
                         _uiState.value = _uiState.value.copy(
                             qtdBrandErrorMessage = ""
@@ -175,6 +181,10 @@ class FormProductViewModel @Inject constructor(
 
     fun permissionNavToBrand(): Boolean {
         return productId != null
+    }
+
+    private fun countIsValid(brandId: UUID?, count: Int): Boolean {
+        return _uiState.value.brands.find { it.brandId == brandId }!!.count <= count
     }
 
     private fun updateProductFormInfos() {

@@ -42,4 +42,5 @@
     <string name="label_sinc">Sincronizar</string>
     <string name="product_saved_message">Produto Salvo com Sucesso.</string>
     <string name="save_brand_success_message">Marca Salva com Sucesso.</string>
+    <string name="form_product_screen_tab_brand_qtd_less_then_storage_message">A quantidade definida é menor que a quantidade em estoque.</string>
 </resources>
