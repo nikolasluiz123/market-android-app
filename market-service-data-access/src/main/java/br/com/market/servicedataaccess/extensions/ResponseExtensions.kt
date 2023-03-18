@@ -34,6 +34,17 @@ fun Response<AuthenticationResponse>.getAuthenticationResponseBody(): Authentica
     return this.body() ?: Gson().fromJson(this.errorBody()!!.charStream(), type)
 }
 
+/**
+ * Função que pode ser utilizada para recuperar a resposta de uma requisição
+ * feita ao serviço.
+ *
+ * Foi implementada para ser utilizada especificamente em uma resposta de consultas,
+ * onde retorna-se uma lista de registros.
+ *
+ * @param SDO Tipo do dado retornado na lista.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 fun <SDO> Response<ReadResponse<SDO>>.getReadResponseBody(): ReadResponse<SDO> {
     val type = object : TypeToken<ReadResponse<SDO>>() {}.type
     return this.body() ?: Gson().fromJson(this.errorBody()!!.charStream(), type)

@@ -159,6 +159,34 @@ open class BaseWebClient(private val context: Context) {
         }
     }
 
+    /**
+     * Função que pode ser utilizada para envolver o bloco de código em um tratamento padrão
+     * de exceções que podem ocorrer ao tentar estabelecer uma conexão com o serviço.
+     *
+     * A função permite que sejam adicionados novos tratamentos específicos de uma rotina,
+     * esses tratamentos específicos devem seguir um padrão:
+     *
+     * Para realizar o tratamento, utilize o when da mesma forma como é feito nessa implementação,
+     * além disso, seus tratamentos deverão sempre terminar tratando uma Exception, pois, da forma
+     * que é feito atualmente está localizada no else do when, e é onde as Exceptions cairiam pro
+     * padrão.
+     *
+     * Essa função é preparada para o cenário de leitura de dados do serviço, note que ela obriga o retorno de
+     * uma ReadResponse, portanto, utilize-a nesses cenários.
+     *
+     * @param codeBlock Bloco de código que deseja executar e tratar.
+     * @param customExceptions Caso haja necessidade de tratar exceções em um caso específico, use este atributo.
+     *
+     * @exception SocketTimeoutException Pode ocorrer essa exceção quando o serviço demorar para responder,
+     * nesse caso podemos considerar como sucesso pois nós salvamos as alterações do produto localmente e permitimos uma
+     * sincronização dos dados.
+     *
+     * @exception ConnectException Pode ocorrer essa exceção quando o usuário não possuir conexão de internet
+     * no dispositivo, nesse caso podemos considerar como sucesso pois nós salvamos as alterações do produto localmente e permitimos
+     * uma sincronização dos dados.
+     *
+     * @author Nikolas Luiz Schmitt
+     */
     suspend fun <SDO> readServiceErrorHandlingBlock(
         codeBlock: suspend () -> ReadResponse<SDO>,
         customExceptions: (e: Exception) -> ReadResponse<SDO> = {

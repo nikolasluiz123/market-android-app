@@ -127,6 +127,11 @@ class BrandWebClient @Inject constructor(
         )
     }
 
+    /**
+     * Função para buscar todas as brands do serviço.
+     *
+     * @author Nikolas Luiz Schmitt
+     */
     suspend fun findAllBrands(): ReadResponse<Brand> {
         return readServiceErrorHandlingBlock(
             codeBlock = {
@@ -137,6 +142,11 @@ class BrandWebClient @Inject constructor(
         )
     }
 
+    /**
+     * Função para buscar todas as ProductBrand do serviço.
+     *
+     * @author Nikolas Luiz Schmitt
+     */
     suspend fun findAllProductBrands(): ReadResponse<ProductBrand> {
         return readServiceErrorHandlingBlock(
             codeBlock = {

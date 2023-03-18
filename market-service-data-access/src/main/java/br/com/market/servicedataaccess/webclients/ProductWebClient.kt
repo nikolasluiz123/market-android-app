@@ -115,6 +115,11 @@ class ProductWebClient @Inject constructor(
         )
     }
 
+    /**
+     * Função para buscar todos os Product do serviço.
+     *
+     * @author Nikolas Luiz Schmitt
+     */
     suspend fun findAllProducts(): ReadResponse<Product> {
         return readServiceErrorHandlingBlock(
             codeBlock = {
