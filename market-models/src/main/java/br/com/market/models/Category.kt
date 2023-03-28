@@ -4,15 +4,8 @@ import androidx.room.*
 import br.com.market.models.base.CompanyModel
 import java.util.*
 
-/**
- * Uma classe que representa uma Marca na base local.
- *
- * @property name Nome da Marca.
- *
- * @author Nikolas Luiz Schmitt
- */
 @Entity(
-    tableName = "brands",
+    tableName = "categories",
     foreignKeys = [
         ForeignKey(
             entity = Company::class,
@@ -22,7 +15,7 @@ import java.util.*
     ],
     indices = [Index(value = ["company_id"])]
 )
-data class Brand(
+data class Category(
     @PrimaryKey
     override var id: UUID = UUID.randomUUID(),
     var name: String = "",
@@ -30,4 +23,4 @@ data class Brand(
     override var active: Boolean = true,
     @ColumnInfo("company_id")
     override var companyId: UUID? = null
-) : CompanyModel()
+): CompanyModel()

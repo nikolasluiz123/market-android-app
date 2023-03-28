@@ -1,6 +1,5 @@
 package br.com.market.storage.ui.screens.formproduct
 
-import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -14,7 +13,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import br.com.market.core.extensions.navParamToString
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.DialogMessage
 import br.com.market.core.ui.components.MarketLinearProgressIndicator
@@ -23,7 +21,6 @@ import br.com.market.core.ui.components.buttons.IconButtonClose
 import br.com.market.core.ui.components.buttons.IconButtonDelete
 import br.com.market.core.ui.components.buttons.IconButtonSearch
 import br.com.market.domain.BrandDomain
-import br.com.market.domain.ProductDomain
 import br.com.market.storage.R
 import br.com.market.storage.ui.states.FormProductUiState
 import br.com.market.storage.ui.viewmodels.FormProductViewModel
@@ -59,26 +56,26 @@ fun FormProductScreen(
         onLogoutClick = onLogoutClick,
         onFABSaveProductClick = {
             coroutineScope.launch {
-                if (state.onValidateProduct()) {
-
-                    state.onToggleLoading()
-
-                    val productDomain = ProductDomain(
-                        id = viewModel.productId?.let { UUID.fromString(it.navParamToString()) },
-                        name = state.productName,
-                        imageUrl = state.productImage
-                    )
-
-                    val response = viewModel.saveProduct(productDomain)
-
-                    if (response.success) {
-                        Toast.makeText(context, context.getString(R.string.product_saved_message), Toast.LENGTH_LONG).show()
-                    } else {
-                        state.onToggleMessageDialog(response.error ?: "")
-                    }
-
-                    state.onToggleLoading()
-                }
+//                if (state.onValidateProduct()) {
+//
+//                    state.onToggleLoading()
+//
+//                    val productDomain = ProductDomain(
+//                        id = viewModel.productId?.let { UUID.fromString(it.navParamToString()) },
+//                        name = state.productName,
+//                        imageUrl = state.productImage
+//                    )
+//
+//                    val response = viewModel.saveProduct(productDomain)
+//
+//                    if (response.success) {
+//                        Toast.makeText(context, context.getString(R.string.product_saved_message), Toast.LENGTH_LONG).show()
+//                    } else {
+//                        state.onToggleMessageDialog(response.error ?: "")
+//                    }
+//
+//                    state.onToggleLoading()
+//                }
             }
         },
         onDeleteProduct = {
@@ -98,17 +95,17 @@ fun FormProductScreen(
         },
         onDialogConfirmClick = { brand ->
             coroutineScope.launch {
-                state.onToggleLoading()
-
-                val response = viewModel.saveBrand(brand)
-
-                if (response.success) {
-                    Toast.makeText(context, context.getString(R.string.save_brand_success_message), Toast.LENGTH_LONG).show()
-                } else {
-                    state.onToggleMessageDialog(response.error ?: "")
-                }
-
-                state.onToggleLoading()
+//                state.onToggleLoading()
+//
+//                val response = viewModel.saveBrand(brand)
+//
+//                if (response.success) {
+//                    Toast.makeText(context, context.getString(R.string.save_brand_success_message), Toast.LENGTH_LONG).show()
+//                } else {
+//                    state.onToggleMessageDialog(response.error ?: "")
+//                }
+//
+//                state.onToggleLoading()
             }
         },
         onMenuItemDeleteBrandClick = {

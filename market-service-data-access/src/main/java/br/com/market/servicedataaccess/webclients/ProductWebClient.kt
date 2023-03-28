@@ -1,16 +1,9 @@
 package br.com.market.servicedataaccess.webclients
 
 import android.content.Context
-import br.com.market.models.Product
 import br.com.market.sdo.product.DeleteProductSDO
-import br.com.market.sdo.product.NewProductSDO
-import br.com.market.sdo.product.UpdateProductSDO
-import br.com.market.servicedataaccess.extensions.getPersistenceResponseBody
-import br.com.market.servicedataaccess.extensions.getReadResponseBody
 import br.com.market.servicedataaccess.extensions.getResponseBody
 import br.com.market.servicedataaccess.responses.MarketServiceResponse
-import br.com.market.servicedataaccess.responses.PersistenceResponse
-import br.com.market.servicedataaccess.responses.ReadResponse
 import br.com.market.servicedataaccess.services.ProductService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.*
@@ -36,33 +29,33 @@ class ProductWebClient @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      *
-     * @param product Produto que deseja salvar na base remota.
+     * @param product2 Produto que deseja salvar na base remota.
      *
      */
-    suspend fun saveProduct(product: Product): PersistenceResponse {
-        return persistenceServiceErrorHandlingBlock(
-            codeBlock = {
-                val newProductSDO = NewProductSDO(localProductId = product.id, name = product.name, imageUrl = product.imageUrl)
-                productService.saveProduct(getToken(), newProductSDO).getPersistenceResponseBody()
-            }
-        )
-    }
+//    suspend fun saveProduct(product2: Product2): PersistenceResponse {
+//        return persistenceServiceErrorHandlingBlock(
+//            codeBlock = {
+//                val newProductSDO = NewProductSDO(localProductId = product2.id, name = product2.name, imageUrl = product2.imageUrl)
+//                productService.saveProduct(getToken(), newProductSDO).getPersistenceResponseBody()
+//            }
+//        )
+//    }
 
     /**
      * Função para alterar um produto na base de dados remota.
      *
-     * @param product Produto que deseja alterar na base remota.
+     * @param product2 Produto que deseja alterar na base remota.
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun updateProduct(product: Product): PersistenceResponse {
-        return persistenceServiceErrorHandlingBlock(
-            codeBlock = {
-                val updateProductSDO = UpdateProductSDO(localProductId = product.id, name = product.name, imageUrl = product.imageUrl)
-                productService.updateProduct(getToken(), updateProductSDO).getPersistenceResponseBody()
-            }
-        )
-    }
+//    suspend fun updateProduct(product2: Product2): PersistenceResponse {
+//        return persistenceServiceErrorHandlingBlock(
+//            codeBlock = {
+//                val updateProductSDO = UpdateProductSDO(localProductId = product2.id, name = product2.name, imageUrl = product2.imageUrl)
+//                productService.updateProduct(getToken(), updateProductSDO).getPersistenceResponseBody()
+//            }
+//        )
+//    }
 
     /**
      * Função para deletar o Produto e todos os registros que possuem referência.
@@ -83,19 +76,19 @@ class ProductWebClient @Inject constructor(
      * Função responsável par deletar 'N' produtos da base remota, utilizada no sincronismo
      * das bases.
      *
-     * @param products Produtos que serão deletados na base remota
+     * @param product2s Produtos que serão deletados na base remota
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun deleteProducts(products: List<Product>): MarketServiceResponse {
-        val productSDOs = products.map { DeleteProductSDO(it.id) }
-
-        return serviceErrorHandlingBlock(
-            codeBlock = {
-                productService.deleteProducts(getToken(), productSDOs).getResponseBody()
-            }
-        )
-    }
+//    suspend fun deleteProducts(product2s: List<Product2>): MarketServiceResponse {
+//        val productSDOs = product2s.map { DeleteProductSDO(it.id) }
+//
+//        return serviceErrorHandlingBlock(
+//            codeBlock = {
+//                productService.deleteProducts(getToken(), productSDOs).getResponseBody()
+//            }
+//        )
+//    }
 
     /**
      * Função que sincroniza as informações dos produtos, enviando quem foi criado e quem foi alterado
@@ -103,31 +96,31 @@ class ProductWebClient @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      *
-     * @param products Produtos que deseja sincronizar.
+     * @param product2s Produtos que deseja sincronizar.
      *
      */
-    suspend fun syncProducts(products: List<Product>): MarketServiceResponse {
-        return serviceErrorHandlingBlock(
-            codeBlock = {
-                val dtoList = products.map { NewProductSDO(localProductId = it.id, name = it.name, imageUrl = it.imageUrl) }
-                productService.syncProducts(getToken(), dtoList).getResponseBody()
-            }
-        )
-    }
+//    suspend fun syncProducts(product2s: List<Product2>): MarketServiceResponse {
+//        return serviceErrorHandlingBlock(
+//            codeBlock = {
+//                val dtoList = product2s.map { NewProductSDO(localProductId = it.id, name = it.name, imageUrl = it.imageUrl) }
+//                productService.syncProducts(getToken(), dtoList).getResponseBody()
+//            }
+//        )
+//    }
 
     /**
      * Função para buscar todos os Product do serviço.
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun findAllProducts(): ReadResponse<Product> {
-        return readServiceErrorHandlingBlock(
-            codeBlock = {
-                val readResponse = productService.findAllProducts(getToken()).getReadResponseBody()
-                val values = readResponse.values.map { Product(id = it.localProductId, name = it.name, imageUrl = it.imageUrl, synchronized = true) }
-                ReadResponse(values, readResponse.code, readResponse.success, readResponse.error)
-            }
-        )
-    }
+//    suspend fun findAllProducts(): ReadResponse<Product2> {
+//        return readServiceErrorHandlingBlock(
+//            codeBlock = {
+//                val readResponse = productService.findAllProducts(getToken()).getReadResponseBody()
+//                val values = readResponse.values.map { Product2(id = it.localProductId, name = it.name, imageUrl = it.imageUrl, synchronized = true) }
+//                ReadResponse(values, readResponse.code, readResponse.success, readResponse.error)
+//            }
+//        )
+//    }
 
 }

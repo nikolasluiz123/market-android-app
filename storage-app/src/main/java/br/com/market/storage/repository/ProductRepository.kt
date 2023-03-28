@@ -1,17 +1,10 @@
 package br.com.market.storage.repository
 
 import android.content.Context
-import br.com.market.domain.ProductDomain
 import br.com.market.localdataaccess.dao.BrandDAO
 import br.com.market.localdataaccess.dao.ProductDAO
-import br.com.market.models.Product
 import br.com.market.servicedataaccess.responses.MarketServiceResponse
-import br.com.market.servicedataaccess.responses.PersistenceResponse
 import br.com.market.servicedataaccess.webclients.ProductWebClient
-import br.com.market.storage.extensions.toProductDomain
-import br.com.market.storage.extensions.toProductDomainList
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import java.net.HttpURLConnection
 import java.util.*
 import javax.inject.Inject
@@ -42,29 +35,29 @@ class ProductRepository @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun save(productDomain: ProductDomain): PersistenceResponse {
-        lateinit var product: Product
-
-        var response = if(productDomain.id == null) {
-            product = Product(name = productDomain.name, imageUrl = productDomain.imageUrl)
-            productWebClient.saveProduct(product)
-        } else {
-            product = productDAO.findProductById(productDomain.id!!).first()!!.copy(name = productDomain.name, imageUrl = productDomain.imageUrl)
-            productWebClient.updateProduct(product)
-        }
-
-        product.synchronized = response.success && response.code != HttpURLConnection.HTTP_UNAVAILABLE
-
-        productDAO.saveProduct(product)
-
-        // Fazendo isso para que quando não conseguir se conectar com o servidor retorne sucesso
-        // por conta da persistência local
-        response.success = response.success || response.code == HttpURLConnection.HTTP_UNAVAILABLE
-
-        response = response.copy(idLocal = product.id, idRemote = response.idRemote)
-
-        return response
-    }
+//    suspend fun save(productDomain: ProductDomain): PersistenceResponse {
+//        lateinit var product2: Product2
+//
+//        var response = if(productDomain.id == null) {
+//            product2 = Product2(name = productDomain.name, imageUrl = productDomain.imageUrl)
+//            productWebClient.saveProduct(product2)
+//        } else {
+//            product2 = productDAO.findProductById(productDomain.id!!).first()!!.copy(name = productDomain.name, imageUrl = productDomain.imageUrl)
+//            productWebClient.updateProduct(product2)
+//        }
+//
+//        product2.synchronized = response.success && response.code != HttpURLConnection.HTTP_UNAVAILABLE
+//
+//        productDAO.saveProduct(product2)
+//
+//        // Fazendo isso para que quando não conseguir se conectar com o servidor retorne sucesso
+//        // por conta da persistência local
+//        response.success = response.success || response.code == HttpURLConnection.HTTP_UNAVAILABLE
+//
+//        response = response.copy(idLocal = product2.id, idRemote = response.idRemote)
+//
+//        return response
+//    }
 
     /**
      * Função para realizar as operações de remoção do produto, dependendo do cenário
@@ -108,44 +101,44 @@ class ProductRepository @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun syncProducts(): MarketServiceResponse {
-        val activeProductsToSync = productDAO.findAllActiveProductsNotSynchronized()
-        val syncResponse = productWebClient.syncProducts(activeProductsToSync)
-
-        if (syncResponse.success) {
-            activeProductsToSync.forEach {
-                val product = it.copy(synchronized = true)
-                productDAO.saveProduct(product)
-            }
-
-            val inactiveAndNotSynchronizedProducts = productDAO.findAllInactiveAndNotSynchronizedProducts()
-            val deleteResponse = productWebClient.deleteProducts(inactiveAndNotSynchronizedProducts)
-
-            return if (deleteResponse.success) {
-                inactiveAndNotSynchronizedProducts.forEach {
-                    productDAO.deleteProductAndReferences(it.id)
-                }
-
-                val findProductsResponse = productWebClient.findAllProducts()
-                findProductsResponse.values.forEach { productDAO.saveProduct(it) }
-
-                findProductsResponse.toBaseResponse()
-            } else {
-                deleteResponse
-            }
-        } else {
-            return syncResponse
-        }
-    }
+//    suspend fun syncProducts(): MarketServiceResponse {
+//        val activeProductsToSync = productDAO.findAllActiveProductsNotSynchronized()
+//        val syncResponse = productWebClient.syncProducts(activeProductsToSync)
+//
+//        if (syncResponse.success) {
+//            activeProductsToSync.forEach {
+//                val product = it.copy(synchronized = true)
+//                productDAO.saveProduct(product)
+//            }
+//
+//            val inactiveAndNotSynchronizedProducts = productDAO.findAllInactiveAndNotSynchronizedProducts()
+//            val deleteResponse = productWebClient.deleteProducts(inactiveAndNotSynchronizedProducts)
+//
+//            return if (deleteResponse.success) {
+//                inactiveAndNotSynchronizedProducts.forEach {
+//                    productDAO.deleteProductAndReferences(it.id)
+//                }
+//
+//                val findProductsResponse = productWebClient.findAllProducts()
+//                findProductsResponse.values.forEach { productDAO.saveProduct(it) }
+//
+//                findProductsResponse.toBaseResponse()
+//            } else {
+//                deleteResponse
+//            }
+//        } else {
+//            return syncResponse
+//        }
+//    }
 
     /**
      * Função que retorna todos os produtos que devem ser exibidos.
      *
      * @author Nikolas Luiz Schmitt
      */
-    fun findActiveAllProducts(): Flow<List<ProductDomain>> {
-        return productDAO.findActiveAllProducts().toProductDomainList()
-    }
+//    fun findActiveAllProducts(): Flow<List<ProductDomain>> {
+//        return productDAO.findActiveAllProducts().toProductDomainList()
+//    }
 
     /**
      * Função que retorna um produto específico.
@@ -154,7 +147,7 @@ class ProductRepository @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    fun findProductById(productId: UUID): Flow<ProductDomain?> {
-        return productDAO.findProductById(productId).toProductDomain()
-    }
+//    fun findProductById(productId: UUID): Flow<ProductDomain?> {
+//        return productDAO.findProductById(productId).toProductDomain()
+//    }
 }

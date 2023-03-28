@@ -1,17 +1,17 @@
 package br.com.market.models
 
 import androidx.room.*
-import br.com.market.enums.EnumUnit
 import br.com.market.models.base.CompanyModel
+import java.time.LocalDate
 import java.util.*
 
 @Entity(
-    tableName = "products",
+    tableName = "card",
     foreignKeys = [
         ForeignKey(
-            entity = CategoryBrand::class,
+            entity = Client::class,
             parentColumns = ["id"],
-            childColumns = ["category_brand_id"]
+            childColumns = ["client_id"]
         ),
         ForeignKey(
             entity = Company::class,
@@ -19,18 +19,17 @@ import java.util.*
             childColumns = ["company_id"]
         )
     ],
-    indices = [Index(value = ["category_brand_id"]), Index(value = ["company_id"])]
+    indices = [Index(value = ["client_id"]), Index(value = ["company_id"])]
 )
-data class Product(
+data class Card(
     @PrimaryKey
     override var id: UUID = UUID.randomUUID(),
-    var name: String = "",
-    var price: Double = 0.0,
-    var quantity: Int = 0,
-    @ColumnInfo(name = "quantity_unit")
-    var quantityUnit: EnumUnit? = null,
-    @ColumnInfo(name = "category_brand_id")
-    var categoryBrandId: UUID? = null,
+    var accaount: String? = null,
+    var agency: String? = null,
+    var bank: String? = null,
+    var validity: LocalDate? = null,
+    @ColumnInfo("client_id")
+    var clientId: UUID? = null,
     override var synchronized: Boolean = false,
     override var active: Boolean = true,
     @ColumnInfo("company_id")

@@ -1,18 +1,12 @@
 package br.com.market.models
 
 import androidx.room.*
+import br.com.market.enums.EnumVehicleType
 import br.com.market.models.base.CompanyModel
 import java.util.*
 
-/**
- * Uma classe que representa uma Marca na base local.
- *
- * @property name Nome da Marca.
- *
- * @author Nikolas Luiz Schmitt
- */
 @Entity(
-    tableName = "brands",
+    tableName = "vehicle",
     foreignKeys = [
         ForeignKey(
             entity = Company::class,
@@ -22,10 +16,10 @@ import java.util.*
     ],
     indices = [Index(value = ["company_id"])]
 )
-data class Brand(
+data class Vehicle(
     @PrimaryKey
     override var id: UUID = UUID.randomUUID(),
-    var name: String = "",
+    var type: EnumVehicleType? = null,
     override var synchronized: Boolean = false,
     override var active: Boolean = true,
     @ColumnInfo("company_id")

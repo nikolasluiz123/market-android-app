@@ -3,7 +3,6 @@ package br.com.market.storage.ui.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.market.domain.ProductDomain
-import br.com.market.servicedataaccess.responses.MarketServiceResponse
 import br.com.market.storage.repository.BrandRepository
 import br.com.market.storage.repository.ProductRepository
 import br.com.market.storage.repository.UserRepository
@@ -51,11 +50,11 @@ class StorageProductsViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            productRepository.findActiveAllProducts().collect { products ->
-                _uiState.value = _uiState.value.copy(
-                    products = products
-                )
-            }
+//            productRepository.findActiveAllProducts().collect { products ->
+//                _uiState.value = _uiState.value.copy(
+//                    products = products
+//                )
+//            }
         }
     }
 
@@ -64,32 +63,32 @@ class StorageProductsViewModel @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun syncProducts(): MarketServiceResponse {
-        return productRepository.syncProducts()
-    }
+//    suspend fun syncProducts(): MarketServiceResponse {
+//        return productRepository.syncProducts()
+//    }
 
-    suspend fun syncBrands(): MarketServiceResponse {
-        return brandRepository.syncBrands()
-    }
+//    suspend fun syncBrands(): MarketServiceResponse {
+//        return brandRepository.syncBrands()
+//    }
 
     private fun onSearchProducts(searchedText: String) {
-        if (searchedText.isEmpty()) {
-            viewModelScope.launch {
-                productRepository.findActiveAllProducts().collect { products ->
-                    _uiState.value = _uiState.value.copy(
-                        searchText = searchedText,
-                        products = products
-                    )
-                }
-            }
-        } else {
-            _uiState.value = _uiState.value.copy(
-                searchText = searchedText,
-                products = _uiState.value.products.filter {
-                    containsProductName(it, searchedText)
-                }
-            )
-        }
+//        if (searchedText.isEmpty()) {
+//            viewModelScope.launch {
+//                productRepository.findActiveAllProducts().collect { products ->
+//                    _uiState.value = _uiState.value.copy(
+//                        searchText = searchedText,
+//                        products = products
+//                    )
+//                }
+//            }
+//        } else {
+//            _uiState.value = _uiState.value.copy(
+//                searchText = searchedText,
+//                products = _uiState.value.products.filter {
+//                    containsProductName(it, searchedText)
+//                }
+//            )
+//        }
     }
 
     private fun containsProductName(product: ProductDomain, searchedText: String): Boolean {

@@ -1,10 +1,7 @@
 package br.com.market.localdataaccess.dao
 
 import androidx.room.*
-import br.com.market.domain.ProductBrandDomain
 import br.com.market.models.Brand
-import br.com.market.models.ProductBrand
-import kotlinx.coroutines.flow.Flow
 import java.util.*
 
 /**
@@ -33,8 +30,8 @@ abstract class BrandDAO {
      *
      * @author Nikolas Luiz Schmitt
      */
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun saveProductBrand(productBrand: ProductBrand)
+//    @Insert(onConflict = OnConflictStrategy.REPLACE)
+//    abstract suspend fun saveProductBrand(productBrand: ProductBrand)
 
     /**
      * Função utilizada para recuperar todas as marcas ativas para exibir na tela.
@@ -43,17 +40,17 @@ abstract class BrandDAO {
      *
      * @author Nikolas Luiz Schmitt
      */
-    @Query(
-        " select b.id as brandId, " +
-                "p.name as productName, " +
-                "b.name as brandName, " +
-                "pb.count as count " +
-                "from products p " +
-                "inner join products_brands pb on pb.product_id = p.id " +
-                "inner join brands b on pb.brand_id = b.id " +
-                "where p.id = :productId and b.active = true"
-    )
-    abstract fun findAllActiveProductBrandsByProductId(productId: UUID?): Flow<List<ProductBrandDomain>>
+//    @Query(
+//        " select b.id as brandId, " +
+//                "p.name as productName, " +
+//                "b.name as brandName, " +
+//                "pb.count as count " +
+//                "from products p " +
+//                "inner join products_brands pb on pb.product_id = p.id " +
+//                "inner join brands b on pb.brand_id = b.id " +
+//                "where p.id = :productId and b.active = true"
+//    )
+//    abstract fun findAllActiveProductBrandsByProductId(productId: UUID?): Flow<List<ProductBrandDomain>>
 
     /**
      * Função para recuperar um ProductBrand pelo ID da Brand.
@@ -62,8 +59,8 @@ abstract class BrandDAO {
      *
      * @author Nikolas Luiz Schmitt
      */
-    @Query("select * from products_brands where brand_id = :brandId")
-    abstract suspend fun findProductBrandByBrandId(brandId: UUID): ProductBrand
+//    @Query("select * from products_brands where brand_id = :brandId")
+//    abstract suspend fun findProductBrandByBrandId(brandId: UUID): ProductBrand
 
     @Query("select * from brands where id = :brandId")
     abstract suspend fun findByBrandId(brandId: UUID): Brand
@@ -79,8 +76,8 @@ abstract class BrandDAO {
      */
     @Transaction
     open suspend fun inactivateBrandAndReferences(brandId: UUID) {
-        inactivateProductBrandOfBrand(brandId)
-        inactivateBrand(brandId)
+//        inactivateProductBrandOfBrand(brandId)
+//        inactivateBrand(brandId)
     }
 
     /**
@@ -90,8 +87,8 @@ abstract class BrandDAO {
      *
      * @author Nikolas Luiz Schmitt
      */
-    @Query("update products_brands set active = false, synchronized = false where brand_id = :brandId")
-    abstract suspend fun inactivateProductBrandOfBrand(brandId: UUID)
+//    @Query("update products_brands set active = false, synchronized = false where brand_id = :brandId")
+//    abstract suspend fun inactivateProductBrandOfBrand(brandId: UUID)
 
     /**
      * Função que inativa a Brand.
@@ -100,8 +97,8 @@ abstract class BrandDAO {
      *
      * @author Nikolas Luiz Schmitt
      */
-    @Query("update brands set active = false, synchronized = false where id = :brandId ")
-    abstract suspend fun inactivateBrand(brandId: UUID)
+//    @Query("update brands set active = false, synchronized = false where id = :brandId ")
+//    abstract suspend fun inactivateBrand(brandId: UUID)
 
     /**
      * Função para excluir fisicamente os registros da brand especificada
@@ -114,7 +111,7 @@ abstract class BrandDAO {
      */
     @Transaction
     open suspend fun deleteBrandAndReferences(brandId: UUID) {
-        deleteProductBrandOfBrand(brandId)
+//        deleteProductBrandOfBrand(brandId)
         deleteBrand(brandId)
     }
 
@@ -125,8 +122,8 @@ abstract class BrandDAO {
      *
      * @author Nikolas Luiz Schmitt
      */
-    @Query("delete from products_brands where brand_id = :brandId")
-    abstract suspend fun deleteProductBrandOfBrand(brandId: UUID)
+//    @Query("delete from products_brands where brand_id = :brandId")
+//    abstract suspend fun deleteProductBrandOfBrand(brandId: UUID)
 
     /**
      * Função para excluir uma Brand de id específico
@@ -153,8 +150,8 @@ abstract class BrandDAO {
      *
      * @author Nikolas Luiz Schmitt
      */
-    @Query("select * from products_brands where active = true and synchronized = false")
-    abstract suspend fun findAllActiveProductsBrandsNotSynchronized(): List<ProductBrand>
+//    @Query("select * from products_brands where active = true and synchronized = false")
+//    abstract suspend fun findAllActiveProductsBrandsNotSynchronized(): List<ProductBrand>
 
     /**
      * Função para buscar todas as Brand que estão inativas e não foram enviadas para o serviço

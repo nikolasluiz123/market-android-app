@@ -1,17 +1,21 @@
 package br.com.market.models
 
 import androidx.room.*
-import br.com.market.enums.EnumUnit
 import br.com.market.models.base.CompanyModel
 import java.util.*
 
 @Entity(
-    tableName = "products",
+    tableName = "categories_brands",
     foreignKeys = [
         ForeignKey(
-            entity = CategoryBrand::class,
+            entity = Category::class,
             parentColumns = ["id"],
-            childColumns = ["category_brand_id"]
+            childColumns = ["category_id"]
+        ),
+        ForeignKey(
+            entity = Brand::class,
+            parentColumns = ["id"],
+            childColumns = ["brand_id"]
         ),
         ForeignKey(
             entity = Company::class,
@@ -19,18 +23,15 @@ import java.util.*
             childColumns = ["company_id"]
         )
     ],
-    indices = [Index(value = ["category_brand_id"]), Index(value = ["company_id"])]
+    indices = [Index(value = ["category_id"]), Index(value = ["brand_id"]), Index(value = ["company_id"])]
 )
-data class Product(
+data class CategoryBrand(
     @PrimaryKey
     override var id: UUID = UUID.randomUUID(),
-    var name: String = "",
-    var price: Double = 0.0,
-    var quantity: Int = 0,
-    @ColumnInfo(name = "quantity_unit")
-    var quantityUnit: EnumUnit? = null,
-    @ColumnInfo(name = "category_brand_id")
-    var categoryBrandId: UUID? = null,
+    @ColumnInfo(name = "category_id")
+    var categoryId: UUID,
+    @ColumnInfo(name = "brand_id")
+    var brandId: UUID,
     override var synchronized: Boolean = false,
     override var active: Boolean = true,
     @ColumnInfo("company_id")

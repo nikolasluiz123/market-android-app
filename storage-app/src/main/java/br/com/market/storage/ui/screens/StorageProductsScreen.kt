@@ -1,6 +1,5 @@
 package br.com.market.storage.ui.screens
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DropdownMenuItem
@@ -59,19 +58,19 @@ fun StorageProductsScreen(
             coroutineScope.launch {
                 state.onToggleLoading()
 
-                val responseSyncProducts = viewModel.syncProducts()
-
-                if (responseSyncProducts.success) {
-                    val responseSyncBrands = viewModel.syncBrands()
-
-                    if (responseSyncBrands.success) {
-                        Toast.makeText(context, "Produtos Sincronizados com Sucesso.", Toast.LENGTH_LONG).show()
-                    } else {
-                        state.onToggleMessageDialog(responseSyncProducts.error ?: "")
-                    }
-                } else {
-                    state.onToggleMessageDialog(responseSyncProducts.error ?: "")
-                }
+//                val responseSyncProducts = viewModel.syncProducts()
+//
+//                if (responseSyncProducts.success) {
+//                    val responseSyncBrands = viewModel.syncBrands()
+//
+//                    if (responseSyncBrands.success) {
+//                        Toast.makeText(context, "Produtos Sincronizados com Sucesso.", Toast.LENGTH_LONG).show()
+//                    } else {
+//                        state.onToggleMessageDialog(responseSyncProducts.error ?: "")
+//                    }
+//                } else {
+//                    state.onToggleMessageDialog(responseSyncProducts.error ?: "")
+//                }
 
                 state.onToggleLoading()
             }

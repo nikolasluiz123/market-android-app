@@ -1,9 +1,6 @@
 package br.com.market.localdataaccess.dao
 
 import androidx.room.*
-import androidx.room.OnConflictStrategy.Companion.REPLACE
-import br.com.market.models.Product
-import kotlinx.coroutines.flow.Flow
 import java.util.*
 
 /**
@@ -21,12 +18,12 @@ abstract class ProductDAO {
      * Ao ocorrer um conflito, ou seja, dois IDs iguais,
      * será realizada a substituição de uma entidade pela outra
      *
-     * @param product Produto que será salvo.
+     * @param product2 Produto que será salvo.
      *
      * @author Nikolas Luiz Schmitt
      */
-    @Insert(onConflict = REPLACE)
-    abstract suspend fun saveProduct(product: Product)
+//    @Insert(onConflict = REPLACE)
+//    abstract suspend fun saveProduct(product2: Product2)
 
     /**
      * Função para buscar todos os proutos ativos da base local.
@@ -37,11 +34,11 @@ abstract class ProductDAO {
      *
      * @author Nikolas Luiz Schmitt
      */
-    @Query("select * from products where active = true")
-    abstract fun findActiveAllProducts(): Flow<List<Product>>
+//    @Query("select * from products where active = true")
+//    abstract fun findActiveAllProducts(): Flow<List<Product2>>
 
-    @Query("select * from products where active = false and synchronized = false")
-    abstract suspend fun findAllInactiveAndNotSynchronizedProducts(): List<Product>
+//    @Query("select * from products where active = false and synchronized = false")
+//    abstract suspend fun findAllInactiveAndNotSynchronizedProducts(): List<Product2>
 
     /**
      * Função para buscar um produto com um id específico.
@@ -53,8 +50,8 @@ abstract class ProductDAO {
      *
      * @author Nikolas Luiz Schmitt
      */
-    @Query("select * from products where id = :productId")
-    abstract fun findProductById(productId: UUID): Flow<Product?>
+//    @Query("select * from products where id = :productId")
+//    abstract fun findProductById(productId: UUID): Flow<Product2?>
 
     /**
      * Find brand ids by product id
@@ -64,11 +61,11 @@ abstract class ProductDAO {
      * @param productId
      * @return
      */
-    @Query("select b.id " +
-            "from brands b " +
-            "inner join products_brands pb on pb.brand_id = b.id " +
-            "where pb.product_id = :productId ")
-    abstract suspend fun findBrandIdsByProductId(productId: UUID): List<UUID>
+//    @Query("select b.id " +
+//            "from brands b " +
+//            "inner join products_brands pb on pb.brand_id = b.id " +
+//            "where pb.product_id = :productId ")
+//    abstract suspend fun findBrandIdsByProductId(productId: UUID): List<UUID>
 
     /**
      * Função para remover fisicamente o produto e suas referencias.
@@ -83,9 +80,9 @@ abstract class ProductDAO {
      */
     @Transaction
     open suspend fun deleteProductAndReferences(productId: UUID) {
-        val brandIds = findBrandIdsByProductId(productId)
-        deleteAllProductBrandOfProduct(productId)
-        deleteAllBrandsOfProduct(brandIds.toTypedArray())
+//        val brandIds = findBrandIdsByProductId(productId)
+//        deleteAllProductBrandOfProduct(productId)
+//        deleteAllBrandsOfProduct(brandIds.toTypedArray())
         deleteProduct(productId)
     }
 
@@ -98,8 +95,8 @@ abstract class ProductDAO {
      *
      * @author Nikolas Luiz Schmitt
      */
-    @Query("delete from products_brands where product_id = :productId")
-    abstract suspend fun deleteAllProductBrandOfProduct(productId: UUID)
+//    @Query("delete from products_brands where product_id = :productId")
+//    abstract suspend fun deleteAllProductBrandOfProduct(productId: UUID)
 
     /**
      * Função resposável por remover as Brands do produto especificado.
@@ -134,8 +131,8 @@ abstract class ProductDAO {
      */
     @Transaction
     open suspend fun inactivateProductAndReferences(productId: UUID) {
-        inactivateAllProductBrandOfProduct(productId)
-        inactivateAllBrandsOfProduct(productId)
+//        inactivateAllProductBrandOfProduct(productId)
+//        inactivateAllBrandsOfProduct(productId)
         inactivateProduct(productId)
     }
 
@@ -148,8 +145,8 @@ abstract class ProductDAO {
      *
      * @author Nikolas Luiz Schmitt
      */
-    @Query("update products_brands set active = false, synchronized = false where product_id = :productId")
-    abstract suspend fun inactivateAllProductBrandOfProduct(productId: UUID)
+//    @Query("update products_brands set active = false, synchronized = false where product_id = :productId")
+//    abstract suspend fun inactivateAllProductBrandOfProduct(productId: UUID)
 
     /**
      * Função resposável por inativar as Brands do produto especificado.
@@ -158,13 +155,13 @@ abstract class ProductDAO {
      *
      * @author Nikolas Luiz Schmitt
      */
-    @Query("update brands set active = false, synchronized = false where id in " +
-            "(select pb.brand_id " +
-            "from products p " +
-            "inner join products_brands pb on pb.product_id = p.id " +
-            "where p.id = :productId " +
-            ")")
-    abstract suspend fun inactivateAllBrandsOfProduct(productId: UUID)
+//    @Query("update brands set active = false, synchronized = false where id in " +
+//            "(select pb.brand_id " +
+//            "from products p " +
+//            "inner join products_brands pb on pb.product_id = p.id " +
+//            "where p.id = :productId " +
+//            ")")
+//    abstract suspend fun inactivateAllBrandsOfProduct(productId: UUID)
 
     /**
      * Função responsável por inativar o produto com o id especificado.
@@ -182,7 +179,7 @@ abstract class ProductDAO {
      *
      * @author Nikolas Luiz Schmitt
      */
-    @Query("select * from products where synchronized = false and active = true")
-    abstract suspend fun findAllActiveProductsNotSynchronized(): List<Product>
+//    @Query("select * from products where synchronized = false and active = true")
+//    abstract suspend fun findAllActiveProductsNotSynchronized(): List<Product2>
 
 }

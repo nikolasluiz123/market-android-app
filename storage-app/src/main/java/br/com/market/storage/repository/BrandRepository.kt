@@ -1,14 +1,8 @@
 package br.com.market.storage.repository
 
-import br.com.market.domain.BrandDomain
-import br.com.market.domain.ProductBrandDomain
 import br.com.market.localdataaccess.dao.BrandDAO
-import br.com.market.models.Brand
-import br.com.market.models.ProductBrand
 import br.com.market.servicedataaccess.responses.MarketServiceResponse
-import br.com.market.servicedataaccess.responses.PersistenceResponse
 import br.com.market.servicedataaccess.webclients.BrandWebClient
-import kotlinx.coroutines.flow.Flow
 import java.net.HttpURLConnection
 import java.util.*
 import javax.inject.Inject
@@ -38,39 +32,39 @@ class BrandRepository @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun save(productId: UUID, brandDomain: BrandDomain): PersistenceResponse {
-        lateinit var brand: Brand
-        lateinit var productBrand: ProductBrand
-        lateinit var response: PersistenceResponse
-
-        if (brandDomain.id == null) {
-            brand = Brand(name = brandDomain.name)
-            productBrand = ProductBrand(productId = productId, brandId = brand.id, count = brandDomain.count)
-
-            response = brandWebClient.saveBrand(productId = productId, brand = brand, productBrand = productBrand)
-        } else {
-            brand = brandDAO.findByBrandId(brandDomain.id!!).copy(name = brandDomain.name)
-            productBrand = brandDAO.findProductBrandByBrandId(brand.id).copy(count = brandDomain.count)
-
-            response = brandWebClient.updateBrand(brand = brand, productBrand = productBrand)
-        }
-
-        brand.synchronized = response.success && response.code != HttpURLConnection.HTTP_UNAVAILABLE
-        productBrand.synchronized = response.success && response.code != HttpURLConnection.HTTP_UNAVAILABLE
-
-        brandDAO.saveBrand(brand)
-        brandDAO.saveProductBrand(productBrand)
-
-        /**
-         * Fazendo isso para que quando não conseguir se conectar com o servidor retorne sucesso
-         * por conta da persistência local
-         */
-        response.success = response.success || response.code == HttpURLConnection.HTTP_UNAVAILABLE
-
-        response = response.copy(idLocal = brand.id, idRemote = response.idRemote)
-
-        return response
-    }
+//    suspend fun save(productId: UUID, brandDomain: BrandDomain): PersistenceResponse {
+//        lateinit var brand: Brand
+//        lateinit var productBrand: ProductBrand
+//        lateinit var response: PersistenceResponse
+//
+//        if (brandDomain.id == null) {
+//            brand = Brand(name = brandDomain.name)
+//            productBrand = ProductBrand(productId = productId, brandId = brand.id, count = brandDomain.count)
+//
+//            response = brandWebClient.saveBrand(productId = productId, brand = brand, productBrand = productBrand)
+//        } else {
+//            brand = brandDAO.findByBrandId(brandDomain.id!!).copy(name = brandDomain.name)
+//            productBrand = brandDAO.findProductBrandByBrandId(brand.id).copy(count = brandDomain.count)
+//
+//            response = brandWebClient.updateBrand(brand = brand, productBrand = productBrand)
+//        }
+//
+//        brand.synchronized = response.success && response.code != HttpURLConnection.HTTP_UNAVAILABLE
+//        productBrand.synchronized = response.success && response.code != HttpURLConnection.HTTP_UNAVAILABLE
+//
+//        brandDAO.saveBrand(brand)
+//        brandDAO.saveProductBrand(productBrand)
+//
+//        /**
+//         * Fazendo isso para que quando não conseguir se conectar com o servidor retorne sucesso
+//         * por conta da persistência local
+//         */
+//        response.success = response.success || response.code == HttpURLConnection.HTTP_UNAVAILABLE
+//
+//        response = response.copy(idLocal = brand.id, idRemote = response.idRemote)
+//
+//        return response
+//    }
 
     /**
      * Função responsável por realizar a exclusão de uma marca.
@@ -112,51 +106,51 @@ class BrandRepository @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun syncBrands(): MarketServiceResponse {
-        val activeBrandsToSync = brandDAO.findAllActiveBrandsNotSynchronized()
-        val activeProductsBrandsToSync = brandDAO.findAllActiveProductsBrandsNotSynchronized()
-
-        val syncResponse = brandWebClient.syncBrands(activeBrandsToSync, activeProductsBrandsToSync)
-
-        if (syncResponse.success) {
-            activeBrandsToSync.forEach {
-                val brand = it.copy(synchronized = true)
-                brandDAO.saveBrand(brand)
-            }
-
-            activeProductsBrandsToSync.forEach {
-                val productBrand = it.copy(synchronized = true)
-                brandDAO.saveProductBrand(productBrand)
-            }
-
-            val inactiveAndNotSynchronizedBrands = brandDAO.findAllInactiveAndNotSynchronizedBrands()
-
-            val deleteResponse = brandWebClient.deleteBrands(inactiveAndNotSynchronizedBrands)
-
-            return if (deleteResponse.success) {
-                inactiveAndNotSynchronizedBrands.forEach {
-                    brandDAO.deleteBrandAndReferences(it.id)
-                }
-
-                val findAllBrandsResponse = brandWebClient.findAllBrands()
-                findAllBrandsResponse.values.forEach { brandDAO.saveBrand(it) }
-
-                return if (findAllBrandsResponse.success) {
-                    val findAllProductBrandsResponse = brandWebClient.findAllProductBrands()
-                    findAllProductBrandsResponse.values.forEach { brandDAO.saveProductBrand(it) }
-
-                    findAllProductBrandsResponse.toBaseResponse()
-                } else {
-                    findAllBrandsResponse.toBaseResponse()
-                }
-            } else {
-                deleteResponse
-            }
-
-        } else {
-            return syncResponse
-        }
-    }
+//    suspend fun syncBrands(): MarketServiceResponse {
+//        val activeBrandsToSync = brandDAO.findAllActiveBrandsNotSynchronized()
+//        val activeProductsBrandsToSync = brandDAO.findAllActiveProductsBrandsNotSynchronized()
+//
+//        val syncResponse = brandWebClient.syncBrands(activeBrandsToSync, activeProductsBrandsToSync)
+//
+//        if (syncResponse.success) {
+//            activeBrandsToSync.forEach {
+//                val brand = it.copy(synchronized = true)
+//                brandDAO.saveBrand(brand)
+//            }
+//
+//            activeProductsBrandsToSync.forEach {
+//                val productBrand = it.copy(synchronized = true)
+//                brandDAO.saveProductBrand(productBrand)
+//            }
+//
+//            val inactiveAndNotSynchronizedBrands = brandDAO.findAllInactiveAndNotSynchronizedBrands()
+//
+//            val deleteResponse = brandWebClient.deleteBrands(inactiveAndNotSynchronizedBrands)
+//
+//            return if (deleteResponse.success) {
+//                inactiveAndNotSynchronizedBrands.forEach {
+//                    brandDAO.deleteBrandAndReferences(it.id)
+//                }
+//
+//                val findAllBrandsResponse = brandWebClient.findAllBrands()
+//                findAllBrandsResponse.values.forEach { brandDAO.saveBrand(it) }
+//
+//                return if (findAllBrandsResponse.success) {
+//                    val findAllProductBrandsResponse = brandWebClient.findAllProductBrands()
+//                    findAllProductBrandsResponse.values.forEach { brandDAO.saveProductBrand(it) }
+//
+//                    findAllProductBrandsResponse.toBaseResponse()
+//                } else {
+//                    findAllBrandsResponse.toBaseResponse()
+//                }
+//            } else {
+//                deleteResponse
+//            }
+//
+//        } else {
+//            return syncResponse
+//        }
+//    }
 
     /**
      * Função para recuperar todos os ProductBrand ativos pelo id de
@@ -166,8 +160,8 @@ class BrandRepository @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    fun findAllActiveProductBrandsByProductId(productId: UUID?): Flow<List<ProductBrandDomain>> {
-        return brandDAO.findAllActiveProductBrandsByProductId(productId)
-    }
+//    fun findAllActiveProductBrandsByProductId(productId: UUID?): Flow<List<ProductBrandDomain>> {
+//        return brandDAO.findAllActiveProductBrandsByProductId(productId)
+//    }
 
 }
