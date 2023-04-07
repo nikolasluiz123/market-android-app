@@ -14,4 +14,8 @@ sealed class StorageAppDestinations(val route: String) {
     object RegisterUser : StorageAppDestinations("registerUser")
     object StorageProducts : StorageAppDestinations("storageProducts")
     object FormProduct : StorageAppDestinations("formProduct")
+    object Camera : StorageAppDestinations("camera")
+    object AndroidGallery : StorageAppDestinations("androidGallery")
+    object LoadImageLink : StorageAppDestinations("loadImageLink")
+    object Testes : StorageAppDestinations("testes")
 }

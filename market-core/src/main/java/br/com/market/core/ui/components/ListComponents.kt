@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import br.com.market.core.R
-import br.com.market.core.theme.CINZA_500
+import br.com.market.core.theme.GREY_500
 
 /**
  * Componente de listagem vertical.
@@ -217,6 +217,6 @@ private fun EmptyState(
         modifier = modifier,
         text = text,
         style = MaterialTheme.typography.titleMedium,
-        color = CINZA_500
+        color = GREY_500
     )
 }

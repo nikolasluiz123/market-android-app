@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">storage</string>
+
     <string name="label_voltar">Voltar</string>
     <string name="label_pesquisar">Pesquisar</string>
     <string name="label_logout">Logout</string>
@@ -18,4 +20,15 @@
     <string name="connection_server_error_message">Não foi possível enviar os dados para o servidor, tente novamente mais tarde, se o erro persistir, contate o suporte.</string>
     <string name="label_sync">Sincronizando...</string>
     <string name="unknown_error_message">Ocorreu um erro não tratado. \n %s</string>
+    <string name="label_camera_bottom_sheet_image">Tirar uma Foto</string>
+    <string name="label_gallery_bottom_sheet_image">Selecionar na Galeria</string>
+    <string name="label_link_bottom_sheet_image">Baixar usando um Link</string>
+    <string name="label_icon_camera_bottom_sheet_image_description">Câmera do Dispositivo</string>
+    <string name="label_icon_gallery_bottom_sheet_image_description">Galeria de Fotos do Dispositivo</string>
+    <string name="label_icon_download_bottom_sheet_image_description">Baixar uma Imagem por Link</string>
+    <string name="icn_camera_view_switch_camera_content_description">Alterar entre câmera frontal e traseira</string>
+    <string name="icn_camera_view_camera_shutter_content_description">Tirar a foto</string>
+    <string name="icn_camera_view_view_gallery_content_description">Abrir a galeria</string>
+    <string name="load_image_screen_link_required_validation_message">O link é obrigatório</string>
+    <string name="load_image_link_screen_label_link">Link da Imagem</string>
 </resources>

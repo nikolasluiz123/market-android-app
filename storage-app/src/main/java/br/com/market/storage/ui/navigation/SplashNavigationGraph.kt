@@ -32,11 +32,12 @@ fun NavGraphBuilder.splashGraph(
                     dataStore.data.collect { preferences ->
                         val token = preferences[PreferencesKey.TOKEN]
 
-                        if (token.isNullOrBlank()) {
-                            navController.cleanNavigation(StorageAppDestinations.Login.route)
-                        } else {
-                            navController.cleanNavigation(StorageAppDestinations.StorageProducts.route)
-                        }
+                        navController.cleanNavigation(StorageAppDestinations.Testes.route)
+//                        if (token.isNullOrBlank()) {
+//                            navController.cleanNavigation(StorageAppDestinations.Login.route)
+//                        } else {
+//                            navController.cleanNavigation(StorageAppDestinations.StorageProducts.route)
+//                        }
                     }
                 }
             }

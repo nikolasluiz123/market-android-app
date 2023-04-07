@@ -1,5 +1,6 @@
 package br.com.market.core.ui.components
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
@@ -65,6 +66,64 @@ fun MarketTopAppBar(
 }
 
 /**
+ * Top App Bar com uma passagem facilitada de título e
+ * subtítulo.
+ *
+ * @see MarketTopAppBar
+ *
+ * @param title String com o título da barra
+ * @param subtitle String com o subtítulo da barra
+ *
+ * @author Nikolas Luiz Schmitt
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SimpleMarketTopAppBar(
+    title: String,
+    subtitle: String? = null,
+    onNavigationIconClick: () -> Unit = { },
+    onLogoutClick: () -> Unit = { },
+    actions: @Composable () -> Unit = { },
+    menuItems: @Composable () -> Unit = { },
+    colors: TopAppBarColors = TopAppBarDefaults.mediumTopAppBarColors(
+        containerColor = MaterialTheme.colorScheme.secondary,
+        titleContentColor = Color.White,
+        actionIconContentColor = Color.White,
+        navigationIconContentColor = Color.White
+    ),
+    showNavigationIcon: Boolean = true,
+    showMenuWithLogout: Boolean = true,
+) {
+    TopAppBar(
+        title = {
+            Column {
+                Text(text = title, style = MaterialTheme.typography.titleSmall)
+
+                if (subtitle != null) {
+                    Text(text = subtitle, style = MaterialTheme.typography.bodySmall)
+                }
+            }
+        },
+        colors = colors,
+        navigationIcon = {
+            if (showNavigationIcon) {
+                IconButtonArrowBack(onClick = onNavigationIconClick)
+            }
+        },
+        actions = {
+            actions()
+
+            if (showMenuWithLogout) {
+                MenuIconButtonWithDefaultActions(
+                    onLogoutClick = onLogoutClick,
+                    menuItems = menuItems,
+                )
+            }
+        }
+    )
+}
+
+/**
  * Searchable storage top app bar
  *
  * @param openSearch Flag que indica se deve ser aberto o campo de pesquisa e ajustados os itens de menu.
@@ -88,6 +147,7 @@ fun SearchableMarketTopAppBar(
     openSearch: Boolean,
     searchText: String,
     title: String,
+    subtitle: String? = null,
     showNavigationIcon: Boolean = false,
     onSearchChange: (String) -> Unit,
     onToggleSearch: () -> Unit,
@@ -105,6 +165,7 @@ fun SearchableMarketTopAppBar(
                 searchText = searchText,
                 onSearchChange = onSearchChange,
                 title = title,
+                subtitle = subtitle,
                 appBarTextFieldHint = appBarTextFieldHint
             )
         },
@@ -118,7 +179,7 @@ fun SearchableMarketTopAppBar(
                     IconButtonClose { onSearchChange("") }
                 }
             }
-            
+
             customActions()
         },
         onLogoutClick = onLogoutClick,
@@ -143,6 +204,7 @@ fun TitleSearchableTopAppBar(
     searchText: String,
     onSearchChange: (String) -> Unit,
     title: String,
+    subtitle: String? = null,
     appBarTextFieldHint: String = stringResource(R.string.top_app_bar_text_field_hint)
 ) {
     if (openSearch) {
@@ -152,7 +214,11 @@ fun TitleSearchableTopAppBar(
             hint = appBarTextFieldHint
         )
     } else {
-        Text(text = title, style = MaterialTheme.typography.titleMedium)
+        Text(text = title, style = MaterialTheme.typography.titleSmall)
+
+        if (subtitle != null) {
+            Text(text = subtitle, style = MaterialTheme.typography.bodySmall)
+        }
     }
 }
 
@@ -166,6 +232,21 @@ fun MarketTopAppBarPreview() {
                 title = { Text("Título da Tela") },
                 onNavigationIconClick = { },
                 onLogoutClick = { }
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+fun MarketTopAppBarWithSubtitlePreview() {
+    MarketTheme {
+        Surface {
+            SimpleMarketTopAppBar(
+                title = "Título da Tela",
+                subtitle = "Subtitulo da Tela",
+                showMenuWithLogout = false
             )
         }
     }

@@ -7,7 +7,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import br.com.market.core.R
-import br.com.market.core.theme.CINZA_300
+import br.com.market.core.theme.GREY_300
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 
@@ -25,16 +25,18 @@ import coil.request.ImageRequest
 @Composable
 fun CoilImageViewer(
     modifier: Modifier = Modifier,
-    data: Any
+    data: Any? = null,
+    contentScale:ContentScale = ContentScale.Crop
 ) {
     SubcomposeAsyncImage(
         model = ImageRequest.Builder(LocalContext.current)
             .data(data)
             .crossfade(true)
             .placeholder(R.drawable.placeholder)
+            .error(R.drawable.placeholder)
             .build(),
         contentDescription = stringResource(R.string.label_image),
-        contentScale = ContentScale.Crop,
-        modifier = modifier.background(color = CINZA_300)
+        contentScale = contentScale,
+        modifier = modifier.background(color = GREY_300)
     )
 }

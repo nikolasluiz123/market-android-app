@@ -28,6 +28,12 @@ fun StorageAppNavHost(
         registerUserGraph(navController)
         storageProductsGraph(navController)
         formProductGraph(navController)
+
+        cameraGraph(navController)
+        androidGalleryGraph(navController)
+        loadImageLinkGraph(navController)
+
+        testesGraph(navController)
     }
 }
 
