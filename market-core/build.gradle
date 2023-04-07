@@ -40,6 +40,8 @@ android {
 }
 
 dependencies {
+    implementation 'de.charlex.compose:speeddial-bottomappbar-material3:1.1.1'
+
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
     implementation "androidx.hilt:hilt-navigation-compose:$hilt_navigation_version"

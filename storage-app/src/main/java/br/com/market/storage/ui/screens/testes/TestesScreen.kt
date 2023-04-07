@@ -4,18 +4,30 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import br.com.market.core.R
 import br.com.market.core.ui.components.Banner
 import br.com.market.core.ui.components.HorizontalGallery
+import br.com.market.core.ui.components.MultiActionsFabBottomAppBar
 import br.com.market.core.ui.components.bottomsheet.BottomSheetLoadImage
 import br.com.market.core.ui.components.bottomsheet.IEnumOptionsBottomSheet
+import br.com.market.core.ui.components.buttons.MarketFloatingActionButtonMultiActions
+import br.com.market.core.ui.components.buttons.fab.SubActionFabItem
+import br.com.market.core.ui.components.buttons.rememberFabMultiActionsState
 
 
 @Composable
@@ -79,5 +91,45 @@ fun TestesBottomSheet(
                 onItemClickListener(it)
             }
         )
+    }
+}
+
+@Composable
+fun TestesBottomAppBar() {
+    val state = rememberFabMultiActionsState()
+
+    Scaffold(
+        bottomBar = {
+            MultiActionsFabBottomAppBar(
+                floatingActionButton = {
+                    MarketFloatingActionButtonMultiActions(
+                        state = state,
+                        onClick = {
+
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = stringResource(R.string.label_adicionar),
+                            tint = Color.White
+                        )
+                    }
+                },
+                subActionsFab = listOf(
+                    SubActionFabItem(icon = painterResource(id = R.drawable.ic_calendar_24dp), label = "Agendar Entrada"),
+                    SubActionFabItem(icon = painterResource(id = R.drawable.ic_input_storage_24dp), label = "Entrada"),
+                    SubActionFabItem(icon = painterResource(id = R.drawable.ic_warning_24dp), label = "Baixa")
+                ),
+                state = state
+            )
+        }
+    ) {
+        ConstraintLayout(
+            Modifier
+                .fillMaxSize()
+                .padding(it)
+        ) {
+
+        }
     }
 }

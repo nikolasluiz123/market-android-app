@@ -31,4 +31,5 @@
     <string name="icn_camera_view_view_gallery_content_description">Abrir a galeria</string>
     <string name="load_image_screen_link_required_validation_message">O link é obrigatório</string>
     <string name="load_image_link_screen_label_link">Link da Imagem</string>
+    <string name="label_fechar">Fechar</string>
 </resources>

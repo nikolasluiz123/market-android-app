@@ -131,7 +131,8 @@ fun StorageListCard(
                         icon = {
                             Icon(
                                 painter = painterResource(id = br.com.market.core.R.drawable.ic_warning_16dp),
-                                contentDescription = null
+                                contentDescription = null,
+                                tint = Color.White
                             )
                         },
                         backgroundColor = RED_500,
@@ -154,7 +155,8 @@ fun StorageListCard(
                         icon = {
                             Icon(
                                 painter = painterResource(id = br.com.market.core.R.drawable.ic_calendar_16dp),
-                                contentDescription = null
+                                contentDescription = null,
+                                tint = Color.White
                             )
                         },
                         backgroundColor = ORANGE_500,

@@ -55,6 +55,8 @@ android {
 }
 
 dependencies {
+    implementation 'de.charlex.compose:speeddial-bottomappbar-material3:1.1.1'
+
     implementation project(path: ':market-core')
     implementation project(path: ':market-models')
     implementation project(path: ':market-local-data-access')
