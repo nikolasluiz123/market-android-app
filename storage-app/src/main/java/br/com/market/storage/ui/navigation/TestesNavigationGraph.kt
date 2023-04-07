@@ -8,6 +8,6 @@ fun NavGraphBuilder.testesGraph(
     navController: NavHostController
 ) {
     composable(route = StorageAppDestinations.Testes.route) {
-        
+
     }
 }

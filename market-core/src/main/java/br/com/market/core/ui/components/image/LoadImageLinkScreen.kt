@@ -17,9 +17,9 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.core.R
-import br.com.market.core.theme.GREY_300
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.CoilImageViewer
+import br.com.market.core.ui.components.MarketBottomAppBar
 import br.com.market.core.ui.components.OutlinedTextFieldValidation
 import br.com.market.core.ui.components.SimpleMarketTopAppBar
 import br.com.market.core.ui.components.buttons.FloatingActionButtonSave
@@ -51,12 +51,10 @@ fun LoadImageLinkScreen(
             )
         },
         bottomBar = {
-            BottomAppBar(
-                actions = { },
+            MarketBottomAppBar(
                 floatingActionButton = {
                     FloatingActionButtonSave()
-                },
-                containerColor = GREY_300
+                }
             )
         }
     ) {
