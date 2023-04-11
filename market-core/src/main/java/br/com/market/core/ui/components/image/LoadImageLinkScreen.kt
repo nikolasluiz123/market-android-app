@@ -46,7 +46,7 @@ fun LoadImageLinkScreen(
             SimpleMarketTopAppBar(
                 title = "Carregar Imagem",
                 subtitle = "Novo Produto",
-                onNavigationIconClick = onNavigationIconClick,
+                onBackClick = onNavigationIconClick,
                 showMenuWithLogout = false
             )
         },

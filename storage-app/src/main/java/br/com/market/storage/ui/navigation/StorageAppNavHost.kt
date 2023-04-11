@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.navOptions
 
 /**
  * Host de Navegação que configura o grafo do APP
@@ -20,12 +21,47 @@ fun StorageAppNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = StorageAppDestinations.Splash.route,
+        startDestination = splashScreenRoute,
         modifier = modifier
     ) {
-        splashGraph(navController)
-        loginGraph(navController)
-        registerUserGraph(navController)
+
+        splashScreen(
+            onNavigateToLogin = {
+                navController.navigateToLoginScreen(navOptions {
+                    popUpTo(loginScreenRoute) {
+                        inclusive = true
+                    }
+                })
+            },
+            onNavigateToCategories = {
+                navController.navigateToCategoryScreen(navOptions {
+                    popUpTo(splashScreenRoute) {
+                        inclusive = true
+                    }
+                })
+            }
+        )
+
+        loginScreen(
+            onNavigateToCategoryScreen = {
+                navController.navigateToCategoryScreen(navOptions {
+                    popUpTo(splashScreenRoute) {
+                        inclusive = true
+                    }
+                })
+            },
+            onNavigateToRegisterUserScreen = { navController.navigateToRegisterUserScreen() }
+        )
+
+        registerUserGraph(
+            onNavigateToBack = { navController.popBackStack() },
+            onNavigateToLoginScreen = { navController.navigateToLoginScreen() }
+        )
+
+        categoryScreen(
+            onButtonBackClickFailureScreen = navController::popBackStack
+        )
+
         storageProductsGraph(navController)
         formProductGraph(navController)
 
@@ -35,17 +71,6 @@ fun StorageAppNavHost(
 
         testesGraph(navController)
     }
-}
-
-/**
- * Função para realizar a navegação limpando a backstack.
- *
- * @param route Rota para onde deseja navegar.
- *
- * @author Nikolas Luiz Schmitt
- */
-fun NavHostController.cleanNavigation(route: String) {
-    this.navigate(route) { popUpTo(0) }
 }
 
 /**

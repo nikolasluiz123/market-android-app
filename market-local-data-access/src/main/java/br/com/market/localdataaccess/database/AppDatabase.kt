@@ -5,6 +5,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import br.com.market.localdataaccess.converters.RoomTypeConverters
 import br.com.market.localdataaccess.dao.BrandDAO
+import br.com.market.localdataaccess.dao.CategoryDAO
 import br.com.market.localdataaccess.dao.ProductDAO
 import br.com.market.models.*
 
@@ -17,7 +18,7 @@ import br.com.market.models.*
  * @author Nikolas Luiz Schmitt
  */
 @Database(
-    version = 8,
+    version = 9,
     entities = [
         Address::class, Brand::class, Card::class, CartItem::class, Category::class, CategoryBrand::class, Client::class, Company::class,
         DeliveryMan::class, DeliveryManQueue::class, Product::class, ProductImage::class, ProductRating::class, PurchaseCart::class,
@@ -41,5 +42,7 @@ abstract class AppDatabase : RoomDatabase() {
      * @author Nikolas Luiz Schmitt
      */
     abstract fun brandDAO(): BrandDAO
+
+    abstract fun categoryDAO(): CategoryDAO
 
 }

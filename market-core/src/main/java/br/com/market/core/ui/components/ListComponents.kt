@@ -48,8 +48,7 @@ fun <T> LazyVerticalListComponent(
                         top.linkTo(parent.top)
                         end.linkTo(parent.end)
                         bottom.linkTo(parent.bottom)
-                    }
-                    .fillMaxSize(),
+                    },
                 items = items
             ) {
                 itemList(it)

@@ -17,7 +17,7 @@ import br.com.market.core.ui.components.buttons.MenuIconButtonWithDefaultActions
  * TopAppBar padrão do APP.
  *
  * @param title Título da app bar
- * @param onNavigationIconClick Ação ao clicar no ícone da esquerda.
+ * @param onBackClick Ação ao clicar no ícone da esquerda.
  * @param onLogoutClick Ação ao clicar no item de menu Logout.
  * @param actions Ações exibidas a direita da barra.
  * @param menuItems Itens de menu exibidos dentro do MoreOptions.
@@ -31,7 +31,7 @@ import br.com.market.core.ui.components.buttons.MenuIconButtonWithDefaultActions
 @Composable
 fun MarketTopAppBar(
     title: @Composable () -> Unit,
-    onNavigationIconClick: () -> Unit,
+    onBackClick: () -> Unit,
     onLogoutClick: () -> Unit = { },
     actions: @Composable () -> Unit = { },
     menuItems: @Composable () -> Unit = { },
@@ -49,7 +49,7 @@ fun MarketTopAppBar(
         colors = colors,
         navigationIcon = {
             if (showNavigationIcon) {
-                IconButtonArrowBack(onClick = onNavigationIconClick)
+                IconButtonArrowBack(onClick = onBackClick)
             }
         },
         actions = {
@@ -73,6 +73,13 @@ fun MarketTopAppBar(
  *
  * @param title String com o título da barra
  * @param subtitle String com o subtítulo da barra
+ * @param onBackClick Ação ao clicar no ícone da esquerda.
+ * @param onLogoutClick Ação ao clicar no item de menu Logout.
+ * @param actions Ações exibidas a direita da barra.
+ * @param menuItems Itens de menu exibidos dentro do MoreOptions.
+ * @param colors Cores da barra.
+ * @param showNavigationIcon Flag para exibir ícone de navação ou não.
+ * @param showMenuWithLogout Flag para exibir o menu com a opção de Logout.
  *
  * @author Nikolas Luiz Schmitt
  */
@@ -81,8 +88,8 @@ fun MarketTopAppBar(
 fun SimpleMarketTopAppBar(
     title: String,
     subtitle: String? = null,
-    onNavigationIconClick: () -> Unit = { },
     onLogoutClick: () -> Unit = { },
+    onBackClick: () -> Unit = { },
     actions: @Composable () -> Unit = { },
     menuItems: @Composable () -> Unit = { },
     colors: TopAppBarColors = TopAppBarDefaults.mediumTopAppBarColors(
@@ -94,7 +101,7 @@ fun SimpleMarketTopAppBar(
     showNavigationIcon: Boolean = true,
     showMenuWithLogout: Boolean = true,
 ) {
-    TopAppBar(
+    MarketTopAppBar(
         title = {
             Column {
                 Text(text = title, style = MaterialTheme.typography.titleSmall)
@@ -105,21 +112,12 @@ fun SimpleMarketTopAppBar(
             }
         },
         colors = colors,
-        navigationIcon = {
-            if (showNavigationIcon) {
-                IconButtonArrowBack(onClick = onNavigationIconClick)
-            }
-        },
-        actions = {
-            actions()
-
-            if (showMenuWithLogout) {
-                MenuIconButtonWithDefaultActions(
-                    onLogoutClick = onLogoutClick,
-                    menuItems = menuItems,
-                )
-            }
-        }
+        actions = actions,
+        menuItems = menuItems,
+        showNavigationIcon = showNavigationIcon,
+        onBackClick = onBackClick,
+        onLogoutClick = onLogoutClick,
+        showMenuWithLogout = showMenuWithLogout
     )
 }
 
@@ -170,7 +168,7 @@ fun SearchableMarketTopAppBar(
             )
         },
         showNavigationIcon = openSearch || showNavigationIcon,
-        onNavigationIconClick = if (openSearch) onToggleSearch else onNavigationIconClick,
+        onBackClick = if (openSearch) onToggleSearch else onNavigationIconClick,
         actions = {
             if (!showOnlyCustomActions) {
                 if (!openSearch) {
@@ -230,7 +228,7 @@ fun MarketTopAppBarPreview() {
         Surface {
             MarketTopAppBar(
                 title = { Text("Título da Tela") },
-                onNavigationIconClick = { },
+                onBackClick = { },
                 onLogoutClick = { }
             )
         }

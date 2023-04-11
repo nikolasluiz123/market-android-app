@@ -29,16 +29,16 @@ import kotlinx.coroutines.launch
  * Tela de cadastro do usuário stateless.
  *
  * @param viewModel ViewModel da tela.
- * @param onNavigationClick Listener executado a oclicar no ícone de voltar.
- * @param onRegisterSuccess Listener executado ao registrar-se com sucesso.
+ * @param onBackClick Listener executado a oclicar no ícone de voltar.
+ * @param onNavigateToLoginScreen Listener executado ao registrar-se com sucesso.
  *
  * @author Nikolas Luiz Schmitt
  */
 @Composable
 fun RegisterUserScreen(
     viewModel: RegisterUserViewModel,
-    onNavigationClick: () -> Unit = { },
-    onRegisterSuccess: () -> Unit = { }
+    onBackClick: () -> Unit = { },
+    onNavigateToLoginScreen: () -> Unit = { }
 ) {
     val state by viewModel.uiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
@@ -51,7 +51,7 @@ fun RegisterUserScreen(
                 val response = viewModel.registerUser(it)
 
                 if (response.success) {
-                    onRegisterSuccess()
+                    onNavigateToLoginScreen()
                 } else {
                     state.onToggleMessageDialog(response.error ?: "")
                 }
@@ -59,7 +59,7 @@ fun RegisterUserScreen(
                 state.onToggleLoading()
             }
         },
-        onNavigationClick = onNavigationClick
+        onBackClick = onBackClick
     )
 }
 
@@ -68,7 +68,7 @@ fun RegisterUserScreen(
  *
  * @param state Objeto de estado da tela.
  * @param onButtonSaveClick Listener executado quando clicar em salvar.
- * @param onNavigationClick Listener executado quando clicar no botão de voltar.
+ * @param onBackClick Listener executado quando clicar no botão de voltar.
  *
  * @author Nikolas Luiz Schmitt
  */
@@ -77,7 +77,7 @@ fun RegisterUserScreen(
 fun RegisterUserScreen(
     state: RegisterUserUIState = RegisterUserUIState(),
     onButtonSaveClick: (UserDomain) -> Unit = { },
-    onNavigationClick: () -> Unit = { }
+    onBackClick: () -> Unit = { }
 ) {
     Scaffold(
         topBar = {
@@ -88,7 +88,7 @@ fun RegisterUserScreen(
                         style = MaterialTheme.typography.titleMedium
                     )
                 },
-                onNavigationIconClick = onNavigationClick,
+                onBackClick = onBackClick,
                 showMenuWithLogout = false
             )
         }

@@ -3,6 +3,7 @@ package br.com.market.localdataaccess.injection
 import android.content.Context
 import androidx.room.Room
 import br.com.market.localdataaccess.dao.BrandDAO
+import br.com.market.localdataaccess.dao.CategoryDAO
 import br.com.market.localdataaccess.dao.ProductDAO
 import br.com.market.localdataaccess.database.AppDatabase
 import dagger.Module
@@ -43,6 +44,11 @@ class DatabaseModule {
     @Provides
     fun provideBrandDAO(appDatabase: AppDatabase): BrandDAO {
         return appDatabase.brandDAO()
+    }
+
+    @Provides
+    fun provideCategoryDAO(appDatabase: AppDatabase): CategoryDAO {
+        return appDatabase.categoryDAO()
     }
 
     /**

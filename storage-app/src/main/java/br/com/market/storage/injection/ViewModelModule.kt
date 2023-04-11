@@ -2,11 +2,13 @@ package br.com.market.storage.injection
 
 import android.content.Context
 import br.com.market.localdataaccess.dao.BrandDAO
+import br.com.market.localdataaccess.dao.CategoryDAO
 import br.com.market.localdataaccess.dao.ProductDAO
 import br.com.market.servicedataaccess.webclients.BrandWebClient
 import br.com.market.servicedataaccess.webclients.ProductWebClient
 import br.com.market.servicedataaccess.webclients.UserWebClient
 import br.com.market.storage.repository.BrandRepository
+import br.com.market.storage.repository.CategoryRepository
 import br.com.market.storage.repository.ProductRepository
 import br.com.market.storage.repository.UserRepository
 import dagger.Module
@@ -73,4 +75,12 @@ class ViewModelModule {
         @ApplicationContext context: Context,
         userWebClient: UserWebClient
     ): UserRepository = UserRepository(context, userWebClient)
+
+    @Provides
+    @ViewModelScoped
+    fun provideCategoryRepository(
+        categoryDAO: CategoryDAO
+    ): CategoryRepository {
+        return CategoryRepository(categoryDAO)
+    }
 }

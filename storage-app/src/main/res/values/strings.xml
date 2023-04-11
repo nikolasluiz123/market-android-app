@@ -47,4 +47,5 @@
     <string name="brand_list_card_label_name">Nome</string>
     <string name="product_list_card_label_name">Nome</string>
     <string name="product_list_card_label_price">Preço</string>
+    <string name="category_search_screen_empty_state_text">Não há Categorias Cadastradas</string>
 </resources>

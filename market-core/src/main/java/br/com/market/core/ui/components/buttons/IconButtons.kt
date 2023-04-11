@@ -4,9 +4,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.market.core.R
+import br.com.market.core.theme.GREY_800
 import br.com.market.core.theme.MarketTheme
 
 /**
@@ -79,10 +82,21 @@ fun IconButtonClose(onClick: () -> Unit = { }) {
  * @author Nikolas Luiz Schmitt
  */
 @Composable
-fun IconButtonDelete(onClick: () -> Unit = { }) {
+fun IconButtonDelete(iconColor: Color = GREY_800, onClick: () -> Unit = { }) {
     IconButton(onClick = onClick) {
         Icon(
-            imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.label_delete)
+            painter = painterResource(id = R.drawable.ic_delete_32dp),
+            contentDescription = stringResource(R.string.label_delete),
+            tint = iconColor
+        )
+    }
+}
+
+@Composable
+fun IconButtonLogout(onClick: () -> Unit = { }) {
+    IconButton(onClick = onClick) {
+        Icon(
+            imageVector = Icons.Default.ExitToApp, contentDescription = stringResource(R.string.label_logout)
         )
     }
 }
