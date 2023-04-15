@@ -63,7 +63,7 @@ fun CategoryScreen(
     }
 
     var isActive by remember((state as CategoryUIState.Success).categoryDomain?.active) {
-        mutableStateOf(state.categoryDomain?.active == true)
+        mutableStateOf(state.categoryDomain?.active ?: true)
     }
 
     Scaffold(
