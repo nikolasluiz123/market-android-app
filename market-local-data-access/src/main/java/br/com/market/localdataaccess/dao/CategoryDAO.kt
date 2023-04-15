@@ -21,6 +21,6 @@ abstract class CategoryDAO {
     @Query("select * from categories where id = :categoryId")
     abstract suspend fun findById(categoryId: UUID): CategoryDomain
 
-    @Query("update categories set active = false, synchronized = false where id = :categoryId ")
-    abstract suspend fun inactivateCategory(categoryId: UUID)
+    @Query("update categories set active = :active, synchronized = false where id = :categoryId ")
+    abstract suspend fun toggleActive(categoryId: UUID, active: Boolean)
 }

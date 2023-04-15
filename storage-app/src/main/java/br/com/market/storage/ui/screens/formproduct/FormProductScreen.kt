@@ -18,7 +18,7 @@ import br.com.market.core.ui.components.DialogMessage
 import br.com.market.core.ui.components.MarketLinearProgressIndicator
 import br.com.market.core.ui.components.SearchableMarketTopAppBar
 import br.com.market.core.ui.components.buttons.IconButtonClose
-import br.com.market.core.ui.components.buttons.IconButtonDelete
+import br.com.market.core.ui.components.buttons.IconButtonInactivate
 import br.com.market.core.ui.components.buttons.IconButtonSearch
 import br.com.market.domain.BrandDomain
 import br.com.market.storage.R
@@ -176,7 +176,7 @@ fun FormProductScreen(
             customActions = {
                 if (!state.openSearch) {
                     if (tabIndex == 0 && isEditing) {
-                        IconButtonDelete {
+                        IconButtonInactivate {
                             onDeleteProduct()
                             isDelete = true
                         }

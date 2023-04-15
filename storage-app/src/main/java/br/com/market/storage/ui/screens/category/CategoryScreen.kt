@@ -18,7 +18,8 @@ import br.com.market.core.ui.components.MarketBottomAppBar
 import br.com.market.core.ui.components.MarketLinearProgressIndicator
 import br.com.market.core.ui.components.SimpleMarketTopAppBar
 import br.com.market.core.ui.components.buttons.FloatingActionButtonSave
-import br.com.market.core.ui.components.buttons.IconButtonDelete
+import br.com.market.core.ui.components.buttons.IconButtonInactivate
+import br.com.market.core.ui.components.buttons.IconButtonReactivate
 import br.com.market.domain.CategoryDomain
 import br.com.market.storage.R
 import br.com.market.storage.ui.states.category.CategoryUIState
@@ -34,8 +35,8 @@ fun CategoryScreen(
 
     CategoryScreen(
         state = state,
-        onInactivateCategoryClick = {
-            viewModel.inactivateCategory()
+        onToggleActive = {
+            viewModel.toggleActive(it)
         },
         onSaveCategoryClick = {
             viewModel.saveCategory()
@@ -48,7 +49,7 @@ fun CategoryScreen(
 @Composable
 fun CategoryScreen(
     state: CategoryUIState,
-    onInactivateCategoryClick: () -> Unit = { },
+    onToggleActive: (Boolean) -> Unit = { },
     onSaveCategoryClick: () -> Unit = { },
     onButtonBackClickFailureScreen: () -> Unit = { },
     onButtonRetryClick: () -> Unit = { },
@@ -56,15 +57,20 @@ fun CategoryScreen(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+
     var isEditMode by remember((state as CategoryUIState.Success).categoryDomain) {
         mutableStateOf(state.categoryDomain != null)
+    }
+
+    var isActive by remember((state as CategoryUIState.Success).categoryDomain?.active) {
+        mutableStateOf(state.categoryDomain?.active == true)
     }
 
     Scaffold(
         topBar = {
             val title = if (isEditMode) {
                 state as CategoryUIState.Success
-                "Categoria ${state.categoryDomain!!.name}"
+                "Categoria ${state.categoryDomain?.name}"
             } else {
                 "Nova Categoria"
             }
@@ -78,35 +84,53 @@ fun CategoryScreen(
         bottomBar = {
             MarketBottomAppBar(
                 actions = {
-                    IconButtonDelete(
-                        enabled = isEditMode,
-                        onClick = {
-                            onInactivateCategoryClick()
+                    if (isActive) {
+                        IconButtonInactivate(
+                            enabled = isEditMode,
+                            onClick = {
+                                onToggleActive(false)
+                                isActive = false
 
-                            scope.launch {
-                                snackbarHostState.showSnackbar("Categoria Inativada com Sucesso")
+                                scope.launch {
+                                    snackbarHostState.showSnackbar("Categoria Inativada com Sucesso")
+                                }
                             }
-                        }
-                    )
+                        )
+                    } else {
+                        IconButtonReactivate(
+                            enabled = isEditMode,
+                            onClick = {
+                                onToggleActive(true)
+                                isActive = true
+
+                                scope.launch {
+                                    snackbarHostState.showSnackbar("Categoria Reativada com Sucesso")
+                                }
+                            }
+                        )
+                    }
                 },
                 floatingActionButton = {
                     FloatingActionButtonSave(
                         onClick = {
                             state as CategoryUIState.Success
 
-                            state.categoryDomain = if (isEditMode) {
-                                state.categoryDomain?.copy(name = state.categoryName)
-                            } else {
-                                CategoryDomain(name = state.categoryName)
+                            if (state.onValidate() && isActive) {
+
+                                state.categoryDomain = if (isEditMode) {
+                                    state.categoryDomain?.copy(name = state.categoryName)
+                                } else {
+                                    CategoryDomain(name = state.categoryName)
+                                }
+
+                                onSaveCategoryClick()
+
+                                scope.launch {
+                                    snackbarHostState.showSnackbar("Categoria Salva com Sucesso")
+                                }
+
+                                isEditMode = state.categoryDomain != null
                             }
-
-                            onSaveCategoryClick()
-
-                            scope.launch {
-                                snackbarHostState.showSnackbar("Categoria Salva com Sucesso")
-                            }
-
-                            isEditMode = state.categoryDomain != null
                         }
                     )
                 }
@@ -206,7 +230,7 @@ fun CategoryScreen(
 
                         when (tabIndex) {
                             0 -> {
-                                TabCategoryScreen(state = state)
+                                TabCategoryScreen(state = state, isActive = isActive)
                             }
                             1 -> {
 

@@ -21,7 +21,7 @@ import br.com.market.storage.R
 import br.com.market.storage.ui.states.category.CategoryUIState
 
 @Composable
-fun TabCategoryScreen(state: CategoryUIState.Success = CategoryUIState.Success()) {
+fun TabCategoryScreen(state: CategoryUIState.Success = CategoryUIState.Success(), isActive: Boolean) {
     ConstraintLayout(
         Modifier
             .fillMaxSize()
@@ -45,7 +45,8 @@ fun TabCategoryScreen(state: CategoryUIState.Success = CategoryUIState.Success()
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Done,
                 capitalization = KeyboardCapitalization.Words
-            )
+            ),
+            enabled = isActive
         )
     }
 }
@@ -55,7 +56,7 @@ fun TabCategoryScreen(state: CategoryUIState.Success = CategoryUIState.Success()
 fun TabCategoryScreenPreview() {
     MarketTheme {
         Surface {
-            TabCategoryScreen()
+            TabCategoryScreen(isActive = true)
         }
     }
 }

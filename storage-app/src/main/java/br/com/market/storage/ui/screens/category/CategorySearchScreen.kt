@@ -21,7 +21,7 @@ import br.com.market.core.ui.components.MarketBottomAppBar
 import br.com.market.core.ui.components.MarketCircularBlockUIProgressIndicator
 import br.com.market.core.ui.components.SimpleMarketTopAppBar
 import br.com.market.core.ui.components.buttons.FloatingActionButtonAdd
-import br.com.market.core.ui.components.buttons.IconButtonDelete
+import br.com.market.core.ui.components.buttons.IconButtonInactivate
 import br.com.market.core.ui.components.buttons.IconButtonLogout
 import br.com.market.storage.R
 import br.com.market.storage.sampledata.sampleCategories
@@ -72,7 +72,7 @@ fun CategorySearchScreen(
         bottomBar = {
             MarketBottomAppBar(
                 actions = {
-                    IconButtonDelete(
+                    IconButtonInactivate(
                         onClick = onDeleteCategoryClick,
                         enabled =  state is CategorySearchUIState.Success && state.categories.isNotEmpty()
                     )

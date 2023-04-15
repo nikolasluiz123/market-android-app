@@ -83,7 +83,12 @@ fun IconButtonClose(onClick: () -> Unit = { }) {
  * @author Nikolas Luiz Schmitt
  */
 @Composable
-fun IconButtonDelete(iconColor: Color = GREY_800, disabledIconColor: Color = GREY_500, enabled: Boolean = true, onClick: () -> Unit = { }) {
+fun IconButtonInactivate(
+    iconColor: Color = GREY_800,
+    disabledIconColor: Color = GREY_500,
+    enabled: Boolean = true,
+    onClick: () -> Unit = { }
+) {
     IconButton(
         enabled = enabled,
         onClick = onClick,
@@ -91,7 +96,26 @@ fun IconButtonDelete(iconColor: Color = GREY_800, disabledIconColor: Color = GRE
     ) {
         Icon(
             painter = painterResource(id = R.drawable.ic_delete_32dp),
-            contentDescription = stringResource(R.string.label_delete)
+            contentDescription = stringResource(R.string.label_inactivate)
+        )
+    }
+}
+
+@Composable
+fun IconButtonReactivate(
+    iconColor: Color = GREY_800,
+    disabledIconColor: Color = GREY_500,
+    enabled: Boolean = true,
+    onClick: () -> Unit = { }
+) {
+    IconButton(
+        enabled = enabled,
+        onClick = onClick,
+        colors = IconButtonDefaults.iconButtonColors(contentColor = iconColor, disabledContentColor = disabledIconColor)
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_reactivate_32dp),
+            contentDescription = stringResource(R.string.label_reactivate)
         )
     }
 }
@@ -190,7 +214,7 @@ fun IconButtonClosePreview() {
 fun IconButtonDeletePreview() {
     MarketTheme {
         Surface {
-            IconButtonDelete()
+            IconButtonInactivate()
         }
     }
 }

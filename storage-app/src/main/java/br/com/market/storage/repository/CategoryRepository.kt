@@ -33,7 +33,7 @@ class CategoryRepository @Inject constructor(
         categoryDAO.findById(categoryId)
     }
 
-    suspend fun inactivateCategory(categoryId: UUID) {
-        categoryDAO.inactivateCategory(categoryId)
+    suspend fun toggleActive(categoryId: UUID, active: Boolean) {
+        categoryDAO.toggleActive(categoryId, active)
     }
 }
