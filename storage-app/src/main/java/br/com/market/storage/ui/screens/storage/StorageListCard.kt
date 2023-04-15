@@ -32,7 +32,7 @@ fun StorageListCard(
     responsibleName: String? = null,
     description: String? = null
 ) {
-    Card(colors = CardDefaults.cardColors(containerColor = colorCard)) {
+    Card(colors = CardDefaults.cardColors(containerColor = colorCardActive)) {
         ConstraintLayout(
             Modifier
                 .fillMaxWidth()

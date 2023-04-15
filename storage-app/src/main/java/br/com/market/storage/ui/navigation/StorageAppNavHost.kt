@@ -5,6 +5,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
+import br.com.market.storage.ui.navigation.category.categoryScreen
+import br.com.market.storage.ui.navigation.category.categorySearchScreen
+import br.com.market.storage.ui.navigation.category.navigateToCategoryScreen
+import br.com.market.storage.ui.navigation.category.navigateToCategorySearchScreen
 
 /**
  * Host de Navegação que configura o grafo do APP
@@ -34,7 +38,7 @@ fun StorageAppNavHost(
                 })
             },
             onNavigateToCategories = {
-                navController.navigateToCategoryScreen(navOptions {
+                navController.navigateToCategorySearchScreen(navOptions {
                     popUpTo(splashScreenRoute) {
                         inclusive = true
                     }
@@ -44,7 +48,7 @@ fun StorageAppNavHost(
 
         loginScreen(
             onNavigateToCategoryScreen = {
-                navController.navigateToCategoryScreen(navOptions {
+                navController.navigateToCategorySearchScreen(navOptions {
                     popUpTo(splashScreenRoute) {
                         inclusive = true
                     }
@@ -58,8 +62,16 @@ fun StorageAppNavHost(
             onNavigateToLoginScreen = { navController.navigateToLoginScreen() }
         )
 
+        categorySearchScreen(
+            onButtonBackClickFailureScreen = navController::popBackStack,
+            onAddCategoryClick = { navController.navigateToCategoryScreen() },
+            onCategoryClick = {
+                navController.navigateToCategoryScreen(categoryId = it)
+            }
+        )
+
         categoryScreen(
-            onButtonBackClickFailureScreen = navController::popBackStack
+            onBackClick = { navController.popBackStack() }
         )
 
         storageProductsGraph(navController)

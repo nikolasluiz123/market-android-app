@@ -12,7 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import br.com.market.core.theme.MarketTheme
-import br.com.market.core.theme.colorCard
+import br.com.market.core.theme.colorCardActive
 import br.com.market.core.theme.colorPrimary
 import br.com.market.core.ui.components.CoilImageViewer
 import br.com.market.domain.ProductDomain
@@ -36,7 +36,7 @@ fun CardProductItem(product: ProductDomain, onClick: (UUID) -> Unit = { }) {
                 onClick(product.id!!)
             },
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        colors = CardDefaults.cardColors(containerColor = colorCard)
+        colors = CardDefaults.cardColors(containerColor = colorCardActive)
     ) {
         ConstraintLayout(Modifier.fillMaxSize()) {
 

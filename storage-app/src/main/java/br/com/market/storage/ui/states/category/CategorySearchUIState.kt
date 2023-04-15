@@ -1,4 +1,4 @@
-package br.com.market.storage.ui.states
+package br.com.market.storage.ui.states.category
 
 import br.com.market.domain.CategoryDomain
 

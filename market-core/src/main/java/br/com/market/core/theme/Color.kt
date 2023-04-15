@@ -11,8 +11,18 @@ val colorSecondary: Color
 val colorTertiary: Color
     get() = BLUE_300
 
-val colorCard: Color
+val colorCardActive: Color
+    get() = Color.White
+
+val colorCardInactive: Color
     get() = GREY_100
+
+val colorTextActive: Color
+    get() = GREY_800
+
+val colorTextInactive: Color
+    get() = GREY_500
+
 
 val GREY_50 = Color(0xFFFAFAFA)
 val GREY_100 = Color(0xFFF5F5F5)

@@ -11,14 +11,14 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.core.theme.MarketTheme
-import br.com.market.core.theme.colorCard
+import br.com.market.core.theme.colorCardActive
 import br.com.market.storage.R
 
 @Composable
 fun BrandListCard(brandName: String) {
     Card(
         Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = colorCard)
+        colors = CardDefaults.cardColors(containerColor = colorCardActive)
     ) {
         ConstraintLayout(
             Modifier

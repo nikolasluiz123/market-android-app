@@ -11,7 +11,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.core.extensions.formatToCurrency
 import br.com.market.core.theme.MarketTheme
-import br.com.market.core.theme.colorCard
+import br.com.market.core.theme.colorCardActive
 import br.com.market.core.ui.components.CoilImageViewer
 import br.com.market.enums.EnumUnit
 import br.com.market.storage.extensions.formatQuantityIn
@@ -24,7 +24,7 @@ fun ProductListCard(
     quantityUnit: EnumUnit,
     image: Any
 ) {
-    Card(colors = CardDefaults.cardColors(containerColor = colorCard)) {
+    Card(colors = CardDefaults.cardColors(containerColor = colorCardActive)) {
         ConstraintLayout(
             Modifier
                 .fillMaxWidth()

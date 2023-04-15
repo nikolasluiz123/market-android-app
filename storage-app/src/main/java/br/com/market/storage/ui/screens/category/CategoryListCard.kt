@@ -1,5 +1,6 @@
 package br.com.market.storage.ui.screens.category
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
@@ -10,22 +11,33 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import br.com.market.core.theme.MarketTheme
-import br.com.market.core.theme.colorCard
+import br.com.market.core.theme.*
 import br.com.market.storage.R
 
 @Composable
-fun CategoryListCard(categoryName: String) {
+fun CategoryListCard(
+    categoryName: String,
+    active: Boolean,
+    onItemClick: () -> Unit = { }
+) {
     Card(
-        Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = colorCard)
+        Modifier
+            .fillMaxWidth()
+            .clickable {
+                onItemClick()
+            },
+        elevation = CardDefaults.cardElevation(8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (active) colorCardActive else colorCardInactive
+        )
     ) {
         ConstraintLayout(
             Modifier
-                .padding(8.dp)
+                .padding(vertical = 8.dp, horizontal = 16.dp)
                 .fillMaxWidth()
         ) {
             val (labelNameRef, nameRef) = createRefs()
+            val textColor = if (active) colorTextActive else colorTextInactive
 
             Text(
                 text = stringResource(id = R.string.category_list_card_label_name),
@@ -36,7 +48,8 @@ fun CategoryListCard(categoryName: String) {
 
                         width = Dimension.fillToConstraints
                     },
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.titleMedium,
+                color = textColor
             )
 
             Text(
@@ -47,7 +60,8 @@ fun CategoryListCard(categoryName: String) {
 
                     width = Dimension.fillToConstraints
                 },
-                style = MaterialTheme.typography.bodySmall
+                style = MaterialTheme.typography.bodyMedium,
+                color = textColor
             )
         }
     }
@@ -58,7 +72,7 @@ fun CategoryListCard(categoryName: String) {
 fun CategoryListCardPreview() {
     MarketTheme {
         Surface {
-            CategoryListCard("Biscoito")
+            CategoryListCard("Biscoito", true)
         }
     }
 }

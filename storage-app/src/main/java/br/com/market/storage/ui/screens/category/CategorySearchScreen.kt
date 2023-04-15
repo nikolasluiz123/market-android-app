@@ -25,13 +25,16 @@ import br.com.market.core.ui.components.buttons.IconButtonDelete
 import br.com.market.core.ui.components.buttons.IconButtonLogout
 import br.com.market.storage.R
 import br.com.market.storage.sampledata.sampleCategories
-import br.com.market.storage.ui.states.CategorySearchUIState
-import br.com.market.storage.ui.viewmodels.CategorySearchViewModel
+import br.com.market.storage.ui.states.category.CategorySearchUIState
+import br.com.market.storage.ui.viewmodels.category.CategorySearchViewModel
+import java.util.*
 
 @Composable
 fun CategorySearchScreen(
     viewModel: CategorySearchViewModel,
     onButtonBackClickFailureScreen: () -> Unit,
+    onAddCategoryClick: () -> Unit,
+    onCategoryClick: (UUID) -> Unit,
 ) {
     val state by viewModel.uiState.collectAsState()
     CategorySearchScreen(
@@ -39,7 +42,9 @@ fun CategorySearchScreen(
         onButtonBackClickFailureScreen = onButtonBackClickFailureScreen,
         onButtonRetryClick = {
             viewModel.findCategories()
-        }
+        },
+        onAddCategoryClick = onAddCategoryClick,
+        onCategoryClick = onCategoryClick
     )
 }
 
@@ -50,7 +55,8 @@ fun CategorySearchScreen(
     onButtonBackClickFailureScreen: () -> Unit = { },
     onButtonRetryClick: () -> Unit = { },
     onDeleteCategoryClick: () -> Unit = { },
-    onAddCategoryClick: () -> Unit = { }
+    onAddCategoryClick: () -> Unit = { },
+    onCategoryClick: (UUID) -> Unit = { }
 ) {
     Scaffold(
         topBar = {
@@ -66,7 +72,10 @@ fun CategorySearchScreen(
         bottomBar = {
             MarketBottomAppBar(
                 actions = {
-                    IconButtonDelete(onClick = onDeleteCategoryClick)
+                    IconButtonDelete(
+                        onClick = onDeleteCategoryClick,
+                        enabled =  state is CategorySearchUIState.Success && state.categories.isNotEmpty()
+                    )
                 },
                 floatingActionButton = {
                     FloatingActionButtonAdd(onClick = onAddCategoryClick)
@@ -84,7 +93,6 @@ fun CategorySearchScreen(
             }
             CategorySearchUIState.Loading -> {
                 MarketCircularBlockUIProgressIndicator(
-                    modifier = Modifier.padding(it),
                     show = true,
                     label = "Carregando"
                 )
@@ -103,7 +111,13 @@ fun CategorySearchScreen(
                         items = state.categories,
                         emptyStateText = stringResource(R.string.category_search_screen_empty_state_text)
                     ) { categoryDomain ->
-                        CategoryListCard(categoryName = categoryDomain.name)
+                        CategoryListCard(
+                            categoryName = categoryDomain.name,
+                            active = categoryDomain.active,
+                            onItemClick = {
+                                onCategoryClick(categoryDomain.id!!)
+                            }
+                        )
                     }
                 }
             }
@@ -176,7 +190,7 @@ fun FailureScreen(
 
 @Preview
 @Composable
-fun CategoryScreenFailurePreview() {
+fun CategorySearchScreenFailurePreview() {
     MarketTheme {
         Surface {
             CategorySearchScreen(state = CategorySearchUIState.Failure)
@@ -186,7 +200,7 @@ fun CategoryScreenFailurePreview() {
 
 @Preview
 @Composable
-fun CategoryScreenLoadingPreview() {
+fun CategorySearchScreenLoadingPreview() {
     MarketTheme {
         Surface {
             CategorySearchScreen(state = CategorySearchUIState.Loading)
@@ -196,7 +210,7 @@ fun CategoryScreenLoadingPreview() {
 
 @Preview
 @Composable
-fun CategoryScreenEmptyListPreview() {
+fun CategorySearchScreenEmptyListPreview() {
     MarketTheme {
         Surface {
             CategorySearchScreen(state = CategorySearchUIState.Success(emptyList()))
@@ -206,7 +220,7 @@ fun CategoryScreenEmptyListPreview() {
 
 @Preview
 @Composable
-fun CategoryScreenPreview() {
+fun CategorySearchScreenPreview() {
     MarketTheme {
         Surface {
             CategorySearchScreen(state = CategorySearchUIState.Success(sampleCategories))

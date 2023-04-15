@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.core.theme.MarketTheme
-import br.com.market.core.theme.colorCard
+import br.com.market.core.theme.colorCardActive
 import br.com.market.core.theme.colorPrimary
 import br.com.market.core.ui.components.buttons.MenuIconButton
 import br.com.market.domain.ProductBrandDomain
@@ -40,7 +40,7 @@ fun CardBrandItem(
             .fillMaxSize()
             .clickable { onItemClick(productBrandDomain) },
         elevation = CardDefaults.cardElevation(8.dp),
-        colors = CardDefaults.cardColors(containerColor = colorCard)
+        colors = CardDefaults.cardColors(containerColor = colorCardActive)
     ) {
         ConstraintLayout(
             Modifier.fillMaxSize()

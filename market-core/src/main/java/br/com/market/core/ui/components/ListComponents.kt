@@ -43,6 +43,7 @@ fun <T> LazyVerticalListComponent(
         if (items.isNotEmpty()) {
             LazyVerticalList(
                 modifier = Modifier
+                    .fillMaxSize()
                     .constrainAs(lazyColumnRef) {
                         start.linkTo(parent.start)
                         top.linkTo(parent.top)
