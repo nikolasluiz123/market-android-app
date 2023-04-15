@@ -1,6 +1,6 @@
 package br.com.market.storage.ui.states
 
-import br.com.market.core.ui.states.BaseUiState
+import br.com.market.core.ui.states.BaseUiState2
 import br.com.market.domain.ProductDomain
 
 /**
@@ -26,7 +26,7 @@ data class StorageProductsUiState(
     override val showLoading: Boolean = false,
     override val onToggleLoading: () -> Unit = { },
     override val onValidate: () -> Boolean = { false }
-) : BaseUiState() {
+) : BaseUiState2() {
 
     fun isSearching(): Boolean = searchText.isNotBlank()
 }

@@ -1,6 +1,6 @@
 package br.com.market.storage.ui.states
 
-import br.com.market.core.ui.states.BaseUiState
+import br.com.market.core.ui.states.BaseUiState2
 
 /**
  * Classe de estado da tela de cadastro do usuário
@@ -33,4 +33,4 @@ data class RegisterUserUIState(
     override val showLoading: Boolean = false,
     override val onToggleLoading: () -> Unit = { },
     override val onValidate: () -> Boolean = { false },
-) : BaseUiState()
+) : BaseUiState2()
