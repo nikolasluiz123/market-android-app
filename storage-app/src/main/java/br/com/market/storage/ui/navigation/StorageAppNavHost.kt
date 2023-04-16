@@ -63,7 +63,6 @@ fun StorageAppNavHost(
         )
 
         categorySearchScreen(
-            onButtonBackClickFailureScreen = navController::popBackStack,
             onAddCategoryClick = { navController.navigateToCategoryScreen() },
             onCategoryClick = {
                 navController.navigateToCategoryScreen(categoryId = it)

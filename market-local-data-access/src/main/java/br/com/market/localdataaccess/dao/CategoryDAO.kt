@@ -6,14 +6,13 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import br.com.market.domain.CategoryDomain
 import br.com.market.models.Category
-import kotlinx.coroutines.flow.Flow
 import java.util.*
 
 @Dao
 abstract class CategoryDAO {
 
-    @Query("select * from categories")
-    abstract fun findCategories(): Flow<List<CategoryDomain>>
+    @Query("select * from categories limit :loadSize offset :position")
+    abstract suspend fun findCategories(position: Int, loadSize: Int): List<CategoryDomain>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun saveCategory(category: Category)

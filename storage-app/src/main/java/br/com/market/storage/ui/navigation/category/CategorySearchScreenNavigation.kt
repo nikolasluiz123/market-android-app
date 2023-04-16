@@ -12,7 +12,6 @@ import java.util.*
 internal const val categorySearchScreenRoute = "categorySearch"
 
 fun NavGraphBuilder.categorySearchScreen(
-    onButtonBackClickFailureScreen: () -> Unit,
     onAddCategoryClick: () -> Unit,
     onCategoryClick: (UUID) -> Unit,
 ) {
@@ -21,7 +20,6 @@ fun NavGraphBuilder.categorySearchScreen(
 
         CategorySearchScreen(
             viewModel = categorySearchViewModel,
-            onButtonBackClickFailureScreen = onButtonBackClickFailureScreen,
             onAddCategoryClick = onAddCategoryClick,
             onCategoryClick = onCategoryClick
         )

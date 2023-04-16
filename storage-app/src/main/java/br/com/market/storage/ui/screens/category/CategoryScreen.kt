@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.core.theme.MarketTheme
+import br.com.market.core.ui.components.FailureScreen
 import br.com.market.core.ui.components.MarketBottomAppBar
 import br.com.market.core.ui.components.MarketLinearProgressIndicator
 import br.com.market.core.ui.components.SimpleMarketTopAppBar
