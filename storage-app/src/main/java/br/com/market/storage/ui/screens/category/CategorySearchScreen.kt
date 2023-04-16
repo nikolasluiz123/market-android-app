@@ -9,11 +9,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
+import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.MarketBottomAppBar
 import br.com.market.core.ui.components.SimpleMarketTopAppBar
 import br.com.market.core.ui.components.buttons.FloatingActionButtonAdd
@@ -142,6 +144,16 @@ fun CategorySearchScreen(
                     }
                 }
             }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun CategorySearchScreenPreview() {
+    MarketTheme {
+        Surface {
+            CategorySearchScreen(state = CategorySearchUIState())
         }
     }
 }

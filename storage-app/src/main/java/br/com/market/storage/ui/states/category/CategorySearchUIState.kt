@@ -5,4 +5,6 @@ import br.com.market.domain.CategoryDomain
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
-data class CategorySearchUIState(val categories: Flow<PagingData<CategoryDomain>> = emptyFlow())
+data class CategorySearchUIState(
+    val categories: Flow<PagingData<CategoryDomain>> = emptyFlow()
+)
