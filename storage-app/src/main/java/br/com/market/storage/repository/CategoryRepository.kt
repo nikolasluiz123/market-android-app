@@ -1,8 +1,8 @@
 package br.com.market.storage.repository
 
 import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import br.com.market.core.pagination.PagingConfigUtils
 import br.com.market.domain.CategoryDomain
 import br.com.market.localdataaccess.dao.CategoryDAO
 import br.com.market.models.Category
@@ -19,12 +19,7 @@ class CategoryRepository @Inject constructor(
 
     fun findCategories(): Flow<PagingData<CategoryDomain>> {
         return Pager(
-            config = PagingConfig(
-                pageSize = 50,
-                prefetchDistance = 25,
-                enablePlaceholders = false,
-                initialLoadSize = 50
-            ),
+            config = PagingConfigUtils.defaultPagingConfig(),
             pagingSourceFactory = { CategoryPagingSource(categoryDAO) }
         ).flow
     }
