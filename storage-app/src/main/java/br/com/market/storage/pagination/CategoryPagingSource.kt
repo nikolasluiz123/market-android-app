@@ -1,6 +1,5 @@
 package br.com.market.storage.pagination
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import br.com.market.domain.CategoryDomain
@@ -24,8 +23,6 @@ class CategoryPagingSource(private val categoryDAO: CategoryDAO) : PagingSource<
         }
 
         val nextKey = if (data.size < params.loadSize) null else pageNumber + 1
-
-        Log.i("Teste", "pageNumber: $pageNumber, loadSize: ${params.loadSize}, prevKey: ${if (pageNumber == 0) null else pageNumber - 1}, nextKey: $nextKey ")
 
         return LoadResult.Page(
             data = data,
