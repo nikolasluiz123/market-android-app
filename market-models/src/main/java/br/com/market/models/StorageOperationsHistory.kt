@@ -35,7 +35,7 @@ data class StorageOperationsHistory(
     @ColumnInfo("date_prevision")
     var datePrevision: LocalDateTime = LocalDateTime.now(),
     @ColumnInfo("operation_type")
-    var operationType: EnumOperationType,
+    var operationType: EnumOperationType? = null,
     var description: String? = null,
     @ColumnInfo("storage_product_id")
     var storageProductId: UUID? = null,

@@ -1,7 +1,6 @@
 package br.com.market.models
 
 import androidx.room.*
-import br.com.market.models.base.BaseModel
 import java.util.*
 
 @Entity(
@@ -17,10 +16,8 @@ import java.util.*
 )
 data class Company(
     @PrimaryKey
-    override var id: UUID = UUID.randomUUID(),
+    var id: Long? = null,
     var name: String,
     @ColumnInfo("theme_definitions_id")
     var themeDefinitionsId: UUID? = null,
-    override var synchronized: Boolean = false,
-    override var active: Boolean = true,
-) : BaseModel()
+)

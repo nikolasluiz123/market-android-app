@@ -25,6 +25,7 @@ data class VehicleCapacity(
     @PrimaryKey
     override var id: UUID = UUID.randomUUID(),
     var capacity: Int = 0,
+    @ColumnInfo(name = "capacity_unit")
     var capacityUnit: EnumUnit? = null,
     @ColumnInfo("vehicle_id")
     var vehicleId: UUID? = null,

@@ -29,9 +29,9 @@ data class CategoryBrand(
     @PrimaryKey
     override var id: UUID = UUID.randomUUID(),
     @ColumnInfo(name = "category_id")
-    var categoryId: UUID,
+    var categoryId: UUID? = null,
     @ColumnInfo(name = "brand_id")
-    var brandId: UUID,
+    var brandId: UUID? = null,
     override var synchronized: Boolean = false,
     override var active: Boolean = true,
     @ColumnInfo("company_id")

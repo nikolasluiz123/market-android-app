@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 9,
-    "identityHash": "f546528b18fbe02656696bff68376345",
+    "identityHash": "4f77dfc9f8aa23d28d264ff1e3f4f155",
     "entities": [
       {
         "tableName": "addresses",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `state` TEXT, `city` TEXT, `public_place` TEXT, `number` TEXT, `complement` TEXT, `cap` TEXT, `synchronized` INTEGER NOT NULL, `active` INTEGER NOT NULL, `company_id` BLOB, PRIMARY KEY(`id`), FOREIGN KEY(`company_id`) REFERENCES `companies`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `state` TEXT, `city` TEXT, `public_place` TEXT, `number` TEXT, `complement` TEXT, `cep` TEXT, `synchronized` INTEGER NOT NULL, `active` INTEGER NOT NULL, `company_id` BLOB, PRIMARY KEY(`id`), FOREIGN KEY(`company_id`) REFERENCES `companies`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -45,8 +45,8 @@
             "notNull": false
           },
           {
-            "fieldPath": "cap",
-            "columnName": "cap",
+            "fieldPath": "cep",
+            "columnName": "cep",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -102,7 +102,7 @@
       },
       {
         "tableName": "brands",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `name` TEXT NOT NULL, `synchronized` INTEGER NOT NULL, `active` INTEGER NOT NULL, `company_id` BLOB, PRIMARY KEY(`id`), FOREIGN KEY(`company_id`) REFERENCES `companies`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `name` TEXT, `synchronized` INTEGER NOT NULL, `active` INTEGER NOT NULL, `company_id` BLOB, PRIMARY KEY(`id`), FOREIGN KEY(`company_id`) REFERENCES `companies`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -114,7 +114,7 @@
             "fieldPath": "name",
             "columnName": "name",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "synchronized",
@@ -396,7 +396,7 @@
       },
       {
         "tableName": "categories",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `name` TEXT NOT NULL, `synchronized` INTEGER NOT NULL, `active` INTEGER NOT NULL, `company_id` BLOB, PRIMARY KEY(`id`), FOREIGN KEY(`company_id`) REFERENCES `companies`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `name` TEXT, `synchronized` INTEGER NOT NULL, `active` INTEGER NOT NULL, `company_id` BLOB, PRIMARY KEY(`id`), FOREIGN KEY(`company_id`) REFERENCES `companies`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -408,7 +408,7 @@
             "fieldPath": "name",
             "columnName": "name",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "synchronized",
@@ -462,7 +462,7 @@
       },
       {
         "tableName": "categories_brands",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `category_id` BLOB NOT NULL, `brand_id` BLOB NOT NULL, `synchronized` INTEGER NOT NULL, `active` INTEGER NOT NULL, `company_id` BLOB, PRIMARY KEY(`id`), FOREIGN KEY(`category_id`) REFERENCES `categories`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`brand_id`) REFERENCES `brands`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`company_id`) REFERENCES `companies`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `category_id` BLOB, `brand_id` BLOB, `synchronized` INTEGER NOT NULL, `active` INTEGER NOT NULL, `company_id` BLOB, PRIMARY KEY(`id`), FOREIGN KEY(`category_id`) REFERENCES `categories`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`brand_id`) REFERENCES `brands`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`company_id`) REFERENCES `companies`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -474,13 +474,13 @@
             "fieldPath": "categoryId",
             "columnName": "category_id",
             "affinity": "BLOB",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "brandId",
             "columnName": "brand_id",
             "affinity": "BLOB",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "synchronized",
@@ -692,13 +692,13 @@
       },
       {
         "tableName": "companies",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `name` TEXT NOT NULL, `theme_definitions_id` BLOB, `synchronized` INTEGER NOT NULL, `active` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`theme_definitions_id`) REFERENCES `theme_definitions`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `name` TEXT NOT NULL, `theme_definitions_id` BLOB, PRIMARY KEY(`id`), FOREIGN KEY(`theme_definitions_id`) REFERENCES `theme_definitions`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "BLOB",
-            "notNull": true
+            "affinity": "INTEGER",
+            "notNull": false
           },
           {
             "fieldPath": "name",
@@ -711,18 +711,6 @@
             "columnName": "theme_definitions_id",
             "affinity": "BLOB",
             "notNull": false
-          },
-          {
-            "fieldPath": "synchronized",
-            "columnName": "synchronized",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "active",
-            "columnName": "active",
-            "affinity": "INTEGER",
-            "notNull": true
           }
         ],
         "primaryKey": {
@@ -1430,7 +1418,7 @@
       },
       {
         "tableName": "storage_product",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `date_realization` TEXT NOT NULL, `date_prevision` TEXT NOT NULL, `operation_type` TEXT NOT NULL, `description` TEXT, `storage_product_id` BLOB, `user_id` BLOB, `synchronized` INTEGER NOT NULL, `active` INTEGER NOT NULL, `company_id` BLOB, PRIMARY KEY(`id`), FOREIGN KEY(`storage_product_id`) REFERENCES `storage_products`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`user_id`) REFERENCES `users`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`company_id`) REFERENCES `companies`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `date_realization` TEXT NOT NULL, `date_prevision` TEXT NOT NULL, `operation_type` TEXT, `description` TEXT, `storage_product_id` BLOB, `user_id` BLOB, `synchronized` INTEGER NOT NULL, `active` INTEGER NOT NULL, `company_id` BLOB, PRIMARY KEY(`id`), FOREIGN KEY(`storage_product_id`) REFERENCES `storage_products`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`user_id`) REFERENCES `users`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`company_id`) REFERENCES `companies`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1454,7 +1442,7 @@
             "fieldPath": "operationType",
             "columnName": "operation_type",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "description",
@@ -1849,7 +1837,7 @@
       },
       {
         "tableName": "vehicle_capacity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `capacity` INTEGER NOT NULL, `capacityUnit` TEXT, `vehicle_id` BLOB, `synchronized` INTEGER NOT NULL, `active` INTEGER NOT NULL, `company_id` BLOB, PRIMARY KEY(`id`), FOREIGN KEY(`company_id`) REFERENCES `companies`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`vehicle_id`) REFERENCES `vehicle`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `capacity` INTEGER NOT NULL, `capacity_unit` TEXT, `vehicle_id` BLOB, `synchronized` INTEGER NOT NULL, `active` INTEGER NOT NULL, `company_id` BLOB, PRIMARY KEY(`id`), FOREIGN KEY(`company_id`) REFERENCES `companies`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`vehicle_id`) REFERENCES `vehicle`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1865,7 +1853,7 @@
           },
           {
             "fieldPath": "capacityUnit",
-            "columnName": "capacityUnit",
+            "columnName": "capacity_unit",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -1949,7 +1937,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f546528b18fbe02656696bff68376345')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4f77dfc9f8aa23d28d264ff1e3f4f155')"
     ]
   }
 }

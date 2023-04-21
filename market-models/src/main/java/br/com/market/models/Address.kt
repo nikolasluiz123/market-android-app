@@ -24,7 +24,7 @@ data class Address(
     var publicPlace: String? = null,
     var number: String? = null,
     var complement: String? = null,
-    var cap: String? = null,
+    var cep: String? = null,
     override var synchronized: Boolean = false,
     override var active: Boolean = true,
     @ColumnInfo("company_id")
