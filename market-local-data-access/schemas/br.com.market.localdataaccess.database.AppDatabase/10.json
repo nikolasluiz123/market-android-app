@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 10,
-    "identityHash": "4f77dfc9f8aa23d28d264ff1e3f4f155",
+    "identityHash": "f1729e3bf73c535bce722bd56affee3f",
     "entities": [
       {
         "tableName": "addresses",
@@ -1505,6 +1505,15 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_storage_product_company_id` ON `${TABLE_NAME}` (`company_id`)"
+          },
+          {
+            "name": "index_storage_product_user_id",
+            "unique": false,
+            "columnNames": [
+              "user_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_storage_product_user_id` ON `${TABLE_NAME}` (`user_id`)"
           }
         ],
         "foreignKeys": [
@@ -1937,7 +1946,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4f77dfc9f8aa23d28d264ff1e3f4f155')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f1729e3bf73c535bce722bd56affee3f')"
     ]
   }
 }

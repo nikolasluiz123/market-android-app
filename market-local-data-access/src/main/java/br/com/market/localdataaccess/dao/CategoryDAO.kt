@@ -15,11 +15,15 @@ abstract class CategoryDAO {
     abstract suspend fun findCategories(position: Int, loadSize: Int): List<CategoryDomain>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun saveCategory(category: Category)
+    abstract suspend fun save(category: Category)
 
     @Query("select * from categories where id = :categoryId")
-    abstract suspend fun findById(categoryId: UUID): CategoryDomain
+    abstract suspend fun findById(categoryId: UUID): Category
 
-    @Query("update categories set active = :active, synchronized = false where id = :categoryId ")
-    abstract suspend fun toggleActive(categoryId: UUID, active: Boolean)
+    @Query("update categories set active = :active, synchronized = :sync where id = :categoryId ")
+    abstract suspend fun updateActive(categoryId: UUID, active: Boolean, sync: Boolean)
+
+    suspend fun toggleActive(category: Category) {
+        updateActive(category.id, !category.active, category.synchronized)
+    }
 }

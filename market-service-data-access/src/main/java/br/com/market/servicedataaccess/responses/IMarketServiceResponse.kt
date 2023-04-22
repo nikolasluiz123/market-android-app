@@ -15,6 +15,4 @@ interface IMarketServiceResponse {
     var success: Boolean
     var error: String?
 
-    fun toBaseResponse() = MarketServiceResponse(code, success, error)
-
 }

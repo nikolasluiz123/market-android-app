@@ -37,7 +37,7 @@ fun CategoryScreen(
     CategoryScreen(
         state = state,
         onToggleActive = {
-            viewModel.toggleActive(it)
+            viewModel.toggleActive()
         },
         onSaveCategoryClick = {
             viewModel.saveCategory()
@@ -50,7 +50,7 @@ fun CategoryScreen(
 @Composable
 fun CategoryScreen(
     state: CategoryUIState,
-    onToggleActive: (Boolean) -> Unit = { },
+    onToggleActive: () -> Unit = { },
     onSaveCategoryClick: () -> Unit = { },
     onButtonBackClickFailureScreen: () -> Unit = { },
     onButtonRetryClick: () -> Unit = { },
@@ -89,7 +89,7 @@ fun CategoryScreen(
                         IconButtonInactivate(
                             enabled = isEditMode,
                             onClick = {
-                                onToggleActive(false)
+                                onToggleActive()
                                 isActive = false
 
                                 scope.launch {
@@ -101,7 +101,7 @@ fun CategoryScreen(
                         IconButtonReactivate(
                             enabled = isEditMode,
                             onClick = {
-                                onToggleActive(true)
+                                onToggleActive()
                                 isActive = true
 
                                 scope.launch {

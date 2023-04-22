@@ -81,15 +81,22 @@ class CategoryViewModel @Inject constructor(
     fun saveCategory() {
         (_uiState.value as CategoryUIState.Success).categoryDomain?.let { categoryDomain ->
             viewModelScope.launch {
-                categoryRepository.saveCategory(categoryDomain)
+                categoryRepository.save(categoryDomain)
+
+                _uiState.update { currentState ->
+                    currentState as CategoryUIState.Success
+
+                    val domain = currentState.categoryDomain
+                    currentState.copy(domain?.copy(active = domain.active))
+                }
             }
         }
     }
 
-    fun toggleActive(active: Boolean) {
+    fun toggleActive() {
         (_uiState.value as CategoryUIState.Success).categoryDomain?.id?.let { id ->
             viewModelScope.launch {
-                categoryRepository.toggleActive(id, active)
+                categoryRepository.toggleActive(id)
             }
         }
     }

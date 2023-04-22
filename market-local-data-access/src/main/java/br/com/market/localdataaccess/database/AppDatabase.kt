@@ -18,7 +18,7 @@ import br.com.market.models.*
  * @author Nikolas Luiz Schmitt
  */
 @Database(
-    version = 10,
+    version = 11,
     entities = [
         Address::class, Brand::class, Card::class, CartItem::class, Category::class, CategoryBrand::class, Client::class, Company::class,
         DeliveryMan::class, DeliveryManQueue::class, Product::class, ProductImage::class, ProductRating::class, PurchaseCart::class,

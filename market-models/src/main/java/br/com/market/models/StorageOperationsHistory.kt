@@ -25,7 +25,7 @@ import java.util.*
             childColumns = ["company_id"]
         )
     ],
-    indices = [Index(value = ["storage_product_id"]), Index(value = ["company_id"])]
+    indices = [Index(value = ["storage_product_id"]), Index(value = ["company_id"]), Index(value = ["user_id"])]
 )
 data class StorageOperationsHistory(
     @PrimaryKey

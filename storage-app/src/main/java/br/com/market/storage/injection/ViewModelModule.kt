@@ -5,6 +5,7 @@ import br.com.market.localdataaccess.dao.BrandDAO
 import br.com.market.localdataaccess.dao.CategoryDAO
 import br.com.market.localdataaccess.dao.ProductDAO
 import br.com.market.servicedataaccess.webclients.BrandWebClient
+import br.com.market.servicedataaccess.webclients.CategoryWebClient
 import br.com.market.servicedataaccess.webclients.ProductWebClient
 import br.com.market.servicedataaccess.webclients.UserWebClient
 import br.com.market.storage.repository.BrandRepository
@@ -79,8 +80,9 @@ class ViewModelModule {
     @Provides
     @ViewModelScoped
     fun provideCategoryRepository(
-        categoryDAO: CategoryDAO
+        categoryDAO: CategoryDAO,
+        categoryWebClient: CategoryWebClient
     ): CategoryRepository {
-        return CategoryRepository(categoryDAO)
+        return CategoryRepository(categoryDAO, categoryWebClient)
     }
 }

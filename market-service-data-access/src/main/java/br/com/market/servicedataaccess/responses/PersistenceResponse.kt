@@ -1,5 +1,6 @@
 package br.com.market.servicedataaccess.responses
 
+import java.net.HttpURLConnection
 import java.util.*
 
 /**
@@ -23,4 +24,7 @@ data class PersistenceResponse(
     override var code: Int,
     override var success: Boolean = false,
     override var error: String? = null
-): IMarketServiceResponse
+): IMarketServiceResponse {
+
+    fun getObjectSynchronized() = success && code != HttpURLConnection.HTTP_UNAVAILABLE
+}

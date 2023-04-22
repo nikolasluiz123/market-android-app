@@ -1,6 +1,7 @@
 package br.com.market.servicedataaccess.injection
 
 import br.com.market.servicedataaccess.services.BrandService
+import br.com.market.servicedataaccess.services.CategoryService
 import br.com.market.servicedataaccess.services.ProductService
 import br.com.market.servicedataaccess.services.UserService
 import dagger.Module
@@ -72,6 +73,12 @@ class RetrofitModule {
     @Singleton
     fun provideUserService(retrofit: Retrofit): UserService {
         return retrofit.create(UserService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCategoryService(retrofit: Retrofit): CategoryService {
+        return retrofit.create(CategoryService::class.java)
     }
 
 }
