@@ -6,6 +6,7 @@ import br.com.market.core.pagination.PagingConfigUtils
 import br.com.market.domain.CategoryDomain
 import br.com.market.localdataaccess.dao.CategoryDAO
 import br.com.market.models.Category
+import br.com.market.servicedataaccess.responses.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.PersistenceResponse
 import br.com.market.servicedataaccess.webclients.CategoryWebClient
 import br.com.market.storage.pagination.CategoryPagingSource
@@ -59,5 +60,32 @@ class CategoryRepository @Inject constructor(
         categoryDAO.toggleActive(category)
 
         return response
+    }
+
+    suspend fun sync(): MarketServiceResponse {
+        val response = sendCategoriesToRemoteDB()
+        return if (response.success) updateCategoriesOfLocalDB() else response
+    }
+
+    private suspend fun sendCategoriesToRemoteDB(): MarketServiceResponse {
+        val categoriesNotSynchronized = categoryDAO.findCategoriesNotSynchronized()
+        val response = categoryWebClient.sync(categoriesNotSynchronized)
+
+        if (response.success) {
+            val categoriesSynchronized = categoriesNotSynchronized.map { it.copy(synchronized = true) }
+            categoryDAO.save(categoriesSynchronized)
+        }
+
+        return response
+    }
+
+    private suspend fun updateCategoriesOfLocalDB(): MarketServiceResponse {
+        val response = categoryWebClient.findAll()
+
+        if (response.success) {
+            categoryDAO.save(response.values)
+        }
+
+        return response.toBaseResponse()
     }
 }

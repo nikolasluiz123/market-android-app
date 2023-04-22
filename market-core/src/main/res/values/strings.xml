@@ -18,7 +18,7 @@
     <string name="register_user_socket_timeout_error_message">Ocorreu um erro inesperado durante o cadastro do usário, é possível que o serviço esteja sobrecarregado ou indisponível no momento. Para mais informações contate o suporte.</string>
     <string name="label_inactivate">Inativar</string>
     <string name="connection_server_error_message">Não foi possível enviar os dados para o servidor, tente novamente mais tarde, se o erro persistir, contate o suporte.</string>
-    <string name="label_sync">Sincronizando...</string>
+    <string name="label_synchronizing">Sincronizando...</string>
     <string name="unknown_error_message">Ocorreu um erro não tratado. \n %s</string>
     <string name="label_camera_bottom_sheet_image">Tirar uma Foto</string>
     <string name="label_gallery_bottom_sheet_image">Selecionar na Galeria</string>
@@ -33,4 +33,5 @@
     <string name="load_image_link_screen_label_link">Link da Imagem</string>
     <string name="label_fechar">Fechar</string>
     <string name="label_reactivate">Reativar</string>
+    <string name="label_sync">Sincronizar</string>
 </resources>

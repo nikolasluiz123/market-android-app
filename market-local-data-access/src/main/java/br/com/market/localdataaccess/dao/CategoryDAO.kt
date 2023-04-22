@@ -1,9 +1,6 @@
 package br.com.market.localdataaccess.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import br.com.market.domain.CategoryDomain
 import br.com.market.models.Category
 import java.util.*
@@ -17,6 +14,9 @@ abstract class CategoryDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun save(category: Category)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract suspend fun save(categories: List<Category>)
+
     @Query("select * from categories where id = :categoryId")
     abstract suspend fun findById(categoryId: UUID): Category
 
@@ -26,4 +26,7 @@ abstract class CategoryDAO {
     suspend fun toggleActive(category: Category) {
         updateActive(category.id, !category.active, category.synchronized)
     }
+
+    @Query("select * from categories where synchronized = false")
+    abstract suspend fun findCategoriesNotSynchronized(): List<Category>
 }

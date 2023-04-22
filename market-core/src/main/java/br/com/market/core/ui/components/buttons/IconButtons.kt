@@ -129,6 +129,15 @@ fun IconButtonLogout(onClick: () -> Unit = { }) {
     }
 }
 
+@Composable
+fun IconButtonSync(onClick: () -> Unit = { }) {
+    IconButton(onClick = onClick) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_sync_24dp), contentDescription = stringResource(R.string.label_sync)
+        )
+    }
+}
+
 /**
  * Menu de mais opções.
  *
@@ -215,6 +224,16 @@ fun IconButtonDeletePreview() {
     MarketTheme {
         Surface {
             IconButtonInactivate()
+        }
+    }
+}
+
+@Preview
+@Composable
+fun IconButtonSyncPreview() {
+    MarketTheme {
+        Surface {
+            IconButtonSync()
         }
     }
 }

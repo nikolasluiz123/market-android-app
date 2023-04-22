@@ -18,4 +18,7 @@ class ReadResponse<DTO>(
     override var code: Int,
     override var success: Boolean,
     override var error: String? = null
-) : IMarketServiceResponse
+) : IMarketServiceResponse {
+
+    fun toBaseResponse(): MarketServiceResponse = MarketServiceResponse(code, success, error)
+}

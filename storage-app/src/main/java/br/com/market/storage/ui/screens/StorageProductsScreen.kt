@@ -142,7 +142,7 @@ fun StorageProductsScreen(
 
         MarketCircularBlockUIProgressIndicator(
             state.showLoading,
-            stringResource(br.com.market.core.R.string.label_sync)
+            stringResource(br.com.market.core.R.string.label_synchronizing)
         )
     }
 }

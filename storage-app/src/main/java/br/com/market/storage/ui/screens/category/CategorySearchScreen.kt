@@ -21,6 +21,7 @@ import br.com.market.core.ui.components.SimpleMarketTopAppBar
 import br.com.market.core.ui.components.buttons.FloatingActionButtonAdd
 import br.com.market.core.ui.components.buttons.IconButtonInactivate
 import br.com.market.core.ui.components.buttons.IconButtonLogout
+import br.com.market.core.ui.components.buttons.IconButtonSync
 import br.com.market.storage.ui.states.category.CategorySearchUIState
 import br.com.market.storage.ui.viewmodels.category.CategorySearchViewModel
 import java.util.*
@@ -35,7 +36,10 @@ fun CategorySearchScreen(
     CategorySearchScreen(
         state = state,
         onAddCategoryClick = onAddCategoryClick,
-        onCategoryClick = onCategoryClick
+        onCategoryClick = onCategoryClick,
+        onSyncClick = {
+            viewModel.sync()
+        }
     )
 }
 
@@ -45,7 +49,8 @@ fun CategorySearchScreen(
     state: CategorySearchUIState,
     onDeleteCategoryClick: () -> Unit = { },
     onAddCategoryClick: () -> Unit = { },
-    onCategoryClick: (UUID) -> Unit = { }
+    onCategoryClick: (UUID) -> Unit = { },
+    onSyncClick: () -> Unit = { }
 ) {
     val pagingData = state.categories.collectAsLazyPagingItems()
 
@@ -56,6 +61,7 @@ fun CategorySearchScreen(
                 showNavigationIcon = false,
                 showMenuWithLogout = false,
                 actions = {
+                    IconButtonSync(onSyncClick)
                     IconButtonLogout()
                 }
             )
