@@ -187,7 +187,7 @@ fun CategoryScreen(
                                 text = { Text(text = title) },
                                 enabled = when (index) {
                                     0 -> true
-                                    1 -> true
+                                    1 -> isEditMode
                                     else -> false
                                 }
                             )
@@ -208,7 +208,7 @@ fun CategoryScreen(
                             },
                         userScrollEnabled = when (tabIndex) {
                             0 -> true
-                            1 -> true
+                            1 -> isEditMode
                             else -> false
                         }
                     ) { index ->
