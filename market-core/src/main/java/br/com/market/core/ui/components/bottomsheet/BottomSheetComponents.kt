@@ -15,6 +15,16 @@ import br.com.market.core.theme.GREY_800
 import br.com.market.core.ui.components.bottomsheet.loadimage.BottomSheetLoadImageItem
 import br.com.market.core.ui.components.bottomsheet.loadimage.EnumOptionsBottomSheetLoadImage
 
+/**
+ * Componente de bottomsheet que pode ser utilizado
+ * de forma genérica
+ *
+ * @param items Itens que serão exibidos
+ * @param onDismissRequest Callback executado ao sair do bottomsheet
+ * @param onItemClickListener Callback executado ao clicar no item
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomSheet(
@@ -55,6 +65,17 @@ fun BottomSheet(
     }
 }
 
+/**
+ * Componente de bottomsheet específico para carregamento de imagens,
+ * contém as opções padrões para tal ação.
+ *
+ * @param onDismissRequest Callback executado ao sair do bottomsheet
+ * @param onItemClickListener Callback executado ao clicar no item
+ *
+ * @see BottomSheet
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Composable
 fun BottomSheetLoadImage(
     onDismissRequest: () -> Unit,
