@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.Room
 import br.com.market.localdataaccess.dao.BrandDAO
 import br.com.market.localdataaccess.dao.CategoryDAO
-import br.com.market.localdataaccess.dao.ProductDAO
 import br.com.market.localdataaccess.database.AppDatabase
 import dagger.Module
 import dagger.Provides
@@ -23,19 +22,7 @@ import javax.inject.Singleton
 class DatabaseModule {
 
     /**
-     * função para instanciar um ProductDAO
-     *
-     * @param appDatabase DataBase do Room
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-    @Provides
-    fun provideProductDAO(appDatabase: AppDatabase): ProductDAO {
-        return appDatabase.productDAO()
-    }
-
-    /**
-     * Função para instanciar um BrandDAO
+     * Função para instanciar um [BrandDAO]
      *
      * @param appDatabase DataBase do Room
      *
@@ -46,6 +33,13 @@ class DatabaseModule {
         return appDatabase.brandDAO()
     }
 
+    /**
+     * Função para instanciar um [CategoryDAO]
+     *
+     * @param appDatabase DataBase do Room
+     *
+     * @author Nikolas Luiz Schmitt
+     */
     @Provides
     fun provideCategoryDAO(appDatabase: AppDatabase): CategoryDAO {
         return appDatabase.categoryDAO()

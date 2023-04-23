@@ -1,11 +1,15 @@
 package br.com.market.storage.ui.navigation
 
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import br.com.market.core.ui.components.image.LoadImageLinkScreen
 import br.com.market.core.ui.viewmodel.LoadImageLinkViewModel
+
+internal const val loadImageLinkScreenRoute = "loadImageLink"
 
 /**
  * Função que realiza as definições da navegação para a
@@ -18,7 +22,7 @@ import br.com.market.core.ui.viewmodel.LoadImageLinkViewModel
 fun NavGraphBuilder.loadImageLinkGraph(
     navController: NavHostController
 ) {
-    composable(route = StorageAppDestinations.LoadImageLink.route) {
+    composable(route = loadImageLinkScreenRoute) {
         val loadImageLinkViewModel = hiltViewModel<LoadImageLinkViewModel>()
 
         LoadImageLinkScreen(
@@ -28,4 +32,8 @@ fun NavGraphBuilder.loadImageLinkGraph(
             }
         )
     }
+}
+
+fun NavController.navigateToLoadImageLinkScreen(navOptions: NavOptions? = null) {
+    navigate(route = loadImageLinkScreenRoute, navOptions = navOptions)
 }

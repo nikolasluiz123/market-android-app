@@ -6,7 +6,6 @@ import androidx.room.TypeConverters
 import br.com.market.localdataaccess.converters.RoomTypeConverters
 import br.com.market.localdataaccess.dao.BrandDAO
 import br.com.market.localdataaccess.dao.CategoryDAO
-import br.com.market.localdataaccess.dao.ProductDAO
 import br.com.market.models.*
 
 /**
@@ -30,19 +29,17 @@ import br.com.market.models.*
 abstract class AppDatabase : RoomDatabase() {
 
     /**
-     * Função responsável por retornar um ProductDAO
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-    abstract fun productDAO(): ProductDAO
-
-    /**
-     * Função responsável por retornar um BrandDAO
+     * Função responsável por retornar um [BrandDAO]
      *
      * @author Nikolas Luiz Schmitt
      */
     abstract fun brandDAO(): BrandDAO
 
+    /**
+     * Função responsável por retornar um [CategoryDAO]
+     *
+     * @author Nikolas Luiz Schmitt
+     */
     abstract fun categoryDAO(): CategoryDAO
 
 }

@@ -1,11 +1,15 @@
 package br.com.market.localdataaccess.dao
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import br.com.market.domain.BrandDomain
 import br.com.market.models.Brand
 import java.util.*
 
 /**
- * Classe para manipulação dos dados da base local
+ * Classe para manipulação dos dados da marca na base local
  *
  * @author Nikolas Luiz Schmitt
  */
@@ -13,153 +17,77 @@ import java.util.*
 abstract class BrandDAO {
 
     /**
-     * Função para salvar uma marca, ocorrer um conflito, ou seja, dois IDs iguais,
-     * será realizada a substituição de uma entidade pela outra.
+     * Função que busca as marcas de forma paginada
      *
-     * @param brand Marca que deseja salvar.
+     * @param position Linha na tabela onde a consulta inicia
+     * @param loadSize Linha na tabela onde a consulta termina
+     *
+     * @author Nikolas Luiz Schmitt
+     */
+    @Query("select * from brands limit :loadSize offset :position")
+    abstract suspend fun findBrands(position: Int, loadSize: Int): List<BrandDomain>
+
+    /**
+     * Função para salvar uma marca
+     *
+     * @param brand Marca que deseja salvar
      *
      * @author Nikolas Luiz Schmitt
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun saveBrand(brand: Brand)
+    abstract suspend fun save(brand: Brand)
 
     /**
-     * Função para salvar a entidade intermediária ProductBrand
+     * Função para salvar uma ou mais marcas em uma lista
      *
-     * @param productBrand Entidade intermediária que deseja salvar
+     * @param brands Lista de marcas pra salvar
      *
      * @author Nikolas Luiz Schmitt
      */
-//    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    abstract suspend fun saveProductBrand(productBrand: ProductBrand)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract suspend fun save(brands: List<Brand>)
 
     /**
-     * Função utilizada para recuperar todas as marcas ativas para exibir na tela.
+     * Função para buscar uma marca pelo id
      *
-     * @param productId Id do produto que está sendo editado
+     * @param brandId Id da marca que deseja buscar
      *
      * @author Nikolas Luiz Schmitt
      */
-//    @Query(
-//        " select b.id as brandId, " +
-//                "p.name as productName, " +
-//                "b.name as brandName, " +
-//                "pb.count as count " +
-//                "from products p " +
-//                "inner join products_brands pb on pb.product_id = p.id " +
-//                "inner join brands b on pb.brand_id = b.id " +
-//                "where p.id = :productId and b.active = true"
-//    )
-//    abstract fun findAllActiveProductBrandsByProductId(productId: UUID?): Flow<List<ProductBrandDomain>>
-
-    /**
-     * Função para recuperar um ProductBrand pelo ID da Brand.
-     *
-     * @param brandId Id da Brand
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-//    @Query("select * from products_brands where brand_id = :brandId")
-//    abstract suspend fun findProductBrandByBrandId(brandId: UUID): ProductBrand
-
     @Query("select * from brands where id = :brandId")
-    abstract suspend fun findByBrandId(brandId: UUID): Brand
+    abstract suspend fun findById(brandId: UUID): Brand
 
     /**
-     * Função para inativar uma marca e as suas referências. Essa função
-     * está dentro de uma transação para que, caso ocorra um erro, não sejam
-     * inativados registros de forma parcial.
+     * Função para atualizar a flag [active] de uma marca com o [brandId] informado
      *
-     * @param brandId Id da marca que será inativada.
+     * @param brandId Id da marca
+     * @param active Flag que indica se o registro está ativo ou não
+     * @param sync Flag que indica se o registro foi sincronizado com a base remota ou não
      *
      * @author Nikolas Luiz Schmitt
      */
-    @Transaction
-    open suspend fun inactivateBrandAndReferences(brandId: UUID) {
-//        inactivateProductBrandOfBrand(brandId)
-//        inactivateBrand(brandId)
+    @Query("update brands set active = :active, synchronized = :sync where id = :brandId ")
+    abstract suspend fun updateActive(brandId: UUID, active: Boolean, sync: Boolean)
+
+    /**
+     * Função que facilita a mudança de ativo e inativo.
+     *
+     * @see updateActive
+     *
+     * @param brand Marca que deseja reativar ou inativar.
+     *
+     * @author Nikolas Luiz Schmitt
+     */
+    suspend fun toggleActive(brand: Brand) {
+        updateActive(brand.id, !brand.active, brand.synchronized)
     }
 
     /**
-     * Função que inativa um ProductBrand que tenha o id da brand especificado.
-     *
-     * @param brandId Id da Brand
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-//    @Query("update products_brands set active = false, synchronized = false where brand_id = :brandId")
-//    abstract suspend fun inactivateProductBrandOfBrand(brandId: UUID)
-
-    /**
-     * Função que inativa a Brand.
-     *
-     * @param brandId Id da Brand que deseja inativar.
+     * Função que busca todas as marcas que não foram sincronizadas
+     * com a base remota.
      *
      * @author Nikolas Luiz Schmitt
      */
-//    @Query("update brands set active = false, synchronized = false where id = :brandId ")
-//    abstract suspend fun inactivateBrand(brandId: UUID)
-
-    /**
-     * Função para excluir fisicamente os registros da brand especificada
-     * e suas referências. Essa função está em uma transação para que não
-     * haja uma exclusão parcial devido a erros.
-     *
-     * @param brandId Id da Brand que deseja excluir
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-    @Transaction
-    open suspend fun deleteBrandAndReferences(brandId: UUID) {
-//        deleteProductBrandOfBrand(brandId)
-        deleteBrand(brandId)
-    }
-
-    /**
-     * Função para excluir uma ProductBrand pelo id da Brand
-     *
-     * @param brandId Id da Brand
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-//    @Query("delete from products_brands where brand_id = :brandId")
-//    abstract suspend fun deleteProductBrandOfBrand(brandId: UUID)
-
-    /**
-     * Função para excluir uma Brand de id específico
-     *
-     * @param brandId Id da Brand
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-    @Query("delete from brands where id = :brandId ")
-    abstract suspend fun deleteBrand(brandId: UUID)
-
-    /**
-     * Função para buscar todas as Brands que estão ativas e não foram
-     * enviadas para o serviço.
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-    @Query("select * from brands where active = true and synchronized = false")
-    abstract suspend fun findAllActiveBrandsNotSynchronized(): List<Brand>
-
-    /**
-     * Função para buscar todas as ProductBrand que estão ativas e não foram
-     * enviadas para o serviço.
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-//    @Query("select * from products_brands where active = true and synchronized = false")
-//    abstract suspend fun findAllActiveProductsBrandsNotSynchronized(): List<ProductBrand>
-
-    /**
-     * Função para buscar todas as Brand que estão inativas e não foram enviadas para o serviço
-     * realizar a exclusão.
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-    @Query("select * from brands where active = false and synchronized = false")
-    abstract suspend fun findAllInactiveAndNotSynchronizedBrands(): List<Brand>
-
+    @Query("select * from brands where synchronized = false")
+    abstract suspend fun findBrandsNotSynchronized(): List<Brand>
 }

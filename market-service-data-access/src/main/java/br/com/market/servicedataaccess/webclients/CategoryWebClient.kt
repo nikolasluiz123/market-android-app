@@ -2,7 +2,7 @@ package br.com.market.servicedataaccess.webclients
 
 import android.content.Context
 import br.com.market.models.Category
-import br.com.market.sdo.category.CategorySDO
+import br.com.market.sdo.CategorySDO
 import br.com.market.servicedataaccess.extensions.getPersistenceResponseBody
 import br.com.market.servicedataaccess.extensions.getReadResponseBody
 import br.com.market.servicedataaccess.extensions.getResponseBody
@@ -13,17 +13,33 @@ import br.com.market.servicedataaccess.services.CategoryService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
+/**
+ * Classe usada para realizar operações dos end points da categoria,
+ * realizando as traduções necessárias do contexto local para o remoto.
+ *
+ * @property context Contexto de uso diversificado
+ * @property service Interface para acesso do serviço.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 class CategoryWebClient @Inject constructor(
     @ApplicationContext private val context: Context,
     private val service: CategoryService
 ) : BaseWebClient(context) {
 
+    /**
+     * Função para salvar uma categoria na base remota
+     *
+     * @param category Categoria que deseja salvar
+     *
+     * @author Nikolas Luiz Schmitt
+     */
     suspend fun save(category: Category): PersistenceResponse {
         return persistenceServiceErrorHandlingBlock(
             codeBlock = {
                 val categorySDO = CategorySDO(
                     name = category.name!!,
-                    localCategoryId = category.id,
+                    localId = category.id,
                     active = category.active
                 )
 
@@ -32,11 +48,18 @@ class CategoryWebClient @Inject constructor(
         )
     }
 
+    /**
+     * Função para alterar a flag [Category.active] na base remota.
+     *
+     * @param category Categoria que deseja alterar a flag
+     *
+     * @author Nikolas Luiz Schmitt
+     */
     suspend fun toggleActive(category: Category): PersistenceResponse {
         return persistenceServiceErrorHandlingBlock(
             codeBlock = {
                 val categorySDO = CategorySDO(
-                    localCategoryId = category.id,
+                    localId = category.id,
                     active = category.active
                 )
 
@@ -45,12 +68,20 @@ class CategoryWebClient @Inject constructor(
         )
     }
 
+    /**
+     * Função para enviar o que está presenta apenas na base local do dispositivo
+     * para a base remota.
+     *
+     * @param categories Categorias que deseja enviar
+     *
+     * @author Nikolas Luiz Schmitt
+     */
     suspend fun sync(categories: List<Category>): MarketServiceResponse {
         return serviceErrorHandlingBlock(
             codeBlock = {
                 val categorySDOs = categories.map {
                     CategorySDO(
-                        localCategoryId = it.id,
+                        localId = it.id,
                         name = it.name,
                         active = it.active
                     )
@@ -61,12 +92,17 @@ class CategoryWebClient @Inject constructor(
         )
     }
 
+    /**
+     * Função que busca todos as categorias da base remota
+     *
+     * @author Nikolas Luiz Schmitt
+     */
     suspend fun findAll(): ReadResponse<Category> {
         return readServiceErrorHandlingBlock(
             codeBlock = {
                 val response = service.findAll(getToken()).getReadResponseBody()
                 val categories = response.values.map {
-                    Category(id = it.localCategoryId, name = it.name, synchronized = true, active = it.active)
+                    Category(id = it.localId, name = it.name, synchronized = true, active = it.active)
                 }
 
                 ReadResponse(values = categories, code = response.code, success = response.success, error = response.error)

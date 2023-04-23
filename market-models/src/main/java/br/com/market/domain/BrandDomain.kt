@@ -1,18 +1,25 @@
 package br.com.market.domain
 
+import androidx.room.ColumnInfo
+import br.com.market.domain.base.BaseDomain
 import java.util.*
 
 /**
- * Classe de domínio da Brand.
+ * Classe de dominio que representa [br.com.market.models.Brand]
  *
- * @property id Identificador.
- * @property name Nome da marca.
- * @property count Quantidade de um produto de uma marca específica.
+ * @property id
+ * @property active
+ * @property companyId
+ * @property synchronized
+ * @property name
  *
  * @author Nikolas Luiz Schmitt
  */
 data class BrandDomain(
-    var id: UUID? = null,
-    var name: String = "",
-    var count: Int = 0
-)
+    override var id: UUID? = null,
+    override var active: Boolean = true,
+    @ColumnInfo(name = "company_id")
+    override var companyId: UUID? = null,
+    override var synchronized: Boolean = false,
+    var name: String = ""
+): BaseDomain()

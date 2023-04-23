@@ -2,7 +2,6 @@ package br.com.market.servicedataaccess.injection
 
 import br.com.market.servicedataaccess.services.BrandService
 import br.com.market.servicedataaccess.services.CategoryService
-import br.com.market.servicedataaccess.services.ProductService
 import br.com.market.servicedataaccess.services.UserService
 import dagger.Module
 import dagger.Provides
@@ -34,19 +33,6 @@ class RetrofitModule {
             .baseUrl("http://192.168.0.49:8080/api/v1/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-    }
-
-    /**
-     * Função para instanciar um ProductService.
-     *
-     * @param retrofit Instância do Retrofit
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-    @Provides
-    @Singleton
-    fun provideProductService(retrofit: Retrofit): ProductService {
-        return retrofit.create(ProductService::class.java)
     }
 
     /**

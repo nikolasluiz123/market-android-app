@@ -69,18 +69,13 @@ fun StorageAppNavHost(
             }
         )
 
-        categoryScreen(
-            onBackClick = { navController.popBackStack() }
-        )
+        categoryScreen(onBackClick = { navController.popBackStack() })
 
-        storageProductsGraph(navController)
-        formProductGraph(navController)
+        cameraGraph()
 
-        cameraGraph(navController)
-        androidGalleryGraph(navController)
+        androidGalleryGraph(onAfterShowGallery = { navController.popBackStack() })
+
         loadImageLinkGraph(navController)
-
-        testesGraph(navController)
     }
 }
 

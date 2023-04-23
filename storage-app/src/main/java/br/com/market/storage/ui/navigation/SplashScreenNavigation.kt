@@ -9,7 +9,7 @@ import br.com.market.core.preferences.dataStore
 import br.com.market.storage.ui.screens.SplashScreen
 import kotlinx.coroutines.launch
 
-internal const val splashScreenRoute = "splash_screen"
+internal const val splashScreenRoute = "splashScreen"
 
 /**
  * Função que realiza as definições da navegação para a
