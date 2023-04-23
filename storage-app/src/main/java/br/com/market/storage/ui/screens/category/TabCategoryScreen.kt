@@ -2,6 +2,7 @@ package br.com.market.storage.ui.screens.category
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -21,7 +22,11 @@ import br.com.market.storage.R
 import br.com.market.storage.ui.states.category.CategoryUIState
 
 @Composable
-fun TabCategoryScreen(state: CategoryUIState.Success = CategoryUIState.Success(), isActive: Boolean) {
+fun TabCategoryScreen(
+    state: CategoryUIState.Success = CategoryUIState.Success(),
+    isActive: Boolean,
+    onSendClick: () -> Unit = { }
+) {
     ConstraintLayout(
         Modifier
             .fillMaxSize()
@@ -46,7 +51,13 @@ fun TabCategoryScreen(state: CategoryUIState.Success = CategoryUIState.Success()
                 imeAction = ImeAction.Done,
                 capitalization = KeyboardCapitalization.Words
             ),
-            enabled = isActive
+            enabled = isActive,
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    onSendClick()
+                    defaultKeyboardAction(ImeAction.Done)
+                }
+            )
         )
     }
 }

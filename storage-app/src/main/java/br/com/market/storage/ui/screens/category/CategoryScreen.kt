@@ -25,6 +25,7 @@ import br.com.market.domain.CategoryDomain
 import br.com.market.storage.R
 import br.com.market.storage.ui.states.category.CategoryUIState
 import br.com.market.storage.ui.viewmodels.category.CategoryViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
@@ -115,23 +116,7 @@ fun CategoryScreen(
                     FloatingActionButtonSave(
                         onClick = {
                             state as CategoryUIState.Success
-
-                            if (state.onValidate() && isActive) {
-
-                                state.categoryDomain = if (isEditMode) {
-                                    state.categoryDomain?.copy(name = state.categoryName)
-                                } else {
-                                    CategoryDomain(name = state.categoryName)
-                                }
-
-                                onSaveCategoryClick()
-
-                                scope.launch {
-                                    snackbarHostState.showSnackbar("Categoria Salva com Sucesso")
-                                }
-
-                                isEditMode = state.categoryDomain != null
-                            }
+                            isEditMode = saveCategory(state, isActive, isEditMode, onSaveCategoryClick, scope, snackbarHostState)
                         }
                     )
                 }
@@ -231,7 +216,13 @@ fun CategoryScreen(
 
                         when (tabIndex) {
                             0 -> {
-                                TabCategoryScreen(state = state, isActive = isActive)
+                                TabCategoryScreen(
+                                    state = state,
+                                    isActive = isActive,
+                                    onSendClick = {
+                                        isEditMode = saveCategory(state, isActive, isEditMode, onSaveCategoryClick, scope, snackbarHostState)
+                                    }
+                                )
                             }
                             1 -> {
 
@@ -272,4 +263,31 @@ fun CategoryScreenEmptyListPreview() {
             CategoryScreen(state = CategoryUIState.Success())
         }
     }
+}
+
+
+private fun saveCategory(
+    state: CategoryUIState.Success,
+    isActive: Boolean,
+    isEditMode: Boolean,
+    onSaveCategoryClick: () -> Unit,
+    scope: CoroutineScope,
+    snackbarHostState: SnackbarHostState
+): Boolean {
+    if (state.onValidate() && isActive) {
+
+        state.categoryDomain = if (isEditMode) {
+            state.categoryDomain?.copy(name = state.categoryName)
+        } else {
+            CategoryDomain(name = state.categoryName)
+        }
+
+        onSaveCategoryClick()
+
+        scope.launch {
+            snackbarHostState.showSnackbar("Categoria Salva com Sucesso")
+        }
+    }
+
+    return state.categoryDomain != null
 }
