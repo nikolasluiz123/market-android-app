@@ -25,34 +25,28 @@ class CategoryViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<CategoryUIState> = MutableStateFlow(CategoryUIState.Success())
+    private val _uiState: MutableStateFlow<CategoryUIState> = MutableStateFlow(CategoryUIState())
     val uiState get() = _uiState.asStateFlow()
 
     private var categoryId = savedStateHandle.get<String>(argumentCategoryId)
 
     init {
         _uiState.update { currentState ->
-            currentState as CategoryUIState.Success
-
             currentState.copy(
                 onCategoryNameChange = {
-                    val successState = _uiState.value as CategoryUIState.Success
-
-                    _uiState.value = successState.copy(categoryName = it)
+                    _uiState.value = _uiState.value.copy(categoryName = it)
                 },
                 onValidate = {
-                    val successState = _uiState.value as CategoryUIState.Success
-
                     var isValid = true
 
-                    if (successState.categoryName.isBlank()) {
+                    if (_uiState.value.categoryName.isBlank()) {
                         isValid = false
 
-                        _uiState.value = successState.copy(
+                        _uiState.value = _uiState.value.copy(
                             categoryNameErrorMessage = context.getString(R.string.category_screen_category_name_required_validation_message)
                         )
                     } else {
-                        _uiState.value = successState.copy(
+                        _uiState.value = _uiState.value.copy(
                             categoryNameErrorMessage = ""
                         )
                     }
@@ -67,8 +61,6 @@ class CategoryViewModel @Inject constructor(
                 val categoryDomain = categoryRepository.findById(UUID.fromString(id))
 
                 _uiState.update { currentState ->
-                    currentState as CategoryUIState.Success
-
                     currentState.copy(
                         categoryDomain = categoryDomain,
                         categoryName = categoryDomain.name
@@ -79,22 +71,20 @@ class CategoryViewModel @Inject constructor(
     }
 
     fun saveCategory() {
-        (_uiState.value as CategoryUIState.Success).categoryDomain?.let { categoryDomain ->
+        _uiState.value.categoryDomain?.let { categoryDomain ->
             viewModelScope.launch {
                 categoryRepository.save(categoryDomain)
 
                 _uiState.update { currentState ->
-                    currentState as CategoryUIState.Success
-
                     val domain = currentState.categoryDomain
-                    currentState.copy(domain?.copy(active = domain.active))
+                    currentState.copy(categoryDomain = domain?.copy(active = domain.active))
                 }
             }
         }
     }
 
     fun toggleActive() {
-        (_uiState.value as CategoryUIState.Success).categoryDomain?.id?.let { id ->
+        _uiState.value.categoryDomain?.id?.let { id ->
             viewModelScope.launch {
                 categoryRepository.toggleActive(id)
             }

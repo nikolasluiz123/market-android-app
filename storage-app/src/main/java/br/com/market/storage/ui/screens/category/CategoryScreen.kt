@@ -14,9 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.core.theme.MarketTheme
-import br.com.market.core.ui.components.FailureScreen
 import br.com.market.core.ui.components.MarketBottomAppBar
-import br.com.market.core.ui.components.MarketLinearProgressIndicator
 import br.com.market.core.ui.components.SimpleMarketTopAppBar
 import br.com.market.core.ui.components.buttons.FloatingActionButtonSave
 import br.com.market.core.ui.components.buttons.IconButtonInactivate
@@ -53,29 +51,22 @@ fun CategoryScreen(
     state: CategoryUIState,
     onToggleActive: () -> Unit = { },
     onSaveCategoryClick: () -> Unit = { },
-    onButtonBackClickFailureScreen: () -> Unit = { },
-    onButtonRetryClick: () -> Unit = { },
     onBackClick: () -> Unit = { }
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
-    var isEditMode by remember((state as CategoryUIState.Success).categoryDomain) {
+    var isEditMode by remember(state.categoryDomain) {
         mutableStateOf(state.categoryDomain != null)
     }
 
-    var isActive by remember((state as CategoryUIState.Success).categoryDomain?.active) {
+    var isActive by remember(state.categoryDomain?.active) {
         mutableStateOf(state.categoryDomain?.active ?: true)
     }
 
     Scaffold(
         topBar = {
-            val title = if (isEditMode) {
-                state as CategoryUIState.Success
-                "Categoria ${state.categoryDomain?.name}"
-            } else {
-                "Nova Categoria"
-            }
+            val title = if (isEditMode) "Categoria ${state.categoryDomain?.name}" else "Nova Categoria"
 
             SimpleMarketTopAppBar(
                 title = title,
@@ -115,7 +106,6 @@ fun CategoryScreen(
                 floatingActionButton = {
                     FloatingActionButtonSave(
                         onClick = {
-                            state as CategoryUIState.Success
                             isEditMode = saveCategory(state, isActive, isEditMode, onSaveCategoryClick, scope, snackbarHostState)
                         }
                     )
@@ -130,127 +120,82 @@ fun CategoryScreen(
             }
         }
     ) {
-        when (state) {
-            CategoryUIState.Failure -> {
-                FailureScreen(
-                    modifier = Modifier.padding(it),
-                    onButtonBackClick = onButtonBackClickFailureScreen,
-                    onButtonRetryClick = onButtonRetryClick
-                )
-            }
-            CategoryUIState.Loading -> {
-                ConstraintLayout(modifier = Modifier.padding(it)) {
-                    val loadingRef = createRef()
+        ConstraintLayout(
+            modifier = Modifier
+                .padding(it)
+                .fillMaxSize()
+        ) {
+            val (tabRowRef, horizontalPagerRef) = createRefs()
+            val tabTitles = listOf(
+                stringResource(R.string.category_screen_label_tab_category),
+                stringResource(R.string.category_screen_label_tab_brand)
+            )
+            val pagerState = rememberPagerState()
+            val coroutineScope = rememberCoroutineScope()
+            var tabIndex by remember { mutableStateOf(0) }
 
-                    MarketLinearProgressIndicator(
-                        modifier = Modifier.constrainAs(loadingRef) {
-                            start.linkTo(parent.start)
-                            top.linkTo(parent.top)
-                            end.linkTo(parent.end)
+            TabRow(
+                modifier = Modifier.constrainAs(tabRowRef) {
+                    start.linkTo(parent.start)
+                    top.linkTo(parent.top)
+                    end.linkTo(parent.end)
+                },
+                selectedTabIndex = tabIndex
+            ) {
+                tabTitles.forEachIndexed { index, title ->
+                    Tab(
+                        selected = tabIndex == index,
+                        onClick = {
+                            coroutineScope.launch {
+                                tabIndex = index
+                                pagerState.animateScrollToPage(index)
+                            }
                         },
-                        show = true
-                    )
-                }
-            }
-            is CategoryUIState.Success -> {
-                ConstraintLayout(
-                    modifier = Modifier
-                        .padding(it)
-                        .fillMaxSize()
-                ) {
-                    val (tabRowRef, horizontalPagerRef) = createRefs()
-                    val tabTitles = listOf(
-                        stringResource(R.string.category_screen_label_tab_category),
-                        stringResource(R.string.category_screen_label_tab_brand)
-                    )
-                    val pagerState = rememberPagerState()
-                    val coroutineScope = rememberCoroutineScope()
-                    var tabIndex by remember { mutableStateOf(0) }
-
-                    TabRow(
-                        modifier = Modifier.constrainAs(tabRowRef) {
-                            start.linkTo(parent.start)
-                            top.linkTo(parent.top)
-                            end.linkTo(parent.end)
-                        },
-                        selectedTabIndex = tabIndex
-                    ) {
-                        tabTitles.forEachIndexed { index, title ->
-                            Tab(
-                                selected = tabIndex == index,
-                                onClick = {
-                                    coroutineScope.launch {
-                                        tabIndex = index
-                                        pagerState.animateScrollToPage(index)
-                                    }
-                                },
-                                text = { Text(text = title) },
-                                enabled = when (index) {
-                                    0 -> true
-                                    1 -> isEditMode
-                                    else -> false
-                                }
-                            )
-                        }
-                    }
-
-                    HorizontalPager(
-                        pageCount = tabTitles.size,
-                        state = pagerState,
-                        modifier = Modifier
-                            .constrainAs(horizontalPagerRef) {
-                                start.linkTo(parent.start)
-                                top.linkTo(tabRowRef.bottom)
-                                end.linkTo(parent.end)
-                                bottom.linkTo(parent.bottom)
-
-                                height = Dimension.fillToConstraints
-                            },
-                        userScrollEnabled = when (tabIndex) {
+                        text = { Text(text = title) },
+                        enabled = when (index) {
                             0 -> true
                             1 -> isEditMode
                             else -> false
                         }
-                    ) { index ->
-                        tabIndex = index
+                    )
+                }
+            }
 
-                        when (tabIndex) {
-                            0 -> {
-                                TabCategoryScreen(
-                                    state = state,
-                                    isActive = isActive,
-                                    onSendClick = {
-                                        isEditMode = saveCategory(state, isActive, isEditMode, onSaveCategoryClick, scope, snackbarHostState)
-                                    }
-                                )
-                            }
-                            1 -> {
+            HorizontalPager(
+                pageCount = tabTitles.size,
+                state = pagerState,
+                modifier = Modifier
+                    .constrainAs(horizontalPagerRef) {
+                        start.linkTo(parent.start)
+                        top.linkTo(tabRowRef.bottom)
+                        end.linkTo(parent.end)
+                        bottom.linkTo(parent.bottom)
 
+                        height = Dimension.fillToConstraints
+                    },
+                userScrollEnabled = when (tabIndex) {
+                    0 -> true
+                    1 -> isEditMode
+                    else -> false
+                }
+            ) { index ->
+                tabIndex = index
+
+                when (tabIndex) {
+                    0 -> {
+                        TabCategoryScreen(
+                            state = state,
+                            isActive = isActive,
+                            onSendClick = {
+                                isEditMode = saveCategory(state, isActive, isEditMode, onSaveCategoryClick, scope, snackbarHostState)
                             }
-                        }
+                        )
+                    }
+                    1 -> {
+
                     }
                 }
             }
-        }
-    }
-}
-
-@Preview
-@Composable
-fun CategoryScreenFailurePreview() {
-    MarketTheme {
-        Surface {
-            CategoryScreen(state = CategoryUIState.Failure)
-        }
-    }
-}
-
-@Preview
-@Composable
-fun CategoryScreenLoadingPreview() {
-    MarketTheme {
-        Surface {
-            CategoryScreen(state = CategoryUIState.Loading)
         }
     }
 }
@@ -260,14 +205,14 @@ fun CategoryScreenLoadingPreview() {
 fun CategoryScreenEmptyListPreview() {
     MarketTheme {
         Surface {
-            CategoryScreen(state = CategoryUIState.Success())
+            CategoryScreen(state = CategoryUIState())
         }
     }
 }
 
 
 private fun saveCategory(
-    state: CategoryUIState.Success,
+    state: CategoryUIState,
     isActive: Boolean,
     isEditMode: Boolean,
     onSaveCategoryClick: () -> Unit,

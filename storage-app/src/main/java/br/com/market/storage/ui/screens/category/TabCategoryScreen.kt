@@ -23,7 +23,7 @@ import br.com.market.storage.ui.states.category.CategoryUIState
 
 @Composable
 fun TabCategoryScreen(
-    state: CategoryUIState.Success = CategoryUIState.Success(),
+    state: CategoryUIState = CategoryUIState(),
     isActive: Boolean,
     onSendClick: () -> Unit = { }
 ) {
