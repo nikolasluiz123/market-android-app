@@ -3,6 +3,7 @@ package br.com.market.storage.ui.viewmodels.category
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.market.storage.repository.CategoryRepository
+import br.com.market.storage.repository.brand.BrandRepository
 import br.com.market.storage.ui.states.category.CategorySearchUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategorySearchViewModel @Inject constructor(
-    private val categoryRepository: CategoryRepository
+    private val categoryRepository: CategoryRepository,
+    private val brandRepository: BrandRepository
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<CategorySearchUIState> = MutableStateFlow(CategorySearchUIState())
@@ -28,6 +30,7 @@ class CategorySearchViewModel @Inject constructor(
     fun sync() {
         viewModelScope.launch {
             categoryRepository.sync()
+            brandRepository.sync()
         }
     }
 }
