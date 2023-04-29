@@ -1,8 +1,8 @@
 package br.com.market.servicedataaccess.injection
 
-import br.com.market.servicedataaccess.services.BrandService
-import br.com.market.servicedataaccess.services.CategoryService
-import br.com.market.servicedataaccess.services.UserService
+import br.com.market.servicedataaccess.services.IBrandService
+import br.com.market.servicedataaccess.services.ICategoryService
+import br.com.market.servicedataaccess.services.IUserService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -44,8 +44,8 @@ class RetrofitModule {
      */
     @Provides
     @Singleton
-    fun provideBrandService(retrofit: Retrofit): BrandService {
-        return retrofit.create(BrandService::class.java)
+    fun provideBrandService(retrofit: Retrofit): IBrandService {
+        return retrofit.create(IBrandService::class.java)
     }
 
     /**
@@ -57,14 +57,14 @@ class RetrofitModule {
      */
     @Provides
     @Singleton
-    fun provideUserService(retrofit: Retrofit): UserService {
-        return retrofit.create(UserService::class.java)
+    fun provideUserService(retrofit: Retrofit): IUserService {
+        return retrofit.create(IUserService::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideCategoryService(retrofit: Retrofit): CategoryService {
-        return retrofit.create(CategoryService::class.java)
+    fun provideCategoryService(retrofit: Retrofit): ICategoryService {
+        return retrofit.create(ICategoryService::class.java)
     }
 
 }

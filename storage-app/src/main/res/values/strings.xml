@@ -52,4 +52,7 @@
     <string name="category_screen_label_tab_brand">Marca</string>
     <string name="category_screen_tab_category_label_name">Nome</string>
     <string name="category_screen_category_name_required_validation_message">O nome é obrigatório</string>
+    <string name="brand_screen_label_tab_brand">Marca</string>
+    <string name="brand_screen_label_tab_product">Produto</string>
+    <string name="brand_screen_tab_brand_label_name">Nome</string>
 </resources>

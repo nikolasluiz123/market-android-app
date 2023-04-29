@@ -1,5 +1,6 @@
 package br.com.market.storage.ui.screens.brand
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
@@ -15,9 +16,9 @@ import br.com.market.core.theme.colorCardActive
 import br.com.market.storage.R
 
 @Composable
-fun BrandListCard(brandName: String) {
+fun BrandListCard(brandName: String, onItemClick: () -> Unit = { }) {
     Card(
-        Modifier.fillMaxWidth(),
+        Modifier.fillMaxWidth().clickable { onItemClick() },
         colors = CardDefaults.cardColors(containerColor = colorCardActive)
     ) {
         ConstraintLayout(

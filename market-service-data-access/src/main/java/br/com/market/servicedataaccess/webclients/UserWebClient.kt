@@ -6,7 +6,7 @@ import br.com.market.sdo.user.AuthenticationRequestSDO
 import br.com.market.sdo.user.RegisterRequestSDO
 import br.com.market.servicedataaccess.extensions.getAuthenticationResponseBody
 import br.com.market.servicedataaccess.responses.AuthenticationResponse
-import br.com.market.servicedataaccess.services.UserService
+import br.com.market.servicedataaccess.services.IUserService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -20,7 +20,7 @@ import javax.inject.Inject
  */
 class UserWebClient @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val userService: UserService
+    private val userService: IUserService
 ) : BaseWebClient(context) {
 
     /**

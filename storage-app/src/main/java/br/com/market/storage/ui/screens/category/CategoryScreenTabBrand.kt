@@ -15,12 +15,14 @@ import br.com.market.core.ui.components.buttons.FloatingActionButtonAdd
 import br.com.market.core.ui.components.buttons.IconButtonInactivate
 import br.com.market.storage.ui.screens.brand.BrandListCard
 import br.com.market.storage.ui.states.category.CategoryUIState
+import java.util.*
 
 @Composable
-fun TabBrandScreen(
+fun CategoryScreenTabBrand(
     state: CategoryUIState = CategoryUIState(),
     onInactivateBrandsClick: () -> Unit = { },
-    onFabAddClick: () -> Unit = { }
+    onFabAddClick: () -> Unit = { },
+    onItemClick: (UUID) -> Unit = { }
 ) {
     val pagingData = state.brands.collectAsLazyPagingItems()
     Scaffold(
@@ -40,7 +42,12 @@ fun TabBrandScreen(
     ) { padding ->
         ConstraintLayout(modifier = Modifier.padding(padding)) {
             PagedVerticalListComponent(pagingItems = pagingData) {
-                BrandListCard(brandName = it.name)
+                BrandListCard(
+                    brandName = it.name,
+                    onItemClick = {
+                        onItemClick(it.id!!)
+                    }
+                )
             }
         }
     }
@@ -51,7 +58,7 @@ fun TabBrandScreen(
 fun TabBrandScreenPreview() {
     MarketTheme {
         Surface {
-            TabBrandScreen()
+            CategoryScreenTabBrand()
         }
     }
 }

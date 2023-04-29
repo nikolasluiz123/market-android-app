@@ -11,7 +11,7 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 
 
-interface BrandService {
+interface IBrandService {
 
     @POST("brand")
     suspend fun save(@Header("Authorization") token: String, @Body brandSDO: BrandSDO): Response<PersistenceResponse>

@@ -4,7 +4,6 @@ import androidx.paging.Pager
 import androidx.paging.PagingData
 import br.com.market.core.pagination.PagingConfigUtils
 import br.com.market.domain.BrandDomain
-import br.com.market.domain.CategoryDomain
 import br.com.market.localdataaccess.dao.BrandDAO
 import br.com.market.models.Brand
 import br.com.market.servicedataaccess.responses.MarketServiceResponse
@@ -81,9 +80,9 @@ class BrandRepository @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun findById(brandId: UUID): CategoryDomain {
-        val category = dao.findById(brandId)
-        return CategoryDomain(id = category.id, name = category.name!!, active = category.active)
+    suspend fun findById(brandId: UUID): BrandDomain {
+        val brand = dao.findById(brandId)
+        return BrandDomain(id = brand.id, name = brand.name!!, active = brand.active)
     }
 
     /**

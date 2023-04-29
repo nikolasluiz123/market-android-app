@@ -13,13 +13,19 @@ import java.util.*
 internal const val categoryScreenRoute = "category"
 internal const val argumentCategoryId = "categoryId"
 
-fun NavGraphBuilder.categoryScreen(onBackClick: () -> Unit) {
+fun NavGraphBuilder.categoryScreen(
+    onBackClick: () -> Unit,
+    onFabAddBrandClick: () -> Unit,
+    onBrandItemClick: (UUID) -> Unit
+) {
     composable(route = "$categoryScreenRoute?$argumentCategoryId={$argumentCategoryId}") {
         val categoryViewModel = hiltViewModel<CategoryViewModel>()
 
         CategoryScreen(
             viewModel = categoryViewModel,
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
+            onFabAddBrandClick = onFabAddBrandClick,
+            onBrandItemClick = onBrandItemClick
         )
     }
 }

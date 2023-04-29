@@ -9,7 +9,7 @@ import br.com.market.servicedataaccess.extensions.getResponseBody
 import br.com.market.servicedataaccess.responses.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.PersistenceResponse
 import br.com.market.servicedataaccess.responses.ReadResponse
-import br.com.market.servicedataaccess.services.CategoryService
+import br.com.market.servicedataaccess.services.ICategoryService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -24,7 +24,7 @@ import javax.inject.Inject
  */
 class CategoryWebClient @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val service: CategoryService
+    private val service: ICategoryService
 ) : BaseWebClient(context) {
 
     /**

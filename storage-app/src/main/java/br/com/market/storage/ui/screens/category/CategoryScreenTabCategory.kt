@@ -28,7 +28,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun TabCategoryScreen(
+fun CategoryScreenTabCategory(
     state: CategoryUIState = CategoryUIState(),
     onSendClick: (Boolean) -> Unit = { },
     onToggleActive: () -> Unit = { },
@@ -135,7 +135,7 @@ fun TabCategoryScreen(
 fun TabCategoryScreenPreview() {
     MarketTheme {
         Surface {
-            TabCategoryScreen()
+            CategoryScreenTabCategory()
         }
     }
 }

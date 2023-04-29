@@ -5,6 +5,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
+import br.com.market.storage.ui.navigation.brand.brandScreen
+import br.com.market.storage.ui.navigation.brand.navigateToBrandScreen
 import br.com.market.storage.ui.navigation.category.categoryScreen
 import br.com.market.storage.ui.navigation.category.categorySearchScreen
 import br.com.market.storage.ui.navigation.category.navigateToCategoryScreen
@@ -69,7 +71,15 @@ fun StorageAppNavHost(
             }
         )
 
-        categoryScreen(onBackClick = { navController.popBackStack() })
+        categoryScreen(
+            onBackClick = { navController.popBackStack() },
+            onFabAddBrandClick = { navController.navigateToBrandScreen() },
+            onBrandItemClick = { navController.navigateToBrandScreen(it) }
+        )
+
+        brandScreen(
+            onBackClick = { navController.popBackStack() }
+        )
 
         cameraGraph()
 

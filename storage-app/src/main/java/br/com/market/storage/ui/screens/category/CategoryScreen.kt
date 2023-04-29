@@ -18,11 +18,14 @@ import br.com.market.storage.R
 import br.com.market.storage.ui.states.category.CategoryUIState
 import br.com.market.storage.ui.viewmodels.category.CategoryViewModel
 import kotlinx.coroutines.launch
+import java.util.*
 
 @Composable
 fun CategoryScreen(
     viewModel: CategoryViewModel,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onFabAddBrandClick: () -> Unit,
+    onBrandItemClick: (UUID) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -34,7 +37,9 @@ fun CategoryScreen(
         onSaveCategoryClick = {
             viewModel.saveCategory()
         },
-        onBackClick = onBackClick
+        onBackClick = onBackClick,
+        onFabAddBrandClick = onFabAddBrandClick,
+        onBrandItemClick = onBrandItemClick
     )
 }
 
@@ -44,7 +49,9 @@ fun CategoryScreen(
     state: CategoryUIState,
     onToggleActive: () -> Unit = { },
     onSaveCategoryClick: (Boolean) -> Unit = { },
-    onBackClick: () -> Unit = { }
+    onBackClick: () -> Unit = { },
+    onFabAddBrandClick: () -> Unit = { },
+    onBrandItemClick: (UUID) -> Unit = { }
 ) {
     var isEditMode by remember(state.categoryDomain) {
         mutableStateOf(state.categoryDomain != null)
@@ -124,7 +131,7 @@ fun CategoryScreen(
 
                 when (tabIndex) {
                     0 -> {
-                        TabCategoryScreen(
+                        CategoryScreenTabCategory(
                             state = state,
                             onSendClick = { isEditMode = it },
                             onToggleActive = onToggleActive,
@@ -133,7 +140,11 @@ fun CategoryScreen(
                         )
                     }
                     1 -> {
-                        TabBrandScreen(state = state)
+                        CategoryScreenTabBrand(
+                            state = state,
+                            onFabAddClick = onFabAddBrandClick,
+                            onItemClick = onBrandItemClick
+                        )
                     }
                 }
             }

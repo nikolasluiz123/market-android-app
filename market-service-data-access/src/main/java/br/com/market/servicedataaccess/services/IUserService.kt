@@ -12,7 +12,7 @@ import retrofit2.http.POST
  *
  * @author Nikolas Luiz Schmitt
  */
-interface UserService {
+interface IUserService {
 
     /**
      * Função utilizada para cadastrar um usuário.
