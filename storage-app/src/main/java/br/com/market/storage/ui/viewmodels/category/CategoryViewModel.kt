@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import br.com.market.core.extensions.navParamToString
 import br.com.market.storage.R
 import br.com.market.storage.repository.CategoryRepository
+import br.com.market.storage.repository.brand.BrandRepository
 import br.com.market.storage.ui.navigation.category.argumentCategoryId
 import br.com.market.storage.ui.states.category.CategoryUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,6 +23,7 @@ import javax.inject.Inject
 class CategoryViewModel @Inject constructor(
     @ApplicationContext context: Context,
     private val categoryRepository: CategoryRepository,
+    private val brandRepository: BrandRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -56,14 +58,16 @@ class CategoryViewModel @Inject constructor(
             )
         }
 
-        categoryId?.navParamToString()?.let { id ->
+        UUID.fromString(categoryId?.navParamToString())?.let { categoryId ->
             viewModelScope.launch {
-                val categoryDomain = categoryRepository.findById(UUID.fromString(id))
+                val categoryDomain = categoryRepository.findById(categoryId)
+                val brands = brandRepository.findBrands(categoryId)
 
                 _uiState.update { currentState ->
                     currentState.copy(
                         categoryDomain = categoryDomain,
-                        categoryName = categoryDomain.name
+                        categoryName = categoryDomain.name,
+                        brands = brands
                     )
                 }
             }

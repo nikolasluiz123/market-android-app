@@ -61,19 +61,21 @@ class BrandWebClient @Inject constructor(
     /**
      * Função para alterar a flag [Brand.active] na base remota.
      *
-     * @param brand Marca que deseja alterar a flag
+     * @param categoryBrand Marca que deseja alterar a flag
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun toggleActive(brand: Brand): PersistenceResponse {
+    suspend fun toggleActive(categoryBrand: CategoryBrand): PersistenceResponse {
         return persistenceServiceErrorHandlingBlock(
             codeBlock = {
-                val brandSDO = BrandSDO(
-                    localId = brand.id,
-                    active = brand.active
+                val categoryBrandSDO = CategoryBrandSDO(
+                    localId = categoryBrand.id,
+                    active = categoryBrand.active,
+                    localCategoryId = categoryBrand.categoryId!!,
+                    localBrandId = categoryBrand.brandId!!
                 )
 
-                service.toggleActive(getToken(), brandSDO).getPersistenceResponseBody()
+                service.toggleActive(getToken(), categoryBrandSDO).getPersistenceResponseBody()
             }
         )
     }

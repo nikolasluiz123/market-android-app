@@ -13,13 +13,19 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.theme.colorCardActive
+import br.com.market.core.theme.colorCardInactive
 import br.com.market.storage.R
 
 @Composable
-fun BrandListCard(brandName: String, onItemClick: () -> Unit = { }) {
+fun BrandListCard(brandName: String, active: Boolean, onItemClick: () -> Unit = { }) {
     Card(
-        Modifier.fillMaxWidth().clickable { onItemClick() },
-        colors = CardDefaults.cardColors(containerColor = colorCardActive)
+        Modifier
+            .fillMaxWidth()
+            .clickable { onItemClick() },
+        elevation = CardDefaults.cardElevation(8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (active) colorCardActive else colorCardInactive
+        )
     ) {
         ConstraintLayout(
             Modifier
@@ -59,7 +65,7 @@ fun BrandListCard(brandName: String, onItemClick: () -> Unit = { }) {
 fun CategoryListCardPreview() {
     MarketTheme {
         Surface {
-            BrandListCard("Nestle")
+            BrandListCard("Nestle", active = true)
         }
     }
 }

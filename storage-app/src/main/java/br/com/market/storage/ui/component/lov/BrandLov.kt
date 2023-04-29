@@ -59,6 +59,7 @@ fun BrandLov(
             PagedVerticalListComponent(pagingItems = pagingData) { brandDomain ->
                 BrandListCard(
                     brandName = brandDomain.name,
+                    active = brandDomain.active,
                     onItemClick = {
                         onItemClick(brandDomain.id!!)
                     }

@@ -109,7 +109,10 @@ abstract class BrandDAO {
      * @author Nikolas Luiz Schmitt
      */
     @Query("select * from brands where id = :brandId")
-    abstract suspend fun findById(brandId: UUID): Brand
+    abstract suspend fun findBrandById(brandId: UUID): Brand
+
+    @Query("select * from categories_brands where brand_id = :brandId and category_id = :categoryId ")
+    abstract suspend fun findCategoryBrandBy(brandId: UUID, categoryId: UUID): CategoryBrand
 
     /**
      * Função para atualizar a flag [active] de uma marca com o [brandId] informado
@@ -120,20 +123,25 @@ abstract class BrandDAO {
      *
      * @author Nikolas Luiz Schmitt
      */
-    @Query("update brands set active = :active, synchronized = :sync where id = :brandId ")
-    abstract suspend fun updateActive(brandId: UUID, active: Boolean, sync: Boolean)
+    @Query("update categories_brands set active = :active, synchronized = :sync where brand_id = :brandId and category_id = :categoryId ")
+    abstract suspend fun updateActive(brandId: UUID, categoryId: UUID, active: Boolean, sync: Boolean)
 
     /**
      * Função que facilita a mudança de ativo e inativo.
      *
      * @see updateActive
      *
-     * @param brand Marca que deseja reativar ou inativar.
+     * @param categoryBrand Marca que deseja reativar ou inativar.
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun toggleActive(brand: Brand) {
-        updateActive(brand.id, !brand.active, brand.synchronized)
+    suspend fun toggleActive(categoryBrand: CategoryBrand) {
+        updateActive(
+            brandId = categoryBrand.brandId!!,
+            categoryId = categoryBrand.categoryId!!,
+            active = !categoryBrand.active,
+            sync = categoryBrand.synchronized
+        )
     }
 
     /**

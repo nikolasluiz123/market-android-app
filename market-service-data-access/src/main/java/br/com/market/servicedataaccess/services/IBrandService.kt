@@ -19,7 +19,7 @@ interface IBrandService {
     suspend fun save(@Header("Authorization") token: String, @Body brandBodySDO: BrandBodySDO): Response<PersistenceResponse>
 
     @POST("brand/toggleActive")
-    suspend fun toggleActive(@Header("Authorization") token: String, @Body brandSDO: BrandSDO): Response<PersistenceResponse>
+    suspend fun toggleActive(@Header("Authorization") token: String, @Body categoryBrandSDO: CategoryBrandSDO): Response<PersistenceResponse>
 
     @POST("brand/sync")
     suspend fun sync(@Header("Authorization") token: String, @Body brandBodySDOs: List<BrandBodySDO>): Response<MarketServiceResponse>

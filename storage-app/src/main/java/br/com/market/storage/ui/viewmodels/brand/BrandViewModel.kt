@@ -117,7 +117,7 @@ class BrandViewModel @Inject constructor(
     fun toggleActive() {
         _uiState.value.brandDomain?.id?.let { id ->
             viewModelScope.launch {
-                brandRepository.toggleActive(id)
+                brandRepository.toggleActive(brandId = id, categoryId = UUID.fromString(categoryId!!.navParamToString()))
             }
         }
     }

@@ -44,6 +44,7 @@ fun CategoryScreenTabBrand(
             PagedVerticalListComponent(pagingItems = pagingData) {
                 BrandListCard(
                     brandName = it.name,
+                    active = it.active,
                     onItemClick = {
                         onItemClick(state.categoryDomain?.id!!, it.id!!)
                     }

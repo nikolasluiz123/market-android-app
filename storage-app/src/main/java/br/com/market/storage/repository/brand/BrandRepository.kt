@@ -59,7 +59,7 @@ class BrandRepository @Inject constructor(
      */
     suspend fun save(categoryId: UUID, domain: BrandDomain): PersistenceResponse {
         val brand = if (domain.id != null) {
-            dao.findById(domain.id!!).copy(name = domain.name)
+            dao.findBrandById(domain.id!!).copy(name = domain.name)
         } else {
             Brand(name = domain.name)
         }
@@ -87,7 +87,7 @@ class BrandRepository @Inject constructor(
      * @author Nikolas Luiz Schmitt
      */
     suspend fun findById(brandId: UUID): BrandDomain {
-        val brand = dao.findById(brandId)
+        val brand = dao.findBrandById(brandId)
         return BrandDomain(id = brand.id, name = brand.name!!, active = brand.active)
     }
 
@@ -106,14 +106,14 @@ class BrandRepository @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun toggleActive(brandId: UUID): PersistenceResponse {
-        val category = dao.findById(brandId)
+    suspend fun toggleActive(brandId: UUID, categoryId: UUID): PersistenceResponse {
+        val categoryBrand = dao.findCategoryBrandBy(brandId = brandId, categoryId = categoryId)
 
-        val response = webClient.toggleActive(category)
+        val response = webClient.toggleActive(categoryBrand)
 
-        category.synchronized = response.getObjectSynchronized()
+        categoryBrand.synchronized = response.getObjectSynchronized()
 
-        dao.toggleActive(category)
+        dao.toggleActive(categoryBrand)
 
         return response
     }
