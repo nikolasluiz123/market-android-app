@@ -24,8 +24,8 @@ import java.util.*
 fun CategoryScreen(
     viewModel: CategoryViewModel,
     onBackClick: () -> Unit,
-    onFabAddBrandClick: () -> Unit,
-    onBrandItemClick: (UUID) -> Unit
+    onFabAddBrandClick: (UUID) -> Unit,
+    onBrandItemClick: (UUID, UUID) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -50,8 +50,8 @@ fun CategoryScreen(
     onToggleActive: () -> Unit = { },
     onSaveCategoryClick: (Boolean) -> Unit = { },
     onBackClick: () -> Unit = { },
-    onFabAddBrandClick: () -> Unit = { },
-    onBrandItemClick: (UUID) -> Unit = { }
+    onFabAddBrandClick: (UUID) -> Unit = { },
+    onBrandItemClick: (UUID, UUID) -> Unit = { _: UUID, _: UUID -> }
 ) {
     var isEditMode by remember(state.categoryDomain) {
         mutableStateOf(state.categoryDomain != null)
@@ -142,7 +142,9 @@ fun CategoryScreen(
                     1 -> {
                         CategoryScreenTabBrand(
                             state = state,
-                            onFabAddClick = onFabAddBrandClick,
+                            onFabAddClick = {
+                                onFabAddBrandClick(state.categoryDomain?.id!!)
+                            },
                             onItemClick = onBrandItemClick
                         )
                     }

@@ -52,7 +52,7 @@ fun BrandScreen(
 
     Scaffold(
         topBar = {
-            val title = "Categoria ${state.brandDomain?.name}"
+            val title = "Categoria ${state.categoryDomain?.name}"
             val subtitle = if (isEditMode) state.brandDomain?.name else "Nova Marca"
 
             SimpleMarketTopAppBar(

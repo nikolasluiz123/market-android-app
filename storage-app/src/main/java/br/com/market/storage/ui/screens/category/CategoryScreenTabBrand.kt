@@ -22,7 +22,7 @@ fun CategoryScreenTabBrand(
     state: CategoryUIState = CategoryUIState(),
     onInactivateBrandsClick: () -> Unit = { },
     onFabAddClick: () -> Unit = { },
-    onItemClick: (UUID) -> Unit = { }
+    onItemClick: (UUID, UUID) -> Unit = { _: UUID, _: UUID -> }
 ) {
     val pagingData = state.brands.collectAsLazyPagingItems()
     Scaffold(
@@ -45,7 +45,7 @@ fun CategoryScreenTabBrand(
                 BrandListCard(
                     brandName = it.name,
                     onItemClick = {
-                        onItemClick(it.id!!)
+                        onItemClick(state.categoryDomain?.id!!, it.id!!)
                     }
                 )
             }

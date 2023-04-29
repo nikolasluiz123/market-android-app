@@ -7,7 +7,9 @@ import androidx.lifecycle.viewModelScope
 import br.com.market.core.extensions.navParamToString
 import br.com.market.storage.R
 import br.com.market.storage.repository.BrandRepository
+import br.com.market.storage.repository.CategoryRepository
 import br.com.market.storage.ui.navigation.brand.argumentBrandId
+import br.com.market.storage.ui.navigation.category.argumentCategoryId
 import br.com.market.storage.ui.states.brand.BrandUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -22,12 +24,14 @@ import javax.inject.Inject
 class BrandViewModel @Inject constructor(
     @ApplicationContext context: Context,
     savedStateHandle: SavedStateHandle,
+    private val categoryRepository: CategoryRepository,
     private val brandRepository: BrandRepository
 ): ViewModel() {
 
     private val _uiState: MutableStateFlow<BrandUIState> = MutableStateFlow(BrandUIState())
     val uiState get() = _uiState.asStateFlow()
 
+    private var categoryId = savedStateHandle.get<String>(argumentCategoryId)
     private var brandId = savedStateHandle.get<String>(argumentBrandId)
 
     init {
@@ -54,6 +58,18 @@ class BrandViewModel @Inject constructor(
                     isValid
                 }
             )
+        }
+
+        categoryId?.navParamToString()?.let { id ->
+            viewModelScope.launch {
+                val categoryDomain = categoryRepository.findById(UUID.fromString(id))
+
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        categoryDomain = categoryDomain
+                    )
+                }
+            }
         }
 
         brandId?.navParamToString()?.let { id ->

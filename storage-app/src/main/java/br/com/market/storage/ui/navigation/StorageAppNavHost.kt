@@ -73,8 +73,12 @@ fun StorageAppNavHost(
 
         categoryScreen(
             onBackClick = { navController.popBackStack() },
-            onFabAddBrandClick = { navController.navigateToBrandScreen() },
-            onBrandItemClick = { navController.navigateToBrandScreen(it) }
+            onFabAddBrandClick = { categoryId ->
+                navController.navigateToBrandScreen(categoryId = categoryId)
+            },
+            onBrandItemClick = { categoryId, brandId ->
+                navController.navigateToBrandScreen(categoryId = categoryId, brandId = brandId)
+            }
         )
 
         brandScreen(
