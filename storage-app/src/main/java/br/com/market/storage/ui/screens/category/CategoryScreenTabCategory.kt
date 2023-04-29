@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun CategoryScreenTabCategory(
     state: CategoryUIState = CategoryUIState(),
-    onSendClick: (Boolean) -> Unit = { },
+    onUpdateEditMode: (Boolean) -> Unit = { },
     onToggleActive: () -> Unit = { },
     onSaveCategoryClick: (Boolean) -> Unit = { },
     isEdit: Boolean = false
@@ -80,6 +80,7 @@ fun CategoryScreenTabCategory(
                     FloatingActionButtonSave(
                         onClick = {
                             isEditMode = saveCategory(state, isActive, isEditMode, onSaveCategoryClick, scope, snackbarHostState)
+                            onUpdateEditMode(isEditMode)
                         }
                     )
                 }
@@ -121,7 +122,8 @@ fun CategoryScreenTabCategory(
                 enabled = isActive,
                 keyboardActions = KeyboardActions(
                     onDone = {
-                        onSendClick(isEditMode)
+                        isEditMode = saveCategory(state, isActive, isEditMode, onSaveCategoryClick, scope, snackbarHostState)
+                        onUpdateEditMode(isEditMode)
                         defaultKeyboardAction(ImeAction.Done)
                     }
                 )

@@ -134,7 +134,7 @@ fun BrandScreen(
                     0 -> {
                         BrandScreenTaBrand(
                             state = state,
-                            onSendClick = { isEditMode = it },
+                            onUpdateEditMode = { isEditMode = it },
                             onToggleActive = onToggleActive,
                             onSaveBrandClick = onSaveBrandClick,
                             isEdit = isEditMode,

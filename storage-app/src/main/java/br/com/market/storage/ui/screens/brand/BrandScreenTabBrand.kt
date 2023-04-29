@@ -33,7 +33,7 @@ import java.util.*
 @Composable
 fun BrandScreenTaBrand(
     state: BrandUIState = BrandUIState(),
-    onSendClick: (Boolean) -> Unit = { },
+    onUpdateEditMode: (Boolean) -> Unit = { },
     onToggleActive: () -> Unit = { },
     onSaveBrandClick: (Boolean) -> Unit = { },
     isEdit: Boolean = false,
@@ -84,6 +84,7 @@ fun BrandScreenTaBrand(
                     FloatingActionButtonSave(
                         onClick = {
                             isEditMode = saveBrand(state, isActive, isEditMode, onSaveBrandClick, scope, snackbarHostState)
+                            onUpdateEditMode(isEditMode)
                         }
                     )
                 }
@@ -125,7 +126,8 @@ fun BrandScreenTaBrand(
                 enabled = isActive,
                 keyboardActions = KeyboardActions(
                     onDone = {
-                        onSendClick(isEditMode)
+                        isEditMode = saveBrand(state, isActive, isEditMode, onSaveBrandClick, scope, snackbarHostState)
+                        onUpdateEditMode(isEditMode)
                         defaultKeyboardAction(ImeAction.Done)
                     }
                 ),

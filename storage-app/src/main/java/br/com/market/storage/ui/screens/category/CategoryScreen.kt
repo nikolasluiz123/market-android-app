@@ -133,7 +133,7 @@ fun CategoryScreen(
                     0 -> {
                         CategoryScreenTabCategory(
                             state = state,
-                            onSendClick = { isEditMode = it },
+                            onUpdateEditMode = { isEditMode = it },
                             onToggleActive = onToggleActive,
                             onSaveCategoryClick = onSaveCategoryClick,
                             isEdit = isEditMode
