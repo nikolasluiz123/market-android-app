@@ -133,7 +133,7 @@ fun CategoryScreen(
                         )
                     }
                     1 -> {
-
+                        TabBrandScreen(state = state)
                     }
                 }
             }

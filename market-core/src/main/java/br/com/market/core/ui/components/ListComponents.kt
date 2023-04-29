@@ -94,7 +94,7 @@ fun <T> LazyVerticalListComponent(
  * @author Nikolas Luiz Schmitt
  */
 @Composable
-fun <T: Any> PagedVerticalListComponent(
+fun <T : Any> PagedVerticalListComponent(
     modifier: Modifier = Modifier,
     pagingItems: LazyPagingItems<T>,
     verticalArrangementSpace: Dp = 16.dp,
@@ -110,7 +110,7 @@ fun <T: Any> PagedVerticalListComponent(
     emptyStateText: String = stringResource(R.string.text_empty_state_default),
     itemList: @Composable (T) -> Unit
 ) {
-    ConstraintLayout(modifier = modifier) {
+    ConstraintLayout(modifier = modifier.fillMaxSize()) {
         val (lazyColumnRef, emptyText) = createRefs()
 
         if (pagingItems.itemCount > 0) {
@@ -139,12 +139,13 @@ fun <T: Any> PagedVerticalListComponent(
             }
         } else {
             EmptyState(
-                modifier = Modifier.constrainAs(emptyText) {
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                },
+                modifier = Modifier
+                    .constrainAs(emptyText) {
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                    },
                 text = emptyStateText
             )
         }
@@ -268,7 +269,7 @@ private fun <T : Any> PagedVerticalList(
         when (pagingItems.loadState.prepend) {
             is LoadState.Error -> {
                 item {
-                    if(prependLoadStateError != null) {
+                    if (prependLoadStateError != null) {
                         prependLoadStateError()
                     }
                 }
