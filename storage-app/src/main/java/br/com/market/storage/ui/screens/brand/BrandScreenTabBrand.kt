@@ -21,12 +21,14 @@ import br.com.market.core.ui.components.OutlinedTextFieldValidation
 import br.com.market.core.ui.components.buttons.FloatingActionButtonSave
 import br.com.market.core.ui.components.buttons.IconButtonInactivate
 import br.com.market.core.ui.components.buttons.IconButtonReactivate
+import br.com.market.core.ui.components.buttons.IconButtonSearch
 import br.com.market.domain.BrandDomain
 import br.com.market.storage.R
 import br.com.market.storage.ui.screens.category.CategoryScreenTabCategory
 import br.com.market.storage.ui.states.brand.BrandUIState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.util.*
 
 @Composable
 fun BrandScreenTaBrand(
@@ -34,7 +36,8 @@ fun BrandScreenTaBrand(
     onSendClick: (Boolean) -> Unit = { },
     onToggleActive: () -> Unit = { },
     onSaveBrandClick: (Boolean) -> Unit = { },
-    isEdit: Boolean = false
+    isEdit: Boolean = false,
+    onNavToBrandLov: (UUID) -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -125,7 +128,12 @@ fun BrandScreenTaBrand(
                         onSendClick(isEditMode)
                         defaultKeyboardAction(ImeAction.Done)
                     }
-                )
+                ),
+                trailingIcon = {
+                    IconButtonSearch {
+                        onNavToBrandLov(state.categoryDomain?.id!!)
+                    }
+                }
             )
         }
     }

@@ -6,7 +6,7 @@ import br.com.market.localdataaccess.dao.CategoryDAO
 import br.com.market.servicedataaccess.webclients.BrandWebClient
 import br.com.market.servicedataaccess.webclients.CategoryWebClient
 import br.com.market.servicedataaccess.webclients.UserWebClient
-import br.com.market.storage.repository.BrandRepository
+import br.com.market.storage.repository.brand.BrandRepository
 import br.com.market.storage.repository.CategoryRepository
 import br.com.market.storage.repository.UserRepository
 import dagger.Module

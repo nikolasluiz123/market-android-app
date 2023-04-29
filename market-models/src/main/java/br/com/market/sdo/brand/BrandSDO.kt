@@ -1,4 +1,4 @@
-package br.com.market.sdo
+package br.com.market.sdo.brand
 
 import br.com.market.sdo.base.BaseSDO
 import java.util.*

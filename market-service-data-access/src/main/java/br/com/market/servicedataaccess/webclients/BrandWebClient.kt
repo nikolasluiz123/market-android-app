@@ -2,7 +2,10 @@ package br.com.market.servicedataaccess.webclients
 
 import android.content.Context
 import br.com.market.models.Brand
-import br.com.market.sdo.BrandSDO
+import br.com.market.models.CategoryBrand
+import br.com.market.sdo.brand.BrandBodySDO
+import br.com.market.sdo.brand.BrandSDO
+import br.com.market.sdo.brand.CategoryBrandSDO
 import br.com.market.servicedataaccess.extensions.getPersistenceResponseBody
 import br.com.market.servicedataaccess.extensions.getReadResponseBody
 import br.com.market.servicedataaccess.extensions.getResponseBody
@@ -34,7 +37,7 @@ class BrandWebClient @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun save(brand: Brand): PersistenceResponse {
+    suspend fun save(brand: Brand, categoryBrand: CategoryBrand): PersistenceResponse {
         return persistenceServiceErrorHandlingBlock(
             codeBlock = {
                 val brandSDO = BrandSDO(
@@ -43,7 +46,14 @@ class BrandWebClient @Inject constructor(
                     active = brand.active
                 )
 
-                service.save(getToken(), brandSDO).getPersistenceResponseBody()
+                val categoryBrandSDO = CategoryBrandSDO(
+                    localId = categoryBrand.id,
+                    localCategoryId = categoryBrand.categoryId!!,
+                    localBrandId = categoryBrand.brandId!!,
+                    active = categoryBrand.active,
+                )
+
+                service.save(getToken(), BrandBodySDO(brandSDO, categoryBrandSDO)).getPersistenceResponseBody()
             }
         )
     }
@@ -76,7 +86,7 @@ class BrandWebClient @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun sync(brands: List<Brand>): MarketServiceResponse {
+    suspend fun sync(brands: List<Brand>, categoryBrands: List<CategoryBrand>): MarketServiceResponse {
         return serviceErrorHandlingBlock(
             codeBlock = {
                 val brandSDOs = brands.map {
@@ -87,7 +97,27 @@ class BrandWebClient @Inject constructor(
                     )
                 }
 
-                service.sync(getToken(), brandSDOs).getResponseBody()
+                val categoryBrandSDOs = categoryBrands.map {
+                    CategoryBrandSDO(
+                        localId = it.id,
+                        localCategoryId = it.categoryId!!,
+                        localBrandId = it.brandId!!,
+                        active = it.active
+                    )
+                }
+
+                val syncList = mutableListOf<BrandBodySDO>()
+
+                for (brandSDO in brandSDOs) {
+                    for (categoryBrandSDO in categoryBrandSDOs) {
+                        if (categoryBrandSDO.localBrandId == brandSDO.localId) {
+                            syncList.add(BrandBodySDO(brandSDO, categoryBrandSDO))
+                            break
+                        }
+                    }
+                }
+
+                service.sync(getToken(), syncList).getResponseBody()
             }
         )
     }
@@ -97,12 +127,38 @@ class BrandWebClient @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun findAll(): ReadResponse<Brand> {
+    suspend fun findAllBrands(): ReadResponse<Brand> {
         return readServiceErrorHandlingBlock(
             codeBlock = {
-                val response = service.findAll(getToken()).getReadResponseBody()
+                val response = service.findAllBrandDTOs(getToken()).getReadResponseBody()
+
                 val brands = response.values.map {
                     Brand(id = it.localId, name = it.name, synchronized = true, active = it.active)
+                }
+
+                ReadResponse(values = brands, code = response.code, success = response.success, error = response.error)
+            }
+        )
+    }
+
+    /**
+     * Função que busca todos as categoria marca da base remota
+     *
+     * @author Nikolas Luiz Schmitt
+     */
+    suspend fun findAllCategoryBrands(): ReadResponse<CategoryBrand> {
+        return readServiceErrorHandlingBlock(
+            codeBlock = {
+                val response = service.findAllCategoryBrandDTOs(getToken()).getReadResponseBody()
+
+                val brands = response.values.map {
+                    CategoryBrand(
+                        id = it.localId,
+                        categoryId = it.localCategoryId,
+                        brandId = it.localBrandId,
+                        synchronized = true,
+                        active = it.active
+                    )
                 }
 
                 ReadResponse(values = brands, code = response.code, success = response.success, error = response.error)

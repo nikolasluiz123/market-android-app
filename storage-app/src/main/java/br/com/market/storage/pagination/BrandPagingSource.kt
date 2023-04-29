@@ -3,6 +3,7 @@ package br.com.market.storage.pagination
 import br.com.market.core.pagination.BasePagingSource
 import br.com.market.domain.BrandDomain
 import br.com.market.localdataaccess.dao.BrandDAO
+import java.util.*
 
 /**
  * PagingSource para listagem das marcas de forma paginada
@@ -11,9 +12,12 @@ import br.com.market.localdataaccess.dao.BrandDAO
  *
  * @author Nikolas Luiz Schmitt
  */
-class BrandPagingSource(private val dao: BrandDAO) : BasePagingSource<BrandDomain>() {
+class BrandPagingSource(
+    private val dao: BrandDAO,
+    private val categoryId: UUID
+) : BasePagingSource<BrandDomain>() {
 
     override suspend fun getData(offset: Int, limit: Int): List<BrandDomain> {
-        return dao.findBrands(offset, limit)
+        return dao.findBrands(categoryId, offset, limit)
     }
 }

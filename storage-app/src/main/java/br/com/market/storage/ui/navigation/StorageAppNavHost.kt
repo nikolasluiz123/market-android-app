@@ -11,6 +11,8 @@ import br.com.market.storage.ui.navigation.category.categoryScreen
 import br.com.market.storage.ui.navigation.category.categorySearchScreen
 import br.com.market.storage.ui.navigation.category.navigateToCategoryScreen
 import br.com.market.storage.ui.navigation.category.navigateToCategorySearchScreen
+import br.com.market.storage.ui.navigation.lovs.brandLov
+import br.com.market.storage.ui.navigation.lovs.navigateToBrandLov
 
 /**
  * Host de Navegação que configura o grafo do APP
@@ -82,7 +84,15 @@ fun StorageAppNavHost(
         )
 
         brandScreen(
-            onBackClick = { navController.popBackStack() }
+            onBackClick = { navController.popBackStack() },
+            onNavToBrandLov = { categoryId ->
+                navController.navigateToBrandLov(categoryId)
+            }
+        )
+
+        brandLov(
+            onBackClick = { navController.popBackStack() },
+            onItemClick = { navController.popBackStack() }
         )
 
         cameraGraph()

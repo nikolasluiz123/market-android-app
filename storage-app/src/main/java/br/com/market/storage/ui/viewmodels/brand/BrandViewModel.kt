@@ -6,10 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.market.core.extensions.navParamToString
 import br.com.market.storage.R
-import br.com.market.storage.repository.BrandRepository
 import br.com.market.storage.repository.CategoryRepository
+import br.com.market.storage.repository.brand.BrandRepository
 import br.com.market.storage.ui.navigation.brand.argumentBrandId
 import br.com.market.storage.ui.navigation.category.argumentCategoryId
+import br.com.market.storage.ui.navigation.lovs.argumentBrandIdLovCallback
 import br.com.market.storage.ui.states.brand.BrandUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -26,13 +27,14 @@ class BrandViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val categoryRepository: CategoryRepository,
     private val brandRepository: BrandRepository
-): ViewModel() {
+) : ViewModel() {
 
     private val _uiState: MutableStateFlow<BrandUIState> = MutableStateFlow(BrandUIState())
     val uiState get() = _uiState.asStateFlow()
 
     private var categoryId = savedStateHandle.get<String>(argumentCategoryId)
     private var brandId = savedStateHandle.get<String>(argumentBrandId)
+    private var brandIdLovCallback = savedStateHandle.get<String>(argumentBrandIdLovCallback)
 
     init {
         _uiState.update { currentState ->
@@ -84,12 +86,25 @@ class BrandViewModel @Inject constructor(
                 }
             }
         }
+
+        brandIdLovCallback?.navParamToString()?.let { id ->
+            viewModelScope.launch {
+                val brandDomain = brandRepository.findById(UUID.fromString(id))
+
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        brandDomain = brandDomain,
+                        brandName = brandDomain.name
+                    )
+                }
+            }
+        }
     }
 
     fun saveBrand() {
         _uiState.value.brandDomain?.let { brandDomain ->
             viewModelScope.launch {
-                brandRepository.save(brandDomain)
+                brandRepository.save(_uiState.value.categoryDomain?.id!!, brandDomain)
 
                 _uiState.update { currentState ->
                     val domain = currentState.brandDomain

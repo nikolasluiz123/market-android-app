@@ -18,11 +18,13 @@ import br.com.market.storage.R
 import br.com.market.storage.ui.states.brand.BrandUIState
 import br.com.market.storage.ui.viewmodels.brand.BrandViewModel
 import kotlinx.coroutines.launch
+import java.util.*
 
 @Composable
 fun BrandScreen(
     viewModel: BrandViewModel,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onNavToBrandLov: (UUID) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -34,7 +36,8 @@ fun BrandScreen(
         },
         onSaveBrandClick = {
             viewModel.saveBrand()
-        }
+        },
+        onNavToBrandLov = onNavToBrandLov
     )
 }
 
@@ -44,7 +47,8 @@ fun BrandScreen(
     state: BrandUIState = BrandUIState(),
     onBackClick: () -> Unit = { },
     onToggleActive: () -> Unit = { },
-    onSaveBrandClick: (Boolean) -> Unit = { }
+    onSaveBrandClick: (Boolean) -> Unit = { },
+    onNavToBrandLov: (UUID) -> Unit = { }
 ) {
     var isEditMode by remember(state.brandDomain) {
         mutableStateOf(state.brandDomain != null)
@@ -133,7 +137,8 @@ fun BrandScreen(
                             onSendClick = { isEditMode = it },
                             onToggleActive = onToggleActive,
                             onSaveBrandClick = onSaveBrandClick,
-                            isEdit = isEditMode
+                            isEdit = isEditMode,
+                            onNavToBrandLov = onNavToBrandLov
                         )
                     }
                     1 -> {

@@ -1,4 +1,4 @@
-package br.com.market.storage.repository
+package br.com.market.storage.repository.brand
 
 import androidx.paging.Pager
 import androidx.paging.PagingData
@@ -6,6 +6,7 @@ import br.com.market.core.pagination.PagingConfigUtils
 import br.com.market.domain.BrandDomain
 import br.com.market.localdataaccess.dao.BrandDAO
 import br.com.market.models.Brand
+import br.com.market.models.CategoryBrand
 import br.com.market.servicedataaccess.responses.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.PersistenceResponse
 import br.com.market.servicedataaccess.webclients.BrandWebClient
@@ -34,10 +35,10 @@ class BrandRepository @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    fun findBrands(): Flow<PagingData<BrandDomain>> {
+    fun findBrands(categoryId: UUID): Flow<PagingData<BrandDomain>> {
         return Pager(
             config = PagingConfigUtils.defaultPagingConfig(),
-            pagingSourceFactory = { BrandPagingSource(dao) }
+            pagingSourceFactory = { BrandPagingSource(dao, categoryId) }
         ).flow
     }
 
@@ -56,21 +57,26 @@ class BrandRepository @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun save(domain: BrandDomain): PersistenceResponse {
+    suspend fun save(categoryId: UUID, domain: BrandDomain): PersistenceResponse {
         val brand = if (domain.id != null) {
             dao.findById(domain.id!!).copy(name = domain.name)
         } else {
             Brand(name = domain.name)
         }
 
+        val categoryBrand = CategoryBrand(categoryId = categoryId, brandId = brand.id)
+
         domain.id = brand.id
 
-        val response = webClient.save(brand = brand)
+        val response = webClient.save(brand = brand, categoryBrand = categoryBrand)
 
-        brand.synchronized = response.getObjectSynchronized()
-        dao.save(brand = brand)
+        val objectSynchronized = response.getObjectSynchronized()
+        brand.synchronized = objectSynchronized
+        categoryBrand.synchronized = objectSynchronized
 
-        return  response
+        dao.saveBrandAndReference(brand = brand, categoryBrand = categoryBrand)
+
+        return response
     }
 
     /**
@@ -129,11 +135,12 @@ class BrandRepository @Inject constructor(
      */
     private suspend fun sendBrandsToRemoteDB(): MarketServiceResponse {
         val brandsNotSynchronized = dao.findBrandsNotSynchronized()
-        val response = webClient.sync(brandsNotSynchronized)
+        val categoryBrandsNotSynchronized = dao.findCategoryBrandsNotSynchronized()
+        val response = webClient.sync(brandsNotSynchronized, categoryBrandsNotSynchronized)
 
         if (response.success) {
             val brandsSynchronized = brandsNotSynchronized.map { it.copy(synchronized = true) }
-            dao.save(brandsSynchronized)
+            dao.saveBrandsAndReferences(brandsSynchronized, categoryBrandsNotSynchronized)
         }
 
         return response
@@ -146,13 +153,19 @@ class BrandRepository @Inject constructor(
      * @author Nikolas Luiz Schmitt
      */
     private suspend fun updateBrandsOfLocalDB(): MarketServiceResponse {
-        val response = webClient.findAll()
-
-        if (response.success) {
-            dao.save(response.values)
+        val responseFindAllBrands = webClient.findAllBrands()
+        if (!responseFindAllBrands.success) {
+            return responseFindAllBrands.toBaseResponse()
         }
 
-        return response.toBaseResponse()
+        val responseFindAllCategoryBrands = webClient.findAllCategoryBrands()
+        if (!responseFindAllCategoryBrands.success) {
+            return responseFindAllCategoryBrands.toBaseResponse()
+        }
+
+        dao.saveBrandsAndReferences(responseFindAllBrands.values, responseFindAllCategoryBrands.values)
+
+        return responseFindAllBrands.toBaseResponse()
     }
 
 }

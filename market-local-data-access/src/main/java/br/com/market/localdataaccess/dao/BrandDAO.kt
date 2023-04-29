@@ -1,11 +1,9 @@
 package br.com.market.localdataaccess.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import br.com.market.domain.BrandDomain
 import br.com.market.models.Brand
+import br.com.market.models.CategoryBrand
 import java.util.*
 
 /**
@@ -24,8 +22,14 @@ abstract class BrandDAO {
      *
      * @author Nikolas Luiz Schmitt
      */
-    @Query("select * from brands limit :loadSize offset :position")
-    abstract suspend fun findBrands(position: Int, loadSize: Int): List<BrandDomain>
+    @Query(
+        " select b.* " +
+                " from brands b " +
+                " inner join categories_brands cb on b.id = cb.brand_id " +
+                " where cb.category_id = :categoryId " +
+                " limit :loadSize offset :position "
+    )
+    abstract suspend fun findBrands(categoryId: UUID, position: Int, loadSize: Int): List<BrandDomain>
 
     /**
      * Função para salvar uma marca
@@ -35,7 +39,42 @@ abstract class BrandDAO {
      * @author Nikolas Luiz Schmitt
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun save(brand: Brand)
+    abstract suspend fun saveBrand(brand: Brand)
+
+    /**
+     * Função para salvar a entidade intermediária [CategoryBrand]
+     *
+     * @param categoryBrand
+     *
+     * @author Nikolas Luiz Schmitt
+     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract suspend fun saveCategoryBrand(categoryBrand: CategoryBrand)
+
+    /**
+     * Função para salvar uma lista de [CategoryBrand]
+     *
+     * @param categoryBrands
+     *
+     * @author Nikolas Luiz Schmitt
+     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract suspend fun saveCategoryBrands(categoryBrands: List<CategoryBrand>)
+
+    /**
+     * Função para salvar [Brand] e [CategoryBrand] uma após
+     * a outra em uma transação.
+     *
+     * @param brand
+     * @param categoryBrand
+     *
+     * @author Nikolas Luiz Schmitt
+     */
+    @Transaction
+    open suspend fun saveBrandAndReference(brand: Brand, categoryBrand: CategoryBrand) {
+        saveBrand(brand)
+        saveCategoryBrand(categoryBrand)
+    }
 
     /**
      * Função para salvar uma ou mais marcas em uma lista
@@ -45,7 +84,22 @@ abstract class BrandDAO {
      * @author Nikolas Luiz Schmitt
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun save(brands: List<Brand>)
+    abstract suspend fun saveBrands(brands: List<Brand>)
+
+    /**
+     * Função para salvar uma lista de [Brand] e [CategoryBrand]
+     * uma após a outra em uma transação.
+     *
+     * @param brands
+     * @param categoryBrands
+     *
+     * @author Nikolas Luiz Schmitt
+     */
+    @Transaction
+    open suspend fun saveBrandsAndReferences(brands: List<Brand>, categoryBrands: List<CategoryBrand>) {
+        saveBrands(brands)
+        saveCategoryBrands(categoryBrands)
+    }
 
     /**
      * Função para buscar uma marca pelo id
@@ -90,4 +144,13 @@ abstract class BrandDAO {
      */
     @Query("select * from brands where synchronized = false")
     abstract suspend fun findBrandsNotSynchronized(): List<Brand>
+
+    /**
+     * Função que busca todas as categoria marca que não foram sincronizadas
+     * com a base remota.
+     *
+     * @author Nikolas Luiz Schmitt
+     */
+    @Query("select * from categories_brands where synchronized = false")
+    abstract suspend fun findCategoryBrandsNotSynchronized(): List<CategoryBrand>
 }
