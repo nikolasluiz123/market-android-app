@@ -22,17 +22,14 @@ import java.util.*
 @Composable
 fun BrandLov(
     viewModel: BrandLovViewModel,
-    onItemClick: () -> Unit = { },
+    onItemClick: (UUID) -> Unit = { },
     onBackClick: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
     BrandLov(
         state = state,
-        onItemClick = { brandId ->
-            viewModel.addBrandLovCallback(brandId)
-            onItemClick()
-        },
+        onItemClick = onItemClick,
         onBackClick = onBackClick
     )
 }
@@ -48,8 +45,7 @@ fun BrandLov(
     Scaffold(
         topBar = {
             SimpleMarketTopAppBar(
-                title = "Lista de Marcas",
-                subtitle = "Categoria ${state.categoryName}",
+                title = "Marcas",
                 showMenuWithLogout = false,
                 onBackClick = onBackClick
             )

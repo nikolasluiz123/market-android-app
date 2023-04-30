@@ -13,7 +13,7 @@ import br.com.market.localdataaccess.dao.CategoryDAO
  */
 class CategoryPagingSource(private val dao: CategoryDAO) : BasePagingSource<CategoryDomain>() {
 
-    override suspend fun getData(offset: Int, limit: Int): List<CategoryDomain> {
-        return dao.findCategories(offset, limit)
+    override suspend fun getData(limit: Int, offset: Int): List<CategoryDomain> {
+        return dao.findCategories(limit = limit, offset = offset)
     }
 }

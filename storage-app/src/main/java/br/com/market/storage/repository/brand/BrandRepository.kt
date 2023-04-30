@@ -35,7 +35,7 @@ class BrandRepository @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    fun findBrands(categoryId: UUID): Flow<PagingData<BrandDomain>> {
+    fun findBrands(categoryId: UUID? = null): Flow<PagingData<BrandDomain>> {
         return Pager(
             config = PagingConfigUtils.defaultPagingConfig(),
             pagingSourceFactory = { BrandPagingSource(dao, categoryId) }

@@ -6,6 +6,5 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
 data class BrandLovUIState(
-    val categoryName: String = "",
     val brands: Flow<PagingData<BrandDomain>> = emptyFlow()
 )

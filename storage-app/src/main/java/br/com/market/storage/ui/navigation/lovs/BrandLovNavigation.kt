@@ -11,11 +11,11 @@ import br.com.market.storage.ui.viewmodels.brand.BrandLovViewModel
 import java.util.*
 
 internal const val brandLovRoute = "brandLov"
-internal const val argumentBrandIdLovCallback = "brandIdLovCallback"
+internal const val brandLovNavResultCallbackKey = "brandLovCallbackKey"
 
 fun NavGraphBuilder.brandLov(
     onBackClick: () -> Unit,
-    onItemClick: () -> Unit
+    onItemClick: (UUID) -> Unit
 ) {
     composable(route = "$brandLovRoute?$argumentCategoryId={$argumentCategoryId}") {
         val brandViewModel = hiltViewModel<BrandLovViewModel>()

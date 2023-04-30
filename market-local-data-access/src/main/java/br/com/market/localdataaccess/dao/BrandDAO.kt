@@ -1,6 +1,8 @@
 package br.com.market.localdataaccess.dao
 
 import androidx.room.*
+import androidx.sqlite.db.SimpleSQLiteQuery
+import androidx.sqlite.db.SupportSQLiteQuery
 import br.com.market.domain.BrandDomain
 import br.com.market.models.Brand
 import br.com.market.models.CategoryBrand
@@ -17,19 +19,37 @@ abstract class BrandDAO {
     /**
      * Função que busca as marcas de forma paginada
      *
-     * @param position Linha na tabela onde a consulta inicia
-     * @param loadSize Linha na tabela onde a consulta termina
+     * @param limit Linha na tabela onde a consulta termina
+     * @param offset Linha na tabela onde a consulta inicia
      *
      * @author Nikolas Luiz Schmitt
      */
-    @Query(
-        " select b.* " +
-                " from brands b " +
-                " inner join categories_brands cb on b.id = cb.brand_id " +
-                " where cb.category_id = :categoryId " +
-                " limit :loadSize offset :position "
-    )
-    abstract suspend fun findBrands(categoryId: UUID, position: Int, loadSize: Int): List<BrandDomain>
+    suspend fun findBrands(limit: Int, offset: Int, categoryId: UUID? = null): List<BrandDomain> {
+        val sql = StringJoiner("\r\n")
+        val params = mutableListOf<Any>()
+
+        with(sql) {
+            add("select b.*")
+            add("from brands b")
+
+            if (categoryId != null) {
+                add("inner join categories_brands cb on b.id = cb.brand_id")
+                add("where cb.category_id = ?")
+
+                params.add(categoryId.toString())
+            }
+
+            add("limit ? offset ?")
+
+            params.add(limit)
+            params.add(offset)
+        }
+
+        return executeQueryFindBrands(SimpleSQLiteQuery(sql.toString(), params.toTypedArray()))
+    }
+
+    @RawQuery(observedEntities = [Brand::class])
+    abstract suspend fun executeQueryFindBrands(query: SupportSQLiteQuery): List<BrandDomain>
 
     /**
      * Função para salvar uma marca

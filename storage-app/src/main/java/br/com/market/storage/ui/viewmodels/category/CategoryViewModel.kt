@@ -58,7 +58,7 @@ class CategoryViewModel @Inject constructor(
             )
         }
 
-        categoryId?.navParamToString()?.let { 
+        categoryId?.navParamToString()?.let {
             val categoryId = UUID.fromString(it)
 
             viewModelScope.launch {

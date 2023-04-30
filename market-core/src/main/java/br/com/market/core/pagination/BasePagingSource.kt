@@ -20,7 +20,7 @@ abstract class BasePagingSource<DOMAIN: Any> : PagingSource<Int, DOMAIN>() {
      *
      * @author Nikolas Luiz Schmitt
      */
-    abstract suspend fun getData(offset: Int, limit: Int): List<DOMAIN>
+    abstract suspend fun getData(limit: Int, offset: Int): List<DOMAIN>
 
     override fun getRefreshKey(state: PagingState<Int, DOMAIN>): Int? {
         return state.anchorPosition?.let {
@@ -31,7 +31,7 @@ abstract class BasePagingSource<DOMAIN: Any> : PagingSource<Int, DOMAIN>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, DOMAIN> {
         val offset = getOffset(params)
 
-        val data = getData(offset = offset, limit = params.loadSize)
+        val data = getData(limit = params.loadSize, offset = offset)
 
         val nextKey = getNextKey(data, params, offset)
 

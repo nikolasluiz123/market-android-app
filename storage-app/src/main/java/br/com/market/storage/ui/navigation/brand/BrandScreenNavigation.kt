@@ -15,7 +15,7 @@ internal const val argumentBrandId = "brandId"
 
 fun NavGraphBuilder.brandScreen(
     onBackClick: () -> Unit,
-    onNavToBrandLov: (UUID) -> Unit
+    onNavToBrandLov: (UUID, (UUID) -> Unit) -> Unit
 ) {
     composable(route = "$brandScreenRoute?$argumentCategoryId={$argumentCategoryId}&$argumentBrandId={$argumentBrandId}") {
         val brandViewModel = hiltViewModel<BrandViewModel>()

@@ -10,7 +10,6 @@ import br.com.market.storage.repository.CategoryRepository
 import br.com.market.storage.repository.brand.BrandRepository
 import br.com.market.storage.ui.navigation.brand.argumentBrandId
 import br.com.market.storage.ui.navigation.category.argumentCategoryId
-import br.com.market.storage.ui.navigation.lovs.argumentBrandIdLovCallback
 import br.com.market.storage.ui.states.brand.BrandUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -34,7 +33,6 @@ class BrandViewModel @Inject constructor(
 
     private var categoryId = savedStateHandle.get<String>(argumentCategoryId)
     private var brandId = savedStateHandle.get<String>(argumentBrandId)
-    private var brandIdLovCallback = savedStateHandle.get<String>(argumentBrandIdLovCallback)
 
     init {
         _uiState.update { currentState ->
@@ -86,19 +84,6 @@ class BrandViewModel @Inject constructor(
                 }
             }
         }
-
-        brandIdLovCallback?.navParamToString()?.let { id ->
-            viewModelScope.launch {
-                val brandDomain = brandRepository.findById(UUID.fromString(id))
-
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        brandDomain = brandDomain,
-                        brandName = brandDomain.name
-                    )
-                }
-            }
-        }
     }
 
     fun saveBrand() {
@@ -118,6 +103,19 @@ class BrandViewModel @Inject constructor(
         _uiState.value.brandDomain?.id?.let { id ->
             viewModelScope.launch {
                 brandRepository.toggleActive(brandId = id, categoryId = UUID.fromString(categoryId!!.navParamToString()))
+            }
+        }
+    }
+
+    fun findBrandById(brandId: UUID) {
+        viewModelScope.launch {
+            val brandDomain = brandRepository.findById(brandId)
+
+            _uiState.update { currentState ->
+                currentState.copy(
+                    brandDomain = brandDomain,
+                    brandName = brandDomain.name
+                )
             }
         }
     }

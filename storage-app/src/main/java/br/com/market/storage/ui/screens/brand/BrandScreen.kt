@@ -24,7 +24,7 @@ import java.util.*
 fun BrandScreen(
     viewModel: BrandViewModel,
     onBackClick: () -> Unit,
-    onNavToBrandLov: (UUID) -> Unit
+    onNavToBrandLov: (UUID, (UUID) -> Unit) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -37,7 +37,11 @@ fun BrandScreen(
         onSaveBrandClick = {
             viewModel.saveBrand()
         },
-        onNavToBrandLov = onNavToBrandLov
+        onNavToBrandLov = { categoryId ->
+            onNavToBrandLov(categoryId) { brandId ->
+                viewModel.findBrandById(brandId)
+            }
+        }
     )
 }
 

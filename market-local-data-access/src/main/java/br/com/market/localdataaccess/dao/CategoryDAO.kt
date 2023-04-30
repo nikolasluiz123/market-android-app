@@ -16,13 +16,13 @@ abstract class CategoryDAO {
     /**
      * Função que busca as categorias de forma paginada
      *
-     * @param position Linha na tabela onde a consulta inicia
-     * @param loadSize Linha na tabela onde a consulta termina
+     * @param limit Linha na tabela onde a consulta inicia
+     * @param offset Linha na tabela onde a consulta termina
      *
      * @author Nikolas Luiz Schmitt
      */
-    @Query("select * from categories limit :loadSize offset :position")
-    abstract suspend fun findCategories(position: Int, loadSize: Int): List<CategoryDomain>
+    @Query("select * from categories limit :limit offset :offset")
+    abstract suspend fun findCategories(limit: Int, offset: Int): List<CategoryDomain>
 
     /**
      * Função para salvar uma categoria
