@@ -1,6 +1,7 @@
 package br.com.market.localdataaccess.dao
 
 import androidx.room.*
+import androidx.room.util.convertUUIDToByte
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import br.com.market.domain.BrandDomain
@@ -36,11 +37,10 @@ abstract class BrandDAO {
                 add("inner join categories_brands cb on b.id = cb.brand_id")
                 add("where cb.category_id = ?")
 
-                params.add(categoryId.toString())
+                params.add(convertUUIDToByte(categoryId))
             }
 
             add("limit ? offset ?")
-
             params.add(limit)
             params.add(offset)
         }
