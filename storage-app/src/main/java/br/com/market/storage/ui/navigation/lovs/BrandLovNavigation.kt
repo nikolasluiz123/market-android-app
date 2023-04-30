@@ -12,14 +12,16 @@ internal const val brandLovRoute = "brandLov"
 internal const val brandLovNavResultCallbackKey = "brandLovCallbackKey"
 
 fun NavGraphBuilder.brandLov(
-    onItemClick: (UUID) -> Unit
+    onItemClick: (UUID) -> Unit,
+    onBackClick: () -> Unit
 ) {
     composable(route = "$brandLovRoute?$argumentCategoryId={$argumentCategoryId}") {
         val brandViewModel = hiltViewModel<BrandLovViewModel>()
 
         BrandLov(
             viewModel = brandViewModel,
-            onItemClick = onItemClick
+            onItemClick = onItemClick,
+            onBackClick = onBackClick
         )
     }
 }

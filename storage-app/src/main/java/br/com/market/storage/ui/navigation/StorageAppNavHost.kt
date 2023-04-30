@@ -94,7 +94,8 @@ fun StorageAppNavHost(
         brandLov(
             onItemClick = { brandId ->
                 navController.popBackStackWithResult(brandLovNavResultCallbackKey, brandId)
-            }
+            },
+            onBackClick = { navController.popBackStack() }
         )
 
         cameraGraph()
