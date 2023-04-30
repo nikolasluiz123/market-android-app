@@ -58,7 +58,9 @@ class CategoryViewModel @Inject constructor(
             )
         }
 
-        UUID.fromString(categoryId?.navParamToString())?.let { categoryId ->
+        categoryId?.navParamToString()?.let { 
+            val categoryId = UUID.fromString(it)
+
             viewModelScope.launch {
                 val categoryDomain = categoryRepository.findById(categoryId)
                 val brands = brandRepository.findBrands(categoryId)
