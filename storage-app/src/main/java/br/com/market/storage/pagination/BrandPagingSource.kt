@@ -14,10 +14,11 @@ import java.util.*
  */
 class BrandPagingSource(
     private val dao: BrandDAO,
-    private val categoryId: UUID?
+    private val categoryId: UUID?,
+    private val brandName: String?
 ) : BasePagingSource<BrandDomain>() {
 
     override suspend fun getData(limit: Int, offset: Int): List<BrandDomain> {
-        return dao.findBrands(categoryId = categoryId, limit = limit, offset = offset)
+        return dao.findBrands(categoryId = categoryId, brandName = brandName, limit = limit, offset = offset)
     }
 }

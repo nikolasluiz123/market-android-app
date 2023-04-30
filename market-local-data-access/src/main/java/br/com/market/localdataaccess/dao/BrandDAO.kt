@@ -25,25 +25,43 @@ abstract class BrandDAO {
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun findBrands(limit: Int, offset: Int, categoryId: UUID? = null): List<BrandDomain> {
-        val sql = StringJoiner("\r\n")
+    suspend fun findBrands(limit: Int, offset: Int, categoryId: UUID? = null, brandName: String? = null): List<BrandDomain> {
         val params = mutableListOf<Any>()
 
-        with(sql) {
-            add("select b.*")
-            add("from brands b")
+        val select = StringJoiner("\r\n")
+        select.add(" select b.* ")
 
-            if (categoryId != null) {
-                add("inner join categories_brands cb on b.id = cb.brand_id")
-                add("where cb.category_id = ?")
+        val from = StringJoiner("\r\n")
+        from.add(" from brands b ")
 
-                params.add(convertUUIDToByte(categoryId))
-            }
+        val where = StringJoiner("\r\n")
+        where.add(" where 1=1 ")
 
-            add("limit ? offset ?")
-            params.add(limit)
-            params.add(offset)
+        if (categoryId != null) {
+            from.add(" inner join categories_brands cb on b.id = cb.brand_id ")
+            where.add(" and cb.category_id = ? ")
+
+            params.add(convertUUIDToByte(categoryId))
         }
+
+        if (brandName != null) {
+            where.add(" and b.name like '%' || ? || '%'")
+
+            params.add(brandName)
+        }
+
+        val orderBy = StringJoiner("\r\n")
+        orderBy.add(" order by b.name ")
+        orderBy.add(" limit ? offset ? ")
+
+        params.add(limit)
+        params.add(offset)
+
+        val sql = StringJoiner("\r\n")
+        sql.add(select.toString())
+        sql.add(from.toString())
+        sql.add(where.toString())
+        sql.add(orderBy.toString())
 
         return executeQueryFindBrands(SimpleSQLiteQuery(sql.toString(), params.toTypedArray()))
     }

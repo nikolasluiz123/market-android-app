@@ -92,7 +92,6 @@ fun StorageAppNavHost(
         )
 
         brandLov(
-            onBackClick = { navController.popBackStack() },
             onItemClick = { brandId ->
                 navController.popBackStackWithResult(brandLovNavResultCallbackKey, brandId)
             }
