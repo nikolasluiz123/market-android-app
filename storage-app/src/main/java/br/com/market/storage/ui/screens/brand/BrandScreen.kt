@@ -24,7 +24,8 @@ import java.util.*
 fun BrandScreen(
     viewModel: BrandViewModel,
     onBackClick: () -> Unit,
-    onNavToBrandLov: (UUID, (UUID) -> Unit) -> Unit
+    onNavToBrandLov: (UUID, (UUID) -> Unit) -> Unit,
+    onFabAddProductClick: (UUID) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -41,7 +42,8 @@ fun BrandScreen(
             onNavToBrandLov(categoryId) { brandId ->
                 viewModel.findBrandById(brandId)
             }
-        }
+        },
+        onFabAddProductClick = onFabAddProductClick
     )
 }
 
@@ -52,7 +54,8 @@ fun BrandScreen(
     onBackClick: () -> Unit = { },
     onToggleActive: () -> Unit = { },
     onSaveBrandClick: (Boolean) -> Unit = { },
-    onNavToBrandLov: (UUID) -> Unit = { }
+    onNavToBrandLov: (UUID) -> Unit = { },
+    onFabAddProductClick: (UUID) -> Unit = { }
 ) {
     var isEditMode by remember(state.brandDomain) {
         mutableStateOf(state.brandDomain != null)
@@ -146,7 +149,11 @@ fun BrandScreen(
                         )
                     }
                     1 -> {
-
+                        BrandScreenTabProduct(
+                            onFabAddClick = {
+                                onFabAddProductClick(state.brandDomain?.id!!)
+                            }
+                        )
                     }
                 }
             }

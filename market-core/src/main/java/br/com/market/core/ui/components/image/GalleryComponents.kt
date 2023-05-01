@@ -1,4 +1,4 @@
-package br.com.market.core.ui.components
+package br.com.market.core.ui.components.image
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -14,6 +14,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import br.com.market.core.R
 import br.com.market.core.theme.BLUE_500
 import br.com.market.core.theme.MarketTheme
+import br.com.market.core.ui.components.CoilImageViewer
 
 @Composable
 fun HorizontalGallery(

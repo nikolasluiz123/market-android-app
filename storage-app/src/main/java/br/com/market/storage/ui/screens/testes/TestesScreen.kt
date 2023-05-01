@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import br.com.market.core.R
 import br.com.market.core.ui.components.Banner
-import br.com.market.core.ui.components.HorizontalGallery
+import br.com.market.core.ui.components.image.HorizontalGallery
 import br.com.market.core.ui.components.MultiActionsFabBottomAppBar
 import br.com.market.core.ui.components.bottomsheet.BottomSheetLoadImage
 import br.com.market.core.ui.components.bottomsheet.IEnumOptionsBottomSheet

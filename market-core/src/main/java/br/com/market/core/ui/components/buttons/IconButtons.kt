@@ -138,6 +138,25 @@ fun IconButtonSync(onClick: () -> Unit = { }) {
     }
 }
 
+@Composable
+fun IconButtonStorage(
+    iconColor: Color = GREY_800,
+    disabledIconColor: Color = GREY_500,
+    enabled: Boolean = true,
+    onClick: () -> Unit = { }
+) {
+    IconButton(
+        enabled = enabled,
+        onClick = onClick,
+        colors = IconButtonDefaults.iconButtonColors(contentColor = iconColor, disabledContentColor = disabledIconColor)
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_storage_32dp),
+            contentDescription = stringResource(R.string.label_storage)
+        )
+    }
+}
+
 /**
  * Menu de mais opções.
  *

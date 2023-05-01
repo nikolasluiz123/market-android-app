@@ -55,4 +55,8 @@
     <string name="brand_screen_label_tab_brand">Marca</string>
     <string name="brand_screen_label_tab_product">Produto</string>
     <string name="brand_screen_tab_brand_label_name">Nome</string>
+    <string name="product_screen_label_name">Nome</string>
+    <string name="product_screen_label_price">Preço</string>
+    <string name="product_screen_label_quantity">Quantidade</string>
+    <string name="product_screen_label_measure">Medida</string>
 </resources>

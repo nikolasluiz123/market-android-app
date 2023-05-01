@@ -10,6 +10,8 @@ import br.com.market.storage.ui.navigation.category.*
 import br.com.market.storage.ui.navigation.lovs.brandLov
 import br.com.market.storage.ui.navigation.lovs.brandLovNavResultCallbackKey
 import br.com.market.storage.ui.navigation.lovs.brandLovRoute
+import br.com.market.storage.ui.navigation.product.navigateToProductScreen
+import br.com.market.storage.ui.navigation.product.productScreen
 
 /**
  * Host de Navegação que configura o grafo do APP
@@ -88,6 +90,14 @@ fun StorageAppNavHost(
                     route = "$brandLovRoute?$argumentCategoryId={$categoryId}",
                     callback = callback
                 )
+            },
+            onFabAddProductClick = { navController.navigateToProductScreen(brandId = it) }
+        )
+
+        productScreen(
+            onBackClick = { navController.popBackStack() },
+            onStorageButtonClick = {
+
             }
         )
 
