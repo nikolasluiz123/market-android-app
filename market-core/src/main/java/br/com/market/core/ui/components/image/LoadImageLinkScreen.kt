@@ -30,9 +30,14 @@ import br.com.market.core.ui.viewmodel.LoadImageLinkViewModel
 fun LoadImageLinkScreen(
     viewModel: LoadImageLinkViewModel,
     onNavigationIconClick: () -> Unit,
+    onSaveClick: (String) -> Unit = { }
 ) {
     val state by viewModel.uiState.collectAsState()
-    LoadImageLinkScreen(state = state, onNavigationIconClick = onNavigationIconClick)
+    LoadImageLinkScreen(
+        state = state,
+        onNavigationIconClick = onNavigationIconClick,
+        onSaveClick = onSaveClick
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,6 +45,7 @@ fun LoadImageLinkScreen(
 fun LoadImageLinkScreen(
     state: LoadImageLinkUIState = LoadImageLinkUIState(),
     onNavigationIconClick: () -> Unit = { },
+    onSaveClick: (String) -> Unit = { }
 ) {
     Scaffold(
         topBar = {
@@ -53,7 +59,11 @@ fun LoadImageLinkScreen(
         bottomBar = {
             MarketBottomAppBar(
                 floatingActionButton = {
-                    FloatingActionButtonSave()
+                    FloatingActionButtonSave(
+                        onClick = {
+                            onSaveClick(state.link)
+                        }
+                    )
                 }
             )
         }

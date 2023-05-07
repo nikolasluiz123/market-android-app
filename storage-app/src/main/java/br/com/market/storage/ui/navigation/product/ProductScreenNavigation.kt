@@ -1,10 +1,12 @@
 package br.com.market.storage.ui.navigation.product
 
+import android.net.Uri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import br.com.market.core.ui.components.bottomsheet.IEnumOptionsBottomSheet
 import br.com.market.storage.ui.navigation.brand.argumentBrandId
 import br.com.market.storage.ui.screens.product.ProductScreen
 import br.com.market.storage.ui.viewmodels.product.ProductViewModel
@@ -15,7 +17,8 @@ internal const val argumentProductId = "productId"
 
 fun NavGraphBuilder.productScreen(
     onBackClick: () -> Unit,
-    onStorageButtonClick: () -> Unit = { }
+    onStorageButtonClick: () -> Unit = { },
+    onBottomSheetLoadImageItemClick: (IEnumOptionsBottomSheet, (Uri) -> Unit) -> Unit
 ) {
     composable(route = "$productScreenRoute?$argumentBrandId={$argumentBrandId}&$argumentProductId={$argumentProductId}") {
         val viewModel = hiltViewModel<ProductViewModel>()
@@ -23,7 +26,8 @@ fun NavGraphBuilder.productScreen(
         ProductScreen(
             viewModel = viewModel,
             onBackClick = onBackClick,
-            onStorageButtonClick = onStorageButtonClick
+            onStorageButtonClick = onStorageButtonClick,
+            onBottomSheetLoadImageItemClick = onBottomSheetLoadImageItemClick
         )
     }
 }

@@ -15,15 +15,36 @@ import br.com.market.core.R
 import br.com.market.core.theme.BLUE_500
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.CoilImageViewer
+import coil.compose.SubcomposeAsyncImage
 
+/**
+ * Componente de galeria horizontal
+ *
+ * @param images Lista de imagens que vão ser exibidas. O tipo deve ser compatível com os que são aceitos pelo componente [SubcomposeAsyncImage]
+ * @param onLoadClick Função executada ao clicar no botão 'Carregar', pode ser utilizado para exibir as opções de carregamento da imagem
+ * @param modifier Modifier para definições de layout específicos
+ * @param maxImages Número máximo de imagens aceito pelo componente
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Composable
 fun HorizontalGallery(
     images: List<Any>,
     onLoadClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    maxImages: Int = 3
 ) {
     ConstraintLayout(modifier) {
         val (buttonLoadRef, imageRef) = createRefs()
+        val imageList = images.ifEmpty { listOf(R.drawable.placeholder, R.drawable.placeholder, R.drawable.placeholder) }.toMutableList()
+
+        if (imageList.size < maxImages) {
+            for (i in 1..maxImages) {
+                if (i > imageList.size) {
+                    imageList.add(R.drawable.placeholder)
+                }
+            }
+        }
 
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -35,7 +56,7 @@ fun HorizontalGallery(
                 }
                 .fillMaxWidth()
         ) {
-            items(images) {
+            items(imageList) {
                 CoilImageViewer(
                     Modifier
                         .fillParentMaxWidth()

@@ -1,9 +1,11 @@
 package br.com.market.storage.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
+import br.com.market.core.ui.components.bottomsheet.loadimage.EnumOptionsBottomSheetLoadImage
 import br.com.market.storage.ui.navigation.brand.brandScreen
 import br.com.market.storage.ui.navigation.brand.navigateToBrandScreen
 import br.com.market.storage.ui.navigation.category.*
@@ -12,6 +14,8 @@ import br.com.market.storage.ui.navigation.lovs.brandLovNavResultCallbackKey
 import br.com.market.storage.ui.navigation.lovs.brandLovRoute
 import br.com.market.storage.ui.navigation.product.navigateToProductScreen
 import br.com.market.storage.ui.navigation.product.productScreen
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
 
 /**
  * Host de Navegação que configura o grafo do APP
@@ -26,6 +30,8 @@ fun StorageAppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController
 ) {
+    val scope = rememberCoroutineScope()
+
     NavHost(
         navController = navController,
         startDestination = splashScreenRoute,
@@ -98,6 +104,31 @@ fun StorageAppNavHost(
             onBackClick = { navController.popBackStack() },
             onStorageButtonClick = {
 
+            },
+            onBottomSheetLoadImageItemClick = { option, callback ->
+                when(option) {
+                    EnumOptionsBottomSheetLoadImage.CAMERA -> {
+                        navController.navigateForResult(
+                            key = cameraNavResultCallbackKey,
+                            route = cameraScreenRoute,
+                            callback = callback
+                        )
+                    }
+                    EnumOptionsBottomSheetLoadImage.GALLERY -> {
+                        navController.navigateForResult(
+                            key = androidGalleryNavResultCallbackKey,
+                            route = androidGalleryScreenRoute,
+                            callback = callback
+                        )
+                    }
+                    EnumOptionsBottomSheetLoadImage.LINK -> {
+                        navController.navigateForResult(
+                            key = loadImageLinkNavResultCallbackKey,
+                            route = loadImageLinkScreenRoute,
+                            callback = callback
+                        )
+                    }
+                }
             }
         )
 
@@ -108,11 +139,34 @@ fun StorageAppNavHost(
             onBackClick = { navController.popBackStack() }
         )
 
-        cameraGraph()
 
-        androidGalleryGraph(onAfterShowGallery = { navController.popBackStack() })
 
-        loadImageLinkGraph(navController)
+        cameraGraph(
+            onImageCaptured = { uri, _ ->
+                // Isso talvez seja temporário, preciso descobrir se tem uma forma de remover
+                // essa execução de dentro do contexto IO da courotine
+                scope.launch(Main) {
+                    navController.popBackStackWithResult(cameraNavResultCallbackKey, uri)
+                }
+            },
+            onError = {
+
+            }
+        )
+
+        androidGalleryGraph(
+            onAfterShowGallery = { navController.popBackStack() },
+            onImageCaptured = {
+                navController.popBackStackWithResult(androidGalleryNavResultCallbackKey, it)
+            }
+        )
+
+        loadImageLinkGraph(
+            onNavigationIconClick = { navController.popBackStack() },
+            onSaveClick = {
+
+            }
+        )
     }
 }
 

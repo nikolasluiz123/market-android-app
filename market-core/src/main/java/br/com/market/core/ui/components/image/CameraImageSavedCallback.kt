@@ -25,9 +25,8 @@ class CameraImageSavedCallback(
             arrayOf(savedUri.toFile().absolutePath),
             arrayOf(mimeType)
         ) { _, uri ->
-
+            onImageCaptured(uri, false)
         }
-        onImageCaptured(savedUri, false)
     }
 
     override fun onError(exception: ImageCaptureException) {

@@ -1,5 +1,6 @@
 package br.com.market.storage.ui.screens.product
 
+import android.net.Uri
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -7,6 +8,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -17,9 +19,12 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.core.theme.MarketTheme
+import br.com.market.core.ui.components.DialogMessage
 import br.com.market.core.ui.components.MarketBottomAppBar
 import br.com.market.core.ui.components.OutlinedTextFieldValidation
 import br.com.market.core.ui.components.SimpleMarketTopAppBar
+import br.com.market.core.ui.components.bottomsheet.BottomSheetLoadImage
+import br.com.market.core.ui.components.bottomsheet.IEnumOptionsBottomSheet
 import br.com.market.core.ui.components.buttons.*
 import br.com.market.core.ui.components.image.HorizontalGallery
 import br.com.market.storage.R
@@ -31,7 +36,8 @@ import kotlinx.coroutines.launch
 fun ProductScreen(
     viewModel: ProductViewModel,
     onBackClick: () -> Unit,
-    onStorageButtonClick: () -> Unit = { }
+    onStorageButtonClick: () -> Unit,
+    onBottomSheetLoadImageItemClick: (IEnumOptionsBottomSheet, (Uri) -> Unit) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -41,7 +47,8 @@ fun ProductScreen(
         onToggleActive = {
 
         },
-        onStorageButtonClick = onStorageButtonClick
+        onStorageButtonClick = onStorageButtonClick,
+        onBottomSheetLoadImageItemClick = onBottomSheetLoadImageItemClick
     )
 }
 
@@ -51,7 +58,8 @@ fun ProductScreen(
     state: ProductUIState = ProductUIState(),
     onBackClick: () -> Unit = { },
     onToggleActive: () -> Unit = { },
-    onStorageButtonClick: () -> Unit = { }
+    onStorageButtonClick: () -> Unit = { },
+    onBottomSheetLoadImageItemClick: (IEnumOptionsBottomSheet, (Uri) -> Unit) -> Unit = { _, _ -> }
 ) {
     var isEditMode by remember(state.productDomain) {
         mutableStateOf(state.productDomain != null)
@@ -132,17 +140,16 @@ fun ProductScreen(
         ConstraintLayout(
             Modifier
                 .padding(padding)
-                .verticalScroll(scrollState)) {
+                .verticalScroll(scrollState)
+        ) {
             val (galleryRef, inputNameRef, inputPriceRef, inputQuantityRef, inputUnityRef) = createRefs()
             createHorizontalChain(inputQuantityRef, inputUnityRef)
 
+            var openBottomSheet by rememberSaveable { mutableStateOf(false) }
+
             HorizontalGallery(
-                images = listOf(
-                    "https://images.pexels.com/photos/327098/pexels-photo-327098.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                    "https://images.pexels.com/photos/2294477/pexels-photo-2294477.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                    "https://images.pexels.com/photos/3584910/pexels-photo-3584910.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                ),
-                onLoadClick = { },
+                images = state.images,
+                onLoadClick = { openBottomSheet = true },
                 modifier = Modifier
                     .constrainAs(galleryRef) {
                         start.linkTo(parent.start)
@@ -203,13 +210,15 @@ fun ProductScreen(
                     capitalization = KeyboardCapitalization.Words
                 ),
                 enabled = isActive,
-                modifier = Modifier.constrainAs(inputQuantityRef) {
-                    top.linkTo(inputPriceRef.bottom)
-                    start.linkTo(parent.start)
+                modifier = Modifier
+                    .constrainAs(inputQuantityRef) {
+                        top.linkTo(inputPriceRef.bottom)
+                        start.linkTo(parent.start)
 
-                    width = Dimension.fillToConstraints
-                    horizontalChainWeight = 0.5F
-                }.padding(horizontal = 8.dp)
+                        width = Dimension.fillToConstraints
+                        horizontalChainWeight = 0.5F
+                    }
+                    .padding(horizontal = 8.dp)
             )
 
             var expanded by remember { mutableStateOf(false) }
@@ -219,13 +228,15 @@ fun ProductScreen(
             ExposedDropdownMenuBox(
                 expanded = expanded,
                 onExpandedChange = { expanded = !expanded },
-                modifier = Modifier.constrainAs(inputUnityRef) {
-                    top.linkTo(inputPriceRef.bottom)
-                    end.linkTo(parent.end)
+                modifier = Modifier
+                    .constrainAs(inputUnityRef) {
+                        top.linkTo(inputPriceRef.bottom)
+                        end.linkTo(parent.end)
 
-                    width = Dimension.fillToConstraints
-                    horizontalChainWeight = 0.5F
-                }.padding(end = 8.dp)
+                        width = Dimension.fillToConstraints
+                        horizontalChainWeight = 0.5F
+                    }
+                    .padding(end = 8.dp)
             ) {
                 OutlinedTextFieldValidation(
                     value = selectedText,
@@ -233,11 +244,13 @@ fun ProductScreen(
                     onValueChange = {},
                     readOnly = true,
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                    modifier = Modifier.menuAnchor().fillMaxWidth()
+                    modifier = Modifier
+                        .menuAnchor()
+                        .fillMaxWidth()
                 )
 
                 ExposedDropdownMenu(expanded = expanded, onDismissRequest = { /*TODO*/ }) {
-                    units.forEach {item ->
+                    units.forEach { item ->
                         DropdownMenuItem(
                             text = { Text(text = item) },
                             onClick = {
@@ -247,6 +260,32 @@ fun ProductScreen(
                         )
                     }
                 }
+            }
+
+            var showDialogMaxImages by rememberSaveable { mutableStateOf(false) }
+
+            DialogMessage(
+                title = "Atenção",
+                show = showDialogMaxImages,
+                onDismissRequest = { showDialogMaxImages = false },
+                message = "São permitidas apenas 3 fotos por produto. Para alterar alguma das fotos você deve removê-la."
+            )
+
+            if (openBottomSheet) {
+                BottomSheetLoadImage(
+                    onDismissRequest = {
+                        openBottomSheet = false
+                    },
+                    onItemClickListener = {
+                        onBottomSheetLoadImageItemClick(it) { uri ->
+                            if (state.images.size < 3) {
+                                state.images.add(uri)
+                            } else {
+                                showDialogMaxImages = true
+                            }
+                        }
+                    }
+                )
             }
         }
     }

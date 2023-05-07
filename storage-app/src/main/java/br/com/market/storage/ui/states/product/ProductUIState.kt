@@ -1,5 +1,6 @@
 package br.com.market.storage.ui.states.product
 
+import android.net.Uri
 import br.com.market.domain.BrandDomain
 import br.com.market.domain.ProductDomain
 
@@ -22,4 +23,6 @@ data class ProductUIState(
     val productUnit: String = "",
     val onProductUnitChange: (String) -> Unit = { },
     val productUnitErrorMessage: String = "",
+
+    var images: MutableList<Uri> = mutableListOf()
 )
