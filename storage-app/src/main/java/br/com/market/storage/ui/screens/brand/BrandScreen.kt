@@ -25,7 +25,7 @@ fun BrandScreen(
     viewModel: BrandViewModel,
     onBackClick: () -> Unit,
     onNavToBrandLov: (UUID, (UUID) -> Unit) -> Unit,
-    onFabAddProductClick: (UUID) -> Unit
+    onFabAddProductClick: (UUID, UUID) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -55,7 +55,7 @@ fun BrandScreen(
     onToggleActive: () -> Unit = { },
     onSaveBrandClick: (Boolean) -> Unit = { },
     onNavToBrandLov: (UUID) -> Unit = { },
-    onFabAddProductClick: (UUID) -> Unit = { }
+    onFabAddProductClick: (UUID, UUID) -> Unit = { _, _ -> }
 ) {
     var isEditMode by remember(state.brandDomain) {
         mutableStateOf(state.brandDomain != null)
@@ -151,7 +151,7 @@ fun BrandScreen(
                     1 -> {
                         BrandScreenTabProduct(
                             onFabAddClick = {
-                                onFabAddProductClick(state.brandDomain?.id!!)
+                                onFabAddProductClick(state.categoryDomain?.id!!, state.brandDomain?.id!!)
                             }
                         )
                     }

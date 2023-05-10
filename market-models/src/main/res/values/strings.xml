@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="enum_unit_label_kilo">Quilo</string>
+    <string name="enum_unit_label_gram">Grama</string>
+    <string name="enum_unit_label_unity">Unidade</string>
+    <string name="enum_unit_label_liter">Litro</string>
+    <string name="enum_unit_label_milliliter">Mililitro</string>
+</resources>

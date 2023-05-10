@@ -1,5 +1,6 @@
 package br.com.market.storage.ui.screens.product
 
+import android.content.Context
 import android.net.Uri
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -10,6 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -18,6 +20,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import br.com.market.core.extensions.parseToDouble
+import br.com.market.core.extensions.readBytes
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.DialogMessage
 import br.com.market.core.ui.components.MarketBottomAppBar
@@ -27,9 +31,12 @@ import br.com.market.core.ui.components.bottomsheet.BottomSheetLoadImage
 import br.com.market.core.ui.components.bottomsheet.IEnumOptionsBottomSheet
 import br.com.market.core.ui.components.buttons.*
 import br.com.market.core.ui.components.image.HorizontalGallery
+import br.com.market.domain.ProductDomain
+import br.com.market.enums.EnumUnit
 import br.com.market.storage.R
 import br.com.market.storage.ui.states.product.ProductUIState
 import br.com.market.storage.ui.viewmodels.product.ProductViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
@@ -48,7 +55,10 @@ fun ProductScreen(
 
         },
         onStorageButtonClick = onStorageButtonClick,
-        onBottomSheetLoadImageItemClick = onBottomSheetLoadImageItemClick
+        onBottomSheetLoadImageItemClick = onBottomSheetLoadImageItemClick,
+        onSaveProductClick = {
+            viewModel.saveProduct()
+        }
     )
 }
 
@@ -59,7 +69,8 @@ fun ProductScreen(
     onBackClick: () -> Unit = { },
     onToggleActive: () -> Unit = { },
     onStorageButtonClick: () -> Unit = { },
-    onBottomSheetLoadImageItemClick: (IEnumOptionsBottomSheet, (Uri) -> Unit) -> Unit = { _, _ -> }
+    onBottomSheetLoadImageItemClick: (IEnumOptionsBottomSheet, (Uri) -> Unit) -> Unit = { _, _ -> },
+    onSaveProductClick: () -> Unit = { }
 ) {
     var isEditMode by remember(state.productDomain) {
         mutableStateOf(state.productDomain != null)
@@ -71,6 +82,7 @@ fun ProductScreen(
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -121,7 +133,7 @@ fun ProductScreen(
                 floatingActionButton = {
                     FloatingActionButtonSave(
                         onClick = {
-
+                            isEditMode = saveProduct(state, isActive, isEditMode, onSaveProductClick, scope, snackbarHostState, context)
                         }
                     )
                 }
@@ -185,9 +197,8 @@ fun ProductScreen(
                 error = state.productPriceErrorMessage,
                 label = { Text(text = stringResource(R.string.product_screen_label_price)) },
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next,
-                    capitalization = KeyboardCapitalization.Words
+                    keyboardType = KeyboardType.Decimal,
+                    imeAction = ImeAction.Next
                 ),
                 enabled = isActive,
                 modifier = Modifier.constrainAs(inputPriceRef) {
@@ -205,9 +216,8 @@ fun ProductScreen(
                 error = state.productQuantityErrorMessage,
                 label = { Text(text = stringResource(R.string.product_screen_label_quantity)) },
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next,
-                    capitalization = KeyboardCapitalization.Words
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Next
                 ),
                 enabled = isActive,
                 modifier = Modifier
@@ -222,8 +232,7 @@ fun ProductScreen(
             )
 
             var expanded by remember { mutableStateOf(false) }
-            val units = listOf("Quilo", "Grama", "Unidade", "Litro", "Mililitro")
-            var selectedText by remember { mutableStateOf("") }
+            val units = EnumUnit.values()
 
             ExposedDropdownMenuBox(
                 expanded = expanded,
@@ -239,9 +248,9 @@ fun ProductScreen(
                     .padding(end = 8.dp)
             ) {
                 OutlinedTextFieldValidation(
-                    value = selectedText,
+                    value = state.productQuantityUnit?.let { stringResource(id = it.labelResId) } ?: "",
                     label = { Text(text = stringResource(R.string.product_screen_label_measure)) },
-                    onValueChange = {},
+                    onValueChange = { },
                     readOnly = true,
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                     modifier = Modifier
@@ -250,11 +259,11 @@ fun ProductScreen(
                 )
 
                 ExposedDropdownMenu(expanded = expanded, onDismissRequest = { /*TODO*/ }) {
-                    units.forEach { item ->
+                    units.forEach { enumUnit ->
                         DropdownMenuItem(
-                            text = { Text(text = item) },
+                            text = { Text(text = stringResource(id = enumUnit.labelResId)) },
                             onClick = {
-                                selectedText = item
+                                state.productQuantityUnit = enumUnit
                                 expanded = false
                             }
                         )
@@ -289,6 +298,45 @@ fun ProductScreen(
             }
         }
     }
+}
+private fun saveProduct(
+    state: ProductUIState,
+    isActive: Boolean,
+    isEditMode: Boolean,
+    onSaveProductClick: () -> Unit,
+    scope: CoroutineScope,
+    snackbarHostState: SnackbarHostState,
+    context: Context
+): Boolean {
+    if (state.onValidate() && isActive) {
+        val productImages = state.images.map { context.readBytes(it)!! }.toMutableList()
+
+        state.productDomain = if (isEditMode) {
+            state.productDomain?.copy(
+                name = state.productName,
+                price = state.productPrice.parseToDouble(),
+                quantity = state.productQuantity.toInt(),
+                quantityUnit = state.productQuantityUnit,
+                images = productImages
+            )
+        } else {
+            ProductDomain(
+                name = state.productName,
+                price = state.productPrice.parseToDouble(),
+                quantity = state.productQuantity.toInt(),
+                quantityUnit = state.productQuantityUnit,
+                images = productImages
+            )
+        }
+
+        onSaveProductClick()
+
+        scope.launch {
+            snackbarHostState.showSnackbar("Produto Salvo com Sucesso")
+        }
+    }
+
+    return state.productDomain != null
 }
 
 @Preview

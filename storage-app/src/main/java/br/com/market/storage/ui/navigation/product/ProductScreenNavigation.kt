@@ -8,6 +8,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import br.com.market.core.ui.components.bottomsheet.IEnumOptionsBottomSheet
 import br.com.market.storage.ui.navigation.brand.argumentBrandId
+import br.com.market.storage.ui.navigation.category.argumentCategoryId
 import br.com.market.storage.ui.screens.product.ProductScreen
 import br.com.market.storage.ui.viewmodels.product.ProductViewModel
 import java.util.*
@@ -20,7 +21,7 @@ fun NavGraphBuilder.productScreen(
     onStorageButtonClick: () -> Unit = { },
     onBottomSheetLoadImageItemClick: (IEnumOptionsBottomSheet, (Uri) -> Unit) -> Unit
 ) {
-    composable(route = "$productScreenRoute?$argumentBrandId={$argumentBrandId}&$argumentProductId={$argumentProductId}") {
+    composable(route = "$productScreenRoute?$argumentCategoryId={$argumentCategoryId}&$argumentBrandId={$argumentBrandId}&$argumentProductId={$argumentProductId}") {
         val viewModel = hiltViewModel<ProductViewModel>()
 
         ProductScreen(
@@ -32,10 +33,13 @@ fun NavGraphBuilder.productScreen(
     }
 }
 
-fun NavController.navigateToProductScreen(brandId: UUID, productId: UUID, navOptions: NavOptions? = null) {
-    navigate(route = "$productScreenRoute?$argumentBrandId={$brandId}&$argumentProductId={$productId}", navOptions = navOptions)
+fun NavController.navigateToProductScreen(categoryId: UUID, brandId: UUID, productId: UUID, navOptions: NavOptions? = null) {
+    navigate(
+        route = "$productScreenRoute?$argumentCategoryId={$categoryId}&$argumentBrandId={$brandId}&$argumentProductId={$productId}",
+        navOptions = navOptions
+    )
 }
 
-fun NavController.navigateToProductScreen(brandId: UUID, navOptions: NavOptions? = null) {
-    navigate(route = "$productScreenRoute?$argumentBrandId={$brandId}", navOptions = navOptions)
+fun NavController.navigateToProductScreen(categoryId: UUID, brandId: UUID, navOptions: NavOptions? = null) {
+    navigate(route = "$productScreenRoute?$argumentCategoryId={$categoryId}&$argumentBrandId={$brandId}", navOptions = navOptions)
 }

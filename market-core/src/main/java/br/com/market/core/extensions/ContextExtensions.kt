@@ -1,10 +1,12 @@
 package br.com.market.core.extensions
 
 import android.content.Context
+import android.net.Uri
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import br.com.market.core.R
 import java.io.File
+import java.io.IOException
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -35,3 +37,7 @@ suspend fun Context.getCameraProvider(): ProcessCameraProvider = suspendCoroutin
         }, ContextCompat.getMainExecutor(this))
     }
 }
+
+@Throws(IOException::class)
+fun Context.readBytes(uri: Uri): ByteArray? =
+    contentResolver.openInputStream(uri)?.use { it.buffered().readBytes() }

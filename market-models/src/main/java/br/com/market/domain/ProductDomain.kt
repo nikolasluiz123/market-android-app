@@ -14,6 +14,6 @@ data class ProductDomain(
     var name: String? = null,
     var price: Double? = null,
     var quantity: Int? = null,
-    var unit: EnumUnit? = null,
+    var quantityUnit: EnumUnit? = null,
     var images: MutableList<ByteArray>
 ): BaseDomain()

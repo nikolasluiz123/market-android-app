@@ -97,7 +97,9 @@ fun StorageAppNavHost(
                     callback = callback
                 )
             },
-            onFabAddProductClick = { navController.navigateToProductScreen(brandId = it) }
+            onFabAddProductClick = { categoryId, brandId ->
+                navController.navigateToProductScreen(categoryId = categoryId, brandId = brandId)
+            }
         )
 
         productScreen(

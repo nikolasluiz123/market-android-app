@@ -6,6 +6,8 @@ import androidx.room.TypeConverters
 import br.com.market.localdataaccess.converters.RoomTypeConverters
 import br.com.market.localdataaccess.dao.BrandDAO
 import br.com.market.localdataaccess.dao.CategoryDAO
+import br.com.market.localdataaccess.dao.ProductDAO
+import br.com.market.localdataaccess.dao.ProductImageDAO
 import br.com.market.models.*
 
 /**
@@ -41,5 +43,9 @@ abstract class AppDatabase : RoomDatabase() {
      * @author Nikolas Luiz Schmitt
      */
     abstract fun categoryDAO(): CategoryDAO
+
+    abstract fun productDAO(): ProductDAO
+
+    abstract fun productImageDAO(): ProductImageDAO
 
 }
