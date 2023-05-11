@@ -1,5 +1,6 @@
 package br.com.market.storage.ui.screens.brand
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
@@ -24,9 +25,11 @@ fun ProductListCard(
     quantity: Int,
     quantityUnit: EnumUnit,
     image: Any,
-    active: Boolean
+    active: Boolean,
+    onItemClick: () -> Unit = { }
 ) {
     Card(
+        modifier  = Modifier.clickable { onItemClick() },
         elevation = CardDefaults.cardElevation(8.dp),
         colors = CardDefaults.cardColors(
             containerColor = if (active) colorCardActive else colorCardInactive

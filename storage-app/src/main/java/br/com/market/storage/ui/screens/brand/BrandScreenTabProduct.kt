@@ -12,9 +12,14 @@ import br.com.market.core.ui.components.PagedVerticalListComponent
 import br.com.market.core.ui.components.buttons.FloatingActionButtonAdd
 import br.com.market.core.ui.components.buttons.IconButtonInactivate
 import br.com.market.storage.ui.states.brand.BrandUIState
+import java.util.*
 
 @Composable
-fun BrandScreenTabProduct(state: BrandUIState, onFabAddClick: () -> Unit = { }) {
+fun BrandScreenTabProduct(
+    state: BrandUIState,
+    onFabAddClick: () -> Unit = { },
+    onProductClick: (UUID) -> Unit = { }
+) {
     val pagingData = state.products.collectAsLazyPagingItems()
 
     Scaffold(
@@ -40,7 +45,10 @@ fun BrandScreenTabProduct(state: BrandUIState, onFabAddClick: () -> Unit = { }) 
                     quantity = it.productQuantity,
                     quantityUnit = it.productQuantityUnit,
                     image = it.imageBytes ?: it.imageUrl!!,
-                    active = it.productActive
+                    active = it.productActive,
+                    onItemClick = {
+                        onProductClick(it.productId)
+                    }
                 )
             }
         }

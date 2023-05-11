@@ -1,6 +1,5 @@
 package br.com.market.storage.ui.states.product
 
-import android.net.Uri
 import br.com.market.core.ui.states.IValidationUIState
 import br.com.market.domain.BrandDomain
 import br.com.market.domain.ProductDomain
@@ -25,7 +24,7 @@ data class ProductUIState(
     var productQuantityUnit: EnumUnit? = null,
     val productQuantityUnitErrorMessage: String = "",
 
-    var images: MutableList<Uri> = mutableListOf(),
+    var images: MutableList<Any> = mutableListOf(),
 
     override val onValidate: () -> Boolean = { false }
 ): IValidationUIState

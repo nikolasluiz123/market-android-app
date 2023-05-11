@@ -3,6 +3,7 @@ package br.com.market.storage.ui.viewmodels.product
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import br.com.market.core.extensions.format
 import br.com.market.core.extensions.navParamToString
 import br.com.market.storage.repository.ProductRepository
 import br.com.market.storage.repository.brand.BrandRepository
@@ -31,6 +32,7 @@ class ProductViewModel @Inject constructor(
     private var categoryId = savedStateHandle.get<String>(argumentCategoryId)
     private var brandId = savedStateHandle.get<String>(argumentBrandId)
     private var productId = savedStateHandle.get<String>(argumentProductId)
+
     init {
         _uiState.update { currentState ->
             currentState.copy(
@@ -44,15 +46,26 @@ class ProductViewModel @Inject constructor(
             )
         }
 
+        productId?.navParamToString()?.let { id ->
+            viewModelScope.launch {
+                val productDomain = productRepository.findProductDomain(UUID.fromString(id))
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        productDomain = productDomain,
+                        productName = productDomain.name!!,
+                        productPrice = productDomain.price!!.format(),
+                        productQuantity = productDomain.quantity!!.toString(),
+                        productQuantityUnit = productDomain.quantityUnit!!,
+                        images = productDomain.images.toMutableList()
+                    )
+                }
+            }
+        }
+
         brandId?.navParamToString()?.let { id ->
             viewModelScope.launch {
                 val brandDomain = brandRepository.findById(UUID.fromString(id))
-
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        brandDomain = brandDomain
-                    )
-                }
+                _uiState.update { currentState -> currentState.copy(brandDomain = brandDomain) }
             }
         }
     }

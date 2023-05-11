@@ -309,7 +309,14 @@ private fun saveProduct(
     context: Context
 ): Boolean {
     if (state.onValidate() && isActive) {
-        val productImages = state.images.map { context.readBytes(it)!! }.toMutableList()
+        val productImages = state.images.map {
+            when(it) {
+                is Uri -> context.readBytes(it)!!
+                is ByteArray -> it
+                else -> throw Exception("Tipo inválido de imagem")
+            }
+
+        }.toMutableList()
 
         state.productDomain = if (isEditMode) {
             state.productDomain?.copy(

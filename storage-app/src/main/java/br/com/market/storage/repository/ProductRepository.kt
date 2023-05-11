@@ -31,8 +31,24 @@ class ProductRepository @Inject constructor(
         ).flow
     }
 
+    suspend fun findProductDomain(productId: UUID): ProductDomain {
+        val product = productDAO.findProductById(productId)
+        val images = productImageDAO.findProductImagesBy(productId)
+
+        return ProductDomain(
+            id = product.id,
+            active = product.active,
+            synchronized = product.synchronized,
+            name = product.name,
+            price = product.price,
+            quantity = product.quantity,
+            quantityUnit = product.quantityUnit,
+            images = images.map { it.bytes!! }.toMutableList()
+        )
+    }
+
     suspend fun save(categoryId: UUID, brandId: UUID, domain: ProductDomain): PersistenceResponse {
-        val product = if(domain.id != null) {
+        val product = if (domain.id != null) {
             productDAO.findProductById(productId = domain.id!!).copy(
                 name = domain.name!!,
                 price = domain.price!!,

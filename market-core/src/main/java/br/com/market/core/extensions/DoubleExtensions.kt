@@ -13,3 +13,8 @@ fun Double.formatToCurrency(): String {
     val formatter = DecimalFormat.getCurrencyInstance()
     return formatter.format(this)
 }
+
+fun Double.format(): String {
+    val formatter = DecimalFormat.getInstance()
+    return formatter.format(this)
+}

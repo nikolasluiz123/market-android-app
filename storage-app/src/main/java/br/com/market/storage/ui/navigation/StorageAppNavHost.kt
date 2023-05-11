@@ -63,29 +63,23 @@ fun StorageAppNavHost(
                     }
                 })
             },
-            onNavigateToRegisterUserScreen = { navController.navigateToRegisterUserScreen() }
+            onNavigateToRegisterUserScreen = navController::navigateToRegisterUserScreen
         )
 
         registerUserGraph(
-            onNavigateToBack = { navController.popBackStack() },
-            onNavigateToLoginScreen = { navController.navigateToLoginScreen() }
+            onNavigateToBack = navController::popBackStack,
+            onNavigateToLoginScreen = navController::navigateToLoginScreen
         )
 
         categorySearchScreen(
-            onAddCategoryClick = { navController.navigateToCategoryScreen() },
-            onCategoryClick = {
-                navController.navigateToCategoryScreen(categoryId = it)
-            }
+            onAddCategoryClick = navController::navigateToCategoryScreen,
+            onCategoryClick = navController::navigateToCategoryScreen
         )
 
         categoryScreen(
             onBackClick = { navController.popBackStack() },
-            onFabAddBrandClick = { categoryId ->
-                navController.navigateToBrandScreen(categoryId = categoryId)
-            },
-            onBrandItemClick = { categoryId, brandId ->
-                navController.navigateToBrandScreen(categoryId = categoryId, brandId = brandId)
-            }
+            onFabAddBrandClick = navController::navigateToBrandScreen,
+            onBrandItemClick = navController::navigateToBrandScreen
         )
 
         brandScreen(
@@ -97,13 +91,12 @@ fun StorageAppNavHost(
                     callback = callback
                 )
             },
-            onFabAddProductClick = { categoryId, brandId ->
-                navController.navigateToProductScreen(categoryId = categoryId, brandId = brandId)
-            }
+            onFabAddProductClick = navController::navigateToProductScreen,
+            onProductClick = navController::navigateToProductScreen
         )
 
         productScreen(
-            onBackClick = { navController.popBackStack() },
+            onBackClick = navController::popBackStack,
             onStorageButtonClick = {
 
             },
@@ -164,7 +157,7 @@ fun StorageAppNavHost(
         )
 
         loadImageLinkGraph(
-            onNavigationIconClick = { navController.popBackStack() },
+            onNavigationIconClick = navController::popBackStack,
             onSaveClick = {
 
             }
