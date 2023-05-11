@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import br.com.market.core.extensions.navParamToString
 import br.com.market.storage.R
 import br.com.market.storage.repository.CategoryRepository
+import br.com.market.storage.repository.ProductRepository
 import br.com.market.storage.repository.brand.BrandRepository
 import br.com.market.storage.ui.navigation.brand.argumentBrandId
 import br.com.market.storage.ui.navigation.category.argumentCategoryId
@@ -25,7 +26,8 @@ class BrandViewModel @Inject constructor(
     @ApplicationContext context: Context,
     savedStateHandle: SavedStateHandle,
     private val categoryRepository: CategoryRepository,
-    private val brandRepository: BrandRepository
+    private val brandRepository: BrandRepository,
+    private val productRepository: ProductRepository
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<BrandUIState> = MutableStateFlow(BrandUIState())
@@ -37,6 +39,10 @@ class BrandViewModel @Inject constructor(
     init {
         _uiState.update { currentState ->
             currentState.copy(
+                products = productRepository.findProducts(
+                    categoryId = UUID.fromString(categoryId?.navParamToString()!!),
+                    brandId = UUID.fromString(brandId?.navParamToString()!!)
+                ),
                 onBrandNameChange = {
                     _uiState.value = _uiState.value.copy(brandName = it)
                 },

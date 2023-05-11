@@ -12,6 +12,7 @@ import androidx.constraintlayout.compose.Dimension
 import br.com.market.core.extensions.formatToCurrency
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.theme.colorCardActive
+import br.com.market.core.theme.colorCardInactive
 import br.com.market.core.ui.components.CoilImageViewer
 import br.com.market.enums.EnumUnit
 import br.com.market.storage.extensions.formatQuantityIn
@@ -22,13 +23,21 @@ fun ProductListCard(
     price: Double,
     quantity: Int,
     quantityUnit: EnumUnit,
-    image: Any
+    image: Any,
+    active: Boolean
 ) {
-    Card(colors = CardDefaults.cardColors(containerColor = colorCardActive)) {
+    Card(
+        elevation = CardDefaults.cardElevation(8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (active) colorCardActive else colorCardInactive
+        )
+    ) {
         ConstraintLayout(
             Modifier
                 .fillMaxWidth()
-                .padding(start = 8.dp)) {
+                .padding(start = 8.dp)
+
+        ) {
             val (labelNameRef, nameRef,
                 labelPriceRef, priceRef,
                 labelQuantityRef, quantityRef, imageRef) = createRefs()
@@ -140,11 +149,12 @@ fun ProductListCardPreview() {
     MarketTheme {
         Surface {
             ProductListCard(
-                "Wafer de Chocolate com Avelã",
-                4.99,
-                110,
-                EnumUnit.GRAM,
-                0
+                name = "Wafer de Chocolate com Avelã",
+                price = 4.99,
+                quantity = 110,
+                quantityUnit = EnumUnit.GRAM,
+                image = 0,
+                active = true
             )
         }
     }

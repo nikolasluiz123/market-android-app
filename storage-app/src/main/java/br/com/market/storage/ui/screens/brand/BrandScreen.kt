@@ -150,6 +150,7 @@ fun BrandScreen(
                     }
                     1 -> {
                         BrandScreenTabProduct(
+                            state = state,
                             onFabAddClick = {
                                 onFabAddProductClick(state.categoryDomain?.id!!, state.brandDomain?.id!!)
                             }
