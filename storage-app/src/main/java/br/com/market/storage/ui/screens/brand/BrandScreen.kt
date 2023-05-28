@@ -1,15 +1,32 @@
 package br.com.market.storage.ui.screens.brand
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PageSize
+import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.core.theme.MarketTheme
@@ -88,9 +105,9 @@ fun BrandScreen(
                 stringResource(R.string.brand_screen_label_tab_product)
             )
 
-            val pagerState = rememberPagerState()
+            val pagerState = rememberPagerState { 2 }
             val coroutineScope = rememberCoroutineScope()
-            var tabIndex by remember { mutableStateOf(0) }
+            var tabIndex by remember { mutableIntStateOf(0) }
 
             TabRow(
                 modifier = Modifier.constrainAs(tabRowRef) {
@@ -120,8 +137,6 @@ fun BrandScreen(
             }
 
             HorizontalPager(
-                pageCount = tabTitles.size,
-                state = pagerState,
                 modifier = Modifier
                     .constrainAs(horizontalPagerRef) {
                         start.linkTo(parent.start)
@@ -131,12 +146,23 @@ fun BrandScreen(
 
                         height = Dimension.fillToConstraints
                     },
+                state = pagerState,
+                pageSpacing = 0.dp,
                 userScrollEnabled = when (tabIndex) {
                     0 -> true
                     1 -> isEditMode
                     else -> false
-                }
-            ) { index ->
+                },
+                reverseLayout = false,
+                contentPadding = PaddingValues(0.dp),
+                beyondBoundsPageCount = 0,
+                pageSize = PageSize.Fill,
+                flingBehavior = PagerDefaults.flingBehavior(state = pagerState),
+                key = null,
+                pageNestedScrollConnection = PagerDefaults.pageNestedScrollConnection(
+                    Orientation.Horizontal
+                )
+            ) {index ->
                 tabIndex = index
 
                 when (tabIndex) {
