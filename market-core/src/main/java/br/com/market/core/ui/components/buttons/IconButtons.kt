@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -67,10 +68,18 @@ fun IconButtonMoreVert(onClick: () -> Unit = { }) {
  * @author Nikolas Luiz Schmitt
  */
 @Composable
-fun IconButtonClose(onClick: () -> Unit = { }) {
-    IconButton(onClick = onClick) {
+fun IconButtonClose(
+    buttonModifier: Modifier = Modifier,
+    iconModifier: Modifier = Modifier,
+    onClick: () -> Unit = { },
+    iconColor: Color = Color.Black
+) {
+    IconButton(modifier = buttonModifier, onClick = onClick) {
         Icon(
-            imageVector = Icons.Default.Close, contentDescription = stringResource(R.string.label_limpar_pesquisa)
+            modifier = iconModifier,
+            imageVector = Icons.Default.Close,
+            contentDescription = stringResource(R.string.label_limpar_pesquisa),
+            tint = iconColor
         )
     }
 }

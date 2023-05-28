@@ -17,10 +17,10 @@ import java.util.*
 )
 data class Category(
     @PrimaryKey
-    override var id: UUID = UUID.randomUUID(),
+    override var id: String = UUID.randomUUID().toString(),
     var name: String? = null,
     override var synchronized: Boolean = false,
     override var active: Boolean = true,
     @ColumnInfo("company_id")
-    override var companyId: UUID? = null
+    override var companyId: String? = null
 ): CompanyModel()

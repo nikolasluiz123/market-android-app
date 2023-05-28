@@ -22,15 +22,17 @@ import java.util.*
 )
 data class ProductImage(
     @PrimaryKey
-    override var id: UUID = UUID.randomUUID(),
+    override var id: String = UUID.randomUUID().toString(),
     var bytes: ByteArray? = null,
     var imageUrl: String? = null,
     @ColumnInfo(name = "product_id")
-    var productId: UUID? = null,
+    var productId: String? = null,
+    @ColumnInfo(defaultValue = "0")
+    var principal: Boolean = false,
     override var synchronized: Boolean = false,
     override var active: Boolean = true,
     @ColumnInfo("company_id")
-    override var companyId: UUID? = null
+    override var companyId: String? = null
 ) : CompanyModel() {
 
     override fun equals(other: Any?): Boolean {

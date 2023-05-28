@@ -5,7 +5,7 @@ import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.market.domain.UserDomain
-import br.com.market.servicedataaccess.responses.AuthenticationResponse
+import br.com.market.servicedataaccess.responses.types.AuthenticationResponse
 import br.com.market.storage.R
 import br.com.market.storage.repository.UserRepository
 import br.com.market.storage.ui.states.LoginUiState

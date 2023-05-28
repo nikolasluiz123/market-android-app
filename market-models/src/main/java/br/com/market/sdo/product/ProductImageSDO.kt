@@ -1,15 +1,15 @@
 package br.com.market.sdo.product
 
 import br.com.market.sdo.base.BaseSDO
-import java.util.*
 
 data class ProductImageSDO(
-    override var localId: UUID,
+    override var localId: String,
     override var companyId: Long? = null,
     override var active: Boolean = true,
     var bytes: ByteArray? = null,
     var imageUrl: String? = null,
-    var productLocalId: UUID? = null
+    var productLocalId: String? = null,
+    var principal: Boolean = false
 ): BaseSDO() {
 
     override fun equals(other: Any?): Boolean {

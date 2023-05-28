@@ -1,4 +1,4 @@
-package br.com.market.core.ui.components
+package br.com.market.core.ui.components.dialog
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme

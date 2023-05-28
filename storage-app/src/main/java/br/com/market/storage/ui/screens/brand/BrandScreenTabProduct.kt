@@ -12,13 +12,12 @@ import br.com.market.core.ui.components.PagedVerticalListComponent
 import br.com.market.core.ui.components.buttons.FloatingActionButtonAdd
 import br.com.market.core.ui.components.buttons.IconButtonInactivate
 import br.com.market.storage.ui.states.brand.BrandUIState
-import java.util.*
 
 @Composable
 fun BrandScreenTabProduct(
     state: BrandUIState,
     onFabAddClick: () -> Unit = { },
-    onProductClick: (UUID) -> Unit = { }
+    onProductClick: (String) -> Unit = { }
 ) {
     val pagingData = state.products.collectAsLazyPagingItems()
 

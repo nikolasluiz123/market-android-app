@@ -59,4 +59,8 @@
     <string name="product_screen_label_price">Preço</string>
     <string name="product_screen_label_quantity">Quantidade</string>
     <string name="product_screen_label_measure">Medida</string>
+    <string name="product_screen_product_name_required_validation_message">O nome é obrigatório</string>
+    <string name="product_screen_product_price_required_validation_message">O preço é obrigatório</string>
+    <string name="product_screen_product_quantity_required_validation_message">A quantidade é obrigatória</string>
+    <string name="product_screen_product_quantity_unity_required_validation_message">A medida é obrigatória</string>
 </resources>

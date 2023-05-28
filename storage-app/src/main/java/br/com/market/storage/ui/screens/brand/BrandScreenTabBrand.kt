@@ -28,7 +28,6 @@ import br.com.market.storage.ui.screens.category.CategoryScreenTabCategory
 import br.com.market.storage.ui.states.brand.BrandUIState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.util.*
 
 @Composable
 fun BrandScreenTaBrand(
@@ -37,7 +36,7 @@ fun BrandScreenTaBrand(
     onToggleActive: () -> Unit = { },
     onSaveBrandClick: (Boolean) -> Unit = { },
     isEdit: Boolean = false,
-    onNavToBrandLov: (UUID) -> Unit
+    onNavToBrandLov: (String) -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()

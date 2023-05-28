@@ -52,7 +52,7 @@ abstract class CategoryDAO {
      * @author Nikolas Luiz Schmitt
      */
     @Query("select * from categories where id = :categoryId")
-    abstract suspend fun findById(categoryId: UUID): Category
+    abstract suspend fun findById(categoryId: String): Category
 
     /**
      * Função para atualizar a flag [active] de uma categoria com o [categoryId] informado
@@ -64,7 +64,7 @@ abstract class CategoryDAO {
      * @author Nikolas Luiz Schmitt
      */
     @Query("update categories set active = :active, synchronized = :sync where id = :categoryId ")
-    abstract suspend fun updateActive(categoryId: UUID, active: Boolean, sync: Boolean)
+    abstract suspend fun updateActive(categoryId: String, active: Boolean, sync: Boolean)
 
     /**
      * Função que facilita a mudança de ativo e inativo.
@@ -85,6 +85,6 @@ abstract class CategoryDAO {
      *
      * @author Nikolas Luiz Schmitt
      */
-    @Query("select * from categories where synchronized = false")
+    @Query("select * from categories where synchronized = 0")
     abstract suspend fun findCategoriesNotSynchronized(): List<Category>
 }

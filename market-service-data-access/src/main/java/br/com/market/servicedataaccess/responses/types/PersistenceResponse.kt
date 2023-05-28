@@ -1,4 +1,4 @@
-package br.com.market.servicedataaccess.responses
+package br.com.market.servicedataaccess.responses.types
 
 import java.net.HttpURLConnection
 import java.util.*

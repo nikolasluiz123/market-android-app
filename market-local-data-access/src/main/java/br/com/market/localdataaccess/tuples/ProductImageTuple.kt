@@ -1,15 +1,14 @@
 package br.com.market.localdataaccess.tuples
 
 import br.com.market.enums.EnumUnit
-import java.util.*
 
 data class ProductImageTuple(
-    val productId: UUID,
+    val productId: String,
     val productName: String,
     val productPrice: Double,
-    val productQuantity: Int,
+    val productQuantity: Double,
     val productQuantityUnit: EnumUnit,
-    val categoryBrandId: UUID,
+    val categoryBrandId: String,
     val productActive: Boolean,
     val imageBytes: ByteArray?,
     val imageUrl: String?

@@ -1,4 +1,4 @@
-package br.com.market.servicedataaccess.responses
+package br.com.market.servicedataaccess.responses.types
 
 /**
  * Classe que representa uma resposta de leitura, utilizada normalmente

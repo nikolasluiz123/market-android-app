@@ -23,16 +23,16 @@ import java.util.*
 )
 data class Product(
     @PrimaryKey
-    override var id: UUID = UUID.randomUUID(),
+    override var id: String = UUID.randomUUID().toString(),
     var name: String = "",
     var price: Double = 0.0,
-    var quantity: Int = 0,
+    var quantity: Double = 0.0,
     @ColumnInfo(name = "quantity_unit")
     var quantityUnit: EnumUnit? = null,
     @ColumnInfo(name = "category_brand_id")
-    var categoryBrandId: UUID? = null,
+    var categoryBrandId: String? = null,
     override var synchronized: Boolean = false,
     override var active: Boolean = true,
     @ColumnInfo("company_id")
-    override var companyId: UUID? = null
+    override var companyId: String? = null
 ) : CompanyModel()

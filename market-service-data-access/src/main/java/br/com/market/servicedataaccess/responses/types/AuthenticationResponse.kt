@@ -1,4 +1,4 @@
-package br.com.market.servicedataaccess.responses
+package br.com.market.servicedataaccess.responses.types
 
 /**
  * Uma classe específica para a resposta de uma autenticação ou

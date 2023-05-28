@@ -1,5 +1,6 @@
 package br.com.market.core.ui.components.image
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -29,10 +30,12 @@ import coil.compose.SubcomposeAsyncImage
  */
 @Composable
 fun HorizontalGallery(
-    images: List<Any>,
+    images: MutableList<Any>,
     onLoadClick: () -> Unit,
     modifier: Modifier = Modifier,
-    maxImages: Int = 3
+    maxImages: Int = 3,
+    onImageClick: (Any) -> Unit = { },
+    onDeleteButtonClick: (Any) -> Unit = { }
 ) {
     ConstraintLayout(modifier) {
         val (buttonLoadRef, imageRef) = createRefs()
@@ -58,9 +61,12 @@ fun HorizontalGallery(
         ) {
             items(imageList) {
                 CoilImageViewer(
-                    Modifier
+                    imageModifier = Modifier
                         .fillParentMaxWidth()
-                        .height(250.dp),
+                        .height(250.dp)
+                        .clickable { onImageClick(it) },
+                    showDeleteButton = it !is Int,
+                    onDeleteButtonClick = { onDeleteButtonClick(it) },
                     data = it
                 )
             }
@@ -93,7 +99,7 @@ fun HorizontalGalleryPreview() {
     MarketTheme {
         Surface {
             HorizontalGallery(
-                images = listOf(
+                images = mutableListOf(
                     R.drawable.imagem_grande_teste,
                     R.drawable.imagem_grande_teste,
                     R.drawable.imagem_grande_teste

@@ -1,9 +1,11 @@
 package br.com.market.servicedataaccess.injection
 
+import br.com.market.servicedataaccess.responses.adapters.ByteArrayToBase64TypeAdapter
 import br.com.market.servicedataaccess.services.IBrandService
 import br.com.market.servicedataaccess.services.ICategoryService
 import br.com.market.servicedataaccess.services.IProductService
 import br.com.market.servicedataaccess.services.IUserService
+import com.google.gson.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -11,6 +13,7 @@ import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
+
 
 /**
  * Módulo de injeção de dependências do Retrofit
@@ -29,10 +32,12 @@ class RetrofitModule {
     @Provides
     @Singleton
     fun provideRetrofit(): Retrofit {
+        val gson = GsonBuilder().registerTypeAdapter(ByteArray::class.java, ByteArrayToBase64TypeAdapter()).create()
+
         return Retrofit
             .Builder()
             .baseUrl("http://192.168.0.49:8080/api/v1/")
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
     }
 

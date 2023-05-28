@@ -1,4 +1,4 @@
-package br.com.market.servicedataaccess.responses
+package br.com.market.servicedataaccess.responses.types
 
 /**
  * Essa classe é a implementação apenas do mais essencial em uma resposta

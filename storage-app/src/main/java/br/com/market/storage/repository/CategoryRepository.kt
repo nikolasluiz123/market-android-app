@@ -6,8 +6,8 @@ import br.com.market.core.pagination.PagingConfigUtils
 import br.com.market.domain.CategoryDomain
 import br.com.market.localdataaccess.dao.CategoryDAO
 import br.com.market.models.Category
-import br.com.market.servicedataaccess.responses.MarketServiceResponse
-import br.com.market.servicedataaccess.responses.PersistenceResponse
+import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
+import br.com.market.servicedataaccess.responses.types.PersistenceResponse
 import br.com.market.servicedataaccess.webclients.CategoryWebClient
 import br.com.market.storage.pagination.CategoryPagingSource
 import kotlinx.coroutines.flow.Flow
@@ -80,7 +80,7 @@ class CategoryRepository @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun findById(categoryId: UUID): CategoryDomain {
+    suspend fun findById(categoryId: String): CategoryDomain {
         val category = dao.findById(categoryId)
         return CategoryDomain(id = category.id, name = category.name!!, active = category.active)
     }
@@ -100,7 +100,7 @@ class CategoryRepository @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun toggleActive(categoryId: UUID): PersistenceResponse {
+    suspend fun toggleActive(categoryId: String): PersistenceResponse {
         val category = dao.findById(categoryId)
 
         val response = webClient.toggleActive(category)

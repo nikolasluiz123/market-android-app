@@ -27,15 +27,15 @@ import java.util.*
 )
 data class DeliveryManQueue(
     @PrimaryKey
-    override var id: UUID = UUID.randomUUID(),
+    override var id: String = UUID.randomUUID().toString(),
     @ColumnInfo("delivery_started")
     var deliveryStarted: Boolean = false,
     @ColumnInfo("purchase_cart_id")
-    var purchaseCartId: UUID? = null,
+    var purchaseCartId: String? = null,
     @ColumnInfo("delivery_man_id")
-    var deliveryManId: UUID? = null,
+    var deliveryManId: String? = null,
     override var synchronized: Boolean = false,
     override var active: Boolean = true,
     @ColumnInfo("company_id")
-    override var companyId: UUID? = null
+    override var companyId: String? = null
 ): CompanyModel()

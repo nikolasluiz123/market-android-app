@@ -7,13 +7,13 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import br.com.market.storage.ui.screens.category.CategorySearchScreen
 import br.com.market.storage.ui.viewmodels.category.CategorySearchViewModel
-import java.util.*
 
 internal const val categorySearchScreenRoute = "categorySearch"
 
 fun NavGraphBuilder.categorySearchScreen(
     onAddCategoryClick: () -> Unit,
-    onCategoryClick: (UUID) -> Unit,
+    onCategoryClick: (String) -> Unit,
+    onAfterLogout: () -> Unit
 ) {
     composable(route = categorySearchScreenRoute) {
         val categorySearchViewModel = hiltViewModel<CategorySearchViewModel>()
@@ -21,7 +21,8 @@ fun NavGraphBuilder.categorySearchScreen(
         CategorySearchScreen(
             viewModel = categorySearchViewModel,
             onAddCategoryClick = onAddCategoryClick,
-            onCategoryClick = onCategoryClick
+            onCategoryClick = onCategoryClick,
+            onAfterLogout = onAfterLogout
         )
     }
 }

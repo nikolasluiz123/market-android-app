@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import br.com.market.core.extensions.navParamToString
+import br.com.market.localdataaccess.tuples.ProductImageTuple
 import br.com.market.storage.R
 import br.com.market.storage.repository.CategoryRepository
 import br.com.market.storage.repository.ProductRepository
@@ -14,11 +16,8 @@ import br.com.market.storage.ui.navigation.category.argumentCategoryId
 import br.com.market.storage.ui.states.brand.BrandUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -39,10 +38,6 @@ class BrandViewModel @Inject constructor(
     init {
         _uiState.update { currentState ->
             currentState.copy(
-                products = productRepository.findProducts(
-                    categoryId = UUID.fromString(categoryId?.navParamToString()!!),
-                    brandId = UUID.fromString(brandId?.navParamToString()!!)
-                ),
                 onBrandNameChange = {
                     _uiState.value = _uiState.value.copy(brandName = it)
                 },
@@ -68,7 +63,7 @@ class BrandViewModel @Inject constructor(
 
         categoryId?.navParamToString()?.let { id ->
             viewModelScope.launch {
-                val categoryDomain = categoryRepository.findById(UUID.fromString(id))
+                val categoryDomain = categoryRepository.findById(id)
 
                 _uiState.update { currentState ->
                     currentState.copy(
@@ -80,7 +75,7 @@ class BrandViewModel @Inject constructor(
 
         brandId?.navParamToString()?.let { id ->
             viewModelScope.launch {
-                val brandDomain = brandRepository.findById(UUID.fromString(id))
+                val brandDomain = brandRepository.findById(id)
 
                 _uiState.update { currentState ->
                     currentState.copy(
@@ -89,6 +84,23 @@ class BrandViewModel @Inject constructor(
                     )
                 }
             }
+        }
+
+        _uiState.update { currentState ->
+            currentState.copy(
+                products = getProducts()
+            )
+        }
+    }
+
+    private fun getProducts(): Flow<PagingData<ProductImageTuple>> {
+        val categoryId = categoryId?.navParamToString()
+        val brandId = brandId?.navParamToString()
+
+        return if (categoryId != null && brandId != null) {
+            productRepository.findProducts(categoryId = categoryId, brandId = brandId)
+        } else {
+            emptyFlow()
         }
     }
 
@@ -108,12 +120,12 @@ class BrandViewModel @Inject constructor(
     fun toggleActive() {
         _uiState.value.brandDomain?.id?.let { id ->
             viewModelScope.launch {
-                brandRepository.toggleActive(brandId = id, categoryId = UUID.fromString(categoryId!!.navParamToString()))
+                brandRepository.toggleActive(brandId = id, categoryId = categoryId.navParamToString()!!)
             }
         }
     }
 
-    fun findBrandById(brandId: UUID) {
+    fun findBrandById(brandId: String) {
         viewModelScope.launch {
             val brandDomain = brandRepository.findById(brandId)
 

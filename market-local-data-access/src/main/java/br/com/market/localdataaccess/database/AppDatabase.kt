@@ -1,5 +1,6 @@
 package br.com.market.localdataaccess.database
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
@@ -19,11 +20,16 @@ import br.com.market.models.*
  * @author Nikolas Luiz Schmitt
  */
 @Database(
-    version = 11,
+    version = 14,
     entities = [
         Address::class, Brand::class, Card::class, CartItem::class, Category::class, CategoryBrand::class, Client::class, Company::class,
         DeliveryMan::class, DeliveryManQueue::class, Product::class, ProductImage::class, ProductRating::class, PurchaseCart::class,
         StorageOperationsHistory::class, StorageProduct::class, ThemeDefinitions::class, User::class, Vehicle::class, VehicleCapacity::class
+    ],
+    autoMigrations = [
+        AutoMigration(from = 11, to = 12),
+        AutoMigration(from = 12, to = 13),
+        AutoMigration(from = 13, to = 14)
     ],
     exportSchema = true
 )

@@ -7,12 +7,11 @@ import br.com.market.domain.BrandDomain
 import br.com.market.localdataaccess.dao.BrandDAO
 import br.com.market.models.Brand
 import br.com.market.models.CategoryBrand
-import br.com.market.servicedataaccess.responses.MarketServiceResponse
-import br.com.market.servicedataaccess.responses.PersistenceResponse
+import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
+import br.com.market.servicedataaccess.responses.types.PersistenceResponse
 import br.com.market.servicedataaccess.webclients.BrandWebClient
 import br.com.market.storage.pagination.BrandPagingSource
 import kotlinx.coroutines.flow.Flow
-import java.util.*
 import javax.inject.Inject
 
 /**
@@ -35,7 +34,7 @@ class BrandRepository @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    fun findBrands(categoryId: UUID? = null, brandName: String? = null): Flow<PagingData<BrandDomain>> {
+    fun findBrands(categoryId: String? = null, brandName: String? = null): Flow<PagingData<BrandDomain>> {
         return Pager(
             config = PagingConfigUtils.defaultPagingConfig(),
             pagingSourceFactory = { BrandPagingSource(dao, categoryId, brandName) }
@@ -57,7 +56,7 @@ class BrandRepository @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun save(categoryId: UUID, domain: BrandDomain): PersistenceResponse {
+    suspend fun save(categoryId: String, domain: BrandDomain): PersistenceResponse {
         val brand = if (domain.id != null) {
             dao.findBrandById(domain.id!!).copy(name = domain.name)
         } else {
@@ -86,7 +85,7 @@ class BrandRepository @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun findById(brandId: UUID): BrandDomain {
+    suspend fun findById(brandId: String): BrandDomain {
         val brand = dao.findBrandById(brandId)
         return BrandDomain(id = brand.id, name = brand.name!!, active = brand.active)
     }
@@ -106,7 +105,7 @@ class BrandRepository @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun toggleActive(brandId: UUID, categoryId: UUID): PersistenceResponse {
+    suspend fun toggleActive(brandId: String, categoryId: String): PersistenceResponse {
         val categoryBrand = dao.findCategoryBrandBy(brandId = brandId, categoryId = categoryId)
 
         val response = webClient.toggleActive(categoryBrand)

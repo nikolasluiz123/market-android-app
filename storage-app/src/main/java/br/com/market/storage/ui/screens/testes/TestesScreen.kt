@@ -21,13 +21,13 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import br.com.market.core.R
 import br.com.market.core.ui.components.Banner
-import br.com.market.core.ui.components.image.HorizontalGallery
 import br.com.market.core.ui.components.MultiActionsFabBottomAppBar
 import br.com.market.core.ui.components.bottomsheet.BottomSheetLoadImage
 import br.com.market.core.ui.components.bottomsheet.IEnumOptionsBottomSheet
 import br.com.market.core.ui.components.buttons.MarketFloatingActionButtonMultiActions
 import br.com.market.core.ui.components.buttons.fab.SubActionFabItem
 import br.com.market.core.ui.components.buttons.rememberFabMultiActionsState
+import br.com.market.core.ui.components.image.HorizontalGallery
 
 
 @Composable
@@ -56,7 +56,7 @@ fun TestesBanner() {
 @Composable
 fun TestesGallery() {
     HorizontalGallery(
-        images = listOf(
+        images = mutableListOf(
             "https://images.pexels.com/photos/327098/pexels-photo-327098.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
             "https://images.pexels.com/photos/2294477/pexels-photo-2294477.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
             "https://images.pexels.com/photos/3584910/pexels-photo-3584910.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"

@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Patterns.EMAIL_ADDRESS
 import androidx.lifecycle.ViewModel
 import br.com.market.domain.UserDomain
-import br.com.market.servicedataaccess.responses.AuthenticationResponse
+import br.com.market.servicedataaccess.responses.types.AuthenticationResponse
 import br.com.market.storage.R
 import br.com.market.storage.repository.UserRepository
 import br.com.market.storage.ui.states.RegisterUserUIState

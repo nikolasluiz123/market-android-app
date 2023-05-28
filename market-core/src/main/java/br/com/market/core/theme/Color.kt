@@ -35,6 +35,8 @@ val GREY_700 = Color(0xFF616161)
 val GREY_800 = Color(0xFF424242)
 val GREY_900 = Color(0xFF212121)
 
+val GREY_900_TRANSPARENT = Color(0x4D212121)
+
 val BLUE_50 = Color(0xFFE3F2FD)
 val BLUE_100 = Color(0xFFBBDEFB)
 val BLUE_200 = Color(0xFF90CAF9)

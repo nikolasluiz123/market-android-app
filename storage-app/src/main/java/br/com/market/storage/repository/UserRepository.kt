@@ -5,7 +5,7 @@ import androidx.datastore.preferences.core.edit
 import br.com.market.core.preferences.PreferencesKey
 import br.com.market.core.preferences.dataStore
 import br.com.market.domain.UserDomain
-import br.com.market.servicedataaccess.responses.AuthenticationResponse
+import br.com.market.servicedataaccess.responses.types.AuthenticationResponse
 import br.com.market.servicedataaccess.webclients.UserWebClient
 import javax.inject.Inject
 

@@ -28,7 +28,7 @@ import java.util.*
 fun BrandLov(
     viewModel: BrandLovViewModel,
     onBackClick: () -> Unit,
-    onItemClick: (UUID) -> Unit = { }
+    onItemClick: (String) -> Unit = { }
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -46,7 +46,7 @@ fun BrandLov(
 @Composable
 fun BrandLov(
     state: BrandLovUIState = BrandLovUIState(),
-    onItemClick: (UUID) -> Unit = { },
+    onItemClick: (String) -> Unit = { },
     onFilterChange: (String) -> Unit = { },
     onBackClick: () -> Unit = { }
 ) {

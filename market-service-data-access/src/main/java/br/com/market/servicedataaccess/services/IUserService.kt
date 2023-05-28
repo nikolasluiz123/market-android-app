@@ -2,7 +2,7 @@ package br.com.market.servicedataaccess.services
 
 import br.com.market.sdo.user.AuthenticationRequestSDO
 import br.com.market.sdo.user.RegisterRequestSDO
-import br.com.market.servicedataaccess.responses.AuthenticationResponse
+import br.com.market.servicedataaccess.responses.types.AuthenticationResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST

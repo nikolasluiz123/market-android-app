@@ -4,8 +4,8 @@ import android.content.Context
 import br.com.market.domain.UserDomain
 import br.com.market.sdo.user.AuthenticationRequestSDO
 import br.com.market.sdo.user.RegisterRequestSDO
-import br.com.market.servicedataaccess.extensions.getAuthenticationResponseBody
-import br.com.market.servicedataaccess.responses.AuthenticationResponse
+import br.com.market.servicedataaccess.responses.extensions.getAuthenticationResponseBody
+import br.com.market.servicedataaccess.responses.types.AuthenticationResponse
 import br.com.market.servicedataaccess.services.IUserService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject

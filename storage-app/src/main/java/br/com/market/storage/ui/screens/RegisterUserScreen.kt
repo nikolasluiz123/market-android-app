@@ -19,6 +19,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.*
+import br.com.market.core.ui.components.dialog.DialogMessage
 import br.com.market.domain.UserDomain
 import br.com.market.storage.R
 import br.com.market.storage.ui.states.RegisterUserUIState

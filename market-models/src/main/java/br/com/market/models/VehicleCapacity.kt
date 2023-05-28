@@ -23,14 +23,14 @@ import java.util.*
 )
 data class VehicleCapacity(
     @PrimaryKey
-    override var id: UUID = UUID.randomUUID(),
+    override var id: String = UUID.randomUUID().toString(),
     var capacity: Int = 0,
     @ColumnInfo(name = "capacity_unit")
     var capacityUnit: EnumUnit? = null,
     @ColumnInfo("vehicle_id")
-    var vehicleId: UUID? = null,
+    var vehicleId: String? = null,
     override var synchronized: Boolean = false,
     override var active: Boolean = true,
     @ColumnInfo("company_id")
-    override var companyId: UUID? = null
+    override var companyId: String? = null
 ): CompanyModel()

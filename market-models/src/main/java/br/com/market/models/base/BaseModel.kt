@@ -1,7 +1,5 @@
 package br.com.market.models.base
 
-import java.util.*
-
 /**
  * Uma classe base para as Entidades da base local que contém
  * os atributos comuns.
@@ -13,7 +11,7 @@ import java.util.*
  * @author Nikolas Luiz Schmitt
  */
 abstract class BaseModel {
-    abstract var id: UUID
+    abstract var id: String
     abstract var synchronized: Boolean
     abstract var active: Boolean
 }

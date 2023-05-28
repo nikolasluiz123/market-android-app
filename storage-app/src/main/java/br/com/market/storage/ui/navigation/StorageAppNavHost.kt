@@ -1,10 +1,12 @@
 package br.com.market.storage.ui.navigation
 
+import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
+import br.com.market.core.ui.components.bottomsheet.IEnumOptionsBottomSheet
 import br.com.market.core.ui.components.bottomsheet.loadimage.EnumOptionsBottomSheetLoadImage
 import br.com.market.storage.ui.navigation.brand.brandScreen
 import br.com.market.storage.ui.navigation.brand.navigateToBrandScreen
@@ -73,7 +75,14 @@ fun StorageAppNavHost(
 
         categorySearchScreen(
             onAddCategoryClick = navController::navigateToCategoryScreen,
-            onCategoryClick = navController::navigateToCategoryScreen
+            onCategoryClick = navController::navigateToCategoryScreen,
+            onAfterLogout = {
+                navController.navigateToLoginScreen(navOptions {
+                    popUpTo(categorySearchScreenRoute) {
+                        inclusive = true
+                    }
+                })
+            }
         )
 
         categoryScreen(
@@ -100,38 +109,15 @@ fun StorageAppNavHost(
             onStorageButtonClick = {
 
             },
-            onBottomSheetLoadImageItemClick = { option, callback ->
-                when(option) {
-                    EnumOptionsBottomSheetLoadImage.CAMERA -> {
-                        navController.navigateForResult(
-                            key = cameraNavResultCallbackKey,
-                            route = cameraScreenRoute,
-                            callback = callback
-                        )
-                    }
-                    EnumOptionsBottomSheetLoadImage.GALLERY -> {
-                        navController.navigateForResult(
-                            key = androidGalleryNavResultCallbackKey,
-                            route = androidGalleryScreenRoute,
-                            callback = callback
-                        )
-                    }
-                    EnumOptionsBottomSheetLoadImage.LINK -> {
-                        navController.navigateForResult(
-                            key = loadImageLinkNavResultCallbackKey,
-                            route = loadImageLinkScreenRoute,
-                            callback = callback
-                        )
-                    }
-                }
-            }
+            onBottomSheetLoadImageItemClick = navController::navigateToLoadImage,
+            onProductImageClick = navController::navigateToImageViewerScreen
         )
 
         brandLov(
             onItemClick = { brandId ->
                 navController.popBackStackWithResult(brandLovNavResultCallbackKey, brandId)
             },
-            onBackClick = { navController.popBackStack() }
+            onBackClick = navController::popBackStack
         )
 
 
@@ -150,7 +136,7 @@ fun StorageAppNavHost(
         )
 
         androidGalleryGraph(
-            onAfterShowGallery = { navController.popBackStack() },
+            onAfterShowGallery = navController::popBackStack,
             onImageCaptured = {
                 navController.popBackStackWithResult(androidGalleryNavResultCallbackKey, it)
             }
@@ -162,6 +148,42 @@ fun StorageAppNavHost(
 
             }
         )
+
+        imageViewerScreen(
+            onBackClick = navController::popBackStack,
+            onAfterDeleteImage = navController::popBackStack,
+            onBottomSheetLoadImageItemClick = navController::navigateToLoadImage,
+            onAfterSaveProductImage = navController::popBackStack
+        )
+    }
+}
+
+fun NavController.navigateToLoadImage(
+    option: IEnumOptionsBottomSheet,
+    callback: (Uri) -> Unit
+) {
+    when (option) {
+        EnumOptionsBottomSheetLoadImage.CAMERA -> {
+            navigateForResult(
+                key = cameraNavResultCallbackKey,
+                route = cameraScreenRoute,
+                callback = callback
+            )
+        }
+        EnumOptionsBottomSheetLoadImage.GALLERY -> {
+            navigateForResult(
+                key = androidGalleryNavResultCallbackKey,
+                route = androidGalleryScreenRoute,
+                callback = callback
+            )
+        }
+        EnumOptionsBottomSheetLoadImage.LINK -> {
+            navigateForResult(
+                key = loadImageLinkNavResultCallbackKey,
+                route = loadImageLinkScreenRoute,
+                callback = callback
+            )
+        }
     }
 }
 

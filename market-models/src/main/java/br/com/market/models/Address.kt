@@ -17,7 +17,7 @@ import java.util.*
 )
 data class Address(
     @PrimaryKey
-    override var id: UUID = UUID.randomUUID(),
+    override var id: String = UUID.randomUUID().toString(),
     var state: String? = null,
     var city: String? = null,
     @ColumnInfo("public_place")
@@ -28,5 +28,5 @@ data class Address(
     override var synchronized: Boolean = false,
     override var active: Boolean = true,
     @ColumnInfo("company_id")
-    override var companyId: UUID? = null
+    override var companyId: String? = null
 ) : CompanyModel()

@@ -1,9 +1,9 @@
 package br.com.market.servicedataaccess.services
 
 import br.com.market.sdo.CategorySDO
-import br.com.market.servicedataaccess.responses.MarketServiceResponse
-import br.com.market.servicedataaccess.responses.PersistenceResponse
-import br.com.market.servicedataaccess.responses.ReadResponse
+import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
+import br.com.market.servicedataaccess.responses.types.PersistenceResponse
+import br.com.market.servicedataaccess.responses.types.ReadResponse
 import retrofit2.Response
 import retrofit2.http.*
 

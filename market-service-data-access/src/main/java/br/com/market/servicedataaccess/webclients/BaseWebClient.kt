@@ -6,10 +6,10 @@ import br.com.market.core.R
 import br.com.market.core.preferences.dataStore
 import br.com.market.core.preferences.getToken
 import br.com.market.core.utils.TokenUtils
-import br.com.market.servicedataaccess.responses.AuthenticationResponse
-import br.com.market.servicedataaccess.responses.MarketServiceResponse
-import br.com.market.servicedataaccess.responses.PersistenceResponse
-import br.com.market.servicedataaccess.responses.ReadResponse
+import br.com.market.servicedataaccess.responses.types.AuthenticationResponse
+import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
+import br.com.market.servicedataaccess.responses.types.PersistenceResponse
+import br.com.market.servicedataaccess.responses.types.ReadResponse
 import java.net.ConnectException
 import java.net.HttpURLConnection
 import java.net.SocketTimeoutException

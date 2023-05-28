@@ -6,8 +6,12 @@ import br.com.market.models.ProductImage
 import br.com.market.sdo.product.ProductBodySDO
 import br.com.market.sdo.product.ProductImageSDO
 import br.com.market.sdo.product.ProductSDO
-import br.com.market.servicedataaccess.extensions.getPersistenceResponseBody
-import br.com.market.servicedataaccess.responses.PersistenceResponse
+import br.com.market.servicedataaccess.responses.extensions.getPersistenceResponseBody
+import br.com.market.servicedataaccess.responses.extensions.getReadResponseBody
+import br.com.market.servicedataaccess.responses.extensions.getResponseBody
+import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
+import br.com.market.servicedataaccess.responses.types.PersistenceResponse
+import br.com.market.servicedataaccess.responses.types.ReadResponse
 import br.com.market.servicedataaccess.services.IProductService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -36,11 +40,130 @@ class ProductWebClient @Inject constructor(
                         active = it.active,
                         bytes = it.bytes,
                         imageUrl = it.imageUrl,
-                        productLocalId = it.productId
+                        productLocalId = it.productId,
+                        principal = it.principal
                     )
                 }
 
                 service.save(getToken(), ProductBodySDO(productSDO, imagesSDO)).getPersistenceResponseBody()
+            }
+        )
+    }
+
+    suspend fun updateProductImage(productImage: ProductImage): PersistenceResponse {
+        return persistenceServiceErrorHandlingBlock(
+            codeBlock = {
+                val productImageSDO = productImage.run {
+                    ProductImageSDO(
+                        localId = id,
+                        active = active,
+                        bytes = bytes,
+                        imageUrl = imageUrl,
+                        productLocalId = productId,
+                        principal = principal
+                    )
+                }
+
+                service.updateProductImage(getToken(), productImageSDO).getPersistenceResponseBody()
+            }
+        )
+    }
+
+    suspend fun toggleActiveProduct(productLocalId: String): PersistenceResponse {
+        return persistenceServiceErrorHandlingBlock(
+            codeBlock = {
+                service.toggleActiveProduct(getToken(), productLocalId).getPersistenceResponseBody()
+            }
+        )
+    }
+
+    suspend fun toggleActiveProductImage(productImageLocalId: String): PersistenceResponse {
+        return persistenceServiceErrorHandlingBlock(
+            codeBlock = {
+                service.toggleActiveProductImage(getToken(), productImageLocalId).getPersistenceResponseBody()
+            }
+        )
+    }
+
+    suspend fun sync(products: List<Product>, images: List<ProductImage>): MarketServiceResponse {
+        return serviceErrorHandlingBlock(
+            codeBlock = {
+                val productSDOs = products.map {
+                    ProductSDO(
+                        localId = it.id,
+                        active = it.active,
+                        name = it.name,
+                        price = it.price,
+                        quantityUnit = it.quantityUnit,
+                        quantity = it.quantity,
+                        categoryBrandLocalId = it.categoryBrandId
+                    )
+                }
+
+                val productImageSDOs = images.map {
+                    ProductImageSDO(
+                        localId = it.id,
+                        active = it.active,
+                        bytes = it.bytes,
+                        imageUrl = it.imageUrl,
+                        productLocalId = it.productId,
+                        principal = it.principal
+                    )
+                }
+
+                val syncList = mutableListOf<ProductBodySDO>()
+
+                for (productSDO in productSDOs) {
+                    val productImages = productImageSDOs.filter { it.productLocalId == productSDO.localId }
+                    syncList.add(ProductBodySDO(productSDO, productImages))
+                }
+
+                service.sync(getToken(), syncList).getResponseBody()
+            }
+        )
+    }
+
+    suspend fun findAllProducts(): ReadResponse<Product> {
+        return readServiceErrorHandlingBlock(
+            codeBlock = {
+                val response = service.findAllProductDTOs(getToken()).getReadResponseBody()
+
+                val products = response.values.map {
+                    Product(
+                        id = it.localId,
+                        name = it.name!!,
+                        price = it.price!!,
+                        quantity = it.quantity!!,
+                        quantityUnit = it.quantityUnit,
+                        categoryBrandId = it.categoryBrandLocalId,
+                        synchronized = true,
+                        active = it.active
+                    )
+                }
+
+                ReadResponse(values = products, code = response.code, success = response.success, error = response.error)
+            }
+        )
+    }
+
+    suspend fun findAllProductImages(): ReadResponse<ProductImage> {
+        return readServiceErrorHandlingBlock(
+            codeBlock = {
+                val response = service.findAllProductImageDTOs(getToken()).getReadResponseBody()
+
+                val images = response.values.map {
+                    ProductImage(
+                        id = it.localId,
+                        synchronized = true,
+                        active = it.active,
+                        bytes = it.bytes,
+                        imageUrl = it.imageUrl,
+                        productId = it.productLocalId,
+                        principal = it.principal
+                    )
+                }
+
+                ReadResponse(values = images, code = response.code, success = response.success, error = response.error)
             }
         )
     }

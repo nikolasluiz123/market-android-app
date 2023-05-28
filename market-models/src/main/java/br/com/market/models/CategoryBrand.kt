@@ -27,13 +27,13 @@ import java.util.*
 )
 data class CategoryBrand(
     @PrimaryKey
-    override var id: UUID = UUID.randomUUID(),
+    override var id: String = UUID.randomUUID().toString(),
     @ColumnInfo(name = "category_id")
-    var categoryId: UUID? = null,
+    var categoryId: String? = null,
     @ColumnInfo(name = "brand_id")
-    var brandId: UUID? = null,
+    var brandId: String? = null,
     override var synchronized: Boolean = false,
     override var active: Boolean = true,
     @ColumnInfo("company_id")
-    override var companyId: UUID? = null
+    override var companyId: String? = null
 ) : CompanyModel()

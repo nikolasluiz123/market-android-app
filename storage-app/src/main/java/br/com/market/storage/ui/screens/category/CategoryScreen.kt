@@ -18,14 +18,13 @@ import br.com.market.storage.R
 import br.com.market.storage.ui.states.category.CategoryUIState
 import br.com.market.storage.ui.viewmodels.category.CategoryViewModel
 import kotlinx.coroutines.launch
-import java.util.*
 
 @Composable
 fun CategoryScreen(
     viewModel: CategoryViewModel,
     onBackClick: () -> Unit,
-    onFabAddBrandClick: (UUID) -> Unit,
-    onBrandItemClick: (UUID, UUID) -> Unit
+    onFabAddBrandClick: (String) -> Unit,
+    onBrandItemClick: (String, String) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -50,8 +49,8 @@ fun CategoryScreen(
     onToggleActive: () -> Unit = { },
     onSaveCategoryClick: (Boolean) -> Unit = { },
     onBackClick: () -> Unit = { },
-    onFabAddBrandClick: (UUID) -> Unit = { },
-    onBrandItemClick: (UUID, UUID) -> Unit = { _: UUID, _: UUID -> }
+    onFabAddBrandClick: (String) -> Unit = { },
+    onBrandItemClick: (String, String) -> Unit = { _: String, _: String -> }
 ) {
     var isEditMode by remember(state.categoryDomain) {
         mutableStateOf(state.categoryDomain != null)

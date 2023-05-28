@@ -174,7 +174,7 @@ fun SearchableMarketTopAppBar(
                 if (!openSearch) {
                     IconButtonSearch(onClick = onToggleSearch)
                 } else {
-                    IconButtonClose { onSearchChange("") }
+                    IconButtonClose(onClick = { onSearchChange("") },)
                 }
             }
 

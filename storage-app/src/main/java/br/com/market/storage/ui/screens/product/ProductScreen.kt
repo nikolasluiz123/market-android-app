@@ -1,6 +1,5 @@
 package br.com.market.storage.ui.screens.product
 
-import android.content.Context
 import android.net.Uri
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,17 +22,18 @@ import androidx.constraintlayout.compose.Dimension
 import br.com.market.core.extensions.parseToDouble
 import br.com.market.core.extensions.readBytes
 import br.com.market.core.theme.MarketTheme
-import br.com.market.core.ui.components.DialogMessage
 import br.com.market.core.ui.components.MarketBottomAppBar
 import br.com.market.core.ui.components.OutlinedTextFieldValidation
 import br.com.market.core.ui.components.SimpleMarketTopAppBar
 import br.com.market.core.ui.components.bottomsheet.BottomSheetLoadImage
 import br.com.market.core.ui.components.bottomsheet.IEnumOptionsBottomSheet
 import br.com.market.core.ui.components.buttons.*
-import br.com.market.core.ui.components.image.HorizontalGallery
+import br.com.market.core.ui.components.dialog.DialogMessage
 import br.com.market.domain.ProductDomain
+import br.com.market.domain.ProductImageDomain
 import br.com.market.enums.EnumUnit
 import br.com.market.storage.R
+import br.com.market.storage.ui.component.ProductImageHorizontalGallery
 import br.com.market.storage.ui.states.product.ProductUIState
 import br.com.market.storage.ui.viewmodels.product.ProductViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -44,21 +44,21 @@ fun ProductScreen(
     viewModel: ProductViewModel,
     onBackClick: () -> Unit,
     onStorageButtonClick: () -> Unit,
-    onBottomSheetLoadImageItemClick: (IEnumOptionsBottomSheet, (Uri) -> Unit) -> Unit
+    onBottomSheetLoadImageItemClick: (IEnumOptionsBottomSheet, (Uri) -> Unit) -> Unit,
+    onProductImageClick: (String) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
     ProductScreen(
         state = state,
         onBackClick = onBackClick,
-        onToggleActive = {
-
-        },
+        onToggleActive = viewModel::toggleProductActive,
         onStorageButtonClick = onStorageButtonClick,
         onBottomSheetLoadImageItemClick = onBottomSheetLoadImageItemClick,
-        onSaveProductClick = {
-            viewModel.saveProduct()
-        }
+        onSaveProductClick = viewModel::saveProduct,
+        onProductImageClick = onProductImageClick,
+        onAddProductImage = viewModel::addImage,
+        onToggleActiveProductImage = viewModel::toggleImageActive
     )
 }
 
@@ -70,7 +70,10 @@ fun ProductScreen(
     onToggleActive: () -> Unit = { },
     onStorageButtonClick: () -> Unit = { },
     onBottomSheetLoadImageItemClick: (IEnumOptionsBottomSheet, (Uri) -> Unit) -> Unit = { _, _ -> },
-    onSaveProductClick: () -> Unit = { }
+    onSaveProductClick: () -> Unit = { },
+    onProductImageClick: (String) -> Unit = { },
+    onAddProductImage: (ByteArray) -> Unit = { },
+    onToggleActiveProductImage: (ByteArray, String?) -> Unit = { _, _ -> }
 ) {
     var isEditMode by remember(state.productDomain) {
         mutableStateOf(state.productDomain != null)
@@ -133,7 +136,7 @@ fun ProductScreen(
                 floatingActionButton = {
                     FloatingActionButtonSave(
                         onClick = {
-                            isEditMode = saveProduct(state, isActive, isEditMode, onSaveProductClick, scope, snackbarHostState, context)
+                            isEditMode = saveProduct(state, isActive, isEditMode, onSaveProductClick, scope, snackbarHostState)
                         }
                     )
                 }
@@ -158,10 +161,29 @@ fun ProductScreen(
             createHorizontalChain(inputQuantityRef, inputUnityRef)
 
             var openBottomSheet by rememberSaveable { mutableStateOf(false) }
+            val images = remember(state.images) {
+                val stateList = mutableStateListOf<ProductImageDomain>()
+                stateList.addAll(state.images)
+                stateList
+            }
 
-            HorizontalGallery(
-                images = state.images,
+            ProductImageHorizontalGallery(
+                images = images,
                 onLoadClick = { openBottomSheet = true },
+                onImageClick = {
+                    if (isEditMode) {
+                        onProductImageClick(it)
+                    }
+                },
+                onDeleteButtonClick = { byteArray, id ->
+                    if (images.size == 1 && id != null) {
+                        state.onShowDialog("Alerta", "O produto deve conter ao menos uma imagem")
+                        return@ProductImageHorizontalGallery
+                    }
+
+                    onToggleActiveProductImage(byteArray, id)
+                    images.removeIf { image -> image.byteArray.contentEquals(byteArray) }
+                },
                 modifier = Modifier
                     .constrainAs(galleryRef) {
                         start.linkTo(parent.start)
@@ -170,6 +192,7 @@ fun ProductScreen(
                     }
                     .padding(8.dp)
             )
+
 
             OutlinedTextFieldValidation(
                 value = state.productName,
@@ -251,6 +274,7 @@ fun ProductScreen(
                     value = state.productQuantityUnit?.let { stringResource(id = it.labelResId) } ?: "",
                     label = { Text(text = stringResource(R.string.product_screen_label_measure)) },
                     onValueChange = { },
+                    error = state.productQuantityUnitErrorMessage,
                     readOnly = true,
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                     modifier = Modifier
@@ -258,7 +282,7 @@ fun ProductScreen(
                         .fillMaxWidth()
                 )
 
-                ExposedDropdownMenu(expanded = expanded, onDismissRequest = { /*TODO*/ }) {
+                ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                     units.forEach { enumUnit ->
                         DropdownMenuItem(
                             text = { Text(text = stringResource(id = enumUnit.labelResId)) },
@@ -271,13 +295,11 @@ fun ProductScreen(
                 }
             }
 
-            var showDialogMaxImages by rememberSaveable { mutableStateOf(false) }
-
             DialogMessage(
-                title = "Atenção",
-                show = showDialogMaxImages,
-                onDismissRequest = { showDialogMaxImages = false },
-                message = "São permitidas apenas 3 fotos por produto. Para alterar alguma das fotos você deve removê-la."
+                title = state.dialogTitle,
+                show = state.showDialog,
+                onDismissRequest = { state.onHideDialog() },
+                message = state.dialogMessage
             )
 
             if (openBottomSheet) {
@@ -288,9 +310,9 @@ fun ProductScreen(
                     onItemClickListener = {
                         onBottomSheetLoadImageItemClick(it) { uri ->
                             if (state.images.size < 3) {
-                                state.images.add(uri)
+                                onAddProductImage(context.readBytes(uri)!!)
                             } else {
-                                showDialogMaxImages = true
+                                state.onShowDialog("Atenção", "São permitidas apenas 3 fotos por produto.")
                             }
                         }
                     }
@@ -299,40 +321,32 @@ fun ProductScreen(
         }
     }
 }
+
 private fun saveProduct(
     state: ProductUIState,
     isActive: Boolean,
     isEditMode: Boolean,
     onSaveProductClick: () -> Unit,
     scope: CoroutineScope,
-    snackbarHostState: SnackbarHostState,
-    context: Context
+    snackbarHostState: SnackbarHostState
 ): Boolean {
     if (state.onValidate() && isActive) {
-        val productImages = state.images.map {
-            when(it) {
-                is Uri -> context.readBytes(it)!!
-                is ByteArray -> it
-                else -> throw Exception("Tipo inválido de imagem")
-            }
-
-        }.toMutableList()
 
         state.productDomain = if (isEditMode) {
             state.productDomain?.copy(
                 name = state.productName,
                 price = state.productPrice.parseToDouble(),
-                quantity = state.productQuantity.toInt(),
+                quantity = state.productQuantity.parseToDouble(),
                 quantityUnit = state.productQuantityUnit,
-                images = productImages
+                images = state.images
             )
         } else {
             ProductDomain(
                 name = state.productName,
                 price = state.productPrice.parseToDouble(),
-                quantity = state.productQuantity.toInt(),
+                quantity = state.productQuantity.parseToDouble(),
                 quantityUnit = state.productQuantityUnit,
-                images = productImages
+                images = state.images
             )
         }
 

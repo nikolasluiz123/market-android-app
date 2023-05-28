@@ -3,9 +3,9 @@ package br.com.market.servicedataaccess.services
 import br.com.market.sdo.brand.BrandBodySDO
 import br.com.market.sdo.brand.BrandSDO
 import br.com.market.sdo.brand.CategoryBrandSDO
-import br.com.market.servicedataaccess.responses.MarketServiceResponse
-import br.com.market.servicedataaccess.responses.PersistenceResponse
-import br.com.market.servicedataaccess.responses.ReadResponse
+import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
+import br.com.market.servicedataaccess.responses.types.PersistenceResponse
+import br.com.market.servicedataaccess.responses.types.ReadResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET

@@ -1,4 +1,4 @@
-package br.com.market.servicedataaccess.responses
+package br.com.market.servicedataaccess.responses.types
 
 /**
  * Interface de resposta do serviço que define os atributos

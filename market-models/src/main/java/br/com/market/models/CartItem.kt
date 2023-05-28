@@ -27,14 +27,14 @@ import java.util.*
 )
 data class CartItem(
     @PrimaryKey
-    override var id: UUID = UUID.randomUUID(),
+    override var id: String = UUID.randomUUID().toString(),
     var quantity: Int = 0,
     @ColumnInfo("product_id")
-    var productId: UUID? = null,
+    var productId: String? = null,
     @ColumnInfo("purchase_cart_id")
-    var purchaseCartId: UUID? = null,
+    var purchaseCartId: String? = null,
     override var synchronized: Boolean = false,
     override var active: Boolean = true,
     @ColumnInfo("company_id")
-    override var companyId: UUID? = null
+    override var companyId: String? = null
 ): CompanyModel()

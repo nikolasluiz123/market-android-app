@@ -76,7 +76,7 @@ fun LoadImageLinkScreen(
             val (imageRef, inputLinkRef) = createRefs()
 
             CoilImageViewer(
-                Modifier
+                containerModifier = Modifier
                     .constrainAs(imageRef) {
                         linkTo(start = parent.start, end = parent.end)
                         top.linkTo(parent.top)
@@ -86,7 +86,7 @@ fun LoadImageLinkScreen(
                     }
                     .height(250.dp)
                     .padding(8.dp),
-                data = state.link
+                data = state.link,
             )
 
             OutlinedTextFieldValidation(

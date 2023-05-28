@@ -25,15 +25,18 @@ import java.util.*
 fun CategorySearchScreen(
     viewModel: CategorySearchViewModel,
     onAddCategoryClick: () -> Unit,
-    onCategoryClick: (UUID) -> Unit,
+    onCategoryClick: (String) -> Unit,
+    onAfterLogout: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
     CategorySearchScreen(
         state = state,
         onAddCategoryClick = onAddCategoryClick,
         onCategoryClick = onCategoryClick,
-        onSyncClick = {
-            viewModel.sync()
+        onSyncClick = viewModel::sync,
+        onLogoutClick = {
+            viewModel.logout()
+            onAfterLogout()
         }
     )
 }
@@ -44,8 +47,9 @@ fun CategorySearchScreen(
     state: CategorySearchUIState,
     onDeleteCategoryClick: () -> Unit = { },
     onAddCategoryClick: () -> Unit = { },
-    onCategoryClick: (UUID) -> Unit = { },
-    onSyncClick: () -> Unit = { }
+    onCategoryClick: (String) -> Unit = { },
+    onSyncClick: () -> Unit = { },
+    onLogoutClick: () -> Unit = { }
 ) {
     val pagingData = state.categories.collectAsLazyPagingItems()
 
@@ -57,7 +61,7 @@ fun CategorySearchScreen(
                 showMenuWithLogout = false,
                 actions = {
                     IconButtonSync(onSyncClick)
-                    IconButtonLogout()
+                    IconButtonLogout(onLogoutClick)
                 }
             )
         },

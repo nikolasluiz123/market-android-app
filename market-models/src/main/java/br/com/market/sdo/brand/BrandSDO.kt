@@ -1,7 +1,6 @@
 package br.com.market.sdo.brand
 
 import br.com.market.sdo.base.BaseSDO
-import java.util.*
 
 /**
  * Classe para envio e recebimento de marcado do serviço.
@@ -14,7 +13,7 @@ import java.util.*
  * @author Nikolas Luiz Schmitt
  */
 data class BrandSDO(
-    override var localId: UUID,
+    override var localId: String,
     override var companyId: Long? = null,
     override var active: Boolean = true,
     var name: String? = null

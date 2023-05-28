@@ -22,7 +22,7 @@ import br.com.market.storage.extensions.formatQuantityIn
 fun ProductListCard(
     name: String,
     price: Double,
-    quantity: Int,
+    quantity: Double,
     quantityUnit: EnumUnit,
     image: Any,
     active: Boolean,
@@ -130,7 +130,7 @@ fun ProductListCard(
             )
 
             CoilImageViewer(
-                modifier = Modifier
+                containerModifier = Modifier
                     .constrainAs(imageRef) {
                         end.linkTo(parent.end)
                         top.linkTo(parent.top)
@@ -140,7 +140,7 @@ fun ProductListCard(
                         height = Dimension.fillToConstraints
                         horizontalChainWeight = 0.3F
                     },
-                data = image
+                data = image,
             )
         }
     }
@@ -154,7 +154,7 @@ fun ProductListCardPreview() {
             ProductListCard(
                 name = "Wafer de Chocolate com Avelã",
                 price = 4.99,
-                quantity = 110,
+                quantity = 110.0,
                 quantityUnit = EnumUnit.GRAM,
                 image = 0,
                 active = true

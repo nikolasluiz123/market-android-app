@@ -3,17 +3,16 @@ package br.com.market.domain
 import androidx.room.ColumnInfo
 import br.com.market.domain.base.BaseDomain
 import br.com.market.enums.EnumUnit
-import java.util.*
 
 data class ProductDomain(
-    override var id: UUID? = null,
+    override var id: String? = null,
     override var active: Boolean = true,
     @ColumnInfo(name = "company_id")
-    override var companyId: UUID? = null,
+    override var companyId: String? = null,
     override var synchronized: Boolean = false,
     var name: String? = null,
     var price: Double? = null,
-    var quantity: Int? = null,
+    var quantity: Double? = null,
     var quantityUnit: EnumUnit? = null,
-    var images: MutableList<ByteArray>
+    var images: MutableList<ProductImageDomain>
 ): BaseDomain()

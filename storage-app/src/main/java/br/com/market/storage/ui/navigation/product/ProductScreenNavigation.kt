@@ -19,7 +19,8 @@ internal const val argumentProductId = "productId"
 fun NavGraphBuilder.productScreen(
     onBackClick: () -> Unit,
     onStorageButtonClick: () -> Unit = { },
-    onBottomSheetLoadImageItemClick: (IEnumOptionsBottomSheet, (Uri) -> Unit) -> Unit
+    onBottomSheetLoadImageItemClick: (IEnumOptionsBottomSheet, (Uri) -> Unit) -> Unit,
+    onProductImageClick: (String) -> Unit
 ) {
     composable(route = "$productScreenRoute?$argumentCategoryId={$argumentCategoryId}&$argumentBrandId={$argumentBrandId}&$argumentProductId={$argumentProductId}") {
         val viewModel = hiltViewModel<ProductViewModel>()
@@ -28,18 +29,19 @@ fun NavGraphBuilder.productScreen(
             viewModel = viewModel,
             onBackClick = onBackClick,
             onStorageButtonClick = onStorageButtonClick,
-            onBottomSheetLoadImageItemClick = onBottomSheetLoadImageItemClick
+            onBottomSheetLoadImageItemClick = onBottomSheetLoadImageItemClick,
+            onProductImageClick = onProductImageClick
         )
     }
 }
 
-fun NavController.navigateToProductScreen(categoryId: UUID, brandId: UUID, productId: UUID, navOptions: NavOptions? = null) {
+fun NavController.navigateToProductScreen(categoryId: String, brandId: String, productId: String, navOptions: NavOptions? = null) {
     navigate(
         route = "$productScreenRoute?$argumentCategoryId={$categoryId}&$argumentBrandId={$brandId}&$argumentProductId={$productId}",
         navOptions = navOptions
     )
 }
 
-fun NavController.navigateToProductScreen(categoryId: UUID, brandId: UUID, navOptions: NavOptions? = null) {
+fun NavController.navigateToProductScreen(categoryId: String, brandId: String, navOptions: NavOptions? = null) {
     navigate(route = "$productScreenRoute?$argumentCategoryId={$categoryId}&$argumentBrandId={$brandId}", navOptions = navOptions)
 }

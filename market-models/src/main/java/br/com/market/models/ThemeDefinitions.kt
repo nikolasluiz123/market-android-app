@@ -9,7 +9,7 @@ import java.util.*
 @Entity(tableName = "theme_definitions")
 data class ThemeDefinitions(
     @PrimaryKey
-    override var id: UUID = UUID.randomUUID(),
+    override var id: String = UUID.randomUUID().toString(),
     @ColumnInfo("color_primary")
     var colorPrimary: String? = null,
     @ColumnInfo("color_secondary")

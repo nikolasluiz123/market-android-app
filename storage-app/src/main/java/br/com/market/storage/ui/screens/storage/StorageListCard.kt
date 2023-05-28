@@ -26,7 +26,7 @@ fun StorageListCard(
     productName: String,
     operationType: EnumOperationType,
     dateRealization: LocalDateTime,
-    quantity: Int,
+    quantity: Double,
     quantityUnit: EnumUnit,
     datePrevision: LocalDateTime? = null,
     responsibleName: String? = null,
@@ -366,7 +366,7 @@ fun StorageListCardInputPreview() {
                 operationType = EnumOperationType.Input,
                 datePrevision = null,
                 dateRealization = LocalDateTime.now(),
-                quantity = 500,
+                quantity = 500.0,
                 quantityUnit = EnumUnit.UNIT
             )
         }
@@ -383,7 +383,7 @@ fun StorageListCardInputWithPrevisionPreview() {
                 operationType = EnumOperationType.Input,
                 datePrevision = LocalDateTime.now(),
                 dateRealization = LocalDateTime.now().plusDays(2),
-                quantity = 500,
+                quantity = 500.0,
                 quantityUnit = EnumUnit.UNIT
             )
         }
@@ -400,7 +400,7 @@ fun StorageListCardInputWithPrevisionAndRealizationIqualsPreview() {
                 operationType = EnumOperationType.Input,
                 datePrevision = LocalDateTime.now(),
                 dateRealization = LocalDateTime.now(),
-                quantity = 500,
+                quantity = 500.0,
                 quantityUnit = EnumUnit.UNIT
             )
         }
@@ -416,7 +416,7 @@ fun StorageListCardSellPreview() {
                 productName = "Wafer de Chocolate com Avelã dos Montes da Índia Nevada do Alaska",
                 operationType = EnumOperationType.Sell,
                 dateRealization = LocalDateTime.now(),
-                quantity = 5,
+                quantity = 5.0,
                 quantityUnit = EnumUnit.UNIT
             )
         }
@@ -432,7 +432,7 @@ fun StorageListCardOutputPreview() {
                 productName = "Wafer de Chocolate com Avelã dos Montes da Índia Nevada do Alaska",
                 operationType = EnumOperationType.Output,
                 dateRealization = LocalDateTime.now(),
-                quantity = 50,
+                quantity = 50.0,
                 quantityUnit = EnumUnit.UNIT,
                 responsibleName = "Nikolas Luiz Schmitt",
                 description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
@@ -451,7 +451,7 @@ fun StorageListCardScheduledInputPreview() {
                 operationType = EnumOperationType.ScheduledInput,
                 datePrevision = LocalDateTime.now(),
                 dateRealization = LocalDateTime.now(),
-                quantity = 50,
+                quantity = 50.0,
                 quantityUnit = EnumUnit.UNIT
             )
         }

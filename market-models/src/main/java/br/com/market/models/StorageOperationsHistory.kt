@@ -29,7 +29,7 @@ import java.util.*
 )
 data class StorageOperationsHistory(
     @PrimaryKey
-    override var id: UUID = UUID.randomUUID(),
+    override var id: String = UUID.randomUUID().toString(),
     @ColumnInfo("date_realization")
     var dateRealization: LocalDateTime = LocalDateTime.now(),
     @ColumnInfo("date_prevision")
@@ -38,11 +38,11 @@ data class StorageOperationsHistory(
     var operationType: EnumOperationType? = null,
     var description: String? = null,
     @ColumnInfo("storage_product_id")
-    var storageProductId: UUID? = null,
+    var storageProductId: String? = null,
     @ColumnInfo("user_id")
-    var userId: UUID? = null,
+    var userId: String? = null,
     override var synchronized: Boolean = false,
     override var active: Boolean = true,
     @ColumnInfo("company_id")
-    override var companyId: UUID? = null
+    override var companyId: String? = null
 ) : CompanyModel()

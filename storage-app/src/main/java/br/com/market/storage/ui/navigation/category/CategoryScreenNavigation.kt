@@ -15,8 +15,8 @@ internal const val argumentCategoryId = "categoryId"
 
 fun NavGraphBuilder.categoryScreen(
     onBackClick: () -> Unit,
-    onFabAddBrandClick: (UUID) -> Unit,
-    onBrandItemClick: (UUID, UUID) -> Unit
+    onFabAddBrandClick: (String) -> Unit,
+    onBrandItemClick: (String, String) -> Unit
 ) {
     composable(route = "$categoryScreenRoute?$argumentCategoryId={$argumentCategoryId}") {
         val categoryViewModel = hiltViewModel<CategoryViewModel>()
@@ -30,7 +30,7 @@ fun NavGraphBuilder.categoryScreen(
     }
 }
 
-fun NavController.navigateToCategoryScreen(categoryId: UUID, navOptions: NavOptions? = null) {
+fun NavController.navigateToCategoryScreen(categoryId: String, navOptions: NavOptions? = null) {
     navigate(route = "$categoryScreenRoute?$argumentCategoryId={$categoryId}", navOptions = navOptions)
 }
 

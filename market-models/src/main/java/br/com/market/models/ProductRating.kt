@@ -28,16 +28,16 @@ import java.util.*
 )
 data class ProductRating(
     @PrimaryKey
-    override var id: UUID = UUID.randomUUID(),
+    override var id: String = UUID.randomUUID().toString(),
     var rating: Double = 0.0,
     var comment: String? = null,
     var date: LocalDateTime = LocalDateTime.now(),
     @ColumnInfo("product_id")
-    var productId: UUID? = null,
+    var productId: String? = null,
     @ColumnInfo("client_id")
-    var clientId: UUID? = null,
+    var clientId: String? = null,
     override var synchronized: Boolean = false,
     override var active: Boolean = true,
     @ColumnInfo("company_id")
-    override var companyId: UUID? = null
+    override var companyId: String? = null
 ): CompanyModel()

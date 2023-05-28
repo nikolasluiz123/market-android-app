@@ -1,9 +1,9 @@
-package br.com.market.servicedataaccess.extensions
+package br.com.market.servicedataaccess.responses.extensions
 
-import br.com.market.servicedataaccess.responses.AuthenticationResponse
-import br.com.market.servicedataaccess.responses.MarketServiceResponse
-import br.com.market.servicedataaccess.responses.PersistenceResponse
-import br.com.market.servicedataaccess.responses.ReadResponse
+import br.com.market.servicedataaccess.responses.types.AuthenticationResponse
+import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
+import br.com.market.servicedataaccess.responses.types.PersistenceResponse
+import br.com.market.servicedataaccess.responses.types.ReadResponse
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import retrofit2.Response

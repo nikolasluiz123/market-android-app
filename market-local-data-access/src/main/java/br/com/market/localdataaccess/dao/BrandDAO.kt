@@ -1,7 +1,6 @@
 package br.com.market.localdataaccess.dao
 
 import androidx.room.*
-import androidx.room.util.convertUUIDToByte
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import br.com.market.domain.BrandDomain
@@ -25,7 +24,7 @@ abstract class BrandDAO {
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun findBrands(limit: Int, offset: Int, categoryId: UUID? = null, brandName: String? = null): List<BrandDomain> {
+    suspend fun findBrands(limit: Int, offset: Int, categoryId: String? = null, brandName: String? = null): List<BrandDomain> {
         val params = mutableListOf<Any>()
 
         val select = StringJoiner("\r\n")
@@ -41,7 +40,7 @@ abstract class BrandDAO {
             from.add(" inner join categories_brands cb on b.id = cb.brand_id ")
             where.add(" and cb.category_id = ? ")
 
-            params.add(convertUUIDToByte(categoryId))
+            params.add(categoryId)
         }
 
         if (brandName != null) {
@@ -147,10 +146,10 @@ abstract class BrandDAO {
      * @author Nikolas Luiz Schmitt
      */
     @Query("select * from brands where id = :brandId")
-    abstract suspend fun findBrandById(brandId: UUID): Brand
+    abstract suspend fun findBrandById(brandId: String): Brand
 
     @Query("select * from categories_brands where brand_id = :brandId and category_id = :categoryId ")
-    abstract suspend fun findCategoryBrandBy(brandId: UUID, categoryId: UUID): CategoryBrand
+    abstract suspend fun findCategoryBrandBy(brandId: String, categoryId: String): CategoryBrand
 
     /**
      * Função para atualizar a flag [active] de uma marca com o [brandId] informado
@@ -162,7 +161,7 @@ abstract class BrandDAO {
      * @author Nikolas Luiz Schmitt
      */
     @Query("update categories_brands set active = :active, synchronized = :sync where brand_id = :brandId and category_id = :categoryId ")
-    abstract suspend fun updateActive(brandId: UUID, categoryId: UUID, active: Boolean, sync: Boolean)
+    abstract suspend fun updateActive(brandId: String, categoryId: String, active: Boolean, sync: Boolean)
 
     /**
      * Função que facilita a mudança de ativo e inativo.
@@ -188,7 +187,7 @@ abstract class BrandDAO {
      *
      * @author Nikolas Luiz Schmitt
      */
-    @Query("select * from brands where synchronized = false")
+    @Query("select * from brands where synchronized = 0")
     abstract suspend fun findBrandsNotSynchronized(): List<Brand>
 
     /**
@@ -197,6 +196,6 @@ abstract class BrandDAO {
      *
      * @author Nikolas Luiz Schmitt
      */
-    @Query("select * from categories_brands where synchronized = false")
+    @Query("select * from categories_brands where synchronized = 0")
     abstract suspend fun findCategoryBrandsNotSynchronized(): List<CategoryBrand>
 }

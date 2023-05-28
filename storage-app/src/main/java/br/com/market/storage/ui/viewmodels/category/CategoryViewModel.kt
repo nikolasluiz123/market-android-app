@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -58,8 +57,7 @@ class CategoryViewModel @Inject constructor(
             )
         }
 
-        categoryId?.navParamToString()?.let {
-            val categoryId = UUID.fromString(it)
+        categoryId?.navParamToString()?.let { categoryId ->
 
             viewModelScope.launch {
                 val categoryDomain = categoryRepository.findById(categoryId)
