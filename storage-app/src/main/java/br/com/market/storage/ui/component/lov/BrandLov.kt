@@ -79,7 +79,11 @@ fun BrandLov(
                     modifier = Modifier.fillMaxWidth(),
                     colors = SearchBarDefaults.colors(
                         containerColor = Color.Transparent,
-                        inputFieldColors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
+                        inputFieldColors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            disabledContainerColor = Color.Transparent,
+                        ),
                         dividerColor = GREY_600
                     ),
                     shape = SearchBarDefaults.fullScreenShape

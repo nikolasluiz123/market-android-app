@@ -7,7 +7,6 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import br.com.market.storage.ui.screens.category.CategoryScreen
 import br.com.market.storage.ui.viewmodels.category.CategoryViewModel
-import java.util.*
 
 
 internal const val categoryScreenRoute = "category"

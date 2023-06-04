@@ -14,6 +14,13 @@ fun Double.formatToCurrency(): String {
     return formatter.format(this)
 }
 
+/**
+ * Função que pode ser utilizada para formatar
+ * um valor Double para um valor decimal no padrão
+ * correto de acordo com o Locale.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 fun Double.format(): String {
     val formatter = DecimalFormat.getInstance()
     return formatter.format(this)

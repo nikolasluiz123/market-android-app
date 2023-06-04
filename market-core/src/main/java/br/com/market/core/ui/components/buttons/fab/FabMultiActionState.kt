@@ -5,6 +5,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 
+/**
+ * Classe de estado customizado do FAB de multiplas ações
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 class FabMultiActionState {
     var currentState by mutableStateOf(EnumFabMultiActionState.COLLAPSED)
 

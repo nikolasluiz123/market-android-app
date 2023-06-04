@@ -8,7 +8,6 @@ import androidx.navigation.compose.composable
 import br.com.market.storage.ui.navigation.category.argumentCategoryId
 import br.com.market.storage.ui.screens.brand.BrandScreen
 import br.com.market.storage.ui.viewmodels.brand.BrandViewModel
-import java.util.*
 
 internal const val brandScreenRoute = "brand"
 internal const val argumentBrandId = "brandId"

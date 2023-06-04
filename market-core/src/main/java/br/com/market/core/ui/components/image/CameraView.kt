@@ -51,7 +51,7 @@ fun CameraView(onImageCaptured: (Uri, Boolean) -> Unit, onError: (ImageCaptureEx
         permissionsNotAvailableContent = { /* ... */ }
     ) {
         val context = LocalContext.current
-        var lensFacing by remember { mutableStateOf(CameraSelector.LENS_FACING_BACK) }
+        var lensFacing by remember { mutableIntStateOf(CameraSelector.LENS_FACING_BACK) }
         val imageCapture: ImageCapture = remember {
             ImageCapture.Builder().build()
         }

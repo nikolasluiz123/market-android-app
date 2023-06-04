@@ -11,7 +11,6 @@ import br.com.market.servicedataaccess.responses.types.PersistenceResponse
 import br.com.market.servicedataaccess.webclients.CategoryWebClient
 import br.com.market.storage.pagination.CategoryPagingSource
 import kotlinx.coroutines.flow.Flow
-import java.util.*
 import javax.inject.Inject
 
 /**
@@ -76,7 +75,7 @@ class CategoryRepository @Inject constructor(
     /**
      * Função para buscar uma categoria com um ID específico.
      *
-     * @param brandId Id da categoria que deseja buscar
+     * @param categoryId Id da categoria que deseja buscar
      *
      * @author Nikolas Luiz Schmitt
      */

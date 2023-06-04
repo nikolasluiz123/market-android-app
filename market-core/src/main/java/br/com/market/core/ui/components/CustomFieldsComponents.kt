@@ -56,7 +56,11 @@ fun AppBarTextField(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val textStyle = MaterialTheme.typography.bodyLarge
-    val colors = TextFieldDefaults.textFieldColors(containerColor = Color.Unspecified)
+    val colors = TextFieldDefaults.colors(
+        focusedContainerColor = Color.Unspecified,
+        unfocusedContainerColor = Color.Unspecified,
+        disabledContainerColor = Color.Unspecified,
+    )
 
     val textColor = Color.White
     val mergedTextStyle = textStyle.merge(TextStyle(color = textColor, lineHeight = 50.sp))
@@ -97,17 +101,17 @@ fun AppBarTextField(
             interactionSource = interactionSource,
             singleLine = true,
             decorationBox = { innerTextField ->
-                TextFieldDefaults.TextFieldDecorationBox(
+                TextFieldDefaults.DecorationBox(
                     value = value,
-                    visualTransformation = VisualTransformation.None,
                     innerTextField = innerTextField,
-                    placeholder = { Text(text = hint, color = Color.White) },
-                    singleLine = true,
                     enabled = true,
-                    isError = false,
+                    singleLine = true,
+                    visualTransformation = VisualTransformation.None,
                     interactionSource = interactionSource,
+                    isError = false,
+                    placeholder = { Text(text = hint, color = Color.White) },
                     colors = colors,
-                    contentPadding = PaddingValues(bottom = 4.dp)
+                    contentPadding = PaddingValues(bottom = 4.dp),
                 )
             }
         )
@@ -140,7 +144,6 @@ fun AppBarTextField(
  *
  * @author Nikolas Luiz Schmitt
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OutlinedTextFieldValidation(
     value: String,
@@ -169,8 +172,8 @@ fun OutlinedTextFieldValidation(
     maxLines: Int = Int.MAX_VALUE,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     shape: Shape = MaterialTheme.shapes.small,
-    colors: TextFieldColors = TextFieldDefaults.outlinedTextFieldColors(
-        disabledTextColor = Color.Black
+    colors: TextFieldColors = OutlinedTextFieldDefaults.colors(
+        disabledTextColor = Color.Black,
     )
 ) {
     OutlinedTextField(

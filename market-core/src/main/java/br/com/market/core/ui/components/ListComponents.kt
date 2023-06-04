@@ -1,7 +1,11 @@
 package br.com.market.core.ui.components
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -19,7 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.items
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import br.com.market.core.R
 import br.com.market.core.theme.GREY_500
 
@@ -218,6 +223,7 @@ private fun <T : Any> PagedVerticalList(
                     }
                 }
             }
+
             is LoadState.Loading -> {
                 item {
                     if (refreshLoadStateLoading != null) {
@@ -229,9 +235,15 @@ private fun <T : Any> PagedVerticalList(
                     }
                 }
             }
+
             is LoadState.NotLoading -> {
-                items(items = pagingItems) { item ->
-                    item?.let {
+                items(
+                    count = pagingItems.itemCount,
+                    key = pagingItems.itemKey(),
+                    contentType = pagingItems.itemContentType(
+                    )
+                ) { index ->
+                    pagingItems[index]?.let {
                         itemList(it)
                     }
                 }
@@ -246,6 +258,7 @@ private fun <T : Any> PagedVerticalList(
                     }
                 }
             }
+
             is LoadState.Loading -> {
                 item {
                     if (appendLoadStateLoading != null) {
@@ -257,6 +270,7 @@ private fun <T : Any> PagedVerticalList(
                     }
                 }
             }
+
             is LoadState.NotLoading -> {
                 item {
                     if (appendLoadStateNotLoading != null) {
@@ -274,6 +288,7 @@ private fun <T : Any> PagedVerticalList(
                     }
                 }
             }
+
             is LoadState.NotLoading -> {
                 item {
                     if (prependLoadStateLoading != null) {
@@ -281,6 +296,7 @@ private fun <T : Any> PagedVerticalList(
                     }
                 }
             }
+
             is LoadState.Loading -> {
                 item {
                     if (prependLoadStateNotLoading != null) {

@@ -1,7 +1,6 @@
 package br.com.market.core.extensions
 
 import java.text.DecimalFormat
-import java.util.*
 
 /**
  * Função para converter um ID enviado por navegação para um Long.
@@ -12,9 +11,13 @@ import java.util.*
  */
 fun String?.navParamToString(): String? = this?.replace("}", "")?.replace("{", "")
 
+/**
+ * Função que pode ser utilizada para converter uma string
+ * em um valor decimal no padrão do locale.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 fun String.parseToDouble(): Double? {
     val formatter = DecimalFormat.getInstance()
     return formatter.parse(this)?.toDouble()
 }
-
-fun String?.navParamToUUID(): UUID? = this.navParamToString()?.let(UUID::fromString)

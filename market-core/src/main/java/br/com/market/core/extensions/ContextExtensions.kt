@@ -38,6 +38,13 @@ suspend fun Context.getCameraProvider(): ProcessCameraProvider = suspendCoroutin
     }
 }
 
+/**
+ * Função que lê uma [Uri] e transforma em um [ByteArray]
+ *
+ * @param uri Objeto do tipo [Uri] que será lido
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Throws(IOException::class)
 fun Context.readBytes(uri: Uri): ByteArray? =
     contentResolver.openInputStream(uri)?.use { it.buffered().readBytes() }

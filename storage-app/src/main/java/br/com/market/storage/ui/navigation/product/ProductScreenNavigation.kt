@@ -11,7 +11,6 @@ import br.com.market.storage.ui.navigation.brand.argumentBrandId
 import br.com.market.storage.ui.navigation.category.argumentCategoryId
 import br.com.market.storage.ui.screens.product.ProductScreen
 import br.com.market.storage.ui.viewmodels.product.ProductViewModel
-import java.util.*
 
 internal const val productScreenRoute = "product"
 internal const val argumentProductId = "productId"
