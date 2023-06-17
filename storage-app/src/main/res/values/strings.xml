@@ -63,4 +63,14 @@
     <string name="product_screen_product_price_required_validation_message">O preço é obrigatório</string>
     <string name="product_screen_product_quantity_required_validation_message">A quantidade é obrigatória</string>
     <string name="product_screen_product_quantity_unity_required_validation_message">A medida é obrigatória</string>
+    <string name="lov_products_title">Produtos</string>
+    <string name="movement_screen_label_product">Produto</string>
+    <string name="movement_screen_label_date">Data</string>
+    <string name="movement_screen_label_time">Hora</string>
+    <string name="product_screen_label_description">Descrição</string>
+    <string name="movement_screen_product_name_required_validation_message">O produto é obrigatório.</string>
+    <string name="movement_screen_quantity_required_validation_message">A quantidade é obrigatória.</string>
+    <string name="movement_screen_description_required_validation_message">A descrição é obrigatória.</string>
+    <string name="movement_screen_date_prevision_required_validation_message">A data de previsão é obrigatória.</string>
+    <string name="movement_screen_time_prevision_required_validation_message">A hora da previsão é obrigatória.</string>
 </resources>

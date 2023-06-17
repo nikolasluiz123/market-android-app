@@ -2,8 +2,10 @@ package br.com.market.storage.ui.viewmodels
 
 import android.content.Context
 import android.util.Patterns
+import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import br.com.market.core.preferences.PreferencesKey
+import br.com.market.core.preferences.dataStore
 import br.com.market.domain.UserDomain
 import br.com.market.servicedataaccess.responses.types.AuthenticationResponse
 import br.com.market.storage.R
@@ -14,7 +16,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -28,7 +29,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    @ApplicationContext context: Context,
+    @ApplicationContext private val context: Context,
     private val userRepository: UserRepository
 ) : ViewModel() {
 
@@ -87,13 +88,15 @@ class LoginViewModel @Inject constructor(
     }
 
     suspend fun authenticate(userDomain: UserDomain): AuthenticationResponse {
-        return userRepository.authenticate(userDomain)
-    }
+        val response = userRepository.authenticate(userDomain)
 
-    fun logout() {
-        viewModelScope.launch {
-            userRepository.logout()
+        if (response.success) {
+            context.dataStore.edit { preferences ->
+                preferences[PreferencesKey.TOKEN] = response.token!!
+                preferences[PreferencesKey.USER] = response.userLocalId!!
+            }
         }
-    }
 
+        return response
+    }
 }

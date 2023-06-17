@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import br.com.market.core.preferences.PreferencesKey
 import br.com.market.core.preferences.dataStore
 import br.com.market.storage.ui.screens.SplashScreen
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 internal const val splashScreenRoute = "splashScreen"
@@ -31,10 +32,8 @@ fun NavGraphBuilder.splashScreen(
 
         SplashScreen {
             coroutineScope.launch {
-                dataStore.data.collect { preferences ->
-                    val token = preferences[PreferencesKey.TOKEN]
-                    if (token.isNullOrBlank()) onNavigateToLogin() else onNavigateToCategories()
-                }
+                val token = dataStore.data.first().toPreferences()[PreferencesKey.TOKEN]
+                if (token.isNullOrBlank()) onNavigateToLogin() else onNavigateToCategories()
             }
         }
     }

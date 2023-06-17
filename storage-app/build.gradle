@@ -72,8 +72,6 @@ dependencies {
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
     implementation "androidx.hilt:hilt-navigation-compose:$hilt_navigation_version"
 
-    implementation "androidx.datastore:datastore-preferences:$data_store_version"
-
     implementation "io.coil-kt:coil-compose:$coil_compose_version"
 
     implementation "androidx.navigation:navigation-compose:$compose_navigation_version"

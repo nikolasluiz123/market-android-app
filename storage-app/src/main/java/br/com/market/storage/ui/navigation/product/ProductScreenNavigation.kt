@@ -17,7 +17,7 @@ internal const val argumentProductId = "productId"
 
 fun NavGraphBuilder.productScreen(
     onBackClick: () -> Unit,
-    onStorageButtonClick: () -> Unit = { },
+    onStorageButtonClick: (String, String, String) -> Unit,
     onBottomSheetLoadImageItemClick: (IEnumOptionsBottomSheet, (Uri) -> Unit) -> Unit,
     onProductImageClick: (String) -> Unit
 ) {

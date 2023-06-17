@@ -1,6 +1,5 @@
 package br.com.market.storage.ui.viewmodels.brand
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import br.com.market.storage.repository.brand.BrandRepository
 import br.com.market.storage.ui.states.brand.BrandLovUIState
@@ -12,7 +11,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BrandLovViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
     private val brandRepository: BrandRepository
 ) : ViewModel() {
 

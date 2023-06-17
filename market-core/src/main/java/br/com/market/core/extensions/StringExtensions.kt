@@ -9,7 +9,10 @@ import java.text.DecimalFormat
  *
  * @author Nikolas Luiz Schmitt
  */
-fun String?.navParamToString(): String? = this?.replace("}", "")?.replace("{", "")
+fun String?.navParamToString(): String? {
+    val value = this?.replace("}", "")?.replace("{", "")
+    return if (value == "null") null else value
+}
 
 /**
  * Função que pode ser utilizada para converter uma string

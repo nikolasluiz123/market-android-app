@@ -1,9 +1,12 @@
 package br.com.market.servicedataaccess.injection
 
 import br.com.market.servicedataaccess.responses.adapters.ByteArrayToBase64TypeAdapter
+import br.com.market.servicedataaccess.responses.adapters.LocalDateTimeTypeAdapter
+import br.com.market.servicedataaccess.responses.adapters.LocalDateTypeAdapter
 import br.com.market.servicedataaccess.services.IBrandService
 import br.com.market.servicedataaccess.services.ICategoryService
 import br.com.market.servicedataaccess.services.IProductService
+import br.com.market.servicedataaccess.services.IStorageOperationsHistoryService
 import br.com.market.servicedataaccess.services.IUserService
 import com.google.gson.*
 import dagger.Module
@@ -12,6 +15,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.time.LocalDate
+import java.time.LocalDateTime
 import javax.inject.Singleton
 
 
@@ -32,12 +37,17 @@ class RetrofitModule {
     @Provides
     @Singleton
     fun provideRetrofit(): Retrofit {
-        val gson = GsonBuilder().registerTypeAdapter(ByteArray::class.java, ByteArrayToBase64TypeAdapter()).create()
+        val gson = GsonBuilder()
+            .registerTypeAdapter(ByteArray::class.java, ByteArrayToBase64TypeAdapter())
+            .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeTypeAdapter())
+            .registerTypeAdapter(LocalDate::class.java, LocalDateTypeAdapter())
+            .create()
 
         return Retrofit
             .Builder()
             .baseUrl("http://192.168.0.49:8080/api/v1/")
             .addConverterFactory(GsonConverterFactory.create(gson))
+//            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
     }
 
@@ -77,6 +87,12 @@ class RetrofitModule {
     @Singleton
     fun provideProductService(retrofit: Retrofit): IProductService {
         return retrofit.create(IProductService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideStorageOperationsHistoryService(retrofit: Retrofit): IStorageOperationsHistoryService {
+        return retrofit.create(IStorageOperationsHistoryService::class.java)
     }
 
 }

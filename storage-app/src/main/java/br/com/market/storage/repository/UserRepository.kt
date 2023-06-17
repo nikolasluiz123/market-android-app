@@ -1,12 +1,12 @@
 package br.com.market.storage.repository
 
-import android.content.Context
-import androidx.datastore.preferences.core.edit
-import br.com.market.core.preferences.PreferencesKey
-import br.com.market.core.preferences.dataStore
 import br.com.market.domain.UserDomain
+import br.com.market.localdataaccess.dao.UserDAO
+import br.com.market.models.User
 import br.com.market.servicedataaccess.responses.types.AuthenticationResponse
+import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.webclients.UserWebClient
+import java.net.HttpURLConnection
 import javax.inject.Inject
 
 /**
@@ -14,13 +14,13 @@ import javax.inject.Inject
  * o usuário, atualmente somente via WebClient.
  *
  * @property context Context do App para uso geral.
- * @property userWebClient WebClient para acesso aos end points do usuário no serviço.
+ * @property webClient WebClient para acesso aos end points do usuário no serviço.
  *
  * @author Nikolas Luiz Schmitt
  */
 class UserRepository @Inject constructor(
-    private val context: Context,
-    private val userWebClient: UserWebClient
+    private val dao: UserDAO,
+    private val webClient: UserWebClient
 ) {
 
     /**
@@ -31,7 +31,22 @@ class UserRepository @Inject constructor(
      * @author Nikolas Luiz Schmitt
      */
     suspend fun registerUser(userDomain: UserDomain): AuthenticationResponse {
-        return userWebClient.registerUser(userDomain)
+        val user = User(
+            name = userDomain.name,
+            email = userDomain.email,
+            password = userDomain.password
+        )
+
+        userDomain.id = user.id
+
+        val response = webClient.registerUser(user)
+
+        user.synchronized = response.getObjectSynchronized()
+        user.token = response.token
+
+        dao.save(user)
+
+        return response
     }
 
     /**
@@ -42,27 +57,46 @@ class UserRepository @Inject constructor(
      * @author Nikolas Luiz Schmitt
      */
     suspend fun authenticate(userDomain: UserDomain): AuthenticationResponse {
-        val response = userWebClient.authenticate(userDomain = userDomain)
+        val response = webClient.authenticate(userDomain = userDomain)
 
-        if (response.success) {
-            context.dataStore.edit { preferences ->
-                preferences[PreferencesKey.TOKEN] = response.token!!
+        if (!response.success) {
+            dao.findUserByEmail(userDomain.email)?.let { user ->
+                return AuthenticationResponse(
+                    token = user.token,
+                    userLocalId = user.id,
+                    code = HttpURLConnection.HTTP_OK,
+                    success = true
+                )
             }
         }
 
         return response
     }
 
-    /**
-     * Função responsável por deslogar o usuário, removendo o
-     * token de acesso do DataStore
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-    suspend fun logout() {
-        context.dataStore.edit { preferences ->
-            preferences[PreferencesKey.TOKEN] = ""
-        }
+    suspend fun sync(): MarketServiceResponse {
+        val response = sendUsersToRemoteDB()
+        return if (response.success) updateUsersOfLocalDB() else response
     }
 
+    private suspend fun sendUsersToRemoteDB(): MarketServiceResponse {
+        val usersNotSynchronized = dao.findUsersNotSynchronized()
+        val response = webClient.sync(usersNotSynchronized)
+
+        if (response.success) {
+            val productsSynchronized = usersNotSynchronized.map { it.copy(synchronized = true) }
+            dao.save(productsSynchronized)
+        }
+
+        return response
+    }
+
+    private suspend fun updateUsersOfLocalDB(): MarketServiceResponse {
+        val responseFindAllProducts = webClient.findAllUsers()
+
+        if (responseFindAllProducts.success) {
+            dao.save(responseFindAllProducts.values)
+        }
+
+        return responseFindAllProducts.toBaseResponse()
+    }
 }

@@ -1,19 +1,18 @@
 package br.com.market.storage.injection
 
-import android.content.Context
 import br.com.market.localdataaccess.dao.BrandDAO
 import br.com.market.localdataaccess.dao.CategoryDAO
+import br.com.market.localdataaccess.dao.UserDAO
 import br.com.market.servicedataaccess.webclients.BrandWebClient
 import br.com.market.servicedataaccess.webclients.CategoryWebClient
 import br.com.market.servicedataaccess.webclients.UserWebClient
-import br.com.market.storage.repository.brand.BrandRepository
 import br.com.market.storage.repository.CategoryRepository
 import br.com.market.storage.repository.UserRepository
+import br.com.market.storage.repository.brand.BrandRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 
 /**
@@ -51,9 +50,9 @@ class ViewModelModule {
     @Provides
     @ViewModelScoped
     fun provideUserRepository(
-        @ApplicationContext context: Context,
+        userDAO: UserDAO,
         userWebClient: UserWebClient
-    ): UserRepository = UserRepository(context, userWebClient)
+    ): UserRepository = UserRepository(userDAO, userWebClient)
 
     @Provides
     @ViewModelScoped

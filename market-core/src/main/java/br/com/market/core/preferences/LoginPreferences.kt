@@ -22,6 +22,7 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "lo
  */
 object PreferencesKey{
     val TOKEN = stringPreferencesKey("token")
+    val USER = stringPreferencesKey("userId")
 }
 
 /**
@@ -33,4 +34,7 @@ object PreferencesKey{
  */
 suspend fun DataStore<Preferences>.getToken(): String? {
     return this.data.first()[PreferencesKey.TOKEN]
+}
+suspend fun DataStore<Preferences>.getUserId(): String? {
+    return this.data.first()[PreferencesKey.USER]
 }

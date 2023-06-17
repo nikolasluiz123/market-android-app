@@ -140,17 +140,9 @@ open class BaseWebClient(private val context: Context) {
             codeBlock()
         } catch (e: Exception) {
             when (e) {
-                is SocketTimeoutException -> {
+                is SocketTimeoutException, is ConnectException -> {
                     AuthenticationResponse(
                         code = HttpURLConnection.HTTP_UNAVAILABLE,
-                        success = false,
-                        error = context.getString(R.string.connection_server_error_message)
-                    )
-                }
-                is ConnectException -> {
-                    AuthenticationResponse(
-                        code = HttpURLConnection.HTTP_UNAVAILABLE,
-                        success = false,
                         error = context.getString(R.string.connection_server_error_message)
                     )
                 }

@@ -42,7 +42,8 @@ fun BrandScreen(
     onBackClick: () -> Unit,
     onNavToBrandLov: (String, (String) -> Unit) -> Unit,
     onFabAddProductClick: (String, String) -> Unit,
-    onProductClick: (String, String, String) -> Unit = { _,_,_ -> }
+    onProductClick: (String, String, String) -> Unit,
+    onStorageButtonClick: (String, String) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -61,7 +62,8 @@ fun BrandScreen(
             }
         },
         onFabAddProductClick = onFabAddProductClick,
-        onProductClick = onProductClick
+        onProductClick = onProductClick,
+        onStorageButtonClick = onStorageButtonClick
     )
 }
 
@@ -74,7 +76,8 @@ fun BrandScreen(
     onSaveBrandClick: (Boolean) -> Unit = { },
     onNavToBrandLov: (String) -> Unit = { },
     onFabAddProductClick: (String, String) -> Unit = { _, _ -> },
-    onProductClick: (String, String, String) -> Unit = { _,_,_ -> }
+    onProductClick: (String, String, String) -> Unit = { _,_,_ -> },
+    onStorageButtonClick: (String, String) -> Unit = { _,_ -> }
 ) {
     var isEditMode by remember(state.brandDomain) {
         mutableStateOf(state.brandDomain != null)
@@ -184,7 +187,8 @@ fun BrandScreen(
                             },
                             onProductClick = { productId ->
                                 onProductClick(state.categoryDomain?.id!!, state.brandDomain?.id!!, productId)
-                            }
+                            },
+                            onStorageButtonClick = onStorageButtonClick
                         )
                     }
                 }

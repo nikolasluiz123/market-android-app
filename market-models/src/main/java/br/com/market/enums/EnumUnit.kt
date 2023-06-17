@@ -1,8 +1,9 @@
 package br.com.market.enums
 
+import br.com.market.core.enums.ILabeledEnum
 import br.com.market.models.R
 
-enum class EnumUnit(val labelResId: Int) {
+enum class EnumUnit(override val labelResId: Int) : ILabeledEnum {
 
     KILO(R.string.enum_unit_label_kilo),
     GRAM(R.string.enum_unit_label_gram),

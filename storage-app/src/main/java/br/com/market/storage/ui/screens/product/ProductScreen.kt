@@ -43,7 +43,7 @@ import kotlinx.coroutines.launch
 fun ProductScreen(
     viewModel: ProductViewModel,
     onBackClick: () -> Unit,
-    onStorageButtonClick: () -> Unit,
+    onStorageButtonClick: (String, String, String) -> Unit,
     onBottomSheetLoadImageItemClick: (IEnumOptionsBottomSheet, (Uri) -> Unit) -> Unit,
     onProductImageClick: (String) -> Unit
 ) {
@@ -68,7 +68,7 @@ fun ProductScreen(
     state: ProductUIState = ProductUIState(),
     onBackClick: () -> Unit = { },
     onToggleActive: () -> Unit = { },
-    onStorageButtonClick: () -> Unit = { },
+    onStorageButtonClick: (String, String, String) -> Unit = { _,_,_ -> },
     onBottomSheetLoadImageItemClick: (IEnumOptionsBottomSheet, (Uri) -> Unit) -> Unit = { _, _ -> },
     onSaveProductClick: () -> Unit = { },
     onProductImageClick: (String) -> Unit = { },
@@ -130,7 +130,9 @@ fun ProductScreen(
 
                     IconButtonStorage(
                         enabled = isEditMode,
-                        onClick = onStorageButtonClick
+                        onClick = {
+                            onStorageButtonClick(state.categoryId!!, state.brandDomain?.id!!, state.productDomain?.id!!)
+                        }
                     )
                 },
                 floatingActionButton = {

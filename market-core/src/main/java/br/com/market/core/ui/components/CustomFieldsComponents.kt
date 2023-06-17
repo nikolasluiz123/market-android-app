@@ -146,7 +146,7 @@ fun AppBarTextField(
  */
 @Composable
 fun OutlinedTextFieldValidation(
-    value: String,
+    value: String?,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
@@ -180,7 +180,7 @@ fun OutlinedTextFieldValidation(
         enabled = enabled,
         readOnly = readOnly,
         modifier = modifier,
-        value = value,
+        value = value ?: "",
         onValueChange = onValueChange,
         singleLine = singleLine,
         textStyle = textStyle,

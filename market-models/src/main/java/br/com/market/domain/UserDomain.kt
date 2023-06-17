@@ -1,5 +1,7 @@
 package br.com.market.domain
 
+import br.com.market.domain.base.BaseDomain
+
 /**
  * Classe de domínio do usuário.
  *
@@ -11,8 +13,11 @@ package br.com.market.domain
  * @author Nikolas Luiz Schmitt
  */
 data class UserDomain(
-    var id: Long? = null,
+    override var id: String? = null,
+    override var active: Boolean = true,
+    override var companyId: String? = null,
+    override var synchronized: Boolean = false,
     var name: String = "",
     var email: String = "",
     var password: String = ""
-)
+): BaseDomain()

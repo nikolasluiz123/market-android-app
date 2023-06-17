@@ -1,8 +1,13 @@
-package br.com.market.storage.ui.screens.storage
+package br.com.market.storage.ui.screens.movement
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -14,7 +19,12 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.core.extensions.formatShort
-import br.com.market.core.theme.*
+import br.com.market.core.theme.BLUE_500
+import br.com.market.core.theme.GREEN_500
+import br.com.market.core.theme.MarketTheme
+import br.com.market.core.theme.ORANGE_500
+import br.com.market.core.theme.RED_500
+import br.com.market.core.theme.colorCardActive
 import br.com.market.core.ui.components.InfoChip
 import br.com.market.enums.EnumOperationType
 import br.com.market.enums.EnumUnit

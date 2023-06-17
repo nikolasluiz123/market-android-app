@@ -35,4 +35,5 @@
     <string name="label_reactivate">Reativar</string>
     <string name="label_sync">Sincronizar</string>
     <string name="label_storage">Estoque</string>
+    <string name="label_calendar">Data</string>
 </resources>

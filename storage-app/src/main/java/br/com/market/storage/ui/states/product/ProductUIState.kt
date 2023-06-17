@@ -7,6 +7,7 @@ import br.com.market.domain.ProductImageDomain
 import br.com.market.enums.EnumUnit
 
 data class ProductUIState(
+    var categoryId: String? = null,
     var brandDomain: BrandDomain? = null,
     var productDomain: ProductDomain? = null,
 

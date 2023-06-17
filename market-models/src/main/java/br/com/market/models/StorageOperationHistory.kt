@@ -7,12 +7,12 @@ import java.time.LocalDateTime
 import java.util.*
 
 @Entity(
-    tableName = "storage_product",
+    tableName = "storage_operations_history",
     foreignKeys = [
         ForeignKey(
-            entity = StorageProduct::class,
+            entity = Product::class,
             parentColumns = ["id"],
-            childColumns = ["storage_product_id"]
+            childColumns = ["product_id"]
         ),
         ForeignKey(
             entity = User::class,
@@ -25,22 +25,23 @@ import java.util.*
             childColumns = ["company_id"]
         )
     ],
-    indices = [Index(value = ["storage_product_id"]), Index(value = ["company_id"]), Index(value = ["user_id"])]
+    indices = [Index(value = ["product_id"]), Index(value = ["company_id"]), Index(value = ["user_id"])]
 )
-data class StorageOperationsHistory(
+data class StorageOperationHistory(
     @PrimaryKey
     override var id: String = UUID.randomUUID().toString(),
     @ColumnInfo("date_realization")
-    var dateRealization: LocalDateTime = LocalDateTime.now(),
+    var dateRealization: LocalDateTime? = null,
     @ColumnInfo("date_prevision")
-    var datePrevision: LocalDateTime = LocalDateTime.now(),
+    var datePrevision: LocalDateTime? = null,
     @ColumnInfo("operation_type")
     var operationType: EnumOperationType? = null,
     var description: String? = null,
-    @ColumnInfo("storage_product_id")
-    var storageProductId: String? = null,
     @ColumnInfo("user_id")
     var userId: String? = null,
+    @ColumnInfo("product_id")
+    var productId: String? = null,
+    var quantity: Int? = null,
     override var synchronized: Boolean = false,
     override var active: Boolean = true,
     @ColumnInfo("company_id")

@@ -6,6 +6,8 @@ import br.com.market.localdataaccess.dao.BrandDAO
 import br.com.market.localdataaccess.dao.CategoryDAO
 import br.com.market.localdataaccess.dao.ProductDAO
 import br.com.market.localdataaccess.dao.ProductImageDAO
+import br.com.market.localdataaccess.dao.StorageOperationsHistoryDAO
+import br.com.market.localdataaccess.dao.UserDAO
 import br.com.market.localdataaccess.database.AppDatabase
 import dagger.Module
 import dagger.Provides
@@ -55,6 +57,16 @@ class DatabaseModule {
     @Provides
     fun provideProductImageDAO(appDatabase: AppDatabase): ProductImageDAO {
         return appDatabase.productImageDAO()
+    }
+
+    @Provides
+    fun provideStorageOperationsHistoryDAO(appDatabase: AppDatabase): StorageOperationsHistoryDAO {
+        return appDatabase.storageOperationsHistoryDAO()
+    }
+
+    @Provides
+    fun provideUserDAO(appDatabase: AppDatabase): UserDAO {
+        return appDatabase.userDAO()
     }
 
     /**

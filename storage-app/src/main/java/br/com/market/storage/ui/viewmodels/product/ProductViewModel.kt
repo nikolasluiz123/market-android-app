@@ -40,6 +40,7 @@ class ProductViewModel @Inject constructor(
     init {
         _uiState.update { currentState ->
             currentState.copy(
+                categoryId = categoryId.navParamToString(),
                 onProductNameChange = { _uiState.value = _uiState.value.copy(productName = it) },
                 onProductPriceChange = { _uiState.value = _uiState.value.copy(productPrice = it) },
                 onProductQuantityChange = { _uiState.value = _uiState.value.copy(productQuantity = it) },

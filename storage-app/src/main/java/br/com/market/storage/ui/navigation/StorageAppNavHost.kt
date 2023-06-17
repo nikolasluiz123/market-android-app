@@ -4,16 +4,31 @@ import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.navigation.*
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
+import androidx.navigation.Navigator
 import androidx.navigation.compose.NavHost
+import androidx.navigation.navOptions
 import br.com.market.core.ui.components.bottomsheet.IEnumOptionsBottomSheet
 import br.com.market.core.ui.components.bottomsheet.loadimage.EnumOptionsBottomSheetLoadImage
 import br.com.market.storage.ui.navigation.brand.brandScreen
 import br.com.market.storage.ui.navigation.brand.navigateToBrandScreen
-import br.com.market.storage.ui.navigation.category.*
+import br.com.market.storage.ui.navigation.category.categoryScreen
+import br.com.market.storage.ui.navigation.category.categorySearchScreen
+import br.com.market.storage.ui.navigation.category.categorySearchScreenRoute
+import br.com.market.storage.ui.navigation.category.navigateToCategoryScreen
+import br.com.market.storage.ui.navigation.category.navigateToCategorySearchScreen
 import br.com.market.storage.ui.navigation.lovs.brandLov
 import br.com.market.storage.ui.navigation.lovs.brandLovNavResultCallbackKey
-import br.com.market.storage.ui.navigation.lovs.brandLovRoute
+import br.com.market.storage.ui.navigation.lovs.navigateToBrandLov
+import br.com.market.storage.ui.navigation.lovs.navigateToProductLov
+import br.com.market.storage.ui.navigation.lovs.productLov
+import br.com.market.storage.ui.navigation.lovs.productLovNavResultCallbackKey
+import br.com.market.storage.ui.navigation.movement.movementScreen
+import br.com.market.storage.ui.navigation.movement.movementsSearchScreen
+import br.com.market.storage.ui.navigation.movement.navigateToMovementScreen
+import br.com.market.storage.ui.navigation.movement.navigateToMovementsSearchScreen
 import br.com.market.storage.ui.navigation.product.navigateToProductScreen
 import br.com.market.storage.ui.navigation.product.productScreen
 import kotlinx.coroutines.Dispatchers.Main
@@ -86,31 +101,34 @@ fun StorageAppNavHost(
         )
 
         categoryScreen(
-            onBackClick = { navController.popBackStack() },
+            onBackClick = navController::popBackStack,
             onFabAddBrandClick = navController::navigateToBrandScreen,
             onBrandItemClick = navController::navigateToBrandScreen
         )
 
         brandScreen(
-            onBackClick = { navController.popBackStack() },
-            onNavToBrandLov = { categoryId, callback ->
-                navController.navigateForResult(
-                    key = brandLovNavResultCallbackKey,
-                    route = "$brandLovRoute?$argumentCategoryId={$categoryId}",
-                    callback = callback
-                )
-            },
+            onBackClick = navController::popBackStack,
+            onNavToBrandLov = navController::navigateToBrandLov,
             onFabAddProductClick = navController::navigateToProductScreen,
-            onProductClick = navController::navigateToProductScreen
+            onProductClick = navController::navigateToProductScreen,
+            onStorageButtonClick = navController::navigateToMovementsSearchScreen
         )
 
         productScreen(
             onBackClick = navController::popBackStack,
-            onStorageButtonClick = {
-
-            },
+            onStorageButtonClick = navController::navigateToMovementsSearchScreen,
             onBottomSheetLoadImageItemClick = navController::navigateToLoadImage,
             onProductImageClick = navController::navigateToImageViewerScreen
+        )
+
+        movementsSearchScreen(
+            onBackClick = navController::popBackStack,
+            onAddMovementClick = navController::navigateToMovementScreen
+        )
+
+        movementScreen(
+            onBackClick = navController::popBackStack,
+            onNavToProductLov = navController::navigateToProductLov
         )
 
         brandLov(
@@ -120,7 +138,12 @@ fun StorageAppNavHost(
             onBackClick = navController::popBackStack
         )
 
-
+        productLov(
+            onItemClick = { productId ->
+                navController.popBackStackWithResult(productLovNavResultCallbackKey, productId)
+            },
+            onBackClick = navController::popBackStack
+        )
 
         cameraGraph(
             onImageCaptured = { uri, _ ->
