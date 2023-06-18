@@ -132,7 +132,8 @@ fun StorageAppNavHost(
         movementScreen(
             onBackClick = navController::popBackStack,
             onNavToProductLov = navController::navigateToProductLov,
-            onInactivate = navController::popBackStack
+            onInactivate = navController::popBackStack,
+            onConfirmInputClick = navController::popBackStack
         )
 
         brandLov(

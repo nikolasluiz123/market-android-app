@@ -31,6 +31,7 @@ fun Banner(
     isVisible: MutableState<Boolean>,
     message: String,
     modifier: Modifier = Modifier,
+    onConfirmClick: () -> Unit = { },
     labelButtonConfirm: String = "Confirmar",
     labelButtonCancel: String = "Cancelar"
 ) {
@@ -85,7 +86,10 @@ fun Banner(
                     end.linkTo(parent.end)
                     bottom.linkTo(parent.bottom)
                 },
-                onClick = { isVisible.value = false }
+                onClick = {
+                    onConfirmClick()
+                    isVisible.value = false
+                }
             ) {
                 Text(text = labelButtonConfirm, style = MaterialTheme.typography.labelMedium)
             }

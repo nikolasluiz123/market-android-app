@@ -41,6 +41,7 @@ import br.com.market.core.enums.EnumDateTimePatterns
 import br.com.market.core.preferences.PreferencesKey
 import br.com.market.core.preferences.dataStore
 import br.com.market.core.theme.MarketTheme
+import br.com.market.core.ui.components.Banner
 import br.com.market.core.ui.components.MarketBottomAppBar
 import br.com.market.core.ui.components.OutlinedTextFieldValidation
 import br.com.market.core.ui.components.SimpleMarketTopAppBar
@@ -71,7 +72,8 @@ fun MovementScreen(
     viewModel: MovementViewModel,
     onBackClick: () -> Unit,
     onNavToProductLov: (String, String, (String) -> Unit) -> Unit,
-    onInactivate: () -> Unit
+    onInactivate: () -> Unit,
+    onConfirmInputClick: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -87,6 +89,10 @@ fun MovementScreen(
         onInactivate = {
             onInactivate()
             viewModel.inactivate()
+        },
+        onConfirmInputClick = {
+            viewModel.confirmInput()
+            onConfirmInputClick()
         }
     )
 }
@@ -98,7 +104,8 @@ fun MovementScreen(
     onBackClick: () -> Unit = { },
     onNavToProductLov: (String, String) -> Unit = { _, _ -> },
     onInactivate: () -> Unit = { },
-    onSaveMovementClick: () -> Unit = { }
+    onSaveMovementClick: () -> Unit = { },
+    onConfirmInputClick: () -> Unit = { }
 ) {
     var isEditMode by remember(state.storageOperationHistoryDomain) {
         mutableStateOf(state.storageOperationHistoryDomain != null)
@@ -356,6 +363,22 @@ fun MovementScreen(
                         .padding(horizontal = 8.dp)
                 )
             }
+
+            val bannerState = remember(state.storageOperationHistoryDomain) {
+                mutableStateOf(
+                    state.storageOperationHistoryDomain?.datePrevision?.let {
+                        (it.isEqual(LocalDateTime.now()) || it.isBefore(LocalDateTime.now())) &&
+                                state.storageOperationHistoryDomain!!.operationType == ScheduledInput &&
+                                state.storageOperationHistoryDomain!!.dateRealization == null
+                    } ?: false
+                )
+            }
+
+            Banner(
+                isVisible = bannerState,
+                message = "Essa é uma Entrada Agendada para ${state.datePrevision} ${state.timePrevision}. Deseja confirmar a entrada dos produtos no estoque?",
+                onConfirmClick = onConfirmInputClick
+            )
         }
     }
 }

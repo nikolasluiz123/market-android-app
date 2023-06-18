@@ -19,7 +19,8 @@ internal const val argumentOperationType = "operationType"
 fun NavGraphBuilder.movementScreen(
     onBackClick: () -> Unit,
     onNavToProductLov: (String, String, (String) -> Unit) -> Unit,
-    onInactivate: () -> Unit
+    onInactivate: () -> Unit,
+    onConfirmInputClick: () -> Unit
 ) {
     composable(route = "$movementScreenRoute?$argumentCategoryId={$argumentCategoryId}&$argumentBrandId={$argumentBrandId}&$argumentProductId={$argumentProductId}&$argumentOperationType={$argumentOperationType}&$argumentMovementId={$argumentMovementId}") {
         val viewModel = hiltViewModel<MovementViewModel>()
@@ -28,7 +29,8 @@ fun NavGraphBuilder.movementScreen(
             viewModel = viewModel,
             onBackClick = onBackClick,
             onNavToProductLov = onNavToProductLov,
-            onInactivate = onInactivate
+            onInactivate = onInactivate,
+            onConfirmInputClick = onConfirmInputClick
         )
     }
 }

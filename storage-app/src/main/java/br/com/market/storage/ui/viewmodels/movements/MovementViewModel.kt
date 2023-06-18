@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import javax.inject.Inject
@@ -177,6 +178,19 @@ class MovementViewModel @Inject constructor(
         _uiState.value.storageOperationHistoryDomain?.id?.let { id ->
             viewModelScope.launch {
                 storageOperationsHistoryRepository.inactivate(id = id)
+            }
+        }
+    }
+
+    fun confirmInput() {
+        _uiState.value.storageOperationHistoryDomain?.let { domain ->
+            viewModelScope.launch {
+                storageOperationsHistoryRepository.save(
+                    domain.copy(
+                        dateRealization = LocalDateTime.now(),
+                        operationType = EnumOperationType.Input,
+                    ),
+                )
             }
         }
     }
