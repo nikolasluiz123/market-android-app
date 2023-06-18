@@ -14,7 +14,7 @@ import java.util.*
  * @author Nikolas Luiz Schmitt
  */
 @Dao
-abstract class BrandDAO {
+abstract class BrandDAO : AbstractBaseDAO() {
 
     /**
      * Função que busca as marcas de forma paginada

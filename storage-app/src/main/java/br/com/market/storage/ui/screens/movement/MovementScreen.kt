@@ -47,11 +47,10 @@ import br.com.market.core.ui.components.SimpleMarketTopAppBar
 import br.com.market.core.ui.components.buttons.FloatingActionButtonSave
 import br.com.market.core.ui.components.buttons.IconButtonCalendar
 import br.com.market.core.ui.components.buttons.IconButtonInactivate
-import br.com.market.core.ui.components.buttons.IconButtonReactivate
 import br.com.market.core.ui.components.buttons.IconButtonSearch
 import br.com.market.core.ui.components.buttons.IconButtonTime
 import br.com.market.core.ui.components.dialog.TimePickerDialog
-import br.com.market.domain.StorageOperationsHistoryDomain
+import br.com.market.domain.StorageOperationHistoryDomain
 import br.com.market.enums.EnumOperationType.*
 import br.com.market.storage.R
 import br.com.market.storage.ui.states.MovementUIState
@@ -72,6 +71,7 @@ fun MovementScreen(
     viewModel: MovementViewModel,
     onBackClick: () -> Unit,
     onNavToProductLov: (String, String, (String) -> Unit) -> Unit,
+    onInactivate: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -83,7 +83,11 @@ fun MovementScreen(
                 viewModel.loadProductById(productId)
             }
         },
-        onSaveMovementClick = viewModel::saveMovement
+        onSaveMovementClick = viewModel::saveMovement,
+        onInactivate = {
+            onInactivate()
+            viewModel.inactivate()
+        }
     )
 }
 
@@ -93,15 +97,11 @@ fun MovementScreen(
     state: MovementUIState = MovementUIState(),
     onBackClick: () -> Unit = { },
     onNavToProductLov: (String, String) -> Unit = { _, _ -> },
-    onToggleActive: () -> Unit = { },
+    onInactivate: () -> Unit = { },
     onSaveMovementClick: () -> Unit = { }
 ) {
-    var isEditMode by remember(state.storageOperationsHistoryDomain) {
-        mutableStateOf(state.storageOperationsHistoryDomain != null)
-    }
-
-    var isActive by remember(state.storageOperationsHistoryDomain?.active) {
-        mutableStateOf(state.storageOperationsHistoryDomain?.active ?: true)
+    var isEditMode by remember(state.storageOperationHistoryDomain) {
+        mutableStateOf(state.storageOperationHistoryDomain != null)
     }
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -127,36 +127,17 @@ fun MovementScreen(
         bottomBar = {
             MarketBottomAppBar(
                 actions = {
-                    if (isActive) {
-                        IconButtonInactivate(
-                            enabled = isEditMode,
-                            onClick = {
-                                onToggleActive()
-                                isActive = false
-
-                                scope.launch {
-                                    snackbarHostState.showSnackbar("Movimentação Inativada com Sucesso")
-                                }
-                            }
-                        )
-                    } else {
-                        IconButtonReactivate(
-                            enabled = isEditMode,
-                            onClick = {
-                                onToggleActive()
-                                isActive = true
-
-                                scope.launch {
-                                    snackbarHostState.showSnackbar("Movimentação Reativada com Sucesso")
-                                }
-                            }
-                        )
-                    }
+                    IconButtonInactivate(
+                        enabled = isEditMode,
+                        onClick = {
+                            onInactivate()
+                        }
+                    )
                 },
                 floatingActionButton = {
                     FloatingActionButtonSave(
                         onClick = {
-                            isEditMode = saveMovement(state, isActive, isEditMode, onSaveMovementClick, scope, snackbarHostState, context)
+                            isEditMode = saveMovement(state, isEditMode, onSaveMovementClick, scope, snackbarHostState, context)
                         }
                     )
                 }
@@ -381,7 +362,6 @@ fun MovementScreen(
 
 private fun saveMovement(
     state: MovementUIState,
-    isActive: Boolean,
     isEditMode: Boolean,
     onSaveMovementClick: () -> Unit,
     scope: CoroutineScope,
@@ -389,7 +369,7 @@ private fun saveMovement(
     context: Context
 ): Boolean {
     scope.launch {
-        if (state.onValidate() && isActive) {
+        if (state.onValidate()) {
             val datePrevision = state.datePrevision?.let {
                 LocalDate.parse(it, DateTimeFormatter.ofPattern(EnumDateTimePatterns.DATE_PATTER.pattern))
             }
@@ -407,8 +387,8 @@ private fun saveMovement(
 
             val userId = context.dataStore.data.first().toPreferences()[PreferencesKey.USER]!!
 
-            state.storageOperationsHistoryDomain = if (isEditMode) {
-                state.storageOperationsHistoryDomain?.copy(
+            state.storageOperationHistoryDomain = if (isEditMode) {
+                state.storageOperationHistoryDomain?.copy(
                     productId = state.productDomain?.id,
                     quantity = state.quantity.toInt(),
                     datePrevision = localDateTimePrevision,
@@ -418,7 +398,7 @@ private fun saveMovement(
                     userId = userId
                 )
             } else {
-                StorageOperationsHistoryDomain(
+                StorageOperationHistoryDomain(
                     productId = state.productDomain?.id,
                     quantity = state.quantity.toInt(),
                     datePrevision = localDateTimePrevision,
@@ -434,7 +414,7 @@ private fun saveMovement(
             snackbarHostState.showSnackbar("Movimentação Salva com Sucesso")
         }
     }
-    return state.storageOperationsHistoryDomain != null
+    return state.storageOperationHistoryDomain != null
 }
 
 @Preview

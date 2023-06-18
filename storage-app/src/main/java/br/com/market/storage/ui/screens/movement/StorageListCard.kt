@@ -1,5 +1,6 @@
 package br.com.market.storage.ui.screens.movement
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
@@ -35,18 +36,26 @@ import java.time.LocalDateTime
 fun StorageListCard(
     productName: String,
     operationType: EnumOperationType,
-    dateRealization: LocalDateTime,
-    quantity: Double,
-    quantityUnit: EnumUnit,
+    quantity: Int,
+    onItemClick: () -> Unit = { },
     datePrevision: LocalDateTime? = null,
+    dateRealization: LocalDateTime? = null,
     responsibleName: String? = null,
     description: String? = null
 ) {
-    Card(colors = CardDefaults.cardColors(containerColor = colorCardActive)) {
+    Card(
+        Modifier
+            .fillMaxWidth()
+            .clickable {
+                onItemClick()
+            },
+        elevation = CardDefaults.cardElevation(8.dp),
+        colors = CardDefaults.cardColors(containerColor = colorCardActive)
+    ) {
         ConstraintLayout(
             Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
+                .padding(bottom = 8.dp)
         ) {
             val (
                 labelNameRef, nameRef,
@@ -70,7 +79,7 @@ fun StorageListCard(
                         width = Dimension.fillToConstraints
                         horizontalChainWeight = 0.6F
                     }
-                    .padding(end = 8.dp),
+                    .padding(start = 8.dp, top = 8.dp, end = 8.dp),
                 style = MaterialTheme.typography.bodyMedium
             )
 
@@ -84,7 +93,7 @@ fun StorageListCard(
                         width = Dimension.fillToConstraints
                         horizontalChainWeight = 0.6F
                     }
-                    .padding(end = 8.dp),
+                    .padding(start = 8.dp, end = 8.dp),
                 style = MaterialTheme.typography.bodySmall
             )
 
@@ -110,8 +119,10 @@ fun StorageListCard(
                                 horizontalChainWeight = 0.4F
 
                             }
+                            .padding(end = 8.dp)
                     )
                 }
+
                 EnumOperationType.Sell -> {
                     InfoChip(
                         label = "Venda",
@@ -133,8 +144,10 @@ fun StorageListCard(
                                 horizontalChainWeight = 0.4F
 
                             }
+                            .padding(end = 8.dp)
                     )
                 }
+
                 EnumOperationType.Output -> {
                     InfoChip(
                         label = "Baixa",
@@ -157,8 +170,10 @@ fun StorageListCard(
                                 horizontalChainWeight = 0.4F
 
                             }
+                            .padding(end = 8.dp)
                     )
                 }
+
                 EnumOperationType.ScheduledInput -> {
                     InfoChip(
                         label = "Entrada Prevista",
@@ -181,11 +196,12 @@ fun StorageListCard(
                                 horizontalChainWeight = 0.4F
 
                             }
+                            .padding(end = 8.dp)
                     )
                 }
             }
 
-            if (datePrevision != null && !datePrevision.isEqual(dateRealization)) {
+            if (datePrevision != null && dateRealization != null) {
                 createHorizontalChain(labelPrevisionRef, labelRealizationRef, labelQuantityRef)
                 createHorizontalChain(previsionRef, realizationRef, quantityRef)
 
@@ -199,7 +215,7 @@ fun StorageListCard(
                             width = Dimension.fillToConstraints
                             horizontalChainWeight = 0.32F
                         }
-                        .padding(top = 8.dp, end = 8.dp),
+                        .padding(start = 8.dp, top = 8.dp, end = 8.dp),
                     style = MaterialTheme.typography.bodyMedium
                 )
 
@@ -213,7 +229,7 @@ fun StorageListCard(
                             width = Dimension.fillToConstraints
                             horizontalChainWeight = 0.32F
                         }
-                        .padding(end = 8.dp),
+                        .padding(start = 8.dp, end = 8.dp),
                     style = MaterialTheme.typography.bodySmall
                 )
 
@@ -244,7 +260,100 @@ fun StorageListCard(
                         .padding(end = 8.dp),
                     style = MaterialTheme.typography.bodySmall
                 )
-            } else {
+
+                Text(
+                    text = "Quantidade",
+                    modifier = Modifier
+                        .constrainAs(labelQuantityRef) {
+                            start.linkTo(labelRealizationRef.end)
+                            top.linkTo(labelRealizationRef.top)
+                            end.linkTo(chipOperationTypeRef.end)
+
+                            width = Dimension.fillToConstraints
+                            horizontalChainWeight = 0.25F
+                        }
+                        .padding(top = 8.dp, end = 8.dp),
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.End
+                )
+
+                Text(
+                    text = quantity.formatQuantityIn(EnumUnit.UNIT),
+                    modifier = Modifier
+                        .constrainAs(quantityRef) {
+                            start.linkTo(labelQuantityRef.start)
+                            top.linkTo(labelQuantityRef.bottom)
+
+                            width = Dimension.fillToConstraints
+                            horizontalChainWeight = 0.25F
+                        }
+                        .padding(end = 8.dp),
+                    style = MaterialTheme.typography.bodySmall,
+                    textAlign = TextAlign.End
+                )
+            } else if (datePrevision != null) {
+                createHorizontalChain(labelPrevisionRef, labelQuantityRef)
+                createHorizontalChain(previsionRef, quantityRef)
+
+                Text(
+                    text = "Previsão",
+                    modifier = Modifier
+                        .constrainAs(labelPrevisionRef) {
+                            start.linkTo(nameRef.start)
+                            top.linkTo(nameRef.bottom)
+
+                            width = Dimension.fillToConstraints
+                            horizontalChainWeight = 0.5F
+                        }
+                        .padding(start = 8.dp, top = 8.dp, end = 8.dp),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                Text(
+                    text = datePrevision.formatShort(),
+                    modifier = Modifier
+                        .constrainAs(previsionRef) {
+                            start.linkTo(labelPrevisionRef.start)
+                            top.linkTo(labelPrevisionRef.bottom)
+
+                            width = Dimension.fillToConstraints
+                            horizontalChainWeight = 0.5F
+                        }
+                        .padding(start = 8.dp, end = 8.dp),
+                    style = MaterialTheme.typography.bodySmall
+                )
+
+                Text(
+                    text = "Quantidade",
+                    modifier = Modifier
+                        .constrainAs(labelQuantityRef) {
+                            start.linkTo(labelPrevisionRef.end)
+                            top.linkTo(labelPrevisionRef.top)
+                            end.linkTo(chipOperationTypeRef.end)
+
+                            width = Dimension.fillToConstraints
+                            horizontalChainWeight = 0.5F
+                        }
+                        .padding(top = 8.dp, end = 8.dp),
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.End
+                )
+
+                Text(
+                    text = quantity.formatQuantityIn(EnumUnit.UNIT),
+                    modifier = Modifier
+                        .constrainAs(quantityRef) {
+                            start.linkTo(labelQuantityRef.start)
+                            top.linkTo(labelQuantityRef.bottom)
+
+                            width = Dimension.fillToConstraints
+                            horizontalChainWeight = 0.5F
+                        }
+                        .padding(end = 8.dp),
+                    style = MaterialTheme.typography.bodySmall,
+                    textAlign = TextAlign.End
+                )
+            } else if (dateRealization != null) {
                 createHorizontalChain(labelRealizationRef, labelQuantityRef)
                 createHorizontalChain(realizationRef, quantityRef)
 
@@ -255,11 +364,10 @@ fun StorageListCard(
                             start.linkTo(nameRef.start)
                             top.linkTo(nameRef.bottom)
 
-
                             width = Dimension.fillToConstraints
                             horizontalChainWeight = 0.5F
                         }
-                        .padding(top = 8.dp, end = 8.dp),
+                        .padding(start = 8.dp, top = 8.dp, end = 8.dp),
                     style = MaterialTheme.typography.bodyMedium
                 )
 
@@ -273,39 +381,41 @@ fun StorageListCard(
                             width = Dimension.fillToConstraints
                             horizontalChainWeight = 0.5F
                         }
-                        .padding(end = 8.dp),
+                        .padding(start = 8.dp, end = 8.dp),
                     style = MaterialTheme.typography.bodySmall
                 )
+
+                Text(
+                    text = "Quantidade",
+                    modifier = Modifier
+                        .constrainAs(labelQuantityRef) {
+                            start.linkTo(labelRealizationRef.end)
+                            top.linkTo(labelRealizationRef.top)
+                            end.linkTo(chipOperationTypeRef.end)
+
+                            width = Dimension.fillToConstraints
+                            horizontalChainWeight = 0.5F
+                        }
+                        .padding(top = 8.dp, end = 8.dp),
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.End
+                )
+
+                Text(
+                    text = quantity.formatQuantityIn(EnumUnit.UNIT),
+                    modifier = Modifier
+                        .constrainAs(quantityRef) {
+                            start.linkTo(labelQuantityRef.start)
+                            top.linkTo(labelQuantityRef.bottom)
+
+                            width = Dimension.fillToConstraints
+                            horizontalChainWeight = 0.5F
+                        }
+                        .padding(end = 8.dp),
+                    style = MaterialTheme.typography.bodySmall,
+                    textAlign = TextAlign.End
+                )
             }
-
-            Text(
-                text = "Quantidade",
-                modifier = Modifier
-                    .constrainAs(labelQuantityRef) {
-                        start.linkTo(labelRealizationRef.end)
-                        top.linkTo(labelRealizationRef.top)
-
-                        width = Dimension.fillToConstraints
-                        horizontalChainWeight = if (datePrevision != null) 0.25F else 0.5F
-                    }
-                    .padding(top = 8.dp),
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.End
-            )
-
-            Text(
-                text = quantity.formatQuantityIn(quantityUnit),
-                modifier = Modifier
-                    .constrainAs(quantityRef) {
-                        start.linkTo(labelQuantityRef.start)
-                        top.linkTo(labelQuantityRef.bottom)
-
-                        width = Dimension.fillToConstraints
-                        horizontalChainWeight = if (datePrevision != null) 0.25F else 0.5F
-                    },
-                style = MaterialTheme.typography.bodySmall,
-                textAlign = TextAlign.End
-            )
 
             if (operationType == EnumOperationType.Output) {
                 Text(
@@ -320,7 +430,8 @@ fun StorageListCard(
                                 top.linkTo(realizationRef.bottom, margin = 8.dp)
 
                             width = Dimension.fillToConstraints
-                        },
+                        }
+                        .padding(start = 8.dp),
                     style = MaterialTheme.typography.bodyMedium
                 )
 
@@ -332,7 +443,8 @@ fun StorageListCard(
                             top.linkTo(labelResponsibleRef.bottom)
 
                             width = Dimension.fillToConstraints
-                        },
+                        }
+                        .padding(start = 8.dp),
                     style = MaterialTheme.typography.bodySmall
                 )
 
@@ -344,7 +456,8 @@ fun StorageListCard(
                             top.linkTo(responsibleRef.bottom, margin = 8.dp)
 
                             width = Dimension.fillToConstraints
-                        },
+                        }
+                        .padding(start = 8.dp),
                     style = MaterialTheme.typography.bodyMedium
                 )
 
@@ -356,7 +469,8 @@ fun StorageListCard(
                             linkTo(top = labelDescriptionRef.bottom, bottom = parent.bottom, bias = 0F)
 
                             width = Dimension.fillToConstraints
-                        },
+                        }
+                        .padding(start = 8.dp),
                     style = MaterialTheme.typography.bodySmall,
                     maxLines = 4,
                     overflow = TextOverflow.Ellipsis
@@ -376,8 +490,7 @@ fun StorageListCardInputPreview() {
                 operationType = EnumOperationType.Input,
                 datePrevision = null,
                 dateRealization = LocalDateTime.now(),
-                quantity = 500.0,
-                quantityUnit = EnumUnit.UNIT
+                quantity = 500
             )
         }
     }
@@ -393,8 +506,7 @@ fun StorageListCardInputWithPrevisionPreview() {
                 operationType = EnumOperationType.Input,
                 datePrevision = LocalDateTime.now(),
                 dateRealization = LocalDateTime.now().plusDays(2),
-                quantity = 500.0,
-                quantityUnit = EnumUnit.UNIT
+                quantity = 500
             )
         }
     }
@@ -410,8 +522,7 @@ fun StorageListCardInputWithPrevisionAndRealizationIqualsPreview() {
                 operationType = EnumOperationType.Input,
                 datePrevision = LocalDateTime.now(),
                 dateRealization = LocalDateTime.now(),
-                quantity = 500.0,
-                quantityUnit = EnumUnit.UNIT
+                quantity = 500
             )
         }
     }
@@ -426,8 +537,7 @@ fun StorageListCardSellPreview() {
                 productName = "Wafer de Chocolate com Avelã dos Montes da Índia Nevada do Alaska",
                 operationType = EnumOperationType.Sell,
                 dateRealization = LocalDateTime.now(),
-                quantity = 5.0,
-                quantityUnit = EnumUnit.UNIT
+                quantity = 5
             )
         }
     }
@@ -442,8 +552,7 @@ fun StorageListCardOutputPreview() {
                 productName = "Wafer de Chocolate com Avelã dos Montes da Índia Nevada do Alaska",
                 operationType = EnumOperationType.Output,
                 dateRealization = LocalDateTime.now(),
-                quantity = 50.0,
-                quantityUnit = EnumUnit.UNIT,
+                quantity = 50,
                 responsibleName = "Nikolas Luiz Schmitt",
                 description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
             )
@@ -461,8 +570,7 @@ fun StorageListCardScheduledInputPreview() {
                 operationType = EnumOperationType.ScheduledInput,
                 datePrevision = LocalDateTime.now(),
                 dateRealization = LocalDateTime.now(),
-                quantity = 50.0,
-                quantityUnit = EnumUnit.UNIT
+                quantity = 50
             )
         }
     }

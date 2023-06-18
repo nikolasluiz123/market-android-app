@@ -11,6 +11,10 @@ import androidx.paging.PagingConfig
  */
 object PagingConfigUtils {
 
+    const val PAGE_SIZE = 20
+    private const val INITIAL_LOAD_SIZE = 60
+    private const val PREFETCH_DISTANCE = 10
+
     /**
      * Função para obter a configuração de paginação
      * padrão.
@@ -18,24 +22,9 @@ object PagingConfigUtils {
      * @author Nikolas Luiz Schmitt
      */
     fun defaultPagingConfig() = PagingConfig(
-        pageSize = 50,
-        prefetchDistance = 25,
+        pageSize = PAGE_SIZE,
+        prefetchDistance = PREFETCH_DISTANCE,
         enablePlaceholders = false,
-        initialLoadSize = 50
-    )
-
-    /**
-     * Função para obter uma configuração de paginação
-     * customizada baseada no [pageSize] informado
-     *
-     * @param pageSize Tamanho desejado de cada página.
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-    fun customPagingConfig(pageSize: Int) = PagingConfig(
-        pageSize = pageSize,
-        prefetchDistance = pageSize / 2,
-        enablePlaceholders = false,
-        initialLoadSize = pageSize
+        initialLoadSize = INITIAL_LOAD_SIZE
     )
 }

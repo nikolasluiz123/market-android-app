@@ -6,7 +6,7 @@ import br.com.market.models.Product
 import java.util.*
 
 @Dao
-abstract class ProductDAO {
+abstract class ProductDAO : AbstractBaseDAO() {
 
     @Query("select * from products where id = :productId and active")
     abstract suspend fun findProductById(productId: String): Product

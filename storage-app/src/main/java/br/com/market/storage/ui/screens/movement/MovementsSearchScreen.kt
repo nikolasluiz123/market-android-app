@@ -16,14 +16,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.paging.compose.collectAsLazyPagingItems
 import br.com.market.core.R
 import br.com.market.core.theme.MarketTheme
-import br.com.market.core.ui.components.MultiActionsFabBottomAppBar
+import br.com.market.core.ui.components.MarketBottomAppBar
+import br.com.market.core.ui.components.PagedVerticalListComponent
 import br.com.market.core.ui.components.SimpleMarketTopAppBar
 import br.com.market.core.ui.components.buttons.MarketFloatingActionButtonMultiActions
+import br.com.market.core.ui.components.buttons.SmallFabActions
 import br.com.market.core.ui.components.buttons.fab.SubActionFabItem
 import br.com.market.core.ui.components.buttons.rememberFabMultiActionsState
 import br.com.market.enums.EnumOperationType
+import br.com.market.localdataaccess.tuples.StorageOperationHistoryTuple
 import br.com.market.storage.ui.states.MovementsSearchUIState
 import br.com.market.storage.ui.viewmodels.movements.MovementsSearchViewModel
 
@@ -31,14 +35,16 @@ import br.com.market.storage.ui.viewmodels.movements.MovementsSearchViewModel
 fun MovementsSearchScreen(
     viewModel: MovementsSearchViewModel,
     onAddMovementClick: (String, String, EnumOperationType, String?) -> Unit,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onMovementClick: (StorageOperationHistoryTuple) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
     MovementsSearchScreen(
         state = state,
         onAddMovementClick = onAddMovementClick,
-        onBackClick = onBackClick
+        onBackClick = onBackClick,
+        onMovementClick = onMovementClick
     )
 }
 
@@ -47,9 +53,11 @@ fun MovementsSearchScreen(
 fun MovementsSearchScreen(
     state: MovementsSearchUIState = MovementsSearchUIState(),
     onAddMovementClick: (String, String, EnumOperationType, String?) -> Unit = { _, _, _, _ -> },
-    onBackClick: () -> Unit = { }
+    onBackClick: () -> Unit = { },
+    onMovementClick: (StorageOperationHistoryTuple) -> Unit = { }
 ) {
     val bottomBarState = rememberFabMultiActionsState()
+    val pagingData = state.operations.collectAsLazyPagingItems()
 
     Scaffold(
         topBar = {
@@ -61,16 +69,41 @@ fun MovementsSearchScreen(
             )
         },
         bottomBar = {
-            MultiActionsFabBottomAppBar(
-                floatingActionButton = {
-                    MarketFloatingActionButtonMultiActions(state = bottomBarState) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = stringResource(R.string.label_adicionar),
-                            tint = Color.White
-                        )
+            MarketBottomAppBar {
+                MarketFloatingActionButtonMultiActions(state = bottomBarState) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = stringResource(R.string.label_adicionar),
+                        tint = Color.White
+                    )
+                }
+            }
+        }
+    ) { padding ->
+        ConstraintLayout(Modifier.padding(padding)) {
+            val (fabActionRef) = createRefs()
+
+            PagedVerticalListComponent(pagingItems = pagingData) {
+                StorageListCard(
+                    productName = it.productName,
+                    operationType = it.operationType,
+                    datePrevision = it.datePrevision,
+                    dateRealization = it.dateRealization,
+                    quantity = it.quantity,
+                    responsibleName = it.responsibleName,
+                    description = it.description,
+                    onItemClick = {
+                        onMovementClick(it)
                     }
+                )
+            }
+
+            SmallFabActions(
+                modifier = Modifier.constrainAs(fabActionRef) {
+                    end.linkTo(parent.end)
+                    bottom.linkTo(parent.bottom)
                 },
+                state = bottomBarState,
                 subActionsFab = listOf(
                     SubActionFabItem(
                         icon = painterResource(id = R.drawable.ic_calendar_24dp),
@@ -108,13 +141,8 @@ fun MovementsSearchScreen(
                             )
                         }
                     )
-                ),
-                state = bottomBarState
+                )
             )
-        }
-    ) { padding ->
-        ConstraintLayout(Modifier.padding(padding)) {
-
         }
     }
 }

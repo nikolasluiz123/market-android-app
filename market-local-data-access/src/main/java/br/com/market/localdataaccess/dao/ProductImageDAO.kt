@@ -5,7 +5,7 @@ import br.com.market.models.ProductImage
 import java.util.*
 
 @Dao
-abstract class ProductImageDAO {
+abstract class ProductImageDAO : AbstractBaseDAO() {
 
     @Query("select * from products_images where product_id = :productId and active")
     abstract suspend fun findProductImagesBy(productId: String): List<ProductImage>

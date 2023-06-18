@@ -4,7 +4,7 @@ import br.com.market.domain.base.BaseDomain
 import br.com.market.enums.EnumOperationType
 import java.time.LocalDateTime
 
-data class StorageOperationsHistoryDomain(
+data class StorageOperationHistoryDomain(
     override var id: String? = null,
     override var active: Boolean = true,
     override var companyId: String? = null,

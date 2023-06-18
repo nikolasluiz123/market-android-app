@@ -11,7 +11,7 @@ import java.util.*
  * @author Nikolas Luiz Schmitt
  */
 @Dao
-abstract class CategoryDAO {
+abstract class CategoryDAO : AbstractBaseDAO() {
 
     /**
      * Função que busca as categorias de forma paginada

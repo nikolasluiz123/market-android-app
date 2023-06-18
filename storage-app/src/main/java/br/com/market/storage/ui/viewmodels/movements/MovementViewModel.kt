@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import br.com.market.core.enums.EnumDateTimePatterns
 import br.com.market.core.extensions.navParamToString
 import br.com.market.enums.EnumOperationType
 import br.com.market.storage.R
@@ -22,6 +23,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import javax.inject.Inject
 
 @HiltViewModel
@@ -131,6 +134,22 @@ class MovementViewModel @Inject constructor(
                 _uiState.update { currentState -> currentState.copy(brandDomain = brandDomain) }
             }
         }
+
+        movementId?.navParamToString()?.let { id ->
+            viewModelScope.launch {
+                val operation = storageOperationsHistoryRepository.findStorageOperationHistoryDomainById(id)
+
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        storageOperationHistoryDomain = operation,
+                        quantity = operation.quantity.toString(),
+                        datePrevision = operation.datePrevision?.format(DateTimeFormatter.ofPattern(EnumDateTimePatterns.DATE_PATTER.pattern)),
+                        timePrevision = operation.datePrevision?.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)),
+                        description = operation.description
+                    )
+                }
+            }
+        }
     }
 
     fun loadProductById(productId: String) {
@@ -147,9 +166,17 @@ class MovementViewModel @Inject constructor(
     }
 
     fun saveMovement() {
-        _uiState.value.storageOperationsHistoryDomain?.let {
+        _uiState.value.storageOperationHistoryDomain?.let {
             viewModelScope.launch {
                 storageOperationsHistoryRepository.save(it)
+            }
+        }
+    }
+
+    fun inactivate() {
+        _uiState.value.storageOperationHistoryDomain?.id?.let { id ->
+            viewModelScope.launch {
+                storageOperationsHistoryRepository.inactivate(id = id)
             }
         }
     }

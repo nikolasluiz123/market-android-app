@@ -7,6 +7,7 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -38,6 +39,7 @@ import br.com.market.core.theme.BLUE_500
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.buttons.fab.EnumFabMultiActionState
 import br.com.market.core.ui.components.buttons.fab.FabMultiActionState
+import br.com.market.core.ui.components.buttons.fab.SubActionFabItem
 
 /**
  * FAB que representa a ação de adicionar.
@@ -232,6 +234,34 @@ fun rememberFabMultiActionsState(): FabMultiActionState {
     state.transition = updateTransition(targetState = state.currentState, label = "")
 
     return state
+}
+
+@Composable
+fun SmallFabActions(
+    modifier: Modifier,
+    state: FabMultiActionState,
+    subActionsFab: List<SubActionFabItem>
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.End
+    ) {
+        if (state.currentState == EnumFabMultiActionState.EXPANDED) {
+            subActionsFab.forEach {
+                AnimatedSmallFabWithLabel(
+                    showLabel = true,
+                    fabContent = {
+                        MarketSmallFabSubAction(
+                            iconPainter = it.icon,
+                            onClick = it.onFabItemClicked,
+                            label = it.label
+                        )
+                    },
+                    state = state
+                )
+            }
+        }
+    }
 }
 
 @Preview

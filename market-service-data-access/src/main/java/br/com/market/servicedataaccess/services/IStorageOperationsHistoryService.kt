@@ -9,6 +9,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface IStorageOperationsHistoryService {
 
@@ -20,4 +21,6 @@ interface IStorageOperationsHistoryService {
 
     @GET("storageOperationsHistory")
     suspend fun findAllStorageOperationDTOs(@Header("Authorization") token: String): Response<ReadResponse<StorageOperationHistorySDO>>
+    @POST("storageOperationsHistory/inactivate")
+    suspend fun inactivate(@Header("Authorization") token: String, @Query("localId") localId: String): Response<PersistenceResponse>
 }

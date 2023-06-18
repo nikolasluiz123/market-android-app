@@ -3,7 +3,7 @@ package br.com.market.storage.ui.states
 import br.com.market.core.ui.states.IValidationUIState
 import br.com.market.domain.BrandDomain
 import br.com.market.domain.ProductDomain
-import br.com.market.domain.StorageOperationsHistoryDomain
+import br.com.market.domain.StorageOperationHistoryDomain
 import br.com.market.enums.EnumOperationType
 
 data class MovementUIState(
@@ -12,7 +12,7 @@ data class MovementUIState(
     var operationType: EnumOperationType? = null,
     var brandDomain: BrandDomain? = null,
     var productDomain: ProductDomain? = null,
-    var storageOperationsHistoryDomain: StorageOperationsHistoryDomain? = null,
+    var storageOperationHistoryDomain: StorageOperationHistoryDomain? = null,
     var productName: String = "",
     var productNameErrorMessage: String = "",
     val quantity: String = "",

@@ -7,7 +7,7 @@ import androidx.room.Query
 import br.com.market.models.User
 
 @Dao
-abstract class UserDAO {
+abstract class UserDAO : AbstractBaseDAO() {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun save(user: User)

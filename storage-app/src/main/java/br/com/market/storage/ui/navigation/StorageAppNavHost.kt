@@ -123,12 +123,16 @@ fun StorageAppNavHost(
 
         movementsSearchScreen(
             onBackClick = navController::popBackStack,
-            onAddMovementClick = navController::navigateToMovementScreen
+            onAddMovementClick = navController::navigateToMovementScreen,
+            onMovementClick = {
+                navController.navigateToMovementScreen(it.categoryId, it.brandId, it.operationType, it.productId, it.id)
+            }
         )
 
         movementScreen(
             onBackClick = navController::popBackStack,
-            onNavToProductLov = navController::navigateToProductLov
+            onNavToProductLov = navController::navigateToProductLov,
+            onInactivate = navController::popBackStack
         )
 
         brandLov(

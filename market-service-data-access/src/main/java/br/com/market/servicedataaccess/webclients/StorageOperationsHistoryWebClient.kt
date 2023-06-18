@@ -86,4 +86,12 @@ class StorageOperationsHistoryWebClient @Inject constructor(
             }
         )
     }
+
+    suspend fun inactivate(localId: String): PersistenceResponse {
+        return persistenceServiceErrorHandlingBlock(
+            codeBlock = {
+                service.inactivate(getToken(), localId).getPersistenceResponseBody()
+            }
+        )
+    }
 }

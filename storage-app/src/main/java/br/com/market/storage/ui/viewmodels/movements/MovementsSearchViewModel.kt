@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.market.core.extensions.navParamToString
 import br.com.market.storage.repository.ProductRepository
+import br.com.market.storage.repository.StorageOperationsHistoryRepository
 import br.com.market.storage.repository.brand.BrandRepository
 import br.com.market.storage.ui.navigation.brand.argumentBrandId
 import br.com.market.storage.ui.navigation.category.argumentCategoryId
@@ -24,7 +25,8 @@ class MovementsSearchViewModel @Inject constructor(
     @ApplicationContext context: Context,
     savedStateHandle: SavedStateHandle,
     private val brandRepository: BrandRepository,
-    private val productRepository: ProductRepository
+    private val productRepository: ProductRepository,
+    private val storageOperationsHistoryRepository: StorageOperationsHistoryRepository
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<MovementsSearchUIState> = MutableStateFlow(MovementsSearchUIState())
@@ -39,7 +41,8 @@ class MovementsSearchViewModel @Inject constructor(
             currentState.copy(
                 categoryId = categoryId.navParamToString(),
                 brandId = brandId.navParamToString(),
-                productId = productId.navParamToString()
+                productId = productId.navParamToString(),
+                operations = storageOperationsHistoryRepository.findStorageOperationHistory(productId = productId.navParamToString())
             )
         }
 
