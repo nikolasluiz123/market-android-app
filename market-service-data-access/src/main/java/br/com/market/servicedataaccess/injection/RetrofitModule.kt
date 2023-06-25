@@ -13,6 +13,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.time.LocalDate
@@ -36,7 +38,7 @@ class RetrofitModule {
      */
     @Provides
     @Singleton
-    fun provideRetrofit(): Retrofit {
+    fun provideRetrofit(client: OkHttpClient): Retrofit {
         val gson = GsonBuilder()
             .registerTypeAdapter(ByteArray::class.java, ByteArrayToBase64TypeAdapter())
             .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeTypeAdapter())
@@ -47,7 +49,7 @@ class RetrofitModule {
             .Builder()
             .baseUrl("http://192.168.0.49:8080/api/v1/")
             .addConverterFactory(GsonConverterFactory.create(gson))
-//            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .client(client)
             .build()
     }
 
@@ -93,6 +95,22 @@ class RetrofitModule {
     @Singleton
     fun provideStorageOperationsHistoryService(retrofit: Retrofit): IStorageOperationsHistoryService {
         return retrofit.create(IStorageOperationsHistoryService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
+        return HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
+    }
+
+    @Provides
+    @Singleton
+    fun provideHttpClient(interceptor: HttpLoggingInterceptor): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor(interceptor)
+            .build()
     }
 
 }
