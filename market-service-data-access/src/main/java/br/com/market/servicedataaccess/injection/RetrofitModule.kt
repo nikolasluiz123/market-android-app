@@ -5,6 +5,8 @@ import br.com.market.servicedataaccess.responses.adapters.LocalDateTimeTypeAdapt
 import br.com.market.servicedataaccess.responses.adapters.LocalDateTypeAdapter
 import br.com.market.servicedataaccess.services.IBrandService
 import br.com.market.servicedataaccess.services.ICategoryService
+import br.com.market.servicedataaccess.services.ICompanyService
+import br.com.market.servicedataaccess.services.IDeviceService
 import br.com.market.servicedataaccess.services.IProductService
 import br.com.market.servicedataaccess.services.IStorageOperationsHistoryService
 import br.com.market.servicedataaccess.services.IUserService
@@ -95,6 +97,18 @@ class RetrofitModule {
     @Singleton
     fun provideStorageOperationsHistoryService(retrofit: Retrofit): IStorageOperationsHistoryService {
         return retrofit.create(IStorageOperationsHistoryService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCompanyService(retrofit: Retrofit): IDeviceService {
+        return retrofit.create(IDeviceService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDeviceService(retrofit: Retrofit): ICompanyService {
+        return retrofit.create(ICompanyService::class.java)
     }
 
     @Provides

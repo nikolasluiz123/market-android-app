@@ -3,13 +3,12 @@ package br.com.market.models
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import br.com.market.models.base.BaseModel
 import java.util.*
 
 @Entity(tableName = "theme_definitions")
 data class ThemeDefinitions(
     @PrimaryKey
-    override var id: String = UUID.randomUUID().toString(),
+    var id: Long? = null,
     @ColumnInfo("color_primary")
     var colorPrimary: String? = null,
     @ColumnInfo("color_secondary")
@@ -18,9 +17,9 @@ data class ThemeDefinitions(
     var colorTertiary: String? = null,
     @ColumnInfo("image_logo")
     var imageLogo: ByteArray? = null,
-    override var synchronized: Boolean = false,
-    override var active: Boolean = true
-) : BaseModel() {
+    var synchronized: Boolean = false,
+    var active: Boolean = true
+) {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

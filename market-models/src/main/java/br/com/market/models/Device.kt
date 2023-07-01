@@ -1,11 +1,15 @@
 package br.com.market.models
 
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import br.com.market.models.base.CompanyModel
-import java.util.*
+import java.util.UUID
 
 @Entity(
-    tableName = "addresses",
+    tableName = "devices",
     foreignKeys = [
         ForeignKey(
             entity = Company::class,
@@ -15,18 +19,12 @@ import java.util.*
     ],
     indices = [Index(value = ["company_id"])]
 )
-data class Address(
+data class Device(
     @PrimaryKey
     override var id: String = UUID.randomUUID().toString(),
-    var state: String? = null,
-    var city: String? = null,
-    @ColumnInfo("public_place")
-    var publicPlace: String? = null,
-    var number: String? = null,
-    var complement: String? = null,
-    var cep: String? = null,
     override var synchronized: Boolean = false,
     override var active: Boolean = true,
-    @ColumnInfo("company_id")
-    override var companyId: Long? = null
+    @ColumnInfo(name = "company_id")
+    override var companyId: Long? = null,
+    var name: String? = null
 ) : CompanyModel()

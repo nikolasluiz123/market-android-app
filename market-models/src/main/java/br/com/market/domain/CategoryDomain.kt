@@ -18,7 +18,7 @@ data class CategoryDomain(
     override var id: String? = null,
     override var active: Boolean = true,
     @ColumnInfo(name = "company_id")
-    override var companyId: String? = null,
+    override var companyId: Long? = null,
     override var synchronized: Boolean = false,
     var name: String = ""
 ): BaseDomain()

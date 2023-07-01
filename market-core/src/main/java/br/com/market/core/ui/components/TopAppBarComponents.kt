@@ -11,6 +11,7 @@ import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.buttons.IconButtonArrowBack
 import br.com.market.core.ui.components.buttons.IconButtonClose
 import br.com.market.core.ui.components.buttons.IconButtonSearch
+import br.com.market.core.ui.components.buttons.MenuIconButton
 import br.com.market.core.ui.components.buttons.MenuIconButtonWithDefaultActions
 
 /**
@@ -43,6 +44,7 @@ fun MarketTopAppBar(
     ),
     showNavigationIcon: Boolean = true,
     showMenuWithLogout: Boolean = true,
+    showMenu: Boolean = false
 ) {
     TopAppBar(
         title = title,
@@ -60,6 +62,8 @@ fun MarketTopAppBar(
                     onLogoutClick = onLogoutClick,
                     menuItems = menuItems,
                 )
+            } else if(showMenu) {
+                MenuIconButton(menuItems)
             }
         }
     )
@@ -100,6 +104,7 @@ fun SimpleMarketTopAppBar(
     ),
     showNavigationIcon: Boolean = true,
     showMenuWithLogout: Boolean = true,
+    showMenu: Boolean = false
 ) {
     MarketTopAppBar(
         title = {
@@ -117,7 +122,8 @@ fun SimpleMarketTopAppBar(
         showNavigationIcon = showNavigationIcon,
         onBackClick = onBackClick,
         onLogoutClick = onLogoutClick,
-        showMenuWithLogout = showMenuWithLogout
+        showMenuWithLogout = showMenuWithLogout,
+        showMenu = showMenu
     )
 }
 

@@ -1,0 +1,119 @@
+package br.com.market.storage.ui.screens
+
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
+import br.com.market.core.theme.MarketTheme
+import br.com.market.core.ui.components.CoilImageViewer
+import br.com.market.core.ui.components.LabeledText
+import br.com.market.core.ui.components.SimpleMarketTopAppBar
+import br.com.market.core.ui.components.buttons.IconButtonSync
+import br.com.market.storage.R
+import br.com.market.storage.ui.states.AboutUIState
+import br.com.market.storage.ui.viewmodels.AboutViewModel
+import java.util.UUID
+
+@Composable
+fun AboutScreen(
+    viewModel: AboutViewModel,
+    onBackClick: () -> Unit,
+) {
+    val state by viewModel.uiState.collectAsState()
+    AboutScreen(
+        state = state,
+        onBackClick = onBackClick,
+        onSyncClick = viewModel::sync
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AboutScreen(
+    state: AboutUIState = AboutUIState(),
+    onBackClick: () -> Unit = { },
+    onSyncClick: () -> Unit = { }
+) {
+    Scaffold(
+        topBar = {
+            SimpleMarketTopAppBar(
+                title = stringResource(R.string.about_screen_top_bar_title),
+                onBackClick = onBackClick,
+                showMenuWithLogout = false,
+                actions = {
+                    IconButtonSync(onClick = onSyncClick)
+                }
+            )
+        }
+    ) { padding ->
+        ConstraintLayout(Modifier.padding(padding).fillMaxSize()) {
+            val (imageLogoRef, companyNameRef, deviceIdRef, deviceNameRef) = createRefs()
+
+            CoilImageViewer(
+                containerModifier = Modifier.constrainAs(imageLogoRef) {
+                    start.linkTo(parent.start, margin = 16.dp)
+                    end.linkTo(parent.end, margin = 16.dp)
+                    top.linkTo(parent.top, margin = 16.dp)
+                },
+                imageModifier = Modifier.height(200.dp),
+                data = state.imageLogo,
+                contentScale = ContentScale.Fit
+            )
+
+            LabeledText(
+                modifier = Modifier.constrainAs(companyNameRef) {
+                    linkTo(start = parent.start, end = parent.end, bias = 0.0F, startMargin = 8.dp)
+                    top.linkTo(imageLogoRef.bottom, margin = 16.dp)
+                },
+                label = "Empresa",
+                value = state.companyName
+            )
+
+            LabeledText(
+                modifier = Modifier.constrainAs(deviceIdRef) {
+                    linkTo(start = companyNameRef.start, end = parent.end, bias = 0.0F)
+                    top.linkTo(companyNameRef.bottom, margin = 16.dp)
+                },
+                label = "Nome do Dispositivo",
+                value = state.deviceName
+            )
+
+            LabeledText(
+                modifier = Modifier.constrainAs(deviceNameRef) {
+                    linkTo(start = deviceIdRef.start, end = parent.end, bias = 0.0F)
+                    top.linkTo(deviceIdRef.bottom, margin = 16.dp)
+                },
+                label = "Identificador",
+                value = state.deviceId
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun AboutScreenPreview() {
+    MarketTheme {
+        Surface {
+            AboutScreen(
+                state = AboutUIState(
+                    imageLogo = R.drawable.logo_amigao,
+                    companyName = "Amigão Supermercados",
+                    deviceId = UUID.randomUUID().toString(),
+                    deviceName = "Dispositivo Nikolas Estoque"
+                )
+            )
+        }
+    }
+}

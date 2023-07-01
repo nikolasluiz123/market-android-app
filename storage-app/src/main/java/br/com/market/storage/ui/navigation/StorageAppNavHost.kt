@@ -69,7 +69,18 @@ fun StorageAppNavHost(
                         inclusive = true
                     }
                 })
+            },
+            onNavigateToAbout = {
+                navController.navigateToAboutScreen(showBack = false, navOptions {
+                    popUpTo(splashScreenRoute) {
+                        inclusive = true
+                    }
+                })
             }
+        )
+
+        aboutScreen(
+            onNavigateToBack = navController::popBackStack
         )
 
         loginScreen(
@@ -97,7 +108,8 @@ fun StorageAppNavHost(
                         inclusive = true
                     }
                 })
-            }
+            },
+            onAboutClick = navController::navigateToAboutScreen
         )
 
         categoryScreen(

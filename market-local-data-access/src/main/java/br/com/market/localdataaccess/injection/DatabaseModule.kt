@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import br.com.market.localdataaccess.dao.BrandDAO
 import br.com.market.localdataaccess.dao.CategoryDAO
+import br.com.market.localdataaccess.dao.CompanyDAO
+import br.com.market.localdataaccess.dao.DeviceDAO
 import br.com.market.localdataaccess.dao.ProductDAO
 import br.com.market.localdataaccess.dao.ProductImageDAO
 import br.com.market.localdataaccess.dao.StorageOperationsHistoryDAO
@@ -33,9 +35,7 @@ class DatabaseModule {
      * @author Nikolas Luiz Schmitt
      */
     @Provides
-    fun provideBrandDAO(appDatabase: AppDatabase): BrandDAO {
-        return appDatabase.brandDAO()
-    }
+    fun provideBrandDAO(appDatabase: AppDatabase): BrandDAO = appDatabase.brandDAO()
 
     /**
      * Função para instanciar um [CategoryDAO]
@@ -45,29 +45,27 @@ class DatabaseModule {
      * @author Nikolas Luiz Schmitt
      */
     @Provides
-    fun provideCategoryDAO(appDatabase: AppDatabase): CategoryDAO {
-        return appDatabase.categoryDAO()
-    }
+    fun provideCategoryDAO(appDatabase: AppDatabase): CategoryDAO = appDatabase.categoryDAO()
 
     @Provides
-    fun provideProductDAO(appDatabase: AppDatabase): ProductDAO {
-        return appDatabase.productDAO()
-    }
+    fun provideProductDAO(appDatabase: AppDatabase): ProductDAO = appDatabase.productDAO()
 
     @Provides
-    fun provideProductImageDAO(appDatabase: AppDatabase): ProductImageDAO {
-        return appDatabase.productImageDAO()
-    }
+    fun provideProductImageDAO(appDatabase: AppDatabase): ProductImageDAO = appDatabase.productImageDAO()
 
     @Provides
-    fun provideStorageOperationsHistoryDAO(appDatabase: AppDatabase): StorageOperationsHistoryDAO {
-        return appDatabase.storageOperationsHistoryDAO()
-    }
+    fun provideStorageOperationsHistoryDAO(appDatabase: AppDatabase): StorageOperationsHistoryDAO = appDatabase.storageOperationsHistoryDAO()
 
     @Provides
-    fun provideUserDAO(appDatabase: AppDatabase): UserDAO {
-        return appDatabase.userDAO()
-    }
+    fun provideUserDAO(appDatabase: AppDatabase): UserDAO = appDatabase.userDAO()
+
+    @Provides
+    @Singleton
+    fun provideDeviceDAO(appDatabase: AppDatabase): DeviceDAO = appDatabase.deviceDAO()
+
+    @Provides
+    @Singleton
+    fun provideCompanyDAO(appDatabase: AppDatabase): CompanyDAO = appDatabase.companyDAO()
 
     /**
      * função para criar o DataBase uma única vez.
@@ -81,5 +79,4 @@ class DatabaseModule {
     fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
         return Room.databaseBuilder(context, AppDatabase::class.java, "storage.db").build()
     }
-
 }

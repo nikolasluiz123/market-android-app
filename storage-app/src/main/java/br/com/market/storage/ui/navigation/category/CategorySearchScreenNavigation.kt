@@ -13,7 +13,8 @@ internal const val categorySearchScreenRoute = "categorySearch"
 fun NavGraphBuilder.categorySearchScreen(
     onAddCategoryClick: () -> Unit,
     onCategoryClick: (String) -> Unit,
-    onAfterLogout: () -> Unit
+    onAfterLogout: () -> Unit,
+    onAboutClick: () -> Unit
 ) {
     composable(route = categorySearchScreenRoute) {
         val categorySearchViewModel = hiltViewModel<CategorySearchViewModel>()
@@ -22,7 +23,8 @@ fun NavGraphBuilder.categorySearchScreen(
             viewModel = categorySearchViewModel,
             onAddCategoryClick = onAddCategoryClick,
             onCategoryClick = onCategoryClick,
-            onAfterLogout = onAfterLogout
+            onAfterLogout = onAfterLogout,
+            onAboutClick = onAboutClick
         )
     }
 }

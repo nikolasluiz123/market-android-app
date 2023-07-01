@@ -23,6 +23,7 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "lo
 object PreferencesKey{
     val TOKEN = stringPreferencesKey("token")
     val USER = stringPreferencesKey("userId")
+    val TEMP_DEVICE_ID = stringPreferencesKey("tempDeviceId")
 }
 
 /**

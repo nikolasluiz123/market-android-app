@@ -19,5 +19,5 @@ data class Company(
     var id: Long? = null,
     var name: String,
     @ColumnInfo("theme_definitions_id")
-    var themeDefinitionsId: String? = null,
+    var themeDefinitionsId: Long? = null,
 )

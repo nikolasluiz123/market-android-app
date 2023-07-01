@@ -6,9 +6,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.paging.compose.collectAsLazyPagingItems
+import br.com.market.core.R
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.MarketBottomAppBar
 import br.com.market.core.ui.components.PagedVerticalListComponent
@@ -26,7 +28,8 @@ fun CategorySearchScreen(
     viewModel: CategorySearchViewModel,
     onAddCategoryClick: () -> Unit,
     onCategoryClick: (String) -> Unit,
-    onAfterLogout: () -> Unit
+    onAfterLogout: () -> Unit,
+    onAboutClick: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
     CategorySearchScreen(
@@ -37,7 +40,8 @@ fun CategorySearchScreen(
         onLogoutClick = {
             viewModel.logout()
             onAfterLogout()
-        }
+        },
+        onAboutClick = onAboutClick
     )
 }
 
@@ -49,7 +53,8 @@ fun CategorySearchScreen(
     onAddCategoryClick: () -> Unit = { },
     onCategoryClick: (String) -> Unit = { },
     onSyncClick: () -> Unit = { },
-    onLogoutClick: () -> Unit = { }
+    onLogoutClick: () -> Unit = { },
+    onAboutClick: () -> Unit = { }
 ) {
     val pagingData = state.categories.collectAsLazyPagingItems()
 
@@ -59,9 +64,13 @@ fun CategorySearchScreen(
                 title = "Categorias",
                 showNavigationIcon = false,
                 showMenuWithLogout = false,
+                showMenu = true,
                 actions = {
                     IconButtonSync(onSyncClick)
                     IconButtonLogout(onLogoutClick)
+                },
+                menuItems = {
+                    DropdownMenuItem(text = { Text(stringResource(R.string.label_about)) }, onClick = onAboutClick)
                 }
             )
         },

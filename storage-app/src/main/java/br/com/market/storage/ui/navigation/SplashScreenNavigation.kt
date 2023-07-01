@@ -2,13 +2,18 @@ package br.com.market.storage.ui.navigation
 
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
+import androidx.datastore.preferences.core.edit
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import br.com.market.core.preferences.PreferencesKey
 import br.com.market.core.preferences.dataStore
 import br.com.market.storage.ui.screens.SplashScreen
+import br.com.market.storage.ui.viewmodels.SplashViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.util.UUID
+
 
 internal const val splashScreenRoute = "splashScreen"
 
@@ -24,16 +29,34 @@ internal const val splashScreenRoute = "splashScreen"
  */
 fun NavGraphBuilder.splashScreen(
     onNavigateToLogin: () -> Unit,
-    onNavigateToCategories: () -> Unit
+    onNavigateToCategories: () -> Unit,
+    onNavigateToAbout: () -> Unit
 ) {
     composable(route = splashScreenRoute) {
         val coroutineScope = rememberCoroutineScope()
-        val dataStore = LocalContext.current.dataStore
+        val context = LocalContext.current
+        val dataStore = context.dataStore
+        val viewModel = hiltViewModel<SplashViewModel>()
 
         SplashScreen {
             coroutineScope.launch {
                 val token = dataStore.data.first().toPreferences()[PreferencesKey.TOKEN]
-                if (token.isNullOrBlank()) onNavigateToLogin() else onNavigateToCategories()
+
+                if (token.isNullOrBlank()) {
+                    onNavigateToLogin()
+                }
+                else if (viewModel.deviceRegistered()) {
+                    onNavigateToCategories()
+                }
+                else {
+                    if(dataStore.data.first()[PreferencesKey.TEMP_DEVICE_ID].isNullOrBlank()) {
+                        dataStore.edit {
+                            it[PreferencesKey.TEMP_DEVICE_ID] = UUID.randomUUID().toString()
+                        }
+                    }
+
+                    onNavigateToAbout()
+                }
             }
         }
     }

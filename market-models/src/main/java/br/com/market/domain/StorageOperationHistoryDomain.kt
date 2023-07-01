@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 data class StorageOperationHistoryDomain(
     override var id: String? = null,
     override var active: Boolean = true,
-    override var companyId: String? = null,
+    override var companyId: Long? = null,
     override var synchronized: Boolean = false,
     var productId: String? = null,
     var quantity: Int = 0,

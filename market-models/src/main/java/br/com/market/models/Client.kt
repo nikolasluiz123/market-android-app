@@ -36,5 +36,5 @@ data class Client(
     override var synchronized: Boolean = false,
     override var active: Boolean = true,
     @ColumnInfo("company_id")
-    override var companyId: String? = null
+    override var companyId: Long? = null
 ): CompanyModel()

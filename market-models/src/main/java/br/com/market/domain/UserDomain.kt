@@ -15,7 +15,7 @@ import br.com.market.domain.base.BaseDomain
 data class UserDomain(
     override var id: String? = null,
     override var active: Boolean = true,
-    override var companyId: String? = null,
+    override var companyId: Long? = null,
     override var synchronized: Boolean = false,
     var name: String = "",
     var email: String = "",

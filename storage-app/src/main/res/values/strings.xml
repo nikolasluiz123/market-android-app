@@ -73,4 +73,5 @@
     <string name="movement_screen_description_required_validation_message">A descrição é obrigatória.</string>
     <string name="movement_screen_date_prevision_required_validation_message">A data de previsão é obrigatória.</string>
     <string name="movement_screen_time_prevision_required_validation_message">A hora da previsão é obrigatória.</string>
+    <string name="about_screen_top_bar_title">Sobre o Dispositivo</string>
 </resources>

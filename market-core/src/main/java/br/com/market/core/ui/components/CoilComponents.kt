@@ -14,7 +14,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import br.com.market.core.R
-import br.com.market.core.theme.GREY_300
 import br.com.market.core.theme.GREY_900_TRANSPARENT
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.buttons.IconButtonClose
@@ -53,7 +52,7 @@ fun CoilImageViewer(
                 .build(),
             contentDescription = stringResource(R.string.label_image),
             contentScale = contentScale,
-            modifier = imageModifier.background(color = GREY_300)
+            modifier = imageModifier
         )
 
         if (showDeleteButton) {
