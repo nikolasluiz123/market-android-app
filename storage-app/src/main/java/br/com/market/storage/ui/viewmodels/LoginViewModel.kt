@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Patterns
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import br.com.market.core.preferences.PreferencesKey
 import br.com.market.core.preferences.dataStore
 import br.com.market.domain.UserDomain
@@ -16,6 +17,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -98,5 +100,11 @@ class LoginViewModel @Inject constructor(
         }
 
         return response
+    }
+
+    fun sync() {
+        viewModelScope.launch {
+            userRepository.sync()
+        }
     }
 }

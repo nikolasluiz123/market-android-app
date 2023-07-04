@@ -90,13 +90,7 @@ fun StorageAppNavHost(
                         inclusive = true
                     }
                 })
-            },
-            onNavigateToRegisterUserScreen = navController::navigateToRegisterUserScreen
-        )
-
-        registerUserGraph(
-            onNavigateToBack = navController::popBackStack,
-            onNavigateToLoginScreen = navController::navigateToLoginScreen
+            }
         )
 
         categorySearchScreen(
