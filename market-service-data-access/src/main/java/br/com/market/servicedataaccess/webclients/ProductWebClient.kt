@@ -3,6 +3,8 @@ package br.com.market.servicedataaccess.webclients
 import android.content.Context
 import br.com.market.models.Product
 import br.com.market.models.ProductImage
+import br.com.market.sdo.filters.ProductFiltersSDO
+import br.com.market.sdo.filters.ProductImageFiltersSDO
 import br.com.market.sdo.product.ProductBodySDO
 import br.com.market.sdo.product.ProductImageSDO
 import br.com.market.sdo.product.ProductSDO
@@ -31,7 +33,8 @@ class ProductWebClient @Inject constructor(
                     quantityUnit = product.quantityUnit,
                     categoryBrandLocalId = product.categoryBrandId,
                     active = product.active,
-                    localId = product.id
+                    localId = product.id,
+                    companyId = product.companyId
                 )
 
                 val imagesSDO = images.map {
@@ -41,7 +44,8 @@ class ProductWebClient @Inject constructor(
                         bytes = it.bytes,
                         imageUrl = it.imageUrl,
                         productLocalId = it.productId,
-                        principal = it.principal
+                        principal = it.principal,
+                        companyId = it.companyId
                     )
                 }
 
@@ -60,7 +64,8 @@ class ProductWebClient @Inject constructor(
                         bytes = bytes,
                         imageUrl = imageUrl,
                         productLocalId = productId,
-                        principal = principal
+                        principal = principal,
+                        companyId = companyId
                     )
                 }
 
@@ -96,7 +101,8 @@ class ProductWebClient @Inject constructor(
                         price = it.price,
                         quantityUnit = it.quantityUnit,
                         quantity = it.quantity,
-                        categoryBrandLocalId = it.categoryBrandId
+                        categoryBrandLocalId = it.categoryBrandId,
+                        companyId = it.companyId
                     )
                 }
 
@@ -107,7 +113,8 @@ class ProductWebClient @Inject constructor(
                         bytes = it.bytes,
                         imageUrl = it.imageUrl,
                         productLocalId = it.productId,
-                        principal = it.principal
+                        principal = it.principal,
+                        companyId = it.companyId
                     )
                 }
 
@@ -123,10 +130,10 @@ class ProductWebClient @Inject constructor(
         )
     }
 
-    suspend fun findAllProducts(): ReadResponse<Product> {
+    suspend fun findAllProducts(productFiltersSDO: ProductFiltersSDO): ReadResponse<Product> {
         return readServiceErrorHandlingBlock(
             codeBlock = {
-                val response = service.findAllProductDTOs(getToken()).getReadResponseBody()
+                val response = service.findAllProductDTOs(getToken(), productFiltersSDO).getReadResponseBody()
 
                 val products = response.values.map {
                     Product(
@@ -137,7 +144,8 @@ class ProductWebClient @Inject constructor(
                         quantityUnit = it.quantityUnit,
                         categoryBrandId = it.categoryBrandLocalId,
                         synchronized = true,
-                        active = it.active
+                        active = it.active,
+                        companyId = it.companyId
                     )
                 }
 
@@ -146,10 +154,10 @@ class ProductWebClient @Inject constructor(
         )
     }
 
-    suspend fun findAllProductImages(): ReadResponse<ProductImage> {
+    suspend fun findAllProductImages(productImageFiltersSDO: ProductImageFiltersSDO): ReadResponse<ProductImage> {
         return readServiceErrorHandlingBlock(
             codeBlock = {
-                val response = service.findAllProductImageDTOs(getToken()).getReadResponseBody()
+                val response = service.findAllProductImageDTOs(getToken(), productImageFiltersSDO).getReadResponseBody()
 
                 val images = response.values.map {
                     ProductImage(
@@ -159,7 +167,8 @@ class ProductWebClient @Inject constructor(
                         bytes = it.bytes,
                         imageUrl = it.imageUrl,
                         productId = it.productLocalId,
-                        principal = it.principal
+                        principal = it.principal,
+                        companyId = it.companyId
                     )
                 }
 

@@ -1,6 +1,7 @@
 package br.com.market.servicedataaccess.services
 
 import br.com.market.sdo.CategorySDO
+import br.com.market.sdo.filters.CategoryFiltersSDO
 import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
 import br.com.market.servicedataaccess.responses.types.ReadResponse
@@ -20,6 +21,6 @@ interface ICategoryService {
     suspend fun sync(@Header("Authorization") token: String, @Body categoriesSDOs: List<CategorySDO>): Response<MarketServiceResponse>
 
     @GET("category")
-    suspend fun findAll(@Header("Authorization") token: String): Response<ReadResponse<CategorySDO>>
+    suspend fun findAll(@Header("Authorization") token: String, @Body categoryFiltersSDO: CategoryFiltersSDO): Response<ReadResponse<CategorySDO>>
 
 }

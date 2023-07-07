@@ -3,6 +3,7 @@ package br.com.market.servicedataaccess.webclients
 import android.content.Context
 import br.com.market.domain.UserDomain
 import br.com.market.models.User
+import br.com.market.sdo.filters.UserFiltersSDO
 import br.com.market.sdo.user.AuthenticationRequestSDO
 import br.com.market.sdo.user.UserSDO
 import br.com.market.servicedataaccess.responses.extensions.getAuthenticationResponseBody
@@ -27,28 +28,6 @@ class UserWebClient @Inject constructor(
     @ApplicationContext private val context: Context,
     private val service: IUserService
 ) : BaseWebClient(context) {
-
-    /**
-     * Função para registrar um usuário.
-     *
-     * @param user Objeto preenchido com as informações da tela.
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-    suspend fun registerUser(user: User): AuthenticationResponse {
-        return authenticationServiceErrorHandlingBlock(
-            codeBlock = {
-                val userSDO = UserSDO(
-                    localId = user.id,
-                    name = user.name!!,
-                    email = user.email!!,
-                    password = user.password!!
-                )
-
-                service.register(userSDO).getAuthenticationResponseBody()
-            }
-        )
-    }
 
     /**
      * Função para autenticar um usuário.
@@ -79,7 +58,9 @@ class UserWebClient @Inject constructor(
                         active = it.active,
                         name = it.name!!,
                         email = it.email!!,
-                        password = it.password!!
+                        password = it.password!!,
+                        companyId = it.companyId,
+                        token = it.token
                     )
                 }
 
@@ -88,10 +69,10 @@ class UserWebClient @Inject constructor(
         )
     }
 
-    suspend fun findAllUsers(): ReadResponse<User> {
+    suspend fun findAllUsers(userFiltersSDO: UserFiltersSDO): ReadResponse<User> {
         return readServiceErrorHandlingBlock(
             codeBlock = {
-                val response = service.findAllUserSDOs(getToken()).getReadResponseBody()
+                val response = service.findAllUserSDOs(getToken(), userFiltersSDO).getReadResponseBody()
 
                 val users = response.values.map {
                     User(
@@ -101,7 +82,8 @@ class UserWebClient @Inject constructor(
                         active = it.active,
                         email = it.email,
                         password = it.password,
-                        token = it.token
+                        token = it.token,
+                        companyId = it.companyId
                     )
                 }
 

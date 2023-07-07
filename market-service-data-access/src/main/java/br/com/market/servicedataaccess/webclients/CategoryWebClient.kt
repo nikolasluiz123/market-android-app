@@ -3,6 +3,7 @@ package br.com.market.servicedataaccess.webclients
 import android.content.Context
 import br.com.market.models.Category
 import br.com.market.sdo.CategorySDO
+import br.com.market.sdo.filters.CategoryFiltersSDO
 import br.com.market.servicedataaccess.responses.extensions.getPersistenceResponseBody
 import br.com.market.servicedataaccess.responses.extensions.getReadResponseBody
 import br.com.market.servicedataaccess.responses.extensions.getResponseBody
@@ -40,7 +41,8 @@ class CategoryWebClient @Inject constructor(
                 val categorySDO = CategorySDO(
                     name = category.name!!,
                     localId = category.id,
-                    active = category.active
+                    active = category.active,
+                    companyId = category.companyId
                 )
 
                 service.save(getToken(), categorySDO).getPersistenceResponseBody()
@@ -97,12 +99,19 @@ class CategoryWebClient @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun findAll(): ReadResponse<Category> {
+    suspend fun findAll(companyId: Long): ReadResponse<Category> {
         return readServiceErrorHandlingBlock(
             codeBlock = {
-                val response = service.findAll(getToken()).getReadResponseBody()
+                val response = service.findAll(getToken(), CategoryFiltersSDO(companyId = companyId)).getReadResponseBody()
+
                 val categories = response.values.map {
-                    Category(id = it.localId, name = it.name, synchronized = true, active = it.active)
+                    Category(
+                        id = it.localId,
+                        name = it.name,
+                        synchronized = true,
+                        active = it.active,
+                        companyId = it.companyId
+                    )
                 }
 
                 ReadResponse(values = categories, code = response.code, success = response.success, error = response.error)

@@ -11,6 +11,7 @@ import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
 import br.com.market.servicedataaccess.webclients.BrandWebClient
 import br.com.market.storage.pagination.BrandPagingSource
+import br.com.market.storage.repository.base.BaseRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -26,7 +27,7 @@ import javax.inject.Inject
 class BrandRepository @Inject constructor(
     private val dao: BrandDAO,
     private val webClient: BrandWebClient
-) {
+): BaseRepository() {
 
     /**
      * Função para obter um fluxo de dados paginados que possa ser
@@ -57,13 +58,19 @@ class BrandRepository @Inject constructor(
      * @author Nikolas Luiz Schmitt
      */
     suspend fun save(categoryId: String, domain: BrandDomain): PersistenceResponse {
+        val companyId = getCompanyId()
+
         val brand = if (domain.id != null) {
             dao.findBrandById(domain.id!!).copy(name = domain.name)
         } else {
-            Brand(name = domain.name)
+            Brand(name = domain.name, companyId = companyId)
         }
 
-        val categoryBrand = CategoryBrand(categoryId = categoryId, brandId = brand.id)
+        val categoryBrand = CategoryBrand(
+            categoryId = categoryId,
+            brandId = brand.id,
+            companyId = companyId
+        )
 
         domain.id = brand.id
 
@@ -87,7 +94,14 @@ class BrandRepository @Inject constructor(
      */
     suspend fun findById(brandId: String): BrandDomain {
         val brand = dao.findBrandById(brandId)
-        return BrandDomain(id = brand.id, name = brand.name!!, active = brand.active)
+
+        return BrandDomain(
+            id = brand.id,
+            name = brand.name!!,
+            active = brand.active,
+            companyId = brand.companyId,
+            synchronized = brand.synchronized
+        )
     }
 
     /**
@@ -152,12 +166,14 @@ class BrandRepository @Inject constructor(
      * @author Nikolas Luiz Schmitt
      */
     private suspend fun updateBrandsOfLocalDB(): MarketServiceResponse {
-        val responseFindAllBrands = webClient.findAllBrands()
+        val companyId = getCompanyId()
+
+        val responseFindAllBrands = webClient.findAllBrands(companyId)
         if (!responseFindAllBrands.success) {
             return responseFindAllBrands.toBaseResponse()
         }
 
-        val responseFindAllCategoryBrands = webClient.findAllCategoryBrands()
+        val responseFindAllCategoryBrands = webClient.findAllCategoryBrands(companyId)
         if (!responseFindAllCategoryBrands.success) {
             return responseFindAllCategoryBrands.toBaseResponse()
         }

@@ -2,10 +2,11 @@ package br.com.market.storage.repository
 
 import br.com.market.domain.UserDomain
 import br.com.market.localdataaccess.dao.UserDAO
-import br.com.market.models.User
+import br.com.market.sdo.filters.UserFiltersSDO
 import br.com.market.servicedataaccess.responses.types.AuthenticationResponse
 import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.webclients.UserWebClient
+import br.com.market.storage.repository.base.BaseRepository
 import java.net.HttpURLConnection
 import javax.inject.Inject
 
@@ -21,33 +22,7 @@ import javax.inject.Inject
 class UserRepository @Inject constructor(
     private val dao: UserDAO,
     private val webClient: UserWebClient
-) {
-
-    /**
-     * Função responsável por cadastrar um novo usuário.
-     *
-     * @param userDomain Objeto com os dados do usuário recuperados da tela.
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-    suspend fun registerUser(userDomain: UserDomain): AuthenticationResponse {
-        val user = User(
-            name = userDomain.name,
-            email = userDomain.email,
-            password = userDomain.password
-        )
-
-        userDomain.id = user.id
-
-        val response = webClient.registerUser(user)
-
-        user.synchronized = response.getObjectSynchronized()
-        user.token = response.token
-
-        dao.save(user)
-
-        return response
-    }
+): BaseRepository() {
 
     /**
      * Função responsável por autenticar um usuário, iniciando sua seção.
@@ -91,7 +66,7 @@ class UserRepository @Inject constructor(
     }
 
     private suspend fun updateUsersOfLocalDB(): MarketServiceResponse {
-        val responseFindAllProducts = webClient.findAllUsers()
+        val responseFindAllProducts = webClient.findAllUsers(UserFiltersSDO(getCompanyId()))
 
         if (responseFindAllProducts.success) {
             dao.save(responseFindAllProducts.values)

@@ -11,10 +11,13 @@ import br.com.market.localdataaccess.dao.ProductImageDAO
 import br.com.market.localdataaccess.tuples.ProductImageTuple
 import br.com.market.models.Product
 import br.com.market.models.ProductImage
+import br.com.market.sdo.filters.ProductFiltersSDO
+import br.com.market.sdo.filters.ProductImageFiltersSDO
 import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
 import br.com.market.servicedataaccess.webclients.ProductWebClient
 import br.com.market.storage.pagination.ProductPagingSource
+import br.com.market.storage.repository.base.BaseRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -23,7 +26,7 @@ class ProductRepository @Inject constructor(
     private val productImageDAO: ProductImageDAO,
     private val brandDAO: BrandDAO,
     private val webClient: ProductWebClient
-) {
+): BaseRepository() {
 
     fun findProducts(categoryId: String, brandId: String): Flow<PagingData<ProductImageTuple>> {
         return Pager(
@@ -73,6 +76,8 @@ class ProductRepository @Inject constructor(
     }
 
     suspend fun saveProduct(categoryId: String, brandId: String, domain: ProductDomain): PersistenceResponse {
+        val companyId = getCompanyId()
+
         val product = if (domain.id != null) {
             productDAO.findProductById(productId = domain.id!!).copy(
                 name = domain.name!!,
@@ -86,7 +91,8 @@ class ProductRepository @Inject constructor(
                 price = domain.price!!,
                 quantity = domain.quantity!!,
                 quantityUnit = domain.quantityUnit,
-                categoryBrandId = brandDAO.findCategoryBrandBy(brandId = brandId, categoryId = categoryId).id
+                categoryBrandId = brandDAO.findCategoryBrandBy(brandId = brandId, categoryId = categoryId).id,
+                companyId = companyId
             )
         }
 
@@ -102,7 +108,7 @@ class ProductRepository @Inject constructor(
                 principal = it.principal
             ) ?: ProductImage(
                 active = it.active,
-                companyId = it.companyId,
+                companyId = companyId,
                 synchronized = it.synchronized,
                 bytes = it.byteArray,
                 productId = product.id,
@@ -198,12 +204,14 @@ class ProductRepository @Inject constructor(
     }
 
     private suspend fun updateProductsOfLocalDB(): MarketServiceResponse {
-        val responseFindAllProducts = webClient.findAllProducts()
+        val companyId = getCompanyId()
+
+        val responseFindAllProducts = webClient.findAllProducts(ProductFiltersSDO(companyId))
         if (!responseFindAllProducts.success) {
             return responseFindAllProducts.toBaseResponse()
         }
 
-        val responseFindAllProductImages = webClient.findAllProductImages()
+        val responseFindAllProductImages = webClient.findAllProductImages(ProductImageFiltersSDO(companyId))
         if (!responseFindAllProductImages.success) {
             return responseFindAllProductImages.toBaseResponse()
         }

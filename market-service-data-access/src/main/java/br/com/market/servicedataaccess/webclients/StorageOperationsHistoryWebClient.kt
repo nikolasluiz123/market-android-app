@@ -2,6 +2,7 @@ package br.com.market.servicedataaccess.webclients
 
 import android.content.Context
 import br.com.market.models.StorageOperationHistory
+import br.com.market.sdo.filters.StorageOperationsFiltersSDO
 import br.com.market.sdo.storageoperationshistory.StorageOperationHistorySDO
 import br.com.market.servicedataaccess.responses.extensions.getPersistenceResponseBody
 import br.com.market.servicedataaccess.responses.extensions.getReadResponseBody
@@ -31,7 +32,8 @@ class StorageOperationsHistoryWebClient @Inject constructor(
                         dateRealization = dateRealization,
                         operationType = operationType,
                         description = description,
-                        userId = userId
+                        userId = userId,
+                        companyId = companyId
                     )
 
                     service.save(getToken(), storageSDO).getPersistenceResponseBody()
@@ -53,7 +55,8 @@ class StorageOperationsHistoryWebClient @Inject constructor(
                        datePrevision = it.datePrevision,
                        operationType = it.operationType,
                        description = it.description,
-                       userId = it.userId
+                       userId = it.userId,
+                       companyId = it.companyId
                    )
                 }
 
@@ -62,10 +65,10 @@ class StorageOperationsHistoryWebClient @Inject constructor(
         )
     }
 
-    suspend fun findAllStorageOperationsHistory(): ReadResponse<StorageOperationHistory> {
+    suspend fun findAllStorageOperationsHistory(storageOperationsFiltersSDO: StorageOperationsFiltersSDO): ReadResponse<StorageOperationHistory> {
         return readServiceErrorHandlingBlock(
             codeBlock = {
-                val response = service.findAllStorageOperationDTOs(getToken()).getReadResponseBody()
+                val response = service.findAllStorageOperationDTOs(getToken(), storageOperationsFiltersSDO).getReadResponseBody()
 
                 val operations = response.values.map {
                     StorageOperationHistory(
@@ -78,7 +81,8 @@ class StorageOperationsHistoryWebClient @Inject constructor(
                         productId = it.productId,
                         quantity = it.quantity,
                         synchronized = true,
-                        active = it.active
+                        active = it.active,
+                        companyId = it.companyId
                     )
                 }
 

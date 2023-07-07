@@ -10,6 +10,7 @@ import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
 import br.com.market.servicedataaccess.webclients.CategoryWebClient
 import br.com.market.storage.pagination.CategoryPagingSource
+import br.com.market.storage.repository.base.BaseRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -25,7 +26,7 @@ import javax.inject.Inject
 class CategoryRepository @Inject constructor(
     private val dao: CategoryDAO,
     private val webClient: CategoryWebClient
-) {
+): BaseRepository() {
 
     /**
      * Função para obter um fluxo de dados paginados que possa ser
@@ -59,7 +60,7 @@ class CategoryRepository @Inject constructor(
         val category = if (domain.id != null) {
             dao.findById(domain.id!!).copy(name = domain.name)
         } else {
-            Category(name = domain.name)
+            Category(name = domain.name, companyId = getCompanyId())
         }
 
         domain.id = category.id
@@ -145,7 +146,7 @@ class CategoryRepository @Inject constructor(
      * @author Nikolas Luiz Schmitt
      */
     private suspend fun updateCategoriesOfLocalDB(): MarketServiceResponse {
-        val response = webClient.findAll()
+        val response = webClient.findAll(getCompanyId())
 
         if (response.success) {
             dao.save(response.values)
