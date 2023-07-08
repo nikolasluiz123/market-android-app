@@ -19,7 +19,7 @@ internal const val loadImageLinkNavResultCallbackKey = "loadImageLinkCallbackKey
  */
 fun NavGraphBuilder.loadImageLinkGraph(
     onNavigationIconClick: () -> Unit,
-    onSaveClick: (String) -> Unit
+    onSaveClick: (ByteArray) -> Unit
 ) {
     composable(route = loadImageLinkScreenRoute) {
         val loadImageLinkViewModel = hiltViewModel<LoadImageLinkViewModel>()
@@ -32,6 +32,11 @@ fun NavGraphBuilder.loadImageLinkGraph(
     }
 }
 
-fun NavController.navigateToLoadImageLinkScreen(navOptions: NavOptions? = null) {
-    navigate(route = loadImageLinkScreenRoute, navOptions = navOptions)
+fun NavController.navigateToLoadImageLinkScreen(callback: (ByteArray) -> Unit, navOptions: NavOptions? = null) {
+    navigateForResult(
+        key = loadImageLinkNavResultCallbackKey,
+        route = loadImageLinkScreenRoute,
+        callback = callback,
+        navOptions = navOptions
+    )
 }

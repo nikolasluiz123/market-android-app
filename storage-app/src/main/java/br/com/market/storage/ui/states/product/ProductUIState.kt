@@ -1,5 +1,7 @@
 package br.com.market.storage.ui.states.product
 
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import br.com.market.core.ui.states.IValidationUIState
 import br.com.market.domain.BrandDomain
 import br.com.market.domain.ProductDomain
@@ -26,7 +28,7 @@ data class ProductUIState(
     var productQuantityUnit: EnumUnit? = null,
     val productQuantityUnitErrorMessage: String = "",
 
-    var images: MutableList<ProductImageDomain> = mutableListOf(),
+    var images: SnapshotStateList<ProductImageDomain> = mutableStateListOf(),
 
     val onShowDialog: (String, String) -> Unit = { _, _ -> },
     val onHideDialog: () -> Unit = { },

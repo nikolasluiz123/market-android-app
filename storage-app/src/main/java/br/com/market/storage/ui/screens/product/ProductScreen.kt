@@ -19,18 +19,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import br.com.market.core.extensions.launchImageOnly
+import br.com.market.core.extensions.openCamera
 import br.com.market.core.extensions.parseToDouble
 import br.com.market.core.extensions.readBytes
+import br.com.market.core.extensions.requestCameraPermission
+import br.com.market.core.extensions.requestGalleryPermission
+import br.com.market.core.extensions.verifyCameraPermissionGranted
+import br.com.market.core.extensions.verifyGalleryPermissionGranted
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.MarketBottomAppBar
 import br.com.market.core.ui.components.OutlinedTextFieldValidation
 import br.com.market.core.ui.components.SimpleMarketTopAppBar
 import br.com.market.core.ui.components.bottomsheet.BottomSheetLoadImage
-import br.com.market.core.ui.components.bottomsheet.IEnumOptionsBottomSheet
+import br.com.market.core.ui.components.bottomsheet.loadimage.EnumOptionsBottomSheetLoadImage
 import br.com.market.core.ui.components.buttons.*
 import br.com.market.core.ui.components.dialog.DialogMessage
+import br.com.market.core.utils.MediaUtils.openCameraLauncher
+import br.com.market.core.utils.MediaUtils.openGalleryLauncher
+import br.com.market.core.utils.PermissionUtils.requestPermissionLauncher
 import br.com.market.domain.ProductDomain
-import br.com.market.domain.ProductImageDomain
 import br.com.market.enums.EnumUnit
 import br.com.market.storage.R
 import br.com.market.storage.ui.component.ProductImageHorizontalGallery
@@ -44,8 +52,8 @@ fun ProductScreen(
     viewModel: ProductViewModel,
     onBackClick: () -> Unit,
     onStorageButtonClick: (String, String, String) -> Unit,
-    onBottomSheetLoadImageItemClick: (IEnumOptionsBottomSheet, (Uri) -> Unit) -> Unit,
-    onProductImageClick: (String) -> Unit
+    onProductImageClick: (String) -> Unit,
+    onBottomSheetLoadImageLinkClick: (((ByteArray) -> Unit)) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -54,11 +62,11 @@ fun ProductScreen(
         onBackClick = onBackClick,
         onToggleActive = viewModel::toggleProductActive,
         onStorageButtonClick = onStorageButtonClick,
-        onBottomSheetLoadImageItemClick = onBottomSheetLoadImageItemClick,
         onSaveProductClick = viewModel::saveProduct,
         onProductImageClick = onProductImageClick,
         onAddProductImage = viewModel::addImage,
-        onToggleActiveProductImage = viewModel::toggleImageActive
+        onToggleActiveProductImage = viewModel::toggleImageActive,
+        onBottomSheetLoadImageLinkClick = onBottomSheetLoadImageLinkClick
     )
 }
 
@@ -69,11 +77,11 @@ fun ProductScreen(
     onBackClick: () -> Unit = { },
     onToggleActive: () -> Unit = { },
     onStorageButtonClick: (String, String, String) -> Unit = { _,_,_ -> },
-    onBottomSheetLoadImageItemClick: (IEnumOptionsBottomSheet, (Uri) -> Unit) -> Unit = { _, _ -> },
     onSaveProductClick: () -> Unit = { },
     onProductImageClick: (String) -> Unit = { },
     onAddProductImage: (ByteArray) -> Unit = { },
-    onToggleActiveProductImage: (ByteArray, String?) -> Unit = { _, _ -> }
+    onToggleActiveProductImage: (ByteArray, String?) -> Unit = { _, _ -> },
+    onBottomSheetLoadImageLinkClick: (((ByteArray) -> Unit)) -> Unit = { }
 ) {
     var isEditMode by remember(state.productDomain) {
         mutableStateOf(state.productDomain != null)
@@ -163,14 +171,9 @@ fun ProductScreen(
             createHorizontalChain(inputQuantityRef, inputUnityRef)
 
             var openBottomSheet by rememberSaveable { mutableStateOf(false) }
-            val images = remember(state.images) {
-                val stateList = mutableStateListOf<ProductImageDomain>()
-                stateList.addAll(state.images)
-                stateList
-            }
 
             ProductImageHorizontalGallery(
-                images = images,
+                images = state.images,
                 onLoadClick = { openBottomSheet = true },
                 onImageClick = {
                     if (isEditMode) {
@@ -178,13 +181,13 @@ fun ProductScreen(
                     }
                 },
                 onDeleteButtonClick = { byteArray, id ->
-                    if (images.size == 1 && id != null) {
+                    if (state.images.size == 1 && id != null) {
                         state.onShowDialog("Alerta", "O produto deve conter ao menos uma imagem")
                         return@ProductImageHorizontalGallery
                     }
 
                     onToggleActiveProductImage(byteArray, id)
-                    images.removeIf { image -> image.byteArray.contentEquals(byteArray) }
+                    state.images.removeIf { image -> image.byteArray.contentEquals(byteArray) }
                 },
                 modifier = Modifier
                     .constrainAs(galleryRef) {
@@ -304,21 +307,56 @@ fun ProductScreen(
                 message = state.dialogMessage
             )
 
+            var cameraURI by remember { mutableStateOf<Uri?>(null) }
+            val requestPermissionLauncher = requestPermissionLauncher()
+
+            val openCamera = openCameraLauncher { success ->
+                if (success) {
+                    cameraURI?.let { uri ->
+                        onAddProductImage(context.readBytes(uri)!!)
+                    }
+                }
+            }
+
+            val openGallery = openGalleryLauncher { uri ->
+                uri?.let { onAddProductImage(context.readBytes(it)!!) }
+            }
+
             if (openBottomSheet) {
-                BottomSheetLoadImage(
-                    onDismissRequest = {
-                        openBottomSheet = false
-                    },
-                    onItemClickListener = {
-                        onBottomSheetLoadImageItemClick(it) { uri ->
-                            if (state.images.size < 3) {
-                                onAddProductImage(context.readBytes(uri)!!)
-                            } else {
-                                state.onShowDialog("Atenção", "São permitidas apenas 3 fotos por produto.")
+                if (state.images.size < 3) {
+                    BottomSheetLoadImage(
+                        onDismissRequest = {
+                            openBottomSheet = false
+                        },
+                        onItemClickListener = {
+                            when(it) {
+                                EnumOptionsBottomSheetLoadImage.CAMERA -> {
+                                    if (context.verifyCameraPermissionGranted()) {
+                                        context.openCamera(openCamera) { uri ->
+                                            cameraURI = uri
+                                        }
+                                    } else {
+                                        requestPermissionLauncher.requestCameraPermission()
+                                    }
+                                }
+
+                                EnumOptionsBottomSheetLoadImage.GALLERY -> {
+                                    if (context.verifyGalleryPermissionGranted()) {
+                                        openGallery.launchImageOnly()
+                                    } else {
+                                        requestPermissionLauncher.requestGalleryPermission()
+                                    }
+                                }
+
+                                EnumOptionsBottomSheetLoadImage.LINK -> {
+                                    onBottomSheetLoadImageLinkClick(onAddProductImage)
+                                }
                             }
                         }
-                    }
-                )
+                    )
+                } else {
+                    state.onShowDialog("Atenção", "São permitidas apenas 3 fotos por produto.")
+                }
             }
         }
     }

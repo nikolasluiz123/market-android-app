@@ -1,6 +1,5 @@
 package br.com.market.storage.ui.screens
 
-import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,13 +15,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import br.com.market.core.extensions.readBytes
 import br.com.market.core.theme.*
 import br.com.market.core.ui.components.CoilImageViewer
 import br.com.market.core.ui.components.MarketBottomAppBar
 import br.com.market.core.ui.components.SimpleMarketTopAppBar
 import br.com.market.core.ui.components.bottomsheet.BottomSheetLoadImage
-import br.com.market.core.ui.components.bottomsheet.IEnumOptionsBottomSheet
 import br.com.market.core.ui.components.buttons.FloatingActionButtonSave
 import br.com.market.core.ui.components.buttons.IconButtonInactivate
 import br.com.market.domain.ProductImageDomain
@@ -34,7 +31,6 @@ fun ImageViewerScreen(
     viewModel: ImageViewerViewModel,
     onBackClick: () -> Unit,
     onAfterDeleteImage: () -> Unit,
-    onBottomSheetLoadImageItemClick: (IEnumOptionsBottomSheet, (Uri) -> Unit) -> Unit,
     onAfterSaveProductImage: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -46,7 +42,6 @@ fun ImageViewerScreen(
             viewModel.toggleImageActive()
             onAfterDeleteImage()
         },
-        onBottomSheetLoadImageItemClick = onBottomSheetLoadImageItemClick,
         onFABSaveClick = {
             viewModel.save(it)
             onAfterSaveProductImage()
@@ -60,7 +55,6 @@ fun ImageViewerScreen(
     state: ImageViewerUIState = ImageViewerUIState(),
     onBackClick: () -> Unit = { },
     onButtonInactivateClick: () -> Unit = { },
-    onBottomSheetLoadImageItemClick: (IEnumOptionsBottomSheet, (Uri) -> Unit) -> Unit = { _, _ -> },
     onFABSaveClick: (ProductImageDomain) -> Unit = { }
 ) {
     val context = LocalContext.current
@@ -170,9 +164,9 @@ fun ImageViewerScreen(
                         openBottomSheet = false
                     },
                     onItemClickListener = {
-                        onBottomSheetLoadImageItemClick(it) { uri ->
-                            state.productImageDomain?.byteArray = context.readBytes(uri)
-                        }
+//                        onBottomSheetLoadImageItemClick(it) { uri ->
+//                            state.productImageDomain?.byteArray = context.readBytes(uri)
+//                        }
                     }
                 )
             }

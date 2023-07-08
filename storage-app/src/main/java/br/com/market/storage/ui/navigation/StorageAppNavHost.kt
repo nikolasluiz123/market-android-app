@@ -1,6 +1,5 @@
 package br.com.market.storage.ui.navigation
 
-import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -10,8 +9,6 @@ import androidx.navigation.NavOptions
 import androidx.navigation.Navigator
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
-import br.com.market.core.ui.components.bottomsheet.IEnumOptionsBottomSheet
-import br.com.market.core.ui.components.bottomsheet.loadimage.EnumOptionsBottomSheetLoadImage
 import br.com.market.storage.ui.navigation.brand.brandScreen
 import br.com.market.storage.ui.navigation.brand.navigateToBrandScreen
 import br.com.market.storage.ui.navigation.category.categoryScreen
@@ -31,8 +28,6 @@ import br.com.market.storage.ui.navigation.movement.navigateToMovementScreen
 import br.com.market.storage.ui.navigation.movement.navigateToMovementsSearchScreen
 import br.com.market.storage.ui.navigation.product.navigateToProductScreen
 import br.com.market.storage.ui.navigation.product.productScreen
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.launch
 
 /**
  * Host de Navegação que configura o grafo do APP
@@ -123,8 +118,8 @@ fun StorageAppNavHost(
         productScreen(
             onBackClick = navController::popBackStack,
             onStorageButtonClick = navController::navigateToMovementsSearchScreen,
-            onBottomSheetLoadImageItemClick = navController::navigateToLoadImage,
-            onProductImageClick = navController::navigateToImageViewerScreen
+            onProductImageClick = navController::navigateToImageViewerScreen,
+            onBottomSheetLoadImageLinkClick = navController::navigateToLoadImageLinkScreen
         )
 
         movementsSearchScreen(
@@ -156,68 +151,18 @@ fun StorageAppNavHost(
             onBackClick = navController::popBackStack
         )
 
-        cameraGraph(
-            onImageCaptured = { uri, _ ->
-                // Isso talvez seja temporário, preciso descobrir se tem uma forma de remover
-                // essa execução de dentro do contexto IO da courotine
-                scope.launch(Main) {
-                    navController.popBackStackWithResult(cameraNavResultCallbackKey, uri)
-                }
-            },
-            onError = {
-
-            }
-        )
-
-        androidGalleryGraph(
-            onAfterShowGallery = navController::popBackStack,
-            onImageCaptured = {
-                navController.popBackStackWithResult(androidGalleryNavResultCallbackKey, it)
-            }
-        )
-
         loadImageLinkGraph(
             onNavigationIconClick = navController::popBackStack,
             onSaveClick = {
-
+                navController.popBackStackWithResult(loadImageLinkNavResultCallbackKey, it)
             }
         )
 
         imageViewerScreen(
             onBackClick = navController::popBackStack,
             onAfterDeleteImage = navController::popBackStack,
-            onBottomSheetLoadImageItemClick = navController::navigateToLoadImage,
             onAfterSaveProductImage = navController::popBackStack
         )
-    }
-}
-
-fun NavController.navigateToLoadImage(
-    option: IEnumOptionsBottomSheet,
-    callback: (Uri) -> Unit
-) {
-    when (option) {
-        EnumOptionsBottomSheetLoadImage.CAMERA -> {
-            navigateForResult(
-                key = cameraNavResultCallbackKey,
-                route = cameraScreenRoute,
-                callback = callback
-            )
-        }
-        EnumOptionsBottomSheetLoadImage.GALLERY -> {
-            navigateForResult(
-                key = androidGalleryNavResultCallbackKey,
-                route = androidGalleryScreenRoute,
-                callback = callback
-            )
-        }
-        EnumOptionsBottomSheetLoadImage.LINK -> {
-            navigateForResult(
-                key = loadImageLinkNavResultCallbackKey,
-                route = loadImageLinkScreenRoute,
-                callback = callback
-            )
-        }
     }
 }
 

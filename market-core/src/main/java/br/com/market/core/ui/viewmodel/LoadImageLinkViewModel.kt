@@ -6,14 +6,17 @@ import br.com.market.core.R
 import br.com.market.core.ui.states.LoadImageLinkUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.withContext
+import java.net.URL
 import javax.inject.Inject
 
 @HiltViewModel
 class LoadImageLinkViewModel @Inject constructor(
-    @ApplicationContext context: Context
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<LoadImageLinkUIState> = MutableStateFlow(LoadImageLinkUIState())
@@ -39,5 +42,9 @@ class LoadImageLinkViewModel @Inject constructor(
                 }
             )
         }
+    }
+
+    suspend fun downloadImage(link: String): ByteArray = withContext(IO) {
+        URL(link).readBytes()
     }
 }

@@ -1,12 +1,10 @@
 package br.com.market.storage.ui.navigation.product
 
-import android.net.Uri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import br.com.market.core.ui.components.bottomsheet.IEnumOptionsBottomSheet
 import br.com.market.storage.ui.navigation.brand.argumentBrandId
 import br.com.market.storage.ui.navigation.category.argumentCategoryId
 import br.com.market.storage.ui.screens.product.ProductScreen
@@ -18,8 +16,8 @@ internal const val argumentProductId = "productId"
 fun NavGraphBuilder.productScreen(
     onBackClick: () -> Unit,
     onStorageButtonClick: (String, String, String) -> Unit,
-    onBottomSheetLoadImageItemClick: (IEnumOptionsBottomSheet, (Uri) -> Unit) -> Unit,
-    onProductImageClick: (String) -> Unit
+    onProductImageClick: (String) -> Unit,
+    onBottomSheetLoadImageLinkClick: ((ByteArray) -> Unit) -> Unit
 ) {
     composable(route = "$productScreenRoute?$argumentCategoryId={$argumentCategoryId}&$argumentBrandId={$argumentBrandId}&$argumentProductId={$argumentProductId}") {
         val viewModel = hiltViewModel<ProductViewModel>()
@@ -28,8 +26,8 @@ fun NavGraphBuilder.productScreen(
             viewModel = viewModel,
             onBackClick = onBackClick,
             onStorageButtonClick = onStorageButtonClick,
-            onBottomSheetLoadImageItemClick = onBottomSheetLoadImageItemClick,
-            onProductImageClick = onProductImageClick
+            onProductImageClick = onProductImageClick,
+            onBottomSheetLoadImageLinkClick = onBottomSheetLoadImageLinkClick
         )
     }
 }

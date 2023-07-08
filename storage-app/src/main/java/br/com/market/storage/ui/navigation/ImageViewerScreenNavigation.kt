@@ -16,7 +16,6 @@ internal const val argumentProductImageId = "productImageId"
 fun NavGraphBuilder.imageViewerScreen(
     onBackClick: () -> Unit,
     onAfterDeleteImage: () -> Unit,
-    onBottomSheetLoadImageItemClick: (IEnumOptionsBottomSheet, (Uri) -> Unit) -> Unit,
     onAfterSaveProductImage: () -> Unit
 ) {
     composable(route = "$imageViewerScreenRoute?$argumentProductImageId={$argumentProductImageId}") {
@@ -26,7 +25,6 @@ fun NavGraphBuilder.imageViewerScreen(
             viewModel = imageViewerViewModel,
             onBackClick = onBackClick,
             onAfterDeleteImage = onAfterDeleteImage,
-            onBottomSheetLoadImageItemClick = onBottomSheetLoadImageItemClick,
             onAfterSaveProductImage = onAfterSaveProductImage
         )
     }

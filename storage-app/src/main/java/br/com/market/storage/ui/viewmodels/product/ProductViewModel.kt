@@ -1,6 +1,7 @@
 package br.com.market.storage.ui.viewmodels.product
 
 import android.content.Context
+import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -119,7 +120,7 @@ class ProductViewModel @Inject constructor(
                         productPrice = productDomain.price!!.format(),
                         productQuantity = productDomain.quantity!!.format(),
                         productQuantityUnit = productDomain.quantityUnit!!,
-                        images = productDomain.images
+                        images = productDomain.images.toMutableStateList()
                     )
                 }
             }
