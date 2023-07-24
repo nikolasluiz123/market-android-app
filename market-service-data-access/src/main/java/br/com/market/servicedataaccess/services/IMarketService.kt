@@ -1,15 +1,15 @@
 package br.com.market.servicedataaccess.services
 
-import br.com.market.sdo.CompanySDO
+import br.com.market.sdo.MarketSDO
 import br.com.market.servicedataaccess.responses.types.ReadResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 
 
-interface ICompanyService {
+interface IMarketService {
 
-    @GET("company/{deviceId}")
-    suspend fun findByDeviceId(@Path("deviceId") deviceId: String): Response<ReadResponse<CompanySDO>>
+    @GET("market/{deviceId}")
+    suspend fun findByDeviceId(@Path("deviceId") deviceId: String): Response<ReadResponse<MarketSDO>>
 
 }

@@ -7,6 +7,7 @@ import br.com.market.servicedataaccess.services.IBrandService
 import br.com.market.servicedataaccess.services.ICategoryService
 import br.com.market.servicedataaccess.services.ICompanyService
 import br.com.market.servicedataaccess.services.IDeviceService
+import br.com.market.servicedataaccess.services.IMarketService
 import br.com.market.servicedataaccess.services.IProductService
 import br.com.market.servicedataaccess.services.IStorageOperationsHistoryService
 import br.com.market.servicedataaccess.services.IUserService
@@ -101,14 +102,20 @@ class RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideCompanyService(retrofit: Retrofit): IDeviceService {
+    fun provideDeviceService(retrofit: Retrofit): IDeviceService {
         return retrofit.create(IDeviceService::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideDeviceService(retrofit: Retrofit): ICompanyService {
+    fun provideCompanyService(retrofit: Retrofit): ICompanyService {
         return retrofit.create(ICompanyService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMarketService(retrofit: Retrofit): IMarketService {
+        return retrofit.create(IMarketService::class.java)
     }
 
     @Provides

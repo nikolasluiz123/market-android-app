@@ -4,22 +4,23 @@ import androidx.paging.Pager
 import androidx.paging.PagingData
 import br.com.market.core.pagination.PagingConfigUtils
 import br.com.market.domain.StorageOperationHistoryDomain
+import br.com.market.localdataaccess.dao.MarketDAO
 import br.com.market.localdataaccess.dao.StorageOperationsHistoryDAO
 import br.com.market.localdataaccess.tuples.StorageOperationHistoryTuple
 import br.com.market.models.StorageOperationHistory
-import br.com.market.sdo.filters.StorageOperationsFiltersSDO
 import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
 import br.com.market.servicedataaccess.webclients.StorageOperationsHistoryWebClient
 import br.com.market.storage.pagination.StorageOperationsHistoryPagingSource
-import br.com.market.storage.repository.base.BaseRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class StorageOperationsHistoryRepository @Inject constructor(
     private val dao: StorageOperationsHistoryDAO,
+    private val marketDAO: MarketDAO,
     private val webClient: StorageOperationsHistoryWebClient
-): BaseRepository() {
+) {
 
     fun findStorageOperationHistory(productId: String?): Flow<PagingData<StorageOperationHistoryTuple>> {
         return Pager(
@@ -59,6 +60,8 @@ class StorageOperationsHistoryRepository @Inject constructor(
                 quantity = domain.quantity
             )
         } else {
+            val marketId = marketDAO.findFirst().first()?.id!!
+
             StorageOperationHistory(
                 productId = domain.productId,
                 dateRealization = domain.dateRealization,
@@ -69,7 +72,7 @@ class StorageOperationsHistoryRepository @Inject constructor(
                 synchronized = domain.synchronized,
                 active = domain.active,
                 quantity = domain.quantity,
-                companyId = getCompanyId()
+                marketId = marketId
             )
         }
 
@@ -101,7 +104,7 @@ class StorageOperationsHistoryRepository @Inject constructor(
     }
 
     private suspend fun updateStorageOperationsHistoryOfLocalDB(): MarketServiceResponse {
-        val responseFindAllProducts = webClient.findAllStorageOperationsHistory(StorageOperationsFiltersSDO(getCompanyId()))
+        val responseFindAllProducts = webClient.findAllStorageOperationsHistory(marketDAO.findFirst().first()?.id!!)
 
         if (responseFindAllProducts.success) {
             dao.save(responseFindAllProducts.values)

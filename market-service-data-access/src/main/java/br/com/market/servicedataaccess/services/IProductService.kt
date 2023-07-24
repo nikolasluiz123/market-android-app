@@ -1,7 +1,5 @@
 package br.com.market.servicedataaccess.services
 
-import br.com.market.sdo.filters.ProductFiltersSDO
-import br.com.market.sdo.filters.ProductImageFiltersSDO
 import br.com.market.sdo.product.ProductBodySDO
 import br.com.market.sdo.product.ProductImageSDO
 import br.com.market.sdo.product.ProductSDO
@@ -30,8 +28,8 @@ interface IProductService {
     suspend fun sync(@Header("Authorization") token: String, @Body productBodySDOs: List<ProductBodySDO>): Response<MarketServiceResponse>
 
     @GET("product")
-    suspend fun findAllProductDTOs(@Header("Authorization") token: String, @Body productFiltersSDO: ProductFiltersSDO): Response<ReadResponse<ProductSDO>>
+    suspend fun findAllProductDTOs(@Header("Authorization") token: String, @Query("marketId") marketId: Long): Response<ReadResponse<ProductSDO>>
 
     @GET("product/images")
-    suspend fun findAllProductImageDTOs(@Header("Authorization") token: String, @Body productImageFiltersSDO: ProductImageFiltersSDO): Response<ReadResponse<ProductImageSDO>>
+    suspend fun findAllProductImageDTOs(@Header("Authorization") token: String,  @Query("marketId") marketId: Long): Response<ReadResponse<ProductImageSDO>>
 }

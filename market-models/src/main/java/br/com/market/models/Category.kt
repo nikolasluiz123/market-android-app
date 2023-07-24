@@ -1,19 +1,19 @@
 package br.com.market.models
 
 import androidx.room.*
-import br.com.market.models.base.CompanyModel
+import br.com.market.models.base.MarketModel
 import java.util.*
 
 @Entity(
     tableName = "categories",
     foreignKeys = [
         ForeignKey(
-            entity = Company::class,
+            entity = Market::class,
             parentColumns = ["id"],
-            childColumns = ["company_id"]
+            childColumns = ["market_id"]
         )
     ],
-    indices = [Index(value = ["company_id"])]
+    indices = [Index(value = ["market_id"])]
 )
 data class Category(
     @PrimaryKey
@@ -21,6 +21,6 @@ data class Category(
     var name: String? = null,
     override var synchronized: Boolean = false,
     override var active: Boolean = true,
-    @ColumnInfo("company_id")
-    override var companyId: Long? = null
-): CompanyModel()
+    @ColumnInfo("market_id")
+    override var marketId: Long? = null
+): MarketModel()

@@ -16,9 +16,7 @@ data class ThemeDefinitions(
     @ColumnInfo("color_tertiary")
     var colorTertiary: String? = null,
     @ColumnInfo("image_logo")
-    var imageLogo: ByteArray? = null,
-    var synchronized: Boolean = false,
-    var active: Boolean = true
+    var imageLogo: ByteArray? = null
 ) {
 
     override fun equals(other: Any?): Boolean {

@@ -85,7 +85,8 @@ fun StorageAppNavHost(
                         inclusive = true
                     }
                 })
-            }
+            },
+            onAboutClick = navController::navigateToAboutScreen
         )
 
         categorySearchScreen(

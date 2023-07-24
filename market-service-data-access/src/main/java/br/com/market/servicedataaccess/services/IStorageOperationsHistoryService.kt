@@ -1,6 +1,5 @@
 package br.com.market.servicedataaccess.services
 
-import br.com.market.sdo.filters.StorageOperationsFiltersSDO
 import br.com.market.sdo.storageoperationshistory.StorageOperationHistorySDO
 import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
@@ -21,7 +20,7 @@ interface IStorageOperationsHistoryService {
     suspend fun sync(@Header("Authorization") token: String, @Body operationsSDO: List<StorageOperationHistorySDO>): Response<MarketServiceResponse>
 
     @GET("storageOperationsHistory")
-    suspend fun findAllStorageOperationDTOs(@Header("Authorization") token: String, @Body storageOperationsFiltersSDO: StorageOperationsFiltersSDO): Response<ReadResponse<StorageOperationHistorySDO>>
+    suspend fun findAllStorageOperationDTOs(@Header("Authorization") token: String, @Query("marketId") marketId: Long): Response<ReadResponse<StorageOperationHistorySDO>>
     @POST("storageOperationsHistory/inactivate")
     suspend fun inactivate(@Header("Authorization") token: String, @Query("localId") localId: String): Response<PersistenceResponse>
 }

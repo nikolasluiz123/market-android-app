@@ -1,7 +1,7 @@
 package br.com.market.models
 
 import androidx.room.*
-import br.com.market.models.base.CompanyModel
+import br.com.market.models.base.MarketModel
 import java.time.LocalDateTime
 import java.util.*
 
@@ -19,12 +19,12 @@ import java.util.*
             childColumns = ["client_id"]
         ),
         ForeignKey(
-            entity = Company::class,
+            entity = Market::class,
             parentColumns = ["id"],
-            childColumns = ["company_id"]
+            childColumns = ["market_id"]
         )
     ],
-    indices = [Index(value = ["product_id"]), Index(value = ["client_id"]), Index(value = ["company_id"])]
+    indices = [Index(value = ["product_id"]), Index(value = ["client_id"]), Index(value = ["market_id"])]
 )
 data class ProductRating(
     @PrimaryKey
@@ -38,6 +38,6 @@ data class ProductRating(
     var clientId: String? = null,
     override var synchronized: Boolean = false,
     override var active: Boolean = true,
-    @ColumnInfo("company_id")
-    override var companyId: Long? = null
-): CompanyModel()
+    @ColumnInfo("market_id")
+    override var marketId: Long? = null
+): MarketModel()

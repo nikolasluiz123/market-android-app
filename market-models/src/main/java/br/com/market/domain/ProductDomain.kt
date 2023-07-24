@@ -7,8 +7,8 @@ import br.com.market.enums.EnumUnit
 data class ProductDomain(
     override var id: String? = null,
     override var active: Boolean = true,
-    @ColumnInfo(name = "company_id")
-    override var companyId: Long? = null,
+    @ColumnInfo(name = "market_id")
+    override var marketId: Long? = null,
     override var synchronized: Boolean = false,
     var name: String? = null,
     var price: Double? = null,

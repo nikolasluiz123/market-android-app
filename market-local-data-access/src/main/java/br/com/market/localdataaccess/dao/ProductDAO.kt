@@ -30,6 +30,7 @@ abstract class ProductDAO : AbstractBaseDAO() {
             " inner join products_images pi on pi.id = (select id from products_images where product_id = p.id and principal and active) " +
             " inner join categories_brands cb on p.category_brand_id = cb.id " +
             " where cb.category_id = :categoryId and cb.brand_id = :brandId and p.active " +
+            " order by p.name " +
             " limit :limit offset :offset ")
     abstract suspend fun findProducts(categoryId: String, brandId: String, limit: Int, offset: Int): List<ProductImageTuple>
 

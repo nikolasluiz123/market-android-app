@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.emptyFlow
 data class BrandUIState(
     var categoryDomain: CategoryDomain? = null,
     var brandDomain: BrandDomain? = null,
+    var active: Boolean = true,
     val brandName: String = "",
     val onBrandNameChange: (String) -> Unit = { },
     val brandNameErrorMessage: String = "",

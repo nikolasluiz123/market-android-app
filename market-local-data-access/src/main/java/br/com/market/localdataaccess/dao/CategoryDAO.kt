@@ -21,7 +21,7 @@ abstract class CategoryDAO : AbstractBaseDAO() {
      *
      * @author Nikolas Luiz Schmitt
      */
-    @Query("select * from categories limit :limit offset :offset")
+    @Query("select * from categories where active order by name limit :limit offset :offset")
     abstract suspend fun findCategories(limit: Int, offset: Int): List<CategoryDomain>
 
     /**

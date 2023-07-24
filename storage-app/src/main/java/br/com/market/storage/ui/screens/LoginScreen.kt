@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -49,6 +50,7 @@ import kotlinx.coroutines.launch
 fun LoginScreen(
     viewModel: LoginViewModel,
     onAuthenticateSuccess: () -> Unit = { },
+    onAboutClick: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
@@ -68,7 +70,8 @@ fun LoginScreen(
                 state.onToggleLoading()
             }
         },
-        onSyncClick = viewModel::sync
+        onSyncClick = viewModel::sync,
+        onAboutClick = onAboutClick
     )
 }
 
@@ -85,7 +88,8 @@ fun LoginScreen(
 fun LoginScreen(
     state: LoginUiState = LoginUiState(),
     onAuthenticate: (UserDomain) -> Unit = {},
-    onSyncClick: () -> Unit = { }
+    onSyncClick: () -> Unit = { },
+    onAboutClick: () -> Unit = { }
 ) {
     Scaffold(
         topBar = {
@@ -93,6 +97,9 @@ fun LoginScreen(
                 title = "Bem-Vindo",
                 actions = {
                     IconButtonSync(onSyncClick)
+                },
+                menuItems = {
+                    DropdownMenuItem(text = { Text("Sobre") }, onClick = onAboutClick)
                 }
             )
         }

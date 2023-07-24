@@ -127,7 +127,10 @@ fun ImageViewerScreen(
 
                     Switch(
                         checked = isPrincipalImage,
-                        onCheckedChange = { isPrincipalImage = it },
+                        onCheckedChange = {
+                            isPrincipalImage = it
+                            state.productImageDomain?.principal = it
+                        },
                         colors = SwitchDefaults.colors(
                             uncheckedBorderColor = GREY_500,
                             uncheckedThumbColor = Color.White,

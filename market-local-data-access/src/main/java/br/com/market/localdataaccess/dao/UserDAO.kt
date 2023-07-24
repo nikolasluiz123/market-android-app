@@ -18,6 +18,4 @@ abstract class UserDAO : AbstractBaseDAO() {
     @Query("select * from users where email = :email")
     abstract suspend fun findUserByEmail(email: String): User?
 
-    @Query("select * from users where synchronized = 0")
-    abstract suspend fun findUsersNotSynchronized(): List<User>
 }

@@ -1,16 +1,16 @@
 package br.com.market.models
 
 import androidx.room.*
-import br.com.market.models.base.CompanyModel
+import br.com.market.models.base.MarketModel
 import java.util.*
 
 @Entity(
     tableName = "carts_items",
     foreignKeys = [
         ForeignKey(
-            entity = Company::class,
+            entity = Market::class,
             parentColumns = ["id"],
-            childColumns = ["company_id"]
+            childColumns = ["market_id"]
         ),
         ForeignKey(
             entity = Product::class,
@@ -23,7 +23,7 @@ import java.util.*
             childColumns = ["purchase_cart_id"]
         )
     ],
-    indices = [Index(value = ["company_id"]), Index(value = ["product_id"]), Index(value = ["purchase_cart_id"])]
+    indices = [Index(value = ["market_id"]), Index(value = ["product_id"]), Index(value = ["purchase_cart_id"])]
 )
 data class CartItem(
     @PrimaryKey
@@ -35,6 +35,6 @@ data class CartItem(
     var purchaseCartId: String? = null,
     override var synchronized: Boolean = false,
     override var active: Boolean = true,
-    @ColumnInfo("company_id")
-    override var companyId: Long? = null
-): CompanyModel()
+    @ColumnInfo("market_id")
+    override var marketId: Long? = null
+): MarketModel()

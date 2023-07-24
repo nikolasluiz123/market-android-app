@@ -22,7 +22,7 @@ import androidx.constraintlayout.compose.Dimension
 import br.com.market.core.extensions.launchImageOnly
 import br.com.market.core.extensions.openCamera
 import br.com.market.core.extensions.parseToDouble
-import br.com.market.core.extensions.readBytes
+import br.com.market.core.extensions.processBytesOfImage
 import br.com.market.core.extensions.requestCameraPermission
 import br.com.market.core.extensions.requestGalleryPermission
 import br.com.market.core.extensions.verifyCameraPermissionGranted
@@ -313,13 +313,13 @@ fun ProductScreen(
             val openCamera = openCameraLauncher { success ->
                 if (success) {
                     cameraURI?.let { uri ->
-                        onAddProductImage(context.readBytes(uri)!!)
+                        onAddProductImage(context.processBytesOfImage(uri)!!)
                     }
                 }
             }
 
             val openGallery = openGalleryLauncher { uri ->
-                uri?.let { onAddProductImage(context.readBytes(it)!!) }
+                uri?.let { onAddProductImage(context.processBytesOfImage(it)!!) }
             }
 
             if (openBottomSheet) {

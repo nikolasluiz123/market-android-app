@@ -2,7 +2,7 @@ package br.com.market.models
 
 import androidx.room.*
 import br.com.market.enums.EnumUnit
-import br.com.market.models.base.CompanyModel
+import br.com.market.models.base.MarketModel
 import java.util.*
 
 @Entity(
@@ -14,12 +14,12 @@ import java.util.*
             childColumns = ["category_brand_id"]
         ),
         ForeignKey(
-            entity = Company::class,
+            entity = Market::class,
             parentColumns = ["id"],
-            childColumns = ["company_id"]
+            childColumns = ["market_id"]
         )
     ],
-    indices = [Index(value = ["category_brand_id"]), Index(value = ["company_id"])]
+    indices = [Index(value = ["category_brand_id"]), Index(value = ["market_id"])]
 )
 data class Product(
     @PrimaryKey
@@ -33,6 +33,6 @@ data class Product(
     var categoryBrandId: String? = null,
     override var synchronized: Boolean = false,
     override var active: Boolean = true,
-    @ColumnInfo("company_id")
-    override var companyId: Long? = null
-) : CompanyModel()
+    @ColumnInfo("market_id")
+    override var marketId: Long? = null
+) : MarketModel()

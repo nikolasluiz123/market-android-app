@@ -8,7 +8,7 @@ import br.com.market.domain.base.BaseDomain
  *
  * @property id
  * @property active
- * @property companyId
+ * @property marketId
  * @property synchronized
  * @property name
  *
@@ -17,8 +17,8 @@ import br.com.market.domain.base.BaseDomain
 data class CategoryDomain(
     override var id: String? = null,
     override var active: Boolean = true,
-    @ColumnInfo(name = "company_id")
-    override var companyId: Long? = null,
+    @ColumnInfo(name = "market_id")
+    override var marketId: Long? = null,
     override var synchronized: Boolean = false,
     var name: String = ""
 ): BaseDomain()

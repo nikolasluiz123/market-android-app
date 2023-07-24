@@ -10,12 +10,16 @@ import br.com.market.core.preferences.dataStore
 import br.com.market.domain.UserDomain
 import br.com.market.servicedataaccess.responses.types.AuthenticationResponse
 import br.com.market.storage.R
+import br.com.market.storage.repository.CompanyRepository
+import br.com.market.storage.repository.DeviceRepository
+import br.com.market.storage.repository.MarketRepository
 import br.com.market.storage.repository.UserRepository
 import br.com.market.storage.ui.states.LoginUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,7 +36,10 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val userRepository: UserRepository
+    private val deviceRepository: DeviceRepository,
+    private val companyRepository: CompanyRepository,
+    private val marketRepository: MarketRepository,
+    private val userRepository: UserRepository,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<LoginUiState> = MutableStateFlow(LoginUiState())
@@ -104,6 +111,11 @@ class LoginViewModel @Inject constructor(
 
     fun sync() {
         viewModelScope.launch {
+            val deviceId = context.dataStore.data.first()[PreferencesKey.TEMP_DEVICE_ID] ?: deviceRepository.findFirst().first()?.id!!
+
+            companyRepository.sync(deviceId)
+            marketRepository.sync(deviceId)
+            deviceRepository.sync(deviceId)
             userRepository.sync()
         }
     }

@@ -9,6 +9,7 @@ import br.com.market.core.preferences.dataStore
 import br.com.market.storage.repository.CategoryRepository
 import br.com.market.storage.repository.CompanyRepository
 import br.com.market.storage.repository.DeviceRepository
+import br.com.market.storage.repository.MarketRepository
 import br.com.market.storage.repository.ProductRepository
 import br.com.market.storage.repository.StorageOperationsHistoryRepository
 import br.com.market.storage.repository.UserRepository
@@ -30,6 +31,7 @@ class AboutViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val deviceRepository: DeviceRepository,
     private val companyRepository: CompanyRepository,
+    private val marketRepository: MarketRepository,
     private val categoryRepository: CategoryRepository,
     private val brandRepository: BrandRepository,
     private val productRepository: ProductRepository,
@@ -73,6 +75,19 @@ class AboutViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
+            marketRepository.findFirst().collect {
+                if (it != null) {
+                    val address = marketRepository.findAddress(it.addressId!!)
+
+                    _uiState.value = _uiState.value.copy(
+                        marketName = it.name ?: "",
+                        marketAddress = "${address.publicPlace}, ${address.number}"
+                    )
+                }
+            }
+        }
+
+        viewModelScope.launch {
             companyRepository.findFirstThemeDefinition().collect {
                 if (it != null) {
                     _uiState.value = _uiState.value.copy(
@@ -88,6 +103,7 @@ class AboutViewModel @Inject constructor(
             val deviceId = context.dataStore.data.first()[PreferencesKey.TEMP_DEVICE_ID] ?: deviceRepository.findFirst().first()?.id!!
 
             companyRepository.sync(deviceId)
+            marketRepository.sync(deviceId)
             deviceRepository.sync(deviceId)
             userRepository.sync()
             categoryRepository.sync()

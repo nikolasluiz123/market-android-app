@@ -3,8 +3,6 @@ package br.com.market.servicedataaccess.services
 import br.com.market.sdo.brand.BrandBodySDO
 import br.com.market.sdo.brand.BrandSDO
 import br.com.market.sdo.brand.CategoryBrandSDO
-import br.com.market.sdo.filters.BrandFiltersSDO
-import br.com.market.sdo.filters.CategoryBrandFiltersSDO
 import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
 import br.com.market.servicedataaccess.responses.types.ReadResponse
@@ -13,6 +11,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 
 interface IBrandService {
@@ -27,9 +26,9 @@ interface IBrandService {
     suspend fun sync(@Header("Authorization") token: String, @Body brandBodySDOs: List<BrandBodySDO>): Response<MarketServiceResponse>
 
     @GET("brand")
-    suspend fun findAllBrandDTOs(@Header("Authorization") token: String, @Body brandFiltersSDO: BrandFiltersSDO): Response<ReadResponse<BrandSDO>>
+    suspend fun findAllBrandDTOs(@Header("Authorization") token: String, @Query("marketId") marketId: Long): Response<ReadResponse<BrandSDO>>
 
     @GET("brand/categoryBrand")
-    suspend fun findAllCategoryBrandDTOs(@Header("Authorization") token: String, @Body categoryBrandFiltersSDO: CategoryBrandFiltersSDO): Response<ReadResponse<CategoryBrandSDO>>
+    suspend fun findAllCategoryBrandDTOs(@Header("Authorization") token: String, @Query("marketId") marketId: Long): Response<ReadResponse<CategoryBrandSDO>>
 
 }

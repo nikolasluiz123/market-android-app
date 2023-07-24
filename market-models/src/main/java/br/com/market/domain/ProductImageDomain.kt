@@ -5,7 +5,7 @@ import br.com.market.domain.base.BaseDomain
 data class ProductImageDomain(
     override var id: String? = null,
     override var active: Boolean = true,
-    override var companyId: Long? = null,
+    override var marketId: Long? = null,
     override var synchronized: Boolean = false,
     var byteArray: ByteArray? = null,
     val productId: String? = null,

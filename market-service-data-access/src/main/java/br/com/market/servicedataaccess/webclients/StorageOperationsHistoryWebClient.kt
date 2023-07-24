@@ -2,7 +2,6 @@ package br.com.market.servicedataaccess.webclients
 
 import android.content.Context
 import br.com.market.models.StorageOperationHistory
-import br.com.market.sdo.filters.StorageOperationsFiltersSDO
 import br.com.market.sdo.storageoperationshistory.StorageOperationHistorySDO
 import br.com.market.servicedataaccess.responses.extensions.getPersistenceResponseBody
 import br.com.market.servicedataaccess.responses.extensions.getReadResponseBody
@@ -33,7 +32,7 @@ class StorageOperationsHistoryWebClient @Inject constructor(
                         operationType = operationType,
                         description = description,
                         userId = userId,
-                        companyId = companyId
+                        marketId = marketId
                     )
 
                     service.save(getToken(), storageSDO).getPersistenceResponseBody()
@@ -56,7 +55,7 @@ class StorageOperationsHistoryWebClient @Inject constructor(
                        operationType = it.operationType,
                        description = it.description,
                        userId = it.userId,
-                       companyId = it.companyId
+                       marketId = it.marketId
                    )
                 }
 
@@ -65,10 +64,10 @@ class StorageOperationsHistoryWebClient @Inject constructor(
         )
     }
 
-    suspend fun findAllStorageOperationsHistory(storageOperationsFiltersSDO: StorageOperationsFiltersSDO): ReadResponse<StorageOperationHistory> {
+    suspend fun findAllStorageOperationsHistory(marketId: Long): ReadResponse<StorageOperationHistory> {
         return readServiceErrorHandlingBlock(
             codeBlock = {
-                val response = service.findAllStorageOperationDTOs(getToken(), storageOperationsFiltersSDO).getReadResponseBody()
+                val response = service.findAllStorageOperationDTOs(getToken(), marketId).getReadResponseBody()
 
                 val operations = response.values.map {
                     StorageOperationHistory(
@@ -82,7 +81,7 @@ class StorageOperationsHistoryWebClient @Inject constructor(
                         quantity = it.quantity,
                         synchronized = true,
                         active = it.active,
-                        companyId = it.companyId
+                        marketId = it.marketId
                     )
                 }
 

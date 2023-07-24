@@ -2,6 +2,7 @@ package br.com.market.storage.injection
 
 import br.com.market.localdataaccess.dao.BrandDAO
 import br.com.market.localdataaccess.dao.CategoryDAO
+import br.com.market.localdataaccess.dao.MarketDAO
 import br.com.market.localdataaccess.dao.UserDAO
 import br.com.market.servicedataaccess.webclients.BrandWebClient
 import br.com.market.servicedataaccess.webclients.CategoryWebClient
@@ -36,8 +37,9 @@ class ViewModelModule {
     @ViewModelScoped
     fun provideBrandRepository(
         brandWebClient: BrandWebClient,
-        brandDAO: BrandDAO
-    ): BrandRepository = BrandRepository(brandDAO, brandWebClient)
+        brandDAO: BrandDAO,
+        marketDAO: MarketDAO
+    ): BrandRepository = BrandRepository(brandDAO, marketDAO, brandWebClient)
 
     /**
      * Função para instanciar um UserRepository.
@@ -51,15 +53,17 @@ class ViewModelModule {
     @ViewModelScoped
     fun provideUserRepository(
         userDAO: UserDAO,
+        marketDAO: MarketDAO,
         userWebClient: UserWebClient
-    ): UserRepository = UserRepository(userDAO, userWebClient)
+    ): UserRepository = UserRepository(userDAO, marketDAO, userWebClient)
 
     @Provides
     @ViewModelScoped
     fun provideCategoryRepository(
         categoryDAO: CategoryDAO,
+        marketDAO: MarketDAO,
         categoryWebClient: CategoryWebClient
     ): CategoryRepository {
-        return CategoryRepository(categoryDAO, categoryWebClient)
+        return CategoryRepository(categoryDAO, marketDAO, categoryWebClient)
     }
 }

@@ -16,7 +16,7 @@ class CompanyWebClient @Inject constructor(
     suspend fun findByDeviceId(deviceId: String): ReadResponse<CompanySDO> {
         return readServiceErrorHandlingBlock(
             codeBlock = {
-                val response = service.findByDeviceId(getToken(), deviceId).getReadResponseBody()
+                val response = service.findByDeviceId(deviceId).getReadResponseBody()
 
                 ReadResponse(
                     values = response.values,

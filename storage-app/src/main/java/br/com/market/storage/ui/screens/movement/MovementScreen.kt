@@ -56,7 +56,6 @@ import br.com.market.enums.EnumOperationType.*
 import br.com.market.storage.R
 import br.com.market.storage.ui.states.MovementUIState
 import br.com.market.storage.ui.viewmodels.movements.MovementViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.Instant
@@ -144,7 +143,9 @@ fun MovementScreen(
                 floatingActionButton = {
                     FloatingActionButtonSave(
                         onClick = {
-                            isEditMode = saveMovement(state, isEditMode, onSaveMovementClick, scope, snackbarHostState, context)
+                            scope.launch {
+                                isEditMode = saveMovement(state, isEditMode, onSaveMovementClick, snackbarHostState, context)
+                            }
                         }
                     )
                 }
@@ -383,60 +384,58 @@ fun MovementScreen(
     }
 }
 
-private fun saveMovement(
+private suspend fun saveMovement(
     state: MovementUIState,
     isEditMode: Boolean,
     onSaveMovementClick: () -> Unit,
-    scope: CoroutineScope,
     snackbarHostState: SnackbarHostState,
     context: Context
 ): Boolean {
-    scope.launch {
-        if (state.onValidate()) {
-            val datePrevision = state.datePrevision?.let {
-                LocalDate.parse(it, DateTimeFormatter.ofPattern(EnumDateTimePatterns.DATE_PATTER.pattern))
-            }
-
-            val timePrevision = state.timePrevision?.let {
-                LocalTime.parse(it, DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
-            }
-
-            val localDateTimePrevision = datePrevision?.atTime(timePrevision)
-
-            val dateRealization = when (state.operationType) {
-                Output, Input -> LocalDateTime.now()
-                else -> null
-            }
-
-            val userId = context.dataStore.data.first().toPreferences()[PreferencesKey.USER]!!
-
-            state.storageOperationHistoryDomain = if (isEditMode) {
-                state.storageOperationHistoryDomain?.copy(
-                    productId = state.productDomain?.id,
-                    quantity = state.quantity.toInt(),
-                    datePrevision = localDateTimePrevision,
-                    dateRealization = dateRealization,
-                    operationType = state.operationType,
-                    description = state.description,
-                    userId = userId
-                )
-            } else {
-                StorageOperationHistoryDomain(
-                    productId = state.productDomain?.id,
-                    quantity = state.quantity.toInt(),
-                    datePrevision = localDateTimePrevision,
-                    dateRealization = dateRealization,
-                    operationType = state.operationType,
-                    description = state.description,
-                    userId = userId
-                )
-            }
-
-            onSaveMovementClick()
-
-            snackbarHostState.showSnackbar("Movimentação Salva com Sucesso")
+    if (state.onValidate()) {
+        val datePrevision = state.datePrevision?.let {
+            LocalDate.parse(it, DateTimeFormatter.ofPattern(EnumDateTimePatterns.DATE_PATTER.pattern))
         }
+
+        val timePrevision = state.timePrevision?.let {
+            LocalTime.parse(it, DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+        }
+
+        val localDateTimePrevision = datePrevision?.atTime(timePrevision)
+
+        val dateRealization = when (state.operationType) {
+            Output, Input -> LocalDateTime.now()
+            else -> null
+        }
+
+        val userId = context.dataStore.data.first().toPreferences()[PreferencesKey.USER]!!
+
+        state.storageOperationHistoryDomain = if (isEditMode) {
+            state.storageOperationHistoryDomain?.copy(
+                productId = state.productDomain?.id,
+                quantity = state.quantity.toInt(),
+                datePrevision = localDateTimePrevision,
+                dateRealization = dateRealization,
+                operationType = state.operationType,
+                description = state.description,
+                userId = userId
+            )
+        } else {
+            StorageOperationHistoryDomain(
+                productId = state.productDomain?.id,
+                quantity = state.quantity.toInt(),
+                datePrevision = localDateTimePrevision,
+                dateRealization = dateRealization,
+                operationType = state.operationType,
+                description = state.description,
+                userId = userId
+            )
+        }
+
+        onSaveMovementClick()
+
+        snackbarHostState.showSnackbar("Movimentação Salva com Sucesso")
     }
+
     return state.storageOperationHistoryDomain != null
 }
 

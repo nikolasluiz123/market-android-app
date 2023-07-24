@@ -3,7 +3,6 @@ package br.com.market.servicedataaccess.webclients
 import android.content.Context
 import br.com.market.models.Category
 import br.com.market.sdo.CategorySDO
-import br.com.market.sdo.filters.CategoryFiltersSDO
 import br.com.market.servicedataaccess.responses.extensions.getPersistenceResponseBody
 import br.com.market.servicedataaccess.responses.extensions.getReadResponseBody
 import br.com.market.servicedataaccess.responses.extensions.getResponseBody
@@ -42,7 +41,7 @@ class CategoryWebClient @Inject constructor(
                     name = category.name!!,
                     localId = category.id,
                     active = category.active,
-                    companyId = category.companyId
+                    marketId = category.marketId
                 )
 
                 service.save(getToken(), categorySDO).getPersistenceResponseBody()
@@ -85,7 +84,8 @@ class CategoryWebClient @Inject constructor(
                     CategorySDO(
                         localId = it.id,
                         name = it.name,
-                        active = it.active
+                        active = it.active,
+                        marketId = it.marketId
                     )
                 }
 
@@ -99,10 +99,10 @@ class CategoryWebClient @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun findAll(companyId: Long): ReadResponse<Category> {
+    suspend fun findAll(marketId: Long): ReadResponse<Category> {
         return readServiceErrorHandlingBlock(
             codeBlock = {
-                val response = service.findAll(getToken(), CategoryFiltersSDO(companyId = companyId)).getReadResponseBody()
+                val response = service.findAll(getToken(), marketId = marketId).getReadResponseBody()
 
                 val categories = response.values.map {
                     Category(
@@ -110,7 +110,7 @@ class CategoryWebClient @Inject constructor(
                         name = it.name,
                         synchronized = true,
                         active = it.active,
-                        companyId = it.companyId
+                        marketId = it.marketId
                     )
                 }
 

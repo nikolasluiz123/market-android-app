@@ -1,16 +1,15 @@
 package br.com.market.servicedataaccess.services
 
-import br.com.market.sdo.filters.UserFiltersSDO
 import br.com.market.sdo.user.AuthenticationRequestSDO
 import br.com.market.sdo.user.UserSDO
 import br.com.market.servicedataaccess.responses.types.AuthenticationResponse
-import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.types.ReadResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 /**
  * Interface utilizada para acessar os end points de autenticação do serviço.
@@ -29,9 +28,6 @@ interface IUserService {
     @POST("user/authenticate")
     suspend fun authenticate(@Body authenticationRequestSDO: AuthenticationRequestSDO): Response<AuthenticationResponse>
 
-    @POST("user/sync")
-    suspend fun sync(@Header("Authorization") token: String, @Body userSDOs: List<UserSDO>): Response<MarketServiceResponse>
-
     @GET("user")
-    suspend fun findAllUserSDOs(@Header("Authorization") token: String, @Body userFiltersSDO: UserFiltersSDO): Response<ReadResponse<UserSDO>>
+    suspend fun findAllUserSDOs(@Header("Authorization") token: String, @Query("marketId") marketId: Long): Response<ReadResponse<UserSDO>>
 }

@@ -3,8 +3,6 @@ package br.com.market.servicedataaccess.webclients
 import android.content.Context
 import br.com.market.models.Product
 import br.com.market.models.ProductImage
-import br.com.market.sdo.filters.ProductFiltersSDO
-import br.com.market.sdo.filters.ProductImageFiltersSDO
 import br.com.market.sdo.product.ProductBodySDO
 import br.com.market.sdo.product.ProductImageSDO
 import br.com.market.sdo.product.ProductSDO
@@ -34,7 +32,7 @@ class ProductWebClient @Inject constructor(
                     categoryBrandLocalId = product.categoryBrandId,
                     active = product.active,
                     localId = product.id,
-                    companyId = product.companyId
+                    marketId = product.marketId
                 )
 
                 val imagesSDO = images.map {
@@ -45,7 +43,7 @@ class ProductWebClient @Inject constructor(
                         imageUrl = it.imageUrl,
                         productLocalId = it.productId,
                         principal = it.principal,
-                        companyId = it.companyId
+                        marketId = it.marketId
                     )
                 }
 
@@ -65,7 +63,7 @@ class ProductWebClient @Inject constructor(
                         imageUrl = imageUrl,
                         productLocalId = productId,
                         principal = principal,
-                        companyId = companyId
+                        marketId = marketId
                     )
                 }
 
@@ -102,7 +100,7 @@ class ProductWebClient @Inject constructor(
                         quantityUnit = it.quantityUnit,
                         quantity = it.quantity,
                         categoryBrandLocalId = it.categoryBrandId,
-                        companyId = it.companyId
+                        marketId = it.marketId
                     )
                 }
 
@@ -114,7 +112,7 @@ class ProductWebClient @Inject constructor(
                         imageUrl = it.imageUrl,
                         productLocalId = it.productId,
                         principal = it.principal,
-                        companyId = it.companyId
+                        marketId = it.marketId
                     )
                 }
 
@@ -130,10 +128,10 @@ class ProductWebClient @Inject constructor(
         )
     }
 
-    suspend fun findAllProducts(productFiltersSDO: ProductFiltersSDO): ReadResponse<Product> {
+    suspend fun findAllProducts(marketId: Long): ReadResponse<Product> {
         return readServiceErrorHandlingBlock(
             codeBlock = {
-                val response = service.findAllProductDTOs(getToken(), productFiltersSDO).getReadResponseBody()
+                val response = service.findAllProductDTOs(getToken(), marketId).getReadResponseBody()
 
                 val products = response.values.map {
                     Product(
@@ -145,7 +143,7 @@ class ProductWebClient @Inject constructor(
                         categoryBrandId = it.categoryBrandLocalId,
                         synchronized = true,
                         active = it.active,
-                        companyId = it.companyId
+                        marketId = it.marketId
                     )
                 }
 
@@ -154,10 +152,10 @@ class ProductWebClient @Inject constructor(
         )
     }
 
-    suspend fun findAllProductImages(productImageFiltersSDO: ProductImageFiltersSDO): ReadResponse<ProductImage> {
+    suspend fun findAllProductImages(marketId: Long): ReadResponse<ProductImage> {
         return readServiceErrorHandlingBlock(
             codeBlock = {
-                val response = service.findAllProductImageDTOs(getToken(), productImageFiltersSDO).getReadResponseBody()
+                val response = service.findAllProductImageDTOs(getToken(), marketId).getReadResponseBody()
 
                 val images = response.values.map {
                     ProductImage(
@@ -168,7 +166,7 @@ class ProductWebClient @Inject constructor(
                         imageUrl = it.imageUrl,
                         productId = it.productLocalId,
                         principal = it.principal,
-                        companyId = it.companyId
+                        marketId = it.marketId
                     )
                 }
 

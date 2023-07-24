@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 20,
-    "identityHash": "3afa80dd2641580e46ec27873f08caed",
+    "version": 23,
+    "identityHash": "59cc1757cfdaaccc017424e1faffa446",
     "entities": [
       {
         "tableName": "addresses",
@@ -1539,7 +1539,7 @@
       },
       {
         "tableName": "theme_definitions",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `color_primary` TEXT, `color_secondary` TEXT, `color_tertiary` TEXT, `image_logo` BLOB, `synchronized` INTEGER NOT NULL, `active` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `color_primary` TEXT, `color_secondary` TEXT, `color_tertiary` TEXT, `image_logo` BLOB, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -1570,18 +1570,6 @@
             "columnName": "image_logo",
             "affinity": "BLOB",
             "notNull": false
-          },
-          {
-            "fieldPath": "synchronized",
-            "columnName": "synchronized",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "active",
-            "columnName": "active",
-            "affinity": "INTEGER",
-            "notNull": true
           }
         ],
         "primaryKey": {
@@ -1595,7 +1583,7 @@
       },
       {
         "tableName": "users",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT, `email` TEXT, `password` TEXT, `token` TEXT, `synchronized` INTEGER NOT NULL, `active` INTEGER NOT NULL, `market_id` INTEGER, PRIMARY KEY(`id`), FOREIGN KEY(`market_id`) REFERENCES `markets`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT, `email` TEXT, `password` TEXT, `token` TEXT, `market_id` INTEGER, PRIMARY KEY(`id`), FOREIGN KEY(`market_id`) REFERENCES `markets`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1626,18 +1614,6 @@
             "columnName": "token",
             "affinity": "TEXT",
             "notNull": false
-          },
-          {
-            "fieldPath": "synchronized",
-            "columnName": "synchronized",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "active",
-            "columnName": "active",
-            "affinity": "INTEGER",
-            "notNull": true
           },
           {
             "fieldPath": "marketId",
@@ -1843,24 +1819,12 @@
       },
       {
         "tableName": "devices",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `synchronized` INTEGER NOT NULL, `active` INTEGER NOT NULL, `market_id` INTEGER, `name` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`market_id`) REFERENCES `markets`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `market_id` INTEGER, `name` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`market_id`) REFERENCES `markets`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "synchronized",
-            "columnName": "synchronized",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "active",
-            "columnName": "active",
-            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -1909,19 +1873,13 @@
       },
       {
         "tableName": "markets",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `active` INTEGER NOT NULL, `company_id` INTEGER, `address_id` TEXT, `name` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`company_id`) REFERENCES `companies`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`address_id`) REFERENCES `addresses`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `company_id` INTEGER, `address_id` TEXT, `name` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`company_id`) REFERENCES `companies`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`address_id`) REFERENCES `addresses`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
             "notNull": false
-          },
-          {
-            "fieldPath": "active",
-            "columnName": "active",
-            "affinity": "INTEGER",
-            "notNull": true
           },
           {
             "fieldPath": "companyId",
@@ -1997,7 +1955,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3afa80dd2641580e46ec27873f08caed')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '59cc1757cfdaaccc017424e1faffa446')"
     ]
   }
 }

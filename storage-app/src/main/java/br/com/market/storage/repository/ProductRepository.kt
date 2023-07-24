@@ -6,27 +6,27 @@ import br.com.market.core.pagination.PagingConfigUtils
 import br.com.market.domain.ProductDomain
 import br.com.market.domain.ProductImageDomain
 import br.com.market.localdataaccess.dao.BrandDAO
+import br.com.market.localdataaccess.dao.MarketDAO
 import br.com.market.localdataaccess.dao.ProductDAO
 import br.com.market.localdataaccess.dao.ProductImageDAO
 import br.com.market.localdataaccess.tuples.ProductImageTuple
 import br.com.market.models.Product
 import br.com.market.models.ProductImage
-import br.com.market.sdo.filters.ProductFiltersSDO
-import br.com.market.sdo.filters.ProductImageFiltersSDO
 import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
 import br.com.market.servicedataaccess.webclients.ProductWebClient
 import br.com.market.storage.pagination.ProductPagingSource
-import br.com.market.storage.repository.base.BaseRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class ProductRepository @Inject constructor(
     private val productDAO: ProductDAO,
+    private val marketDAO: MarketDAO,
     private val productImageDAO: ProductImageDAO,
     private val brandDAO: BrandDAO,
     private val webClient: ProductWebClient
-): BaseRepository() {
+) {
 
     fun findProducts(categoryId: String, brandId: String): Flow<PagingData<ProductImageTuple>> {
         return Pager(
@@ -51,7 +51,7 @@ class ProductRepository @Inject constructor(
                 ProductImageDomain(
                     id = it.id,
                     active = it.active,
-                    companyId = it.companyId,
+                    marketId = it.marketId,
                     synchronized = it.synchronized,
                     byteArray = it.bytes,
                     productId = it.productId,
@@ -66,7 +66,7 @@ class ProductRepository @Inject constructor(
             ProductImageDomain(
                 id = id,
                 active = active,
-                companyId = companyId,
+                marketId = marketId,
                 synchronized = synchronized,
                 byteArray = bytes,
                 productId = productId,
@@ -76,7 +76,7 @@ class ProductRepository @Inject constructor(
     }
 
     suspend fun saveProduct(categoryId: String, brandId: String, domain: ProductDomain): PersistenceResponse {
-        val companyId = getCompanyId()
+        val marketId = marketDAO.findFirst().first()?.id!!
 
         val product = if (domain.id != null) {
             productDAO.findProductById(productId = domain.id!!).copy(
@@ -91,8 +91,8 @@ class ProductRepository @Inject constructor(
                 price = domain.price!!,
                 quantity = domain.quantity!!,
                 quantityUnit = domain.quantityUnit,
-                categoryBrandId = brandDAO.findCategoryBrandBy(brandId = brandId, categoryId = categoryId).id,
-                companyId = companyId
+                categoryBrandId = brandDAO.findCategoryBrandBy(brandId = brandId, categoryId = categoryId)!!.id,
+                marketId = marketId
             )
         }
 
@@ -101,14 +101,14 @@ class ProductRepository @Inject constructor(
         val productImages = domain.images.map {
             productImageDAO.findProductImageBy(it.id)?.copy(
                 active = it.active,
-                companyId = it.companyId,
+                marketId = it.marketId,
                 synchronized = it.synchronized,
                 bytes = it.byteArray,
                 productId = product.id,
                 principal = it.principal
             ) ?: ProductImage(
                 active = it.active,
-                companyId = companyId,
+                marketId = marketId,
                 synchronized = it.synchronized,
                 bytes = it.byteArray,
                 productId = product.id,
@@ -141,7 +141,7 @@ class ProductRepository @Inject constructor(
             ProductImage(
                 id = id!!,
                 active = active,
-                companyId = companyId,
+                marketId = marketId,
                 synchronized = synchronized,
                 bytes = byteArray,
                 productId = productId,
@@ -204,14 +204,14 @@ class ProductRepository @Inject constructor(
     }
 
     private suspend fun updateProductsOfLocalDB(): MarketServiceResponse {
-        val companyId = getCompanyId()
+        val marketId = marketDAO.findFirst().first()?.id!!
 
-        val responseFindAllProducts = webClient.findAllProducts(ProductFiltersSDO(companyId))
+        val responseFindAllProducts = webClient.findAllProducts(marketId)
         if (!responseFindAllProducts.success) {
             return responseFindAllProducts.toBaseResponse()
         }
 
-        val responseFindAllProductImages = webClient.findAllProductImages(ProductImageFiltersSDO(companyId))
+        val responseFindAllProductImages = webClient.findAllProductImages(marketId)
         if (!responseFindAllProductImages.success) {
             return responseFindAllProductImages.toBaseResponse()
         }

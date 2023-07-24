@@ -5,26 +5,23 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import br.com.market.models.base.CompanyModel
 import java.util.UUID
 
 @Entity(
     tableName = "devices",
     foreignKeys = [
         ForeignKey(
-            entity = Company::class,
+            entity = Market::class,
             parentColumns = ["id"],
-            childColumns = ["company_id"]
+            childColumns = ["market_id"]
         )
     ],
-    indices = [Index(value = ["company_id"])]
+    indices = [Index(value = ["market_id"])]
 )
 data class Device(
     @PrimaryKey
-    override var id: String = UUID.randomUUID().toString(),
-    override var synchronized: Boolean = false,
-    override var active: Boolean = true,
-    @ColumnInfo(name = "company_id")
-    override var companyId: Long? = null,
+    var id: String = UUID.randomUUID().toString(),
+    @ColumnInfo(name = "market_id")
+    var marketId: Long? = null,
     var name: String? = null
-) : CompanyModel()
+)

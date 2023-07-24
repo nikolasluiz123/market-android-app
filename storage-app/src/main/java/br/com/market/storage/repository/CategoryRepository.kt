@@ -5,13 +5,14 @@ import androidx.paging.PagingData
 import br.com.market.core.pagination.PagingConfigUtils
 import br.com.market.domain.CategoryDomain
 import br.com.market.localdataaccess.dao.CategoryDAO
+import br.com.market.localdataaccess.dao.MarketDAO
 import br.com.market.models.Category
 import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
 import br.com.market.servicedataaccess.webclients.CategoryWebClient
 import br.com.market.storage.pagination.CategoryPagingSource
-import br.com.market.storage.repository.base.BaseRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 /**
@@ -25,8 +26,9 @@ import javax.inject.Inject
  */
 class CategoryRepository @Inject constructor(
     private val dao: CategoryDAO,
+    private val marketDAO: MarketDAO,
     private val webClient: CategoryWebClient
-): BaseRepository() {
+) {
 
     /**
      * Função para obter um fluxo de dados paginados que possa ser
@@ -60,7 +62,7 @@ class CategoryRepository @Inject constructor(
         val category = if (domain.id != null) {
             dao.findById(domain.id!!).copy(name = domain.name)
         } else {
-            Category(name = domain.name, companyId = getCompanyId())
+            Category(name = domain.name, marketId = marketDAO.findFirst().first()?.id!!)
         }
 
         domain.id = category.id
@@ -146,7 +148,7 @@ class CategoryRepository @Inject constructor(
      * @author Nikolas Luiz Schmitt
      */
     private suspend fun updateCategoriesOfLocalDB(): MarketServiceResponse {
-        val response = webClient.findAll(getCompanyId())
+        val response = webClient.findAll(marketDAO.findFirst().first()?.id!!)
 
         if (response.success) {
             dao.save(response.values)

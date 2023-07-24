@@ -13,7 +13,7 @@ import br.com.market.sdo.base.BaseSDO
  */
 data class UserSDO(
     override var localId: String,
-    override var companyId: Long? = null,
+    override var marketId: Long? = null,
     override var active: Boolean = true,
     var name: String = "",
     var email: String = "",

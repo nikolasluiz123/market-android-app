@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 20,
-    "identityHash": "3afa80dd2641580e46ec27873f08caed",
+    "version": 22,
+    "identityHash": "20eec1bf22cb4ecc3ac40b5cddafeb1a",
     "entities": [
       {
         "tableName": "addresses",
@@ -1539,7 +1539,7 @@
       },
       {
         "tableName": "theme_definitions",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `color_primary` TEXT, `color_secondary` TEXT, `color_tertiary` TEXT, `image_logo` BLOB, `synchronized` INTEGER NOT NULL, `active` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `color_primary` TEXT, `color_secondary` TEXT, `color_tertiary` TEXT, `image_logo` BLOB, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -1570,18 +1570,6 @@
             "columnName": "image_logo",
             "affinity": "BLOB",
             "notNull": false
-          },
-          {
-            "fieldPath": "synchronized",
-            "columnName": "synchronized",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "active",
-            "columnName": "active",
-            "affinity": "INTEGER",
-            "notNull": true
           }
         ],
         "primaryKey": {
@@ -1997,7 +1985,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3afa80dd2641580e46ec27873f08caed')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '20eec1bf22cb4ecc3ac40b5cddafeb1a')"
     ]
   }
 }

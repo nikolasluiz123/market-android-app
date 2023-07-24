@@ -2,10 +2,12 @@ package br.com.market.localdataaccess.injection
 
 import android.content.Context
 import androidx.room.Room
+import br.com.market.localdataaccess.dao.AddressDAO
 import br.com.market.localdataaccess.dao.BrandDAO
 import br.com.market.localdataaccess.dao.CategoryDAO
 import br.com.market.localdataaccess.dao.CompanyDAO
 import br.com.market.localdataaccess.dao.DeviceDAO
+import br.com.market.localdataaccess.dao.MarketDAO
 import br.com.market.localdataaccess.dao.ProductDAO
 import br.com.market.localdataaccess.dao.ProductImageDAO
 import br.com.market.localdataaccess.dao.StorageOperationsHistoryDAO
@@ -66,6 +68,14 @@ class DatabaseModule {
     @Provides
     @Singleton
     fun provideCompanyDAO(appDatabase: AppDatabase): CompanyDAO = appDatabase.companyDAO()
+
+    @Provides
+    @Singleton
+    fun provideMarketDAO(appDatabase: AppDatabase): MarketDAO = appDatabase.marketDAO()
+
+    @Provides
+    @Singleton
+    fun provideAddressDAO(appDatabase: AppDatabase): AddressDAO = appDatabase.addressDAO()
 
     /**
      * função para criar o DataBase uma única vez.

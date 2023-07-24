@@ -42,20 +42,16 @@ fun NavGraphBuilder.splashScreen(
             coroutineScope.launch {
                 val token = dataStore.data.first().toPreferences()[PreferencesKey.TOKEN]
 
-                if (token.isNullOrBlank()) {
-                    onNavigateToLogin()
-                }
-                else if (viewModel.deviceRegistered()) {
-                    onNavigateToCategories()
-                }
-                else {
-                    if(dataStore.data.first()[PreferencesKey.TEMP_DEVICE_ID].isNullOrBlank()) {
-                        dataStore.edit {
-                            it[PreferencesKey.TEMP_DEVICE_ID] = UUID.randomUUID().toString()
-                        }
+                if (dataStore.data.first()[PreferencesKey.TEMP_DEVICE_ID].isNullOrBlank()) {
+                    dataStore.edit {
+                        it[PreferencesKey.TEMP_DEVICE_ID] = UUID.randomUUID().toString()
                     }
 
                     onNavigateToAbout()
+                } else if (token.isNullOrBlank()) {
+                    onNavigateToLogin()
+                } else if (viewModel.deviceRegistered()) {
+                    onNavigateToCategories()
                 }
             }
         }

@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 
 data class StorageOperationHistorySDO(
     override var localId: String,
-    override var companyId: Long? = null,
+    override var marketId: Long? = null,
     override var active: Boolean = true,
     var productId: String? = null,
     var quantity: Int = 0,

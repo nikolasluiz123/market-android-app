@@ -2,16 +2,16 @@ package br.com.market.models
 
 import androidx.room.*
 import br.com.market.enums.EnumUnit
-import br.com.market.models.base.CompanyModel
+import br.com.market.models.base.MarketModel
 import java.util.*
 
 @Entity(
     tableName = "vehicle_capacity",
     foreignKeys = [
         ForeignKey(
-            entity = Company::class,
+            entity = Market::class,
             parentColumns = ["id"],
-            childColumns = ["company_id"]
+            childColumns = ["market_id"]
         ),
         ForeignKey(
             entity = Vehicle::class,
@@ -19,7 +19,7 @@ import java.util.*
             childColumns = ["vehicle_id"]
         )
     ],
-    indices = [Index(value = ["company_id"]), Index(value = ["vehicle_id"])]
+    indices = [Index(value = ["market_id"]), Index(value = ["vehicle_id"])]
 )
 data class VehicleCapacity(
     @PrimaryKey
@@ -31,6 +31,6 @@ data class VehicleCapacity(
     var vehicleId: String? = null,
     override var synchronized: Boolean = false,
     override var active: Boolean = true,
-    @ColumnInfo("company_id")
-    override var companyId: Long? = null
-): CompanyModel()
+    @ColumnInfo("market_id")
+    override var marketId: Long? = null
+): MarketModel()

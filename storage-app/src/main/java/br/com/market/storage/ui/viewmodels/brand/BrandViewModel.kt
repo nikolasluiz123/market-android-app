@@ -16,7 +16,11 @@ import br.com.market.storage.ui.navigation.category.argumentCategoryId
 import br.com.market.storage.ui.states.brand.BrandUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -32,12 +36,13 @@ class BrandViewModel @Inject constructor(
     private val _uiState: MutableStateFlow<BrandUIState> = MutableStateFlow(BrandUIState())
     val uiState get() = _uiState.asStateFlow()
 
-    private var categoryId = savedStateHandle.get<String>(argumentCategoryId)
-    private var brandId = savedStateHandle.get<String>(argumentBrandId)
+    private var categoryId: String? = savedStateHandle[argumentCategoryId]
+    private var brandId: String? = savedStateHandle[argumentBrandId]
 
     init {
         _uiState.update { currentState ->
             currentState.copy(
+                products = getProducts(),
                 onBrandNameChange = {
                     _uiState.value = _uiState.value.copy(brandName = it)
                 },
@@ -61,6 +66,12 @@ class BrandViewModel @Inject constructor(
             )
         }
 
+        loadCategoryDomain()
+        loadBrandDomain()
+        loadCategoryBrandActive()
+    }
+
+    private fun loadCategoryDomain() {
         categoryId?.navParamToString()?.let { id ->
             viewModelScope.launch {
                 val categoryDomain = categoryRepository.findById(id)
@@ -72,7 +83,9 @@ class BrandViewModel @Inject constructor(
                 }
             }
         }
+    }
 
+    private fun loadBrandDomain() {
         brandId?.navParamToString()?.let { id ->
             viewModelScope.launch {
                 val brandDomain = brandRepository.findById(id)
@@ -85,11 +98,17 @@ class BrandViewModel @Inject constructor(
                 }
             }
         }
+    }
 
-        _uiState.update { currentState ->
-            currentState.copy(
-                products = getProducts()
-            )
+    private fun loadCategoryBrandActive() {
+        val categoryId = categoryId?.navParamToString()
+        val brandId = brandId?.navParamToString()
+
+        if (!categoryId.isNullOrEmpty() && !brandId.isNullOrEmpty()) {
+            viewModelScope.launch {
+                val active = brandRepository.findCategoryBrandActive(categoryId = categoryId, brandId = brandId)
+                _uiState.update { currentState -> currentState.copy(active = active) }
+            }
         }
     }
 
@@ -108,11 +127,6 @@ class BrandViewModel @Inject constructor(
         _uiState.value.brandDomain?.let { brandDomain ->
             viewModelScope.launch {
                 brandRepository.save(_uiState.value.categoryDomain?.id!!, brandDomain)
-
-                _uiState.update { currentState ->
-                    val domain = currentState.brandDomain
-                    currentState.copy(brandDomain = domain?.copy(active = domain.active))
-                }
             }
         }
     }

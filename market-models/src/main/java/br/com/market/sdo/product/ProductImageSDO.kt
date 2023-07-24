@@ -4,7 +4,7 @@ import br.com.market.sdo.base.BaseSDO
 
 data class ProductImageSDO(
     override var localId: String,
-    override var companyId: Long? = null,
+    override var marketId: Long? = null,
     override var active: Boolean = true,
     var bytes: ByteArray? = null,
     var imageUrl: String? = null,

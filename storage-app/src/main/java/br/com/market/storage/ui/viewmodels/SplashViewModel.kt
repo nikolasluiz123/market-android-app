@@ -13,7 +13,7 @@ class SplashViewModel @Inject constructor(
 
     suspend fun deviceRegistered(): Boolean {
         return deviceRepository.findFirst().first()?.let {
-            it.synchronized && it.companyId != null
+            it.marketId != null
         } ?: false
     }
 

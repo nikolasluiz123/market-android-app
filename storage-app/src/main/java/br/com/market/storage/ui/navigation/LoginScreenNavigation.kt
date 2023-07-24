@@ -20,7 +20,8 @@ internal const val loginScreenRoute = "login"
  * @author Nikolas Luiz Schmitt
  */
 fun NavGraphBuilder.loginScreen(
-    onNavigateToCategoryScreen: () -> Unit
+    onNavigateToCategoryScreen: () -> Unit,
+    onAboutClick: () -> Unit
 ) {
     composable(route = loginScreenRoute) {
         val loginViewModel = hiltViewModel<LoginViewModel>()
@@ -29,7 +30,8 @@ fun NavGraphBuilder.loginScreen(
             viewModel = loginViewModel,
             onAuthenticateSuccess = {
                 onNavigateToCategoryScreen()
-            }
+            },
+            onAboutClick = onAboutClick
         )
     }
 }

@@ -2,7 +2,7 @@ package br.com.market.models
 
 import androidx.room.*
 import br.com.market.enums.EnumPaymentType
-import br.com.market.models.base.CompanyModel
+import br.com.market.models.base.MarketModel
 import java.time.LocalDateTime
 import java.util.*
 
@@ -10,9 +10,9 @@ import java.util.*
     tableName = "purchases_carts",
     foreignKeys = [
         ForeignKey(
-            entity = Company::class,
+            entity = Market::class,
             parentColumns = ["id"],
-            childColumns = ["company_id"]
+            childColumns = ["market_id"]
         ),
         ForeignKey(
             entity = Client::class,
@@ -20,7 +20,7 @@ import java.util.*
             childColumns = ["client_id"]
         )
     ],
-    indices = [Index(value = ["company_id"]), Index(value = ["client_id"])]
+    indices = [Index(value = ["market_id"]), Index(value = ["client_id"])]
 )
 data class PurchaseCart(
     @PrimaryKey
@@ -33,6 +33,6 @@ data class PurchaseCart(
     var clientId: String? = null,
     override var synchronized: Boolean = false,
     override var active: Boolean = true,
-    @ColumnInfo("company_id")
-    override var companyId: Long? = null
-): CompanyModel()
+    @ColumnInfo("market_id")
+    override var marketId: Long? = null
+): MarketModel()

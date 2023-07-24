@@ -3,14 +3,10 @@ package br.com.market.servicedataaccess.webclients
 import android.content.Context
 import br.com.market.domain.UserDomain
 import br.com.market.models.User
-import br.com.market.sdo.filters.UserFiltersSDO
 import br.com.market.sdo.user.AuthenticationRequestSDO
-import br.com.market.sdo.user.UserSDO
 import br.com.market.servicedataaccess.responses.extensions.getAuthenticationResponseBody
 import br.com.market.servicedataaccess.responses.extensions.getReadResponseBody
-import br.com.market.servicedataaccess.responses.extensions.getResponseBody
 import br.com.market.servicedataaccess.responses.types.AuthenticationResponse
-import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.types.ReadResponse
 import br.com.market.servicedataaccess.services.IUserService
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -49,41 +45,19 @@ class UserWebClient @Inject constructor(
         )
     }
 
-    suspend fun sync(users: List<User>): MarketServiceResponse {
-        return serviceErrorHandlingBlock(
-            codeBlock = {
-                val userSDOs = users.map {
-                    UserSDO(
-                        localId = it.id,
-                        active = it.active,
-                        name = it.name!!,
-                        email = it.email!!,
-                        password = it.password!!,
-                        companyId = it.companyId,
-                        token = it.token
-                    )
-                }
-
-                service.sync(getToken(), userSDOs).getResponseBody()
-            }
-        )
-    }
-
-    suspend fun findAllUsers(userFiltersSDO: UserFiltersSDO): ReadResponse<User> {
+    suspend fun findAllUsers(marketId: Long): ReadResponse<User> {
         return readServiceErrorHandlingBlock(
             codeBlock = {
-                val response = service.findAllUserSDOs(getToken(), userFiltersSDO).getReadResponseBody()
+                val response = service.findAllUserSDOs(getToken(), marketId).getReadResponseBody()
 
                 val users = response.values.map {
                     User(
                         id = it.localId,
                         name = it.name,
-                        synchronized = true,
-                        active = it.active,
                         email = it.email,
                         password = it.password,
                         token = it.token,
-                        companyId = it.companyId
+                        marketId = it.marketId
                     )
                 }
 

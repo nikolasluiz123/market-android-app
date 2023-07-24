@@ -58,13 +58,13 @@ fun AboutScreen(
         }
     ) { padding ->
         ConstraintLayout(Modifier.padding(padding).fillMaxSize()) {
-            val (imageLogoRef, companyNameRef, deviceIdRef, deviceNameRef) = createRefs()
+            val (imageLogoRef, companyNameRef, marketNameRef, marketAddressRef, deviceIdRef, deviceNameRef) = createRefs()
 
             CoilImageViewer(
                 containerModifier = Modifier.constrainAs(imageLogoRef) {
-                    start.linkTo(parent.start, margin = 16.dp)
-                    end.linkTo(parent.end, margin = 16.dp)
-                    top.linkTo(parent.top, margin = 16.dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    top.linkTo(parent.top, margin = 8.dp)
                 },
                 imageModifier = Modifier.height(200.dp),
                 data = state.imageLogo,
@@ -81,9 +81,27 @@ fun AboutScreen(
             )
 
             LabeledText(
+                modifier = Modifier.constrainAs(marketNameRef) {
+                    linkTo(start = parent.start, end = parent.end, bias = 0.0F, startMargin = 8.dp)
+                    top.linkTo(companyNameRef.bottom, margin = 16.dp)
+                },
+                label = "Loja",
+                value = state.marketName
+            )
+
+            LabeledText(
+                modifier = Modifier.constrainAs(marketAddressRef) {
+                    linkTo(start = parent.start, end = parent.end, bias = 0.0F, startMargin = 8.dp)
+                    top.linkTo(marketNameRef.bottom, margin = 16.dp)
+                },
+                label = "Endereço",
+                value = state.marketAddress
+            )
+
+            LabeledText(
                 modifier = Modifier.constrainAs(deviceIdRef) {
                     linkTo(start = companyNameRef.start, end = parent.end, bias = 0.0F)
-                    top.linkTo(companyNameRef.bottom, margin = 16.dp)
+                    top.linkTo(marketAddressRef.bottom, margin = 16.dp)
                 },
                 label = "Nome do Dispositivo",
                 value = state.deviceName
@@ -109,7 +127,9 @@ fun AboutScreenPreview() {
             AboutScreen(
                 state = AboutUIState(
                     imageLogo = R.drawable.logo_amigao,
-                    companyName = "Amigão Supermercados",
+                    companyName = "Assuvali",
+                    marketName = "Supermercado TOP",
+                    marketAddress = "Rua Francisco Vahldieck, 1881",
                     deviceId = UUID.randomUUID().toString(),
                     deviceName = "Dispositivo Nikolas Estoque"
                 )

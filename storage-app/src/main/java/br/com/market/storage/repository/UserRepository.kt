@@ -1,12 +1,12 @@
 package br.com.market.storage.repository
 
 import br.com.market.domain.UserDomain
+import br.com.market.localdataaccess.dao.MarketDAO
 import br.com.market.localdataaccess.dao.UserDAO
-import br.com.market.sdo.filters.UserFiltersSDO
 import br.com.market.servicedataaccess.responses.types.AuthenticationResponse
 import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.webclients.UserWebClient
-import br.com.market.storage.repository.base.BaseRepository
+import kotlinx.coroutines.flow.first
 import java.net.HttpURLConnection
 import javax.inject.Inject
 
@@ -21,8 +21,9 @@ import javax.inject.Inject
  */
 class UserRepository @Inject constructor(
     private val dao: UserDAO,
+    private val marketDAO: MarketDAO,
     private val webClient: UserWebClient
-): BaseRepository() {
+) {
 
     /**
      * Função responsável por autenticar um usuário, iniciando sua seção.
@@ -49,24 +50,11 @@ class UserRepository @Inject constructor(
     }
 
     suspend fun sync(): MarketServiceResponse {
-        val response = sendUsersToRemoteDB()
-        return if (response.success) updateUsersOfLocalDB() else response
-    }
-
-    private suspend fun sendUsersToRemoteDB(): MarketServiceResponse {
-        val usersNotSynchronized = dao.findUsersNotSynchronized()
-        val response = webClient.sync(usersNotSynchronized)
-
-        if (response.success) {
-            val productsSynchronized = usersNotSynchronized.map { it.copy(synchronized = true) }
-            dao.save(productsSynchronized)
-        }
-
-        return response
+        return updateUsersOfLocalDB()
     }
 
     private suspend fun updateUsersOfLocalDB(): MarketServiceResponse {
-        val responseFindAllProducts = webClient.findAllUsers(UserFiltersSDO(getCompanyId()))
+        val responseFindAllProducts = webClient.findAllUsers(marketDAO.findFirst().first()?.id!!)
 
         if (responseFindAllProducts.success) {
             dao.save(responseFindAllProducts.values)

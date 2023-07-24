@@ -34,10 +34,10 @@ abstract class BrandDAO : AbstractBaseDAO() {
         from.add(" from brands b ")
 
         val where = StringJoiner("\r\n")
-        where.add(" where 1=1 ")
+        where.add(" where b.active ")
 
         if (categoryId != null) {
-            from.add(" inner join categories_brands cb on b.id = cb.brand_id ")
+            from.add(" inner join categories_brands cb on b.id = cb.brand_id and cb.active ")
             where.add(" and cb.category_id = ? ")
 
             params.add(categoryId)
@@ -149,7 +149,7 @@ abstract class BrandDAO : AbstractBaseDAO() {
     abstract suspend fun findBrandById(brandId: String): Brand
 
     @Query("select * from categories_brands where brand_id = :brandId and category_id = :categoryId ")
-    abstract suspend fun findCategoryBrandBy(brandId: String, categoryId: String): CategoryBrand
+    abstract suspend fun findCategoryBrandBy(brandId: String, categoryId: String): CategoryBrand?
 
     /**
      * Função para atualizar a flag [active] de uma marca com o [brandId] informado
