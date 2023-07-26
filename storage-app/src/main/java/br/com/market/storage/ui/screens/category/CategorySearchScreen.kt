@@ -5,6 +5,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -13,6 +16,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import br.com.market.core.R
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.MarketBottomAppBar
+import br.com.market.core.ui.components.MarketCircularBlockUIProgressIndicator
 import br.com.market.core.ui.components.PagedVerticalListComponent
 import br.com.market.core.ui.components.SimpleMarketTopAppBar
 import br.com.market.core.ui.components.buttons.FloatingActionButtonAdd
@@ -36,7 +40,9 @@ fun CategorySearchScreen(
         state = state,
         onAddCategoryClick = onAddCategoryClick,
         onCategoryClick = onCategoryClick,
-        onSyncClick = viewModel::sync,
+        onSyncClick = { onFinish ->
+            viewModel.sync(onFinish)
+        },
         onLogoutClick = {
             viewModel.logout()
             onAfterLogout()
@@ -52,11 +58,12 @@ fun CategorySearchScreen(
     onDeleteCategoryClick: () -> Unit = { },
     onAddCategoryClick: () -> Unit = { },
     onCategoryClick: (String) -> Unit = { },
-    onSyncClick: () -> Unit = { },
+    onSyncClick: (onFinish: () -> Unit) -> Unit = { },
     onLogoutClick: () -> Unit = { },
     onAboutClick: () -> Unit = { }
 ) {
     val pagingData = state.categories.collectAsLazyPagingItems()
+    var showLoadingBlockUI by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -66,7 +73,12 @@ fun CategorySearchScreen(
                 showMenuWithLogout = false,
                 showMenu = true,
                 actions = {
-                    IconButtonSync(onSyncClick)
+                    IconButtonSync {
+                        showLoadingBlockUI = true
+                        onSyncClick {
+                            showLoadingBlockUI = false
+                        }
+                    }
                     IconButtonLogout(onLogoutClick)
                 },
                 menuItems = {
@@ -89,6 +101,11 @@ fun CategorySearchScreen(
         }
     ) { padding ->
         ConstraintLayout(modifier = Modifier.padding(padding)) {
+
+            MarketCircularBlockUIProgressIndicator(
+                show = showLoadingBlockUI,
+                label = "Sincronizando..."
+            )
 
             PagedVerticalListComponent(pagingItems = pagingData) {
                 CategoryListCard(

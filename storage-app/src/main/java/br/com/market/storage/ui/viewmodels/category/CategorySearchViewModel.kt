@@ -39,13 +39,15 @@ class CategorySearchViewModel @Inject constructor(
         }
     }
 
-    fun sync() {
+    fun sync(onFinish: () -> Unit) {
         viewModelScope.launch {
             userRepository.sync()
             categoryRepository.sync()
             brandRepository.sync()
             productRepository.sync()
             storageOperationsHistoryRepository.sync()
+        }.invokeOnCompletion {
+            onFinish()
         }
     }
 
