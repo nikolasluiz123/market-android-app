@@ -42,7 +42,11 @@ class MovementsSearchViewModel @Inject constructor(
                 categoryId = categoryId.navParamToString(),
                 brandId = brandId.navParamToString(),
                 productId = productId.navParamToString(),
-                operations = storageOperationsHistoryRepository.findStorageOperationHistory(productId = productId.navParamToString())
+                operations = storageOperationsHistoryRepository.findStorageOperationHistory(
+                    productId = productId.navParamToString(),
+                    categoryId = categoryId.navParamToString()!!,
+                    brandId = brandId.navParamToString()!!
+                )
             )
         }
 

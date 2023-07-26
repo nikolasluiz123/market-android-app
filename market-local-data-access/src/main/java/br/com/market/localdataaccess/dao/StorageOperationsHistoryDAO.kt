@@ -29,7 +29,13 @@ abstract class StorageOperationsHistoryDAO : AbstractBaseDAO() {
     @Query("select * from storage_operations_history where synchronized = 0")
     abstract suspend fun findStorageOperationsHistoryNotSynchronized(): List<StorageOperationHistory>
 
-    suspend fun findStorageOperationsHistory(limit: Int, offset: Int, productId: String? = null): List<StorageOperationHistoryTuple> {
+    suspend fun findStorageOperationsHistory(
+        limit: Int,
+        offset: Int,
+        categoryId: String,
+        brandId: String,
+        productId: String? = null
+    ): List<StorageOperationHistoryTuple> {
         val params = mutableListOf<Any>()
 
         val select = StringJoiner("\r\n")
@@ -61,6 +67,11 @@ abstract class StorageOperationsHistoryDAO : AbstractBaseDAO() {
         val where = StringJoiner("\r\n")
         with(where) {
             add(" where operation.active = 1 ")
+            add(" and category.id = ? ")
+            add(" and brand.id = ? ")
+
+            params.add(categoryId)
+            params.add(brandId)
 
             if (!productId.isNullOrBlank()) {
                 add(" and product.id = ? ")
