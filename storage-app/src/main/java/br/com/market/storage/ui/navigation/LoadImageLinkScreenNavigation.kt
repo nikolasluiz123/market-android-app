@@ -6,6 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import br.com.market.core.ui.components.image.LoadImageLinkScreen
+import br.com.market.core.ui.navigation.navigateForResult
 import br.com.market.core.ui.viewmodel.LoadImageLinkViewModel
 
 internal const val loadImageLinkScreenRoute = "loadImageLink"

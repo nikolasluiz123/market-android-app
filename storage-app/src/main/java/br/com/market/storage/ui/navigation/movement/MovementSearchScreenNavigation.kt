@@ -10,6 +10,7 @@ import br.com.market.localdataaccess.tuples.StorageOperationHistoryTuple
 import br.com.market.storage.ui.navigation.brand.argumentBrandId
 import br.com.market.storage.ui.navigation.category.argumentCategoryId
 import br.com.market.storage.ui.navigation.product.argumentProductId
+import br.com.market.core.filter.CommonAdvancedFilterItem
 import br.com.market.storage.ui.screens.movement.MovementsSearchScreen
 import br.com.market.storage.ui.viewmodels.movements.MovementsSearchViewModel
 
@@ -18,7 +19,8 @@ internal const val movementsSearchScreenRoute = "movementsSearch"
 fun NavGraphBuilder.movementsSearchScreen(
     onBackClick: () -> Unit,
     onAddMovementClick: (String, String, EnumOperationType, String?) -> Unit,
-    onMovementClick: (StorageOperationHistoryTuple) -> Unit
+    onMovementClick: (StorageOperationHistoryTuple) -> Unit,
+    onAdvancedFiltersClick: (List<CommonAdvancedFilterItem>) -> Unit
 ) {
     composable(route = "$movementsSearchScreenRoute?$argumentCategoryId={$argumentCategoryId}&$argumentBrandId={$argumentBrandId}&$argumentProductId={$argumentProductId}") {
         val viewModel = hiltViewModel<MovementsSearchViewModel>()
@@ -27,7 +29,8 @@ fun NavGraphBuilder.movementsSearchScreen(
             viewModel = viewModel,
             onAddMovementClick = onAddMovementClick,
             onBackClick = onBackClick,
-            onMovementClick = onMovementClick
+            onMovementClick = onMovementClick,
+            onAdvancedFiltersClick = onAdvancedFiltersClick
         )
     }
 }

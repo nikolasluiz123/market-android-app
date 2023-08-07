@@ -1,19 +1,29 @@
 package br.com.market.core.extensions
 
+import br.com.market.core.enums.EnumDateTimePatterns
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 
-/**
- * Função para formatar uma data com hora exibindo
- * dia, mês, ano, horas e minutos.
- *
- * Exemplo: 32/04/2023 10:23
- *
- * @author Nikolas Luiz Schmitt
- */
-fun LocalDateTime.formatShort(): String {
-    return this.format(FormatStyle.SHORT, FormatStyle.SHORT)
+fun String.parseToLocalDate(enumDateTimePatterns: EnumDateTimePatterns): LocalDate {
+    return LocalDate.parse(this, DateTimeFormatter.ofPattern(enumDateTimePatterns.pattern))
+}
+
+fun String.parseToLocalTime(enumDateTimePatterns: EnumDateTimePatterns): LocalTime {
+    return LocalTime.parse(this, DateTimeFormatter.ofPattern(enumDateTimePatterns.pattern))
+}
+
+fun String.parseToLocalDateTime(enumDateTimePatterns: EnumDateTimePatterns): LocalDateTime {
+    return LocalDateTime.parse(this, DateTimeFormatter.ofPattern(enumDateTimePatterns.pattern))
+}
+
+fun LocalDate.format(enumDateTimePatterns: EnumDateTimePatterns): String {
+    return this.format(DateTimeFormatter.ofPattern(enumDateTimePatterns.pattern))
+}
+
+fun LocalTime.format(enumDateTimePatterns: EnumDateTimePatterns): String {
+    return this.format(DateTimeFormatter.ofPattern(enumDateTimePatterns.pattern))
 }
 
 /**
@@ -25,6 +35,6 @@ fun LocalDateTime.formatShort(): String {
  *
  * @author Nikolas Luiz Schmitt
  */
-fun LocalDateTime.format(dateFormatStyle: FormatStyle, timeFormatStyle: FormatStyle): String {
-    return this.format(DateTimeFormatter.ofLocalizedDateTime(dateFormatStyle, timeFormatStyle))
+fun LocalDateTime.format(enumDateTimePatterns: EnumDateTimePatterns): String {
+    return this.format(DateTimeFormatter.ofPattern(enumDateTimePatterns.pattern))
 }

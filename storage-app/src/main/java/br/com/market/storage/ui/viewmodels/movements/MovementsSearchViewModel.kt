@@ -45,7 +45,8 @@ class MovementsSearchViewModel @Inject constructor(
                 operations = storageOperationsHistoryRepository.findStorageOperationHistory(
                     productId = productId.navParamToString(),
                     categoryId = categoryId.navParamToString()!!,
-                    brandId = brandId.navParamToString()!!
+                    brandId = brandId.navParamToString()!!,
+                    simpleFilter = null
                 )
             )
         }
@@ -68,6 +69,19 @@ class MovementsSearchViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    fun updateList(simpleFilterText: String? = null) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                operations = storageOperationsHistoryRepository.findStorageOperationHistory(
+                    productId = productId.navParamToString(),
+                    categoryId = categoryId.navParamToString()!!,
+                    brandId = brandId.navParamToString()!!,
+                    simpleFilter = simpleFilterText
+                )
+            )
         }
     }
 }

@@ -1,5 +1,6 @@
 package br.com.market.core.extensions
 
+import com.google.gson.Gson
 import java.text.DecimalFormat
 
 /**
@@ -23,4 +24,10 @@ fun String?.navParamToString(): String? {
 fun String.parseToDouble(): Double? {
     val formatter = DecimalFormat.getInstance()
     return formatter.parse(this)?.toDouble()
+}
+
+fun String.formatJsonNavParam() = this.substring(1, this.length - 1)
+
+fun <ARG> String.fromJsonNavParamToArgs(clazz: Class<ARG>, gson: Gson = Gson()): ARG {
+    return gson.getAdapter(clazz).fromJson(this.formatJsonNavParam())
 }

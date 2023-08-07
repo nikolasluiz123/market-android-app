@@ -34,7 +34,8 @@ abstract class StorageOperationsHistoryDAO : AbstractBaseDAO() {
         offset: Int,
         categoryId: String,
         brandId: String,
-        productId: String? = null
+        productId: String? = null,
+        simpleFilter: String? = null
     ): List<StorageOperationHistoryTuple> {
         val params = mutableListOf<Any>()
 
@@ -76,6 +77,18 @@ abstract class StorageOperationsHistoryDAO : AbstractBaseDAO() {
             if (!productId.isNullOrBlank()) {
                 add(" and product.id = ? ")
                 params.add(productId)
+            }
+
+            if (!simpleFilter.isNullOrBlank()) {
+                add(" and ( ")
+                add("       product.name like ? or ")
+                add("       user.name like ? or ")
+                add("       operation.description like ? ")
+                add("     ) ")
+
+                params.add("%${simpleFilter}%")
+                params.add("%${simpleFilter}%")
+                params.add("%${simpleFilter}%")
             }
         }
 

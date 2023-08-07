@@ -37,4 +37,12 @@
     <string name="label_storage">Estoque</string>
     <string name="label_calendar">Data</string>
     <string name="label_about">Sobre</string>
+    <string name="label_clear">Limpar</string>
+    <string name="advanced_filter_screen_search_for">Buscar pelo Nome do Filtro</string>
+    <string name="text_advanced_filter_screen_label_confirm">Confirmar</string>
+    <string name="text_advanced_filter_screen_label_cancel">Cancelar</string>
+    <string name="date_range_advanced_filter_screen_label_date_from">Data Inicial</string>
+    <string name="date_range_advanced_filter_screen_label_time_from">Hora Inicial</string>
+    <string name="date_range_advanced_filter_screen_label_date_to">Data Final</string>
+    <string name="date_range_advanced_filter_screen_label_time_to">Hora Final</string>
 </resources>

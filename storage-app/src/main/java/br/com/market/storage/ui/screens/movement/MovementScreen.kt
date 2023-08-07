@@ -305,7 +305,7 @@ fun MovementScreen(
                                 onClick = {
                                     datePickerState.selectedDateMillis?.let {
                                         val localDate = Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate()
-                                        state.datePrevision = localDate.format(DateTimeFormatter.ofPattern(EnumDateTimePatterns.DATE_PATTER.pattern))
+                                        state.datePrevision = localDate.format(DateTimeFormatter.ofPattern(EnumDateTimePatterns.DATE.pattern))
                                     }
 
                                     datePickerShow = false
@@ -393,7 +393,7 @@ private suspend fun saveMovement(
 ): Boolean {
     if (state.onValidate()) {
         val datePrevision = state.datePrevision?.let {
-            LocalDate.parse(it, DateTimeFormatter.ofPattern(EnumDateTimePatterns.DATE_PATTER.pattern))
+            LocalDate.parse(it, DateTimeFormatter.ofPattern(EnumDateTimePatterns.DATE.pattern))
         }
 
         val timePrevision = state.timePrevision?.let {

@@ -40,6 +40,8 @@ android {
 }
 
 dependencies {
+    implementation "com.google.code.gson:gson:$gson_version"
+
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
     implementation "androidx.hilt:hilt-navigation-compose:$hilt_navigation_version"

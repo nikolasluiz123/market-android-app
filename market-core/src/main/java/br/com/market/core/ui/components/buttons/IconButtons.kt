@@ -144,6 +144,20 @@ fun IconButtonReactivate(
 }
 
 @Composable
+fun IconButtonClear(
+    onClick: () -> Unit = { }
+) {
+    IconButton(
+        onClick = onClick
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_delete_32dp),
+            contentDescription = stringResource(R.string.label_clear)
+        )
+    }
+}
+
+@Composable
 fun IconButtonLogout(onClick: () -> Unit = { }) {
     IconButton(onClick = onClick) {
         Icon(
@@ -194,6 +208,26 @@ fun IconButtonTime(onClick: () -> Unit = { }) {
     IconButton(onClick = onClick) {
         Icon(
             painter = painterResource(id = R.drawable.ic_time_24dp), contentDescription = stringResource(R.string.label_calendar)
+        )
+    }
+}
+
+@Composable
+fun IconButtonAdvancedFilters(onClick: () -> Unit = { }) {
+    IconButton(onClick = onClick) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_advanced_filter),
+            contentDescription = "Filtros Avançados"
+        )
+    }
+}
+
+@Composable
+fun IconButtonAdvancedFiltersApply(onClick: () -> Unit = { }) {
+    IconButton(onClick = onClick) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_advanced_filter_apply),
+            contentDescription = "Filtros Avançados Aplicados"
         )
     }
 }
@@ -294,6 +328,26 @@ fun IconButtonSyncPreview() {
     MarketTheme {
         Surface {
             IconButtonSync()
+        }
+    }
+}
+
+@Preview
+@Composable
+fun IconButtonAdvancedFiltersPreview() {
+    MarketTheme {
+        Surface {
+            IconButtonAdvancedFilters()
+        }
+    }
+}
+
+@Preview
+@Composable
+fun IconButtonAdvancedFiltersApplyPreview() {
+    MarketTheme {
+        Surface {
+            IconButtonAdvancedFiltersApply()
         }
     }
 }

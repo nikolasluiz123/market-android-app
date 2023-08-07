@@ -74,4 +74,13 @@
     <string name="movement_screen_date_prevision_required_validation_message">A data de previsão é obrigatória.</string>
     <string name="movement_screen_time_prevision_required_validation_message">A hora da previsão é obrigatória.</string>
     <string name="about_screen_top_bar_title">Sobre o Dispositivo</string>
+    <string name="movements_search_screen_title">Movimentações</string>
+    <string name="movements_search_screen_buscar_por">Buscar por Nome, Descrição ou Responsável</string>
+    <string name="movements_search_screen_label_filter_product_name">Nome do Produto</string>
+    <string name="movements_search_screen_label_filter_description">Descrição</string>
+    <string name="movements_search_screen_label_filter_user">Responsável</string>
+    <string name="movements_search_screen_label_filter_operation_type">Tipo da Operação</string>
+    <string name="movements_search_screen_label_filter_date_realization">Data de Realização</string>
+    <string name="movements_search_screen_label_filter_date_prevision">Data de Previsão</string>
+    <string name="movements_search_screen_label_filter_quantity">Quantidade</string>
 </resources>

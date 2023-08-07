@@ -44,7 +44,9 @@ fun <T> LazyVerticalListComponent(
     modifier: Modifier = Modifier,
     items: List<T>,
     emptyStateText: String = stringResource(R.string.text_empty_state_default),
-    itemList: @Composable (T) -> Unit
+    verticalArrangementSpace: Dp = 16.dp,
+    contentPadding: Dp = 16.dp,
+    itemList: @Composable (T) -> Unit,
 ) {
     ConstraintLayout(modifier = modifier) {
         val (lazyColumnRef, emptyText) = createRefs()
@@ -59,7 +61,9 @@ fun <T> LazyVerticalListComponent(
                         end.linkTo(parent.end)
                         bottom.linkTo(parent.bottom)
                     },
-                items = items
+                items = items,
+                verticalArrangementSpace = verticalArrangementSpace,
+                contentPadding = contentPadding
             ) {
                 itemList(it)
             }

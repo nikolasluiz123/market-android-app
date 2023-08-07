@@ -22,11 +22,17 @@ class StorageOperationsHistoryRepository @Inject constructor(
     private val webClient: StorageOperationsHistoryWebClient
 ) {
 
-    fun findStorageOperationHistory(productId: String?, categoryId: String, brandId: String): Flow<PagingData<StorageOperationHistoryTuple>> {
+    fun findStorageOperationHistory(productId: String?, categoryId: String, brandId: String, simpleFilter: String?): Flow<PagingData<StorageOperationHistoryTuple>> {
         return Pager(
             config = PagingConfigUtils.defaultPagingConfig(),
             pagingSourceFactory = {
-                StorageOperationsHistoryPagingSource(dao = dao, productId = productId, categoryId = categoryId, brandId = brandId)
+                StorageOperationsHistoryPagingSource(
+                    dao = dao,
+                    productId = productId,
+                    categoryId = categoryId,
+                    brandId = brandId,
+                    simpleFilter = simpleFilter
+                )
             }
         ).flow
     }

@@ -8,7 +8,8 @@ class StorageOperationsHistoryPagingSource(
     private val dao: StorageOperationsHistoryDAO,
     private val productId: String?,
     private val categoryId: String,
-    private val brandId: String
+    private val brandId: String,
+    private val simpleFilter: String?
 ) : BasePagingSource<StorageOperationHistoryTuple>() {
 
     override suspend fun getData(limit: Int, offset: Int): List<StorageOperationHistoryTuple> {
@@ -17,7 +18,8 @@ class StorageOperationsHistoryPagingSource(
             offset = offset,
             productId = productId,
             categoryId = categoryId,
-            brandId = brandId
+            brandId = brandId,
+            simpleFilter = simpleFilter
         )
     }
 }

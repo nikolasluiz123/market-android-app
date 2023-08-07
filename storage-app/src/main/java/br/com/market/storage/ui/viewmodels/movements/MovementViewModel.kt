@@ -144,7 +144,7 @@ class MovementViewModel @Inject constructor(
                     currentState.copy(
                         storageOperationHistoryDomain = operation,
                         quantity = operation.quantity.toString(),
-                        datePrevision = operation.datePrevision?.format(DateTimeFormatter.ofPattern(EnumDateTimePatterns.DATE_PATTER.pattern)),
+                        datePrevision = operation.datePrevision?.format(DateTimeFormatter.ofPattern(EnumDateTimePatterns.DATE.pattern)),
                         timePrevision = operation.datePrevision?.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)),
                         description = operation.description
                     )

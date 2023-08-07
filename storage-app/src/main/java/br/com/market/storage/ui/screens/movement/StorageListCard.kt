@@ -19,7 +19,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import br.com.market.core.extensions.formatShort
+import br.com.market.core.enums.EnumDateTimePatterns
+import br.com.market.core.extensions.format
 import br.com.market.core.theme.BLUE_500
 import br.com.market.core.theme.GREEN_500
 import br.com.market.core.theme.MarketTheme
@@ -220,7 +221,7 @@ fun StorageListCard(
                 )
 
                 Text(
-                    text = datePrevision.formatShort(),
+                    text = datePrevision.format(EnumDateTimePatterns.DATE_TIME),
                     modifier = Modifier
                         .constrainAs(previsionRef) {
                             start.linkTo(labelPrevisionRef.start)
@@ -248,7 +249,7 @@ fun StorageListCard(
                 )
 
                 Text(
-                    text = dateRealization.formatShort(),
+                    text = dateRealization.format(EnumDateTimePatterns.DATE_TIME),
                     modifier = Modifier
                         .constrainAs(realizationRef) {
                             start.linkTo(labelRealizationRef.start)
@@ -310,7 +311,7 @@ fun StorageListCard(
                 )
 
                 Text(
-                    text = datePrevision.formatShort(),
+                    text = datePrevision.format(EnumDateTimePatterns.DATE_TIME),
                     modifier = Modifier
                         .constrainAs(previsionRef) {
                             start.linkTo(labelPrevisionRef.start)
@@ -372,7 +373,7 @@ fun StorageListCard(
                 )
 
                 Text(
-                    text = dateRealization.formatShort(),
+                    text = dateRealization.format(EnumDateTimePatterns.DATE_TIME),
                     modifier = Modifier
                         .constrainAs(realizationRef) {
                             start.linkTo(labelRealizationRef.start)

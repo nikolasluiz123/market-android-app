@@ -3,12 +3,21 @@ package br.com.market.storage.ui.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import androidx.navigation.NavOptions
-import androidx.navigation.Navigator
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
+import br.com.market.core.filter.AdvancedFilterArgs
+import br.com.market.core.filter.AdvancedFiltersScreenArgs
+import br.com.market.core.filter.EnumAdvancedFilterType
+import br.com.market.core.ui.navigation.advancedFilterScreen
+import br.com.market.core.ui.navigation.dateRangeAdvancedFilterScreen
+import br.com.market.core.ui.navigation.dateRangeAdvancedFilterScreenNavResultCallbackKey
+import br.com.market.core.ui.navigation.navigateToAdvancedFilterScreen
+import br.com.market.core.ui.navigation.navigateToDateRangeAdvancedFilterScreen
+import br.com.market.core.ui.navigation.navigateToTextAdvancedFilterScreen
+import br.com.market.core.ui.navigation.popBackStackWithResult
+import br.com.market.core.ui.navigation.textAdvancedFilterScreen
+import br.com.market.core.ui.navigation.textAdvancedFilterScreenNavResultCallbackKey
 import br.com.market.storage.ui.navigation.brand.brandScreen
 import br.com.market.storage.ui.navigation.brand.navigateToBrandScreen
 import br.com.market.storage.ui.navigation.category.categoryScreen
@@ -128,7 +137,8 @@ fun StorageAppNavHost(
             onAddMovementClick = navController::navigateToMovementScreen,
             onMovementClick = {
                 navController.navigateToMovementScreen(it.categoryId, it.brandId, it.operationType, it.productId, it.id)
-            }
+            },
+            onAdvancedFiltersClick = { navController.navigateToAdvancedFilterScreen(AdvancedFiltersScreenArgs(it)) }
         )
 
         movementScreen(
@@ -164,75 +174,50 @@ fun StorageAppNavHost(
             onAfterDeleteImage = navController::popBackStack,
             onAfterSaveProductImage = navController::popBackStack
         )
+
+        advancedFilterScreen(
+            onItemClick = { filterItem, callback ->
+                when(filterItem.filterType) {
+                    EnumAdvancedFilterType.TEXT -> {
+                        navController.navigateToTextAdvancedFilterScreen(
+                            args = AdvancedFilterArgs(
+                                titleResId = filterItem.labelResId,
+                                value = filterItem.value
+                            ),
+                            callback = callback
+                        )
+                    }
+                    EnumAdvancedFilterType.NUMBER -> TODO()
+                    EnumAdvancedFilterType.DATE -> {
+                        navController.navigateToDateRangeAdvancedFilterScreen(
+                            args = AdvancedFilterArgs(
+                                titleResId = filterItem.labelResId,
+                                value = filterItem.value
+                            ),
+                            callback = callback
+                        )
+                    }
+                    EnumAdvancedFilterType.DATE_RANGE -> TODO()
+                    EnumAdvancedFilterType.LOV -> TODO()
+                    EnumAdvancedFilterType.SELECT_ONE -> TODO()
+                }
+            }
+        )
+
+        textAdvancedFilterScreen(
+            onBackClick = navController::popBackStack,
+            onConfirmClick = {
+                navController.popBackStackWithResult(textAdvancedFilterScreenNavResultCallbackKey, it)
+            },
+            onCancelClick = navController::popBackStack
+        )
+
+        dateRangeAdvancedFilterScreen(
+            onBackClick = navController::popBackStack,
+            onConfirmClick = { localDateTimeFrom, localDateTimeTo ->
+                navController.popBackStackWithResult(dateRangeAdvancedFilterScreenNavResultCallbackKey, Pair(localDateTimeFrom, localDateTimeTo))
+            },
+            onCancelClick = navController::popBackStack
+        )
     }
-}
-
-/**
- * Função para definir um valor no state handle da backstack de navegação
- * e recuperar futuramente em algum ponto desejado.
- *
- * @param T Tipo do valor passado para o callback
- * @param key Chave que aponta para o valor setado em [androidx.lifecycle.SavedStateHandle]
- * @param callback Função que pode executar algo usando o valor retornado
- *
- * @author Nikolas Luiz Schmitt
- */
-fun <T> NavController.setNavResultCallback(key: String, callback: (T) -> Unit) {
-    currentBackStackEntry?.savedStateHandle?.set(key, callback)
-}
-
-/**
- * Função que retorna o callback que foi definido para que possa
- * ser executado.
- *
- * @param T Tipo do valor passado para o callback
- * @param key Chave que aponta para o valor setado em [androidx.lifecycle.SavedStateHandle]
- *
- * @author Nikolas Luiz Schmitt
- */
-fun <T> NavController.getNavResultCallback(key: String): ((T) -> Unit)? {
-    return previousBackStackEntry?.savedStateHandle?.remove(key)
-}
-
-/**
- * Função que recupera o callback utilizando [getNavResultCallback]
- * e executa passando como resultado algum valor.
- *
- * Após invocar o callback é feito o [NavController.popBackStack] para
- * remover da pilha a tela.
- *
- * @param T Tipo do valor passado para o callback
- * @param key Chave que aponta para o valor setado em [androidx.lifecycle.SavedStateHandle]
- * @param result O que desejar enviar para a tela anterior
- *
- * @author Nikolas Luiz Schmitt
- */
-fun <T> NavController.popBackStackWithResult(key: String, result: T) {
-    getNavResultCallback<T>(key)?.invoke(result)
-    popBackStack()
-}
-
-/**
- * Função para navegar para um tela definindo um callback
- * usando [setNavResultCallback] para ser executado em algum
- * momento usando [popBackStackWithResult]
- *
- * @param T Tipo do valor passado para o callback
- * @param key Chave que aponta para o valor setado em [androidx.lifecycle.SavedStateHandle]
- * @param route Rota para onde deve ocorrer a navegação
- * @param callback Função que pode executar algo usando o valor retornado
- * @param navOptions Atributo que pode ser usado para definições da navegação
- * @param navigatorExtras Possibilita algum comportamento específico
- *
- * @author Nikolas Luiz Schmitt
- */
-fun <T> NavController.navigateForResult(
-    key: String,
-    route: String,
-    callback: (T) -> Unit,
-    navOptions: NavOptions? = null,
-    navigatorExtras: Navigator.Extras? = null
-) {
-    setNavResultCallback(key, callback)
-    navigate(route, navOptions, navigatorExtras)
 }

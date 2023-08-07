@@ -4,10 +4,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import br.com.market.core.ui.navigation.navigateForResult
 import br.com.market.storage.ui.component.lov.ProductLov
 import br.com.market.storage.ui.navigation.brand.argumentBrandId
 import br.com.market.storage.ui.navigation.category.argumentCategoryId
-import br.com.market.storage.ui.navigation.navigateForResult
 import br.com.market.storage.ui.viewmodels.product.ProductLovViewModel
 
 internal const val productLovRoute = "productLov"

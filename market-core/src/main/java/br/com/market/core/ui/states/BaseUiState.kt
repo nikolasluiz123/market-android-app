@@ -6,7 +6,7 @@ package br.com.market.core.ui.states
  *
  * @author Nikolas Luiz Schmitt
  */
-abstract class BaseUiState2 {
+abstract class BaseUiState {
     abstract val serverMessage: String
     abstract val showDialogMessage: Boolean
     abstract val onToggleMessageDialog: (String) -> Unit
