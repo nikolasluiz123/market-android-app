@@ -188,7 +188,8 @@ fun StorageAppNavHost(
                         )
                     }
                     EnumAdvancedFilterType.NUMBER -> TODO()
-                    EnumAdvancedFilterType.DATE -> {
+                    EnumAdvancedFilterType.DATE -> { }
+                    EnumAdvancedFilterType.DATE_RANGE -> {
                         navController.navigateToDateRangeAdvancedFilterScreen(
                             args = AdvancedFilterArgs(
                                 titleResId = filterItem.labelResId,
@@ -197,7 +198,6 @@ fun StorageAppNavHost(
                             callback = callback
                         )
                     }
-                    EnumAdvancedFilterType.DATE_RANGE -> TODO()
                     EnumAdvancedFilterType.LOV -> TODO()
                     EnumAdvancedFilterType.SELECT_ONE -> TODO()
                 }

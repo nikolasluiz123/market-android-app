@@ -159,12 +159,12 @@ fun MovementsSearchScreen(
                             ),
                             CommonAdvancedFilterItem(
                                 labelResId = string.movements_search_screen_label_filter_date_prevision,
-                                filterType = EnumAdvancedFilterType.DATE,
+                                filterType = EnumAdvancedFilterType.DATE_RANGE,
                                 formatter = DateTimeRangeAdvancedFilterFormatter()
                             ),
                             CommonAdvancedFilterItem(
                                 labelResId = string.movements_search_screen_label_filter_date_realization,
-                                filterType = EnumAdvancedFilterType.DATE,
+                                filterType = EnumAdvancedFilterType.DATE_RANGE,
                                 formatter = DateTimeRangeAdvancedFilterFormatter()
                             ),
                             CommonAdvancedFilterItem(
