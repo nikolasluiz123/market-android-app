@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import br.com.market.core.extensions.fromJsonNavParamToArgs
 import br.com.market.core.filter.AdvancedFiltersScreenArgs
 import br.com.market.core.filter.formatter.IAdvancedFilterFormatter
-import br.com.market.core.gson.GsonTypeAdapterAdapter
+import br.com.market.core.gson.GsonTypeAdapter
 import br.com.market.core.ui.navigation.argumentFilters
 import br.com.market.core.ui.states.filter.AdvancedFilterUIState
 import com.google.gson.Gson
@@ -36,7 +36,7 @@ class AdvancedFilterViewModel @Inject constructor(
     private fun fromJsonNavParamToAdvancedFiltersArgs(): AdvancedFiltersScreenArgs? {
         val gson = Gson()
             .newBuilder()
-            .registerTypeAdapter(IAdvancedFilterFormatter::class.java, GsonTypeAdapterAdapter())
+            .registerTypeAdapter(IAdvancedFilterFormatter::class.java, GsonTypeAdapter())
             .create()
 
         return filterArgs?.fromJsonNavParamToArgs(AdvancedFiltersScreenArgs::class.java, gson)

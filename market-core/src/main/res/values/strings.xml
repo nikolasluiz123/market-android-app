@@ -45,4 +45,11 @@
     <string name="date_range_advanced_filter_screen_label_time_from">Hora Inicial</string>
     <string name="date_range_advanced_filter_screen_label_date_to">Data Final</string>
     <string name="date_range_advanced_filter_screen_label_time_to">Hora Final</string>
+
+    <string-array name="movement_screen_advanced_filter_operation_type_labels">
+        <item>Entrada</item>
+        <item>Entrada Agendada</item>
+        <item>Venda</item>
+        <item>Baixa</item>
+    </string-array>
 </resources>

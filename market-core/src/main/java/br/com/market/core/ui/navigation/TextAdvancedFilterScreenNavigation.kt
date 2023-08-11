@@ -5,7 +5,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import br.com.market.core.filter.AdvancedFilterArgs
-import br.com.market.core.ui.components.filter.TextAdvancedFilterScreen
+import br.com.market.core.ui.components.filter.TextAdvancedFilter
 import br.com.market.core.ui.viewmodel.filter.TextAdvancedFilterViewModel
 import com.google.gson.Gson
 
@@ -23,7 +23,7 @@ fun NavGraphBuilder.textAdvancedFilterScreen(
     ) {
         val viewModel = hiltViewModel<TextAdvancedFilterViewModel>()
 
-        TextAdvancedFilterScreen(
+        TextAdvancedFilter(
             viewModel = viewModel,
             onBackClick = onBackClick,
             onConfirmClick = onConfirmClick,

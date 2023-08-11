@@ -55,7 +55,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
 @Composable
-fun DateRangeAdvancedFilterScreen(
+fun DateRangeAdvancedFilter(
     viewModel: DateRangeAdvancedFilterViewModel,
     onBackClick: () -> Unit,
     onCancelClick: () -> Unit,
@@ -63,7 +63,7 @@ fun DateRangeAdvancedFilterScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
 
-    DateRangeAdvancedFilterScreen(
+    DateRangeAdvancedFilter(
         state = state,
         onBackClick = onBackClick,
         onConfirmClick = onConfirmClick,
@@ -73,7 +73,7 @@ fun DateRangeAdvancedFilterScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DateRangeAdvancedFilterScreen(
+fun DateRangeAdvancedFilter(
     state: DateRangeAdvancedFilterUIState = DateRangeAdvancedFilterUIState(),
     onBackClick: () -> Unit = { },
     onCancelClick: () -> Unit = { },
@@ -368,10 +368,10 @@ fun DateRangeAdvancedFilterScreen(
 
 @Preview
 @Composable
-fun DateRangeAdvancedFilterScreenPreview() {
+fun DateRangeAdvancedFilterPreview() {
     MarketTheme {
         Surface {
-            DateRangeAdvancedFilterScreen()
+            DateRangeAdvancedFilter()
         }
     }
 }

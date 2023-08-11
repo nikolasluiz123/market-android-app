@@ -5,12 +5,12 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import br.com.market.core.filter.CommonAdvancedFilterItem
 import br.com.market.enums.EnumOperationType
 import br.com.market.localdataaccess.tuples.StorageOperationHistoryTuple
 import br.com.market.storage.ui.navigation.brand.argumentBrandId
 import br.com.market.storage.ui.navigation.category.argumentCategoryId
 import br.com.market.storage.ui.navigation.product.argumentProductId
-import br.com.market.core.filter.CommonAdvancedFilterItem
 import br.com.market.storage.ui.screens.movement.MovementsSearchScreen
 import br.com.market.storage.ui.viewmodels.movements.MovementsSearchViewModel
 

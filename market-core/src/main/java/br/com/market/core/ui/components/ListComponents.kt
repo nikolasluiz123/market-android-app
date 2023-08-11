@@ -32,7 +32,7 @@ import br.com.market.core.theme.GREY_500
  * Componente de listagem vertical.
  *
  * @param T Tipo do dado exibido.
- * @param modifier Modificadores específicos.
+ * @param containerModifier Modificadores específicos.
  * @param items Lista de itens que serão carregados.
  * @param emptyStateText Texto exibido quando a lista for vazia.
  * @param itemList Composable que define qual será o card do item. Pode ser usado outro tipo de container além do card.
@@ -54,12 +54,15 @@ fun <T> LazyVerticalListComponent(
         if (items.isNotEmpty()) {
             LazyVerticalList(
                 modifier = Modifier
-                    .fillMaxSize()
                     .constrainAs(lazyColumnRef) {
-                        start.linkTo(parent.start)
-                        top.linkTo(parent.top)
-                        end.linkTo(parent.end)
-                        bottom.linkTo(parent.bottom)
+                        linkTo(
+                            start = parent.start,
+                            top = parent.top,
+                            end = parent.end,
+                            bottom = parent.bottom,
+                            verticalBias = 0F,
+                            horizontalBias = 0F
+                        )
                     },
                 items = items,
                 verticalArrangementSpace = verticalArrangementSpace,

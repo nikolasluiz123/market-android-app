@@ -30,7 +30,7 @@ import br.com.market.core.ui.states.filter.TextAdvancedFilterUIState
 import br.com.market.core.ui.viewmodel.filter.TextAdvancedFilterViewModel
 
 @Composable
-fun TextAdvancedFilterScreen(
+fun TextAdvancedFilter(
     viewModel: TextAdvancedFilterViewModel,
     onBackClick: () -> Unit,
     onCancelClick: () -> Unit,
@@ -38,7 +38,7 @@ fun TextAdvancedFilterScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
 
-    TextAdvancedFilterScreen(
+    TextAdvancedFilter(
         state = state,
         onBackClick = onBackClick,
         onConfirmClick = onConfirmClick,
@@ -48,7 +48,7 @@ fun TextAdvancedFilterScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TextAdvancedFilterScreen(
+fun TextAdvancedFilter(
     state: TextAdvancedFilterUIState = TextAdvancedFilterUIState(),
     onBackClick: () -> Unit = { },
     onCancelClick: () -> Unit = { },
@@ -121,10 +121,10 @@ fun TextAdvancedFilterScreen(
 
 @Preview
 @Composable
-fun TextAdvancedFilterScreenPreview() {
+fun TextAdvancedFilterPreview() {
     MarketTheme {
         Surface {
-            TextAdvancedFilterScreen()
+            TextAdvancedFilter()
         }
     }
 }

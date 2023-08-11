@@ -32,6 +32,7 @@ import br.com.market.core.R
 import br.com.market.core.filter.CommonAdvancedFilterItem
 import br.com.market.core.filter.EnumAdvancedFilterType
 import br.com.market.core.filter.formatter.DateTimeRangeAdvancedFilterFormatter
+import br.com.market.core.filter.formatter.SelectOneFormatter
 import br.com.market.core.filter.formatter.StringAdvancedFilterFormatter
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.MarketBottomAppBar
@@ -168,9 +169,10 @@ fun MovementsSearchScreen(
                                 formatter = DateTimeRangeAdvancedFilterFormatter()
                             ),
                             CommonAdvancedFilterItem(
+                                labelsReference = R.array.movement_screen_advanced_filter_operation_type_labels,
                                 labelResId = string.movements_search_screen_label_filter_operation_type,
                                 filterType = EnumAdvancedFilterType.SELECT_ONE,
-                                formatter = StringAdvancedFilterFormatter()
+                                formatter = SelectOneFormatter()
                             ),
                             CommonAdvancedFilterItem(
                                 labelResId = string.movements_search_screen_label_filter_quantity,

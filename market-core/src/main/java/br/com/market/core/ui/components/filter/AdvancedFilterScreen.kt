@@ -23,12 +23,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import br.com.market.core.R
 import br.com.market.core.filter.CommonAdvancedFilterItem
+import br.com.market.core.filter.EnumAdvancedFilterType
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.LazyVerticalListComponent
 import br.com.market.core.ui.states.filter.AdvancedFilterUIState
@@ -61,6 +63,8 @@ fun AdvancedFilterScreen(
         val (listRef, searchBarRef, searchDividerRef) = createRefs()
         var text by rememberSaveable { mutableStateOf("") }
         var searchActive by remember { mutableStateOf(false) }
+        var openSelectOn by remember { mutableStateOf(false) }
+        var callbackSelectOne: ((Any) -> Unit)? = null
 
         SearchBar(
             modifier = Modifier
@@ -105,10 +109,28 @@ fun AdvancedFilterScreen(
                 AdvancedFilterItem(
                     item = item,
                     onItemClick = { callback ->
-                        onItemClick(item, callback)
+                        when (item.filterType) {
+                            EnumAdvancedFilterType.SELECT_ONE -> {
+                                openSelectOn = true
+                                callbackSelectOne = callback
+                            }
+                            else -> onItemClick(item, callback)
+                        }
+
                     }
                 )
                 Divider(Modifier.fillMaxWidth())
+
+                if (openSelectOn) {
+                    OpenSelectOneOption(
+                        item,
+                        onDismiss = { openSelectOn = false },
+                        onItemClick = {
+                            callbackSelectOne!!.invoke(it)
+                            openSelectOn = false
+                        }
+                    )
+                }
             }
         }
 
@@ -134,12 +156,49 @@ fun AdvancedFilterScreen(
                 AdvancedFilterItem(
                     item = item,
                     onItemClick = { callback ->
-                        onItemClick(item, callback)
+                        when (item.filterType) {
+                            EnumAdvancedFilterType.SELECT_ONE -> {
+                                openSelectOn = true
+                                callbackSelectOne = callback
+                            }
+                            else -> onItemClick(item, callback)
+                        }
                     }
                 )
                 Divider(Modifier.fillMaxWidth())
+
+                if (openSelectOn) {
+                    OpenSelectOneOption(
+                        item = item,
+                        onDismiss = { openSelectOn = false },
+                        onItemClick = {
+                            callbackSelectOne!!.invoke(it)
+                            openSelectOn = false
+                        }
+                    )
+                }
             }
         }
+    }
+}
+
+@Composable
+private fun OpenSelectOneOption(
+    item: CommonAdvancedFilterItem,
+    onDismiss: () -> Unit,
+    onItemClick: (Pair<String, Int>) -> Unit
+) {
+    item.labelsReference?.let { labelsId ->
+        val options = mutableListOf<Pair<String, Int>>()
+        stringArrayResource(id = labelsId).forEachIndexed { index, label ->
+            options.add(label to index)
+        }
+
+        SelectOneAdvancedFilter(
+            items = options,
+            onDismiss = onDismiss,
+            onItemClick = onItemClick
+        )
     }
 }
 

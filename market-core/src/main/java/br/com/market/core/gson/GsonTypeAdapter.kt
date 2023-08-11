@@ -10,7 +10,7 @@ import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
 import java.lang.reflect.Type
 
-class GsonTypeAdapterAdapter : JsonDeserializer<Any>, JsonSerializer<Any> {
+class GsonTypeAdapter : JsonDeserializer<Any>, JsonSerializer<Any> {
 
     companion object {
         const val CLASSNAME = "CLASSNAME"

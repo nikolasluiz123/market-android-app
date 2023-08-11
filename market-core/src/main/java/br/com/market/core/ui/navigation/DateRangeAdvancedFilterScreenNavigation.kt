@@ -5,7 +5,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import br.com.market.core.filter.AdvancedFilterArgs
-import br.com.market.core.ui.components.filter.DateRangeAdvancedFilterScreen
+import br.com.market.core.ui.components.filter.DateRangeAdvancedFilter
 import br.com.market.core.ui.viewmodel.filter.DateRangeAdvancedFilterViewModel
 import com.google.gson.Gson
 import java.time.LocalDateTime
@@ -24,7 +24,7 @@ fun NavGraphBuilder.dateRangeAdvancedFilterScreen(
     ) {
         val viewModel = hiltViewModel<DateRangeAdvancedFilterViewModel>()
 
-        DateRangeAdvancedFilterScreen(
+        DateRangeAdvancedFilter(
             viewModel = viewModel,
             onBackClick = onBackClick,
             onConfirmClick = onConfirmClick,

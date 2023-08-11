@@ -181,25 +181,25 @@ fun StorageAppNavHost(
                     EnumAdvancedFilterType.TEXT -> {
                         navController.navigateToTextAdvancedFilterScreen(
                             args = AdvancedFilterArgs(
-                                titleResId = filterItem.labelResId,
+                                titleResId = filterItem.labelResId!!,
                                 value = filterItem.value
                             ),
                             callback = callback
                         )
                     }
-                    EnumAdvancedFilterType.NUMBER -> TODO()
+                    EnumAdvancedFilterType.NUMBER -> { }
                     EnumAdvancedFilterType.DATE -> { }
                     EnumAdvancedFilterType.DATE_RANGE -> {
                         navController.navigateToDateRangeAdvancedFilterScreen(
                             args = AdvancedFilterArgs(
-                                titleResId = filterItem.labelResId,
+                                titleResId = filterItem.labelResId!!,
                                 value = filterItem.value
                             ),
                             callback = callback
                         )
                     }
-                    EnumAdvancedFilterType.LOV -> TODO()
-                    EnumAdvancedFilterType.SELECT_ONE -> TODO()
+                    EnumAdvancedFilterType.LOV -> { }
+                    else -> throw IllegalArgumentException("O tipo de filtro não foi tratado corretamente.")
                 }
             }
         )
