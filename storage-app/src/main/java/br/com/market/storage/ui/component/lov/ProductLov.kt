@@ -14,11 +14,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import br.com.market.core.theme.GREY_600
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.PagedVerticalListComponent
 import br.com.market.core.ui.components.SimpleMarketTopAppBar
+import br.com.market.localdataaccess.tuples.ProductImageTuple
 import br.com.market.storage.R
 import br.com.market.storage.ui.screens.brand.ProductListItem
 import br.com.market.storage.ui.states.product.ProductLovUIState
@@ -86,52 +87,42 @@ fun ProductLov(
                             unfocusedContainerColor = Color.Transparent,
                             disabledContainerColor = Color.Transparent,
                         ),
-                        dividerColor = GREY_600
+                        dividerColor = DividerDefaults.color
                     ),
                     shape = SearchBarDefaults.fullScreenShape
                 ) {
-                    if (text.isNotEmpty()) {
-                        PagedVerticalListComponent(pagingItems = pagingData) { productTuple ->
-                            ProductListItem(
-                                name = productTuple.productName,
-                                price = productTuple.productPrice,
-                                quantity = productTuple.productQuantity,
-                                quantityUnit = productTuple.productQuantityUnit,
-                                image = productTuple.imageBytes!!,
-                                active = productTuple.productActive,
-                                onItemClick = {
-                                    onItemClick(productTuple.productId)
-                                }
-                            )
-                        }
-                    }
+                    ProductList(pagingData, onItemClick)
                 }
                 if (!active) {
-                    Divider(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp),
-                        color = GREY_600
-                    )
+                    Divider(modifier = Modifier.fillMaxWidth().padding(top = 8.dp))
                 }
             }
         }
     ) { padding ->
         ConstraintLayout(modifier = Modifier.padding(padding)) {
-            PagedVerticalListComponent(pagingItems = pagingData) { productTuple ->
-                ProductListItem(
-                    name = productTuple.productName,
-                    price = productTuple.productPrice,
-                    quantity = productTuple.productQuantity,
-                    quantityUnit = productTuple.productQuantityUnit,
-                    image = productTuple.imageBytes!!,
-                    active = productTuple.productActive,
-                    onItemClick = {
-                        onItemClick(productTuple.productId)
-                    }
-                )
-            }
+            ProductList(pagingData, onItemClick)
         }
+    }
+}
+
+@Composable
+private fun ProductList(
+    pagingData: LazyPagingItems<ProductImageTuple>,
+    onItemClick: (String) -> Unit
+) {
+    PagedVerticalListComponent(pagingItems = pagingData) { productTuple ->
+        ProductListItem(
+            name = productTuple.productName,
+            price = productTuple.productPrice,
+            quantity = productTuple.productQuantity,
+            quantityUnit = productTuple.productQuantityUnit,
+            image = productTuple.imageBytes!!,
+            active = productTuple.productActive,
+            onItemClick = {
+                onItemClick(productTuple.productId)
+            }
+        )
+        Divider(modifier = Modifier.fillMaxWidth())
     }
 }
 
