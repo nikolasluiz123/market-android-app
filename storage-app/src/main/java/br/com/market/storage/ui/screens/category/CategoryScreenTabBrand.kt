@@ -1,6 +1,8 @@
 package br.com.market.storage.ui.screens.category
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -13,9 +15,8 @@ import br.com.market.core.ui.components.MarketBottomAppBar
 import br.com.market.core.ui.components.PagedVerticalListComponent
 import br.com.market.core.ui.components.buttons.FloatingActionButtonAdd
 import br.com.market.core.ui.components.buttons.IconButtonInactivate
-import br.com.market.storage.ui.screens.brand.BrandListCard
+import br.com.market.storage.ui.screens.brand.BrandListItem
 import br.com.market.storage.ui.states.category.CategoryUIState
-import java.util.*
 
 @Composable
 fun CategoryScreenTabBrand(
@@ -42,13 +43,14 @@ fun CategoryScreenTabBrand(
     ) { padding ->
         ConstraintLayout(modifier = Modifier.padding(padding)) {
             PagedVerticalListComponent(pagingItems = pagingData) {
-                BrandListCard(
+                BrandListItem(
                     brandName = it.name,
                     active = it.active,
                     onItemClick = {
                         onItemClick(state.categoryDomain?.id!!, it.id!!)
                     }
                 )
+                Divider(modifier = Modifier.fillMaxWidth())
             }
         }
     }

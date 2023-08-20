@@ -4,7 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -15,49 +17,33 @@ import androidx.constraintlayout.compose.Dimension
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.theme.colorCardActive
 import br.com.market.core.theme.colorCardInactive
+import br.com.market.core.ui.components.LabeledText
 import br.com.market.storage.R
 
 @Composable
-fun BrandListCard(brandName: String, active: Boolean, onItemClick: () -> Unit = { }) {
-    Card(
-        Modifier
+fun BrandListItem(brandName: String, active: Boolean, onItemClick: () -> Unit = { }) {
+    ConstraintLayout(
+        modifier = Modifier
             .fillMaxWidth()
-            .clickable { onItemClick() },
-        elevation = CardDefaults.cardElevation(8.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = if (active) colorCardActive else colorCardInactive
-        )
+            .padding(8.dp)
+            .background(color = if (active) colorCardActive else colorCardInactive)
+            .clickable {
+                onItemClick()
+            }
     ) {
-        ConstraintLayout(
-            Modifier
-                .padding(8.dp)
-                .fillMaxWidth()
-        ) {
-            val (labelNameRef, nameRef) = createRefs()
+        val (nameRef) = createRefs()
 
-            Text(
-                text = stringResource(id = R.string.brand_list_card_label_name),
-                modifier = Modifier
-                    .constrainAs(labelNameRef) {
-                        linkTo(start = parent.start, end = parent.end)
-                        top.linkTo(parent.top)
-
-                        width = Dimension.fillToConstraints
-                    },
-                style = MaterialTheme.typography.bodyMedium
-            )
-
-            Text(
-                text = brandName,
-                modifier = Modifier.constrainAs(nameRef) {
-                    linkTo(start = labelNameRef.start, end = labelNameRef.end)
-                    top.linkTo(labelNameRef.bottom)
+        LabeledText(
+            modifier = Modifier
+                .constrainAs(nameRef) {
+                    linkTo(start = parent.start, end = parent.end)
+                    top.linkTo(parent.top)
 
                     width = Dimension.fillToConstraints
                 },
-                style = MaterialTheme.typography.bodySmall
-            )
-        }
+            label = stringResource(id = R.string.brand_list_card_label_name),
+            value = brandName
+        )
     }
 }
 
@@ -101,7 +87,7 @@ fun BrandListCardSearch(brandName: String, active: Boolean, onItemClick: () -> U
 fun CategoryListCardPreview() {
     MarketTheme {
         Surface {
-            BrandListCard("Nestle", active = true)
+            BrandListItem("Nestle", active = true)
         }
     }
 }

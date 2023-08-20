@@ -18,7 +18,7 @@ import br.com.market.core.theme.GREY_600
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.PagedVerticalListComponent
 import br.com.market.core.ui.components.SimpleMarketTopAppBar
-import br.com.market.storage.ui.screens.brand.BrandListCard
+import br.com.market.storage.ui.screens.brand.BrandListItem
 import br.com.market.storage.ui.screens.brand.BrandListCardSearch
 import br.com.market.storage.ui.states.brand.BrandLovUIState
 import br.com.market.storage.ui.viewmodels.brand.BrandLovViewModel
@@ -108,7 +108,7 @@ fun BrandLov(
     ) { padding ->
         ConstraintLayout(modifier = Modifier.padding(padding)) {
             PagedVerticalListComponent(pagingItems = pagingData) { brandDomain ->
-                BrandListCard(
+                BrandListItem(
                     brandName = brandDomain.name,
                     active = brandDomain.active,
                     onItemClick = {
