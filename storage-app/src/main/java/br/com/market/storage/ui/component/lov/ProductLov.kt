@@ -20,7 +20,7 @@ import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.PagedVerticalListComponent
 import br.com.market.core.ui.components.SimpleMarketTopAppBar
 import br.com.market.storage.R
-import br.com.market.storage.ui.screens.brand.ProductListCard
+import br.com.market.storage.ui.screens.brand.ProductListItem
 import br.com.market.storage.ui.states.product.ProductLovUIState
 import br.com.market.storage.ui.viewmodels.product.ProductLovViewModel
 import java.util.*
@@ -92,7 +92,7 @@ fun ProductLov(
                 ) {
                     if (text.isNotEmpty()) {
                         PagedVerticalListComponent(pagingItems = pagingData) { productTuple ->
-                            ProductListCard(
+                            ProductListItem(
                                 name = productTuple.productName,
                                 price = productTuple.productPrice,
                                 quantity = productTuple.productQuantity,
@@ -119,7 +119,7 @@ fun ProductLov(
     ) { padding ->
         ConstraintLayout(modifier = Modifier.padding(padding)) {
             PagedVerticalListComponent(pagingItems = pagingData) { productTuple ->
-                ProductListCard(
+                ProductListItem(
                     name = productTuple.productName,
                     price = productTuple.productPrice,
                     quantity = productTuple.productQuantity,

@@ -96,4 +96,7 @@
     <string name="movement_list_item_label_quantity">Quantidade</string>
     <string name="movement_list_item_label_responsible">Responsável</string>
     <string name="movement_list_item_label_description">Descrição</string>
+    <string name="product_list_item_label_name">Nome</string>
+    <string name="product_list_item_label_price">Preço</string>
+    <string name="product_list_item_label_quantity">Quantidade</string>
 </resources>
