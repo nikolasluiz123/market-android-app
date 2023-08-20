@@ -68,7 +68,7 @@ fun CategorySearchScreen(
     Scaffold(
         topBar = {
             SimpleMarketTopAppBar(
-                title = "Categorias",
+                title = stringResource(br.com.market.storage.R.string.category_search_title),
                 showNavigationIcon = false,
                 showMenuWithLogout = false,
                 showMenu = true,
@@ -104,19 +104,19 @@ fun CategorySearchScreen(
 
             MarketCircularBlockUIProgressIndicator(
                 show = showLoadingBlockUI,
-                label = "Sincronizando..."
+                label = stringResource(R.string.label_sincronizing)
             )
 
             PagedVerticalListComponent(pagingItems = pagingData) {
-                CategoryListCard(
+                CategoryListItem(
                     categoryName = it.name,
                     active = it.active,
                     onItemClick = {
                         onCategoryClick(it.id!!)
                     }
                 )
+                Divider(modifier = Modifier.fillMaxWidth())
             }
-
         }
     }
 }
