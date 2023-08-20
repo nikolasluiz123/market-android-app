@@ -85,7 +85,12 @@ fun DateRangeAdvancedFilter(
                 title = stringResource(id = state.titleResId!!),
                 showMenuWithLogout = false,
                 actions = {
-                    IconButtonClear()
+                    IconButtonClear {
+                        state.dateFrom = ""
+                        state.timeFrom = ""
+                        state.dateTo = ""
+                        state.timeTo = ""
+                    }
                 },
                 onBackClick = onBackClick
             )

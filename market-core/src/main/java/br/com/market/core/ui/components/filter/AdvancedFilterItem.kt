@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import br.com.market.core.R
 import br.com.market.core.filter.CommonAdvancedFilterItem
-import br.com.market.core.filter.EnumAdvancedFilterType
 import br.com.market.core.filter.formatter.StringAdvancedFilterFormatter
 import br.com.market.core.theme.MarketTheme
 
@@ -95,7 +94,7 @@ fun AdvancedFilterItemPreview() {
             AdvancedFilterItem(
                 CommonAdvancedFilterItem(
                     labelResId = R.string.app_name,
-                    filterType = EnumAdvancedFilterType.TEXT,
+                    identifier = "teste",
                     formatter = StringAdvancedFilterFormatter()
                 )
             ) { }

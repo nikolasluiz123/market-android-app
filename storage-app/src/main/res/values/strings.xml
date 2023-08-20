@@ -83,4 +83,7 @@
     <string name="movements_search_screen_label_filter_date_realization">Data de Realização</string>
     <string name="movements_search_screen_label_filter_date_prevision">Data de Previsão</string>
     <string name="movements_search_screen_label_filter_quantity">Quantidade</string>
+    <string name="user_lov_title">Usuários</string>
+    <string name="user_lov_placeholder_filter">Buscar por Nome</string>
+    <string name="user_lov_list_item_label_name">Nome</string>
 </resources>

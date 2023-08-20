@@ -1,11 +1,16 @@
 package br.com.market.storage.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingData
+import br.com.market.core.pagination.PagingConfigUtils
 import br.com.market.domain.UserDomain
 import br.com.market.localdataaccess.dao.MarketDAO
 import br.com.market.localdataaccess.dao.UserDAO
 import br.com.market.servicedataaccess.responses.types.AuthenticationResponse
 import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.webclients.UserWebClient
+import br.com.market.storage.pagination.UserPagingSource
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import java.net.HttpURLConnection
 import javax.inject.Inject
@@ -61,5 +66,12 @@ class UserRepository @Inject constructor(
         }
 
         return responseFindAllProducts.toBaseResponse()
+    }
+
+    fun findUsers(name: String? = null): Flow<PagingData<UserDomain>> {
+        return Pager(
+            config = PagingConfigUtils.defaultPagingConfig(),
+            pagingSourceFactory = { UserPagingSource(dao = dao, name = name) }
+        ).flow
     }
 }

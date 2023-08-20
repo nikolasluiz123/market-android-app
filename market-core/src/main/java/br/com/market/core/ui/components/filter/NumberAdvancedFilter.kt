@@ -3,6 +3,7 @@ package br.com.market.core.ui.components.filter
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedButton
@@ -17,28 +18,30 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.core.text.isDigitsOnly
 import br.com.market.core.R
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.theme.colorSecondary
 import br.com.market.core.ui.components.SimpleMarketTopAppBar
 import br.com.market.core.ui.components.buttons.IconButtonClear
-import br.com.market.core.ui.states.filter.TextAdvancedFilterUIState
-import br.com.market.core.ui.viewmodel.filter.TextAdvancedFilterViewModel
+import br.com.market.core.ui.states.filter.NumberAdvancedFilterUIState
+import br.com.market.core.ui.viewmodel.filter.NumberAdvancedFilterViewModel
 
 @Composable
-fun TextAdvancedFilter(
-    viewModel: TextAdvancedFilterViewModel,
+fun NumberAdvancedFilter(
+    viewModel: NumberAdvancedFilterViewModel,
     onBackClick: () -> Unit,
     onCancelClick: () -> Unit,
-    onConfirmClick: (String) -> Unit
+    onConfirmClick: (Number) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
-    TextAdvancedFilter(
+    NumberAdvancedFilter(
         state = state,
         onBackClick = onBackClick,
         onConfirmClick = onConfirmClick,
@@ -48,11 +51,11 @@ fun TextAdvancedFilter(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TextAdvancedFilter(
-    state: TextAdvancedFilterUIState = TextAdvancedFilterUIState(),
+fun NumberAdvancedFilter(
+    state: NumberAdvancedFilterUIState = NumberAdvancedFilterUIState(),
     onBackClick: () -> Unit = { },
     onCancelClick: () -> Unit = { },
-    onConfirmClick: (String) -> Unit = { }
+    onConfirmClick: (Number) -> Unit = { }
 ) {
     Scaffold(
         topBar = {
@@ -85,12 +88,21 @@ fun TextAdvancedFilter(
                         height = Dimension.fillToConstraints
                     },
                 value = state.value,
-                onValueChange = state.onValueChange,
+                onValueChange = {
+                    if (state.integer && it.isDigitsOnly()) {
+                        state.onValueChange(it)
+                    } else if (!state.integer) {
+                        state.onValueChange(it)
+                    }
+                },
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
                     disabledContainerColor = Color.Transparent,
                     errorContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent
+                ),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number
                 )
             )
 
@@ -99,7 +111,9 @@ fun TextAdvancedFilter(
                     end.linkTo(parent.end, margin = 8.dp)
                     bottom.linkTo(parent.bottom, margin = 8.dp)
                 },
-                onClick = { onConfirmClick(state.value) },
+                onClick = {
+                    onConfirmClick(if (state.integer) state.value.toLong() else state.value.toDouble())
+                },
                 colors = ButtonDefaults.outlinedButtonColors(containerColor = colorSecondary),
                 border = null
             ) {
@@ -123,10 +137,10 @@ fun TextAdvancedFilter(
 
 @Preview
 @Composable
-fun TextAdvancedFilterPreview() {
+fun NumberAdvancedFilterPreview() {
     MarketTheme {
         Surface {
-            TextAdvancedFilter()
+            NumberAdvancedFilter()
         }
     }
 }

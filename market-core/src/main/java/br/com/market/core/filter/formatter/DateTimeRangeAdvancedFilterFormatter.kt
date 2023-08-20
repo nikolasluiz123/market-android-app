@@ -6,7 +6,6 @@ import java.time.LocalDateTime
 
 class DateTimeRangeAdvancedFilterFormatter : IAdvancedFilterFormatter {
 
-    @Suppress("UNCHECKED_CAST")
     override fun formatToString(value: Any?): String {
         value as Pair<LocalDateTime, LocalDateTime>?
 

@@ -5,7 +5,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import br.com.market.core.filter.CommonAdvancedFilterItem
 import br.com.market.enums.EnumOperationType
 import br.com.market.localdataaccess.tuples.StorageOperationHistoryTuple
 import br.com.market.storage.ui.navigation.brand.argumentBrandId
@@ -20,7 +19,7 @@ fun NavGraphBuilder.movementsSearchScreen(
     onBackClick: () -> Unit,
     onAddMovementClick: (String, String, EnumOperationType, String?) -> Unit,
     onMovementClick: (StorageOperationHistoryTuple) -> Unit,
-    onAdvancedFiltersClick: (List<CommonAdvancedFilterItem>) -> Unit
+    onAdvancedFiltersClick: () -> Unit,
 ) {
     composable(route = "$movementsSearchScreenRoute?$argumentCategoryId={$argumentCategoryId}&$argumentBrandId={$argumentBrandId}&$argumentProductId={$argumentProductId}") {
         val viewModel = hiltViewModel<MovementsSearchViewModel>()
@@ -30,7 +29,7 @@ fun NavGraphBuilder.movementsSearchScreen(
             onAddMovementClick = onAddMovementClick,
             onBackClick = onBackClick,
             onMovementClick = onMovementClick,
-            onAdvancedFiltersClick = onAdvancedFiltersClick
+            onAdvancedFiltersClick = onAdvancedFiltersClick,
         )
     }
 }

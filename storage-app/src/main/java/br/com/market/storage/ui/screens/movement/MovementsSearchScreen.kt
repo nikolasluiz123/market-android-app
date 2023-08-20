@@ -29,11 +29,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.paging.compose.collectAsLazyPagingItems
 import br.com.market.core.R
-import br.com.market.core.filter.CommonAdvancedFilterItem
-import br.com.market.core.filter.EnumAdvancedFilterType
-import br.com.market.core.filter.formatter.DateTimeRangeAdvancedFilterFormatter
-import br.com.market.core.filter.formatter.SelectOneFormatter
-import br.com.market.core.filter.formatter.StringAdvancedFilterFormatter
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.MarketBottomAppBar
 import br.com.market.core.ui.components.PagedVerticalListComponent
@@ -55,7 +50,7 @@ fun MovementsSearchScreen(
     onAddMovementClick: (String, String, EnumOperationType, String?) -> Unit,
     onBackClick: () -> Unit,
     onMovementClick: (StorageOperationHistoryTuple) -> Unit,
-    onAdvancedFiltersClick: (List<CommonAdvancedFilterItem>) -> Unit
+    onAdvancedFiltersClick: () -> Unit,
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -65,7 +60,7 @@ fun MovementsSearchScreen(
         onBackClick = onBackClick,
         onMovementClick = onMovementClick,
         onSimpleFilterChange = viewModel::updateList,
-        onAdvancedFiltersClick = onAdvancedFiltersClick
+        onAdvancedFiltersClick = onAdvancedFiltersClick,
     )
 }
 
@@ -77,7 +72,7 @@ fun MovementsSearchScreen(
     onBackClick: () -> Unit = { },
     onMovementClick: (StorageOperationHistoryTuple) -> Unit = { },
     onSimpleFilterChange: (String) -> Unit = { },
-    onAdvancedFiltersClick: (List<CommonAdvancedFilterItem>) -> Unit = { }
+    onAdvancedFiltersClick: () -> Unit = { },
 ) {
     val bottomBarState = rememberFabMultiActionsState()
     val pagingData = state.operations.collectAsLazyPagingItems()
@@ -147,46 +142,7 @@ fun MovementsSearchScreen(
                 shape = SearchBarDefaults.fullScreenShape,
                 trailingIcon = {
                     IconButtonAdvancedFilters {
-                        val filters = listOf(
-                            CommonAdvancedFilterItem(
-                                labelResId = string.movements_search_screen_label_filter_product_name,
-                                filterType = EnumAdvancedFilterType.TEXT,
-                                formatter = StringAdvancedFilterFormatter()
-                            ),
-                            CommonAdvancedFilterItem(
-                                labelResId = string.movements_search_screen_label_filter_description,
-                                filterType = EnumAdvancedFilterType.TEXT,
-                                formatter = StringAdvancedFilterFormatter()
-                            ),
-                            CommonAdvancedFilterItem(
-                                labelResId = string.movements_search_screen_label_filter_date_prevision,
-                                filterType = EnumAdvancedFilterType.DATE_RANGE,
-                                formatter = DateTimeRangeAdvancedFilterFormatter()
-                            ),
-                            CommonAdvancedFilterItem(
-                                labelResId = string.movements_search_screen_label_filter_date_realization,
-                                filterType = EnumAdvancedFilterType.DATE_RANGE,
-                                formatter = DateTimeRangeAdvancedFilterFormatter()
-                            ),
-                            CommonAdvancedFilterItem(
-                                labelsReference = R.array.movement_screen_advanced_filter_operation_type_labels,
-                                labelResId = string.movements_search_screen_label_filter_operation_type,
-                                filterType = EnumAdvancedFilterType.SELECT_ONE,
-                                formatter = SelectOneFormatter()
-                            ),
-                            CommonAdvancedFilterItem(
-                                labelResId = string.movements_search_screen_label_filter_quantity,
-                                filterType = EnumAdvancedFilterType.NUMBER,
-                                formatter = StringAdvancedFilterFormatter()
-                            ),
-                            CommonAdvancedFilterItem(
-                                labelResId = string.movements_search_screen_label_filter_user,
-                                filterType = EnumAdvancedFilterType.LOV,
-                                formatter = StringAdvancedFilterFormatter()
-                            )
-                        )
-
-                        onAdvancedFiltersClick(filters)
+                        onAdvancedFiltersClick()
                     }
                 }
             ) {

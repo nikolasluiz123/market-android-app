@@ -6,15 +6,13 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
-import br.com.market.core.filter.AdvancedFilterArgs
-import br.com.market.core.filter.AdvancedFiltersScreenArgs
-import br.com.market.core.filter.EnumAdvancedFilterType
-import br.com.market.core.ui.navigation.advancedFilterScreen
 import br.com.market.core.ui.navigation.dateRangeAdvancedFilterScreen
 import br.com.market.core.ui.navigation.dateRangeAdvancedFilterScreenNavResultCallbackKey
-import br.com.market.core.ui.navigation.navigateToAdvancedFilterScreen
 import br.com.market.core.ui.navigation.navigateToDateRangeAdvancedFilterScreen
+import br.com.market.core.ui.navigation.navigateToNumberAdvancedFilterScreen
 import br.com.market.core.ui.navigation.navigateToTextAdvancedFilterScreen
+import br.com.market.core.ui.navigation.numberAdvancedFilterScreen
+import br.com.market.core.ui.navigation.numberAdvancedFilterScreenNavResultCallbackKey
 import br.com.market.core.ui.navigation.popBackStackWithResult
 import br.com.market.core.ui.navigation.textAdvancedFilterScreen
 import br.com.market.core.ui.navigation.textAdvancedFilterScreenNavResultCallbackKey
@@ -29,11 +27,16 @@ import br.com.market.storage.ui.navigation.lovs.brandLov
 import br.com.market.storage.ui.navigation.lovs.brandLovNavResultCallbackKey
 import br.com.market.storage.ui.navigation.lovs.navigateToBrandLov
 import br.com.market.storage.ui.navigation.lovs.navigateToProductLov
+import br.com.market.storage.ui.navigation.lovs.navigateToUserLov
 import br.com.market.storage.ui.navigation.lovs.productLov
 import br.com.market.storage.ui.navigation.lovs.productLovNavResultCallbackKey
+import br.com.market.storage.ui.navigation.lovs.userLov
+import br.com.market.storage.ui.navigation.lovs.userLovNavResultCallbackKey
 import br.com.market.storage.ui.navigation.movement.movementScreen
+import br.com.market.storage.ui.navigation.movement.movementSearchAdvancedFiltersScreen
 import br.com.market.storage.ui.navigation.movement.movementsSearchScreen
 import br.com.market.storage.ui.navigation.movement.navigateToMovementScreen
+import br.com.market.storage.ui.navigation.movement.navigateToMovementSearchAdvancedFilterScreen
 import br.com.market.storage.ui.navigation.movement.navigateToMovementsSearchScreen
 import br.com.market.storage.ui.navigation.product.navigateToProductScreen
 import br.com.market.storage.ui.navigation.product.productScreen
@@ -138,7 +141,7 @@ fun StorageAppNavHost(
             onMovementClick = {
                 navController.navigateToMovementScreen(it.categoryId, it.brandId, it.operationType, it.productId, it.id)
             },
-            onAdvancedFiltersClick = { navController.navigateToAdvancedFilterScreen(AdvancedFiltersScreenArgs(it)) }
+            onAdvancedFiltersClick = { navController.navigateToMovementSearchAdvancedFilterScreen() }
         )
 
         movementScreen(
@@ -162,6 +165,13 @@ fun StorageAppNavHost(
             onBackClick = navController::popBackStack
         )
 
+        userLov(
+            onItemClick = { userPair ->
+                navController.popBackStackWithResult(userLovNavResultCallbackKey, userPair)
+            },
+            onBackClick = navController::popBackStack
+        )
+
         loadImageLinkGraph(
             onNavigationIconClick = navController::popBackStack,
             onSaveClick = {
@@ -175,32 +185,18 @@ fun StorageAppNavHost(
             onAfterSaveProductImage = navController::popBackStack
         )
 
-        advancedFilterScreen(
-            onItemClick = { filterItem, callback ->
-                when(filterItem.filterType) {
-                    EnumAdvancedFilterType.TEXT -> {
-                        navController.navigateToTextAdvancedFilterScreen(
-                            args = AdvancedFilterArgs(
-                                titleResId = filterItem.labelResId!!,
-                                value = filterItem.value
-                            ),
-                            callback = callback
-                        )
-                    }
-                    EnumAdvancedFilterType.NUMBER -> { }
-                    EnumAdvancedFilterType.DATE -> { }
-                    EnumAdvancedFilterType.DATE_RANGE -> {
-                        navController.navigateToDateRangeAdvancedFilterScreen(
-                            args = AdvancedFilterArgs(
-                                titleResId = filterItem.labelResId!!,
-                                value = filterItem.value
-                            ),
-                            callback = callback
-                        )
-                    }
-                    EnumAdvancedFilterType.LOV -> { }
-                    else -> throw IllegalArgumentException("O tipo de filtro não foi tratado corretamente.")
-                }
+        movementSearchAdvancedFiltersScreen(
+            onNavigateToTextFilter = { args, callback ->
+                navController.navigateToTextAdvancedFilterScreen(args, callback)
+            },
+            onNavigateToDateRangeFilter = { args, callback ->
+                navController.navigateToDateRangeAdvancedFilterScreen(args, callback)
+            },
+            onNavigateToNumberFilter = { args, callback ->
+                navController.navigateToNumberAdvancedFilterScreen(args, callback)
+            },
+            onNavigateToUserLovFilter = { callback ->
+                navController.navigateToUserLov(callback)
             }
         )
 
@@ -216,6 +212,14 @@ fun StorageAppNavHost(
             onBackClick = navController::popBackStack,
             onConfirmClick = { localDateTimeFrom, localDateTimeTo ->
                 navController.popBackStackWithResult(dateRangeAdvancedFilterScreenNavResultCallbackKey, Pair(localDateTimeFrom, localDateTimeTo))
+            },
+            onCancelClick = navController::popBackStack
+        )
+
+        numberAdvancedFilterScreen(
+            onBackClick = navController::popBackStack,
+            onConfirmClick = {
+                navController.popBackStackWithResult(numberAdvancedFilterScreenNavResultCallbackKey, it)
             },
             onCancelClick = navController::popBackStack
         )
