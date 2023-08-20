@@ -2,6 +2,7 @@ package br.com.market.storage.ui.screens.movement
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Divider
@@ -155,6 +156,7 @@ fun MovementSearchAdvancedFilterScreen(
                         linkTo(start = parent.start, end = parent.end, bias = 0F)
                         top.linkTo(searchBarRef.bottom)
                     }
+                    .padding(top = 8.dp)
             )
 
             LazyVerticalListComponent(

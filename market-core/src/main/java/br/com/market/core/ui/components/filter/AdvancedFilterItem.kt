@@ -20,7 +20,9 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import br.com.market.core.R
 import br.com.market.core.filter.CommonAdvancedFilterItem
 import br.com.market.core.filter.formatter.StringAdvancedFilterFormatter
+import br.com.market.core.theme.GREY_800
 import br.com.market.core.theme.MarketTheme
+import br.com.market.core.ui.components.LabeledText
 
 @Composable
 fun AdvancedFilterItem(
@@ -37,7 +39,7 @@ fun AdvancedFilterItem(
                 }
             }
     ) {
-        val (checkboxRef, labelRef, valueRef) = createRefs()
+        val (checkboxRef, labelRef) = createRefs()
 
         var checked by remember(item.checked) { mutableStateOf(item.checked) }
 
@@ -61,26 +63,18 @@ fun AdvancedFilterItem(
                     bottom.linkTo(checkboxRef.bottom)
                 },
                 text = stringResource(id = item.labelResId),
-                style = MaterialTheme.typography.labelLarge
+                style = MaterialTheme.typography.titleSmall,
+                color = GREY_800
             )
         } else {
-            Text(
-                modifier = Modifier.constrainAs(labelRef) {
+            LabeledText(
+                modifier =  Modifier.constrainAs(labelRef) {
                     start.linkTo(checkboxRef.end, margin = 4.dp)
-                    linkTo(top = parent.top, bottom = valueRef.top)
+                    linkTo(top = checkboxRef.top, bottom = checkboxRef.bottom)
                 },
-                text = stringResource(id = item.labelResId),
-                style = MaterialTheme.typography.labelLarge
-            )
-
-            Text(
-                modifier = Modifier.constrainAs(valueRef) {
-                    start.linkTo(checkboxRef.end, margin = 4.dp)
-                    linkTo(top = labelRef.bottom, bottom = parent.bottom)
-                },
-                text = item.formatter.formatToString(item.value),
-                style = MaterialTheme.typography.bodySmall,
-                maxLines = 1
+                label = stringResource(id = item.labelResId),
+                value = item.formatter.formatToString(item.value),
+                maxLinesValue = 1
             )
         }
     }
