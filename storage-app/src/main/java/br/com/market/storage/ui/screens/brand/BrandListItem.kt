@@ -4,9 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -43,41 +41,6 @@ fun BrandListItem(brandName: String, active: Boolean, onItemClick: () -> Unit = 
                 },
             label = stringResource(id = R.string.brand_list_card_label_name),
             value = brandName
-        )
-    }
-}
-
-@Composable
-fun BrandListCardSearch(brandName: String, active: Boolean, onItemClick: () -> Unit = { }) {
-    ConstraintLayout(
-        Modifier
-            .background(color = if (active) colorCardActive else colorCardInactive)
-            .clickable { onItemClick() }
-            .fillMaxWidth()
-    ) {
-        val (labelNameRef, nameRef) = createRefs()
-
-        Text(
-            text = stringResource(id = R.string.brand_list_card_label_name),
-            modifier = Modifier
-                .constrainAs(labelNameRef) {
-                    linkTo(start = parent.start, end = parent.end)
-                    top.linkTo(parent.top)
-
-                    width = Dimension.fillToConstraints
-                },
-            style = MaterialTheme.typography.bodyMedium
-        )
-
-        Text(
-            text = brandName,
-            modifier = Modifier.constrainAs(nameRef) {
-                linkTo(start = labelNameRef.start, end = labelNameRef.end)
-                top.linkTo(labelNameRef.bottom)
-
-                width = Dimension.fillToConstraints
-            },
-            style = MaterialTheme.typography.bodySmall
         )
     }
 }

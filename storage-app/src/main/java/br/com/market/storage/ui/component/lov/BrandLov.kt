@@ -10,16 +10,18 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import br.com.market.core.theme.GREY_600
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.PagedVerticalListComponent
 import br.com.market.core.ui.components.SimpleMarketTopAppBar
+import br.com.market.domain.BrandDomain
+import br.com.market.storage.R
 import br.com.market.storage.ui.screens.brand.BrandListItem
-import br.com.market.storage.ui.screens.brand.BrandListCardSearch
 import br.com.market.storage.ui.states.brand.BrandLovUIState
 import br.com.market.storage.ui.viewmodels.brand.BrandLovViewModel
 import java.util.*
@@ -55,7 +57,7 @@ fun BrandLov(
         topBar = {
             Column {
                 SimpleMarketTopAppBar(
-                    title = "Marcas",
+                    title = stringResource(R.string.brand_lov_label_title),
                     showMenuWithLogout = false,
                     onBackClick = onBackClick
                 )
@@ -74,7 +76,12 @@ fun BrandLov(
                     },
                     active = active,
                     onActiveChange = { active = it },
-                    placeholder = { Text(text = "Buscar por Nome") },
+                    placeholder = {
+                        Text(
+                            text = stringResource(R.string.brand_lov_placeholder),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    },
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                     modifier = Modifier.fillMaxWidth(),
                     colors = SearchBarDefaults.colors(
@@ -84,39 +91,40 @@ fun BrandLov(
                             unfocusedContainerColor = Color.Transparent,
                             disabledContainerColor = Color.Transparent,
                         ),
-                        dividerColor = GREY_600
+                        dividerColor = DividerDefaults.color
                     ),
                     shape = SearchBarDefaults.fullScreenShape
                 ) {
-                    if (text.isNotEmpty()) {
-                        PagedVerticalListComponent(pagingItems = pagingData) { brandDomain ->
-                            BrandListCardSearch(
-                                brandName = brandDomain.name,
-                                active = brandDomain.active,
-                                onItemClick = {
-                                    onItemClick(brandDomain.id!!)
-                                }
-                            )
-                        }
-                    }
+                    BrandList(pagingData, onItemClick)
                 }
                 if (!active) {
-                    Divider(modifier = Modifier.fillMaxWidth().padding(top = 8.dp), color = GREY_600)
+                    Divider(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp))
                 }
             }
         }
     ) { padding ->
         ConstraintLayout(modifier = Modifier.padding(padding)) {
-            PagedVerticalListComponent(pagingItems = pagingData) { brandDomain ->
-                BrandListItem(
-                    brandName = brandDomain.name,
-                    active = brandDomain.active,
-                    onItemClick = {
-                        onItemClick(brandDomain.id!!)
-                    }
-                )
-            }
+            BrandList(pagingData, onItemClick)
         }
+    }
+}
+
+@Composable
+private fun BrandList(
+    pagingData: LazyPagingItems<BrandDomain>,
+    onItemClick: (String) -> Unit
+) {
+    PagedVerticalListComponent(pagingItems = pagingData) { brandDomain ->
+        BrandListItem(
+            brandName = brandDomain.name,
+            active = brandDomain.active,
+            onItemClick = {
+                onItemClick(brandDomain.id!!)
+            }
+        )
+        Divider(modifier = Modifier.fillMaxWidth())
     }
 }
 
