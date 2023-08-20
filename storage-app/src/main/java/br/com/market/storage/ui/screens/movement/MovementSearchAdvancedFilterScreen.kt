@@ -162,7 +162,7 @@ fun MovementSearchAdvancedFilterScreen(
             LazyVerticalListComponent(
                 modifier = Modifier.constrainAs(listRef) {
                     linkTo(start = parent.start, end = parent.end, bias = 0F)
-                    top.linkTo(searchBarRef.bottom)
+                    top.linkTo(searchDividerRef.bottom)
                 },
                 items = state.filters,
                 verticalArrangementSpace = 0.dp,

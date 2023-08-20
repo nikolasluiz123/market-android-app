@@ -86,4 +86,14 @@
     <string name="user_lov_title">Usuários</string>
     <string name="user_lov_placeholder_filter">Buscar por Nome</string>
     <string name="user_lov_list_item_label_name">Nome</string>
+    <string name="movement_list_item_label_name">Nome</string>
+    <string name="movement_list_item_label_chip_input">Entrada</string>
+    <string name="movement_list_item_label_chip_sell">Venda</string>
+    <string name="movement_list_item_label_chip_output">Baixa</string>
+    <string name="movement_list_item_label_chip_scheduled_input">Entrada Prevista</string>
+    <string name="movement_list_item_label_prevision">Previsão</string>
+    <string name="movement_list_item_label_realization">Realização</string>
+    <string name="movement_list_item_label_quantity">Quantidade</string>
+    <string name="movement_list_item_label_responsible">Responsável</string>
+    <string name="movement_list_item_label_description">Descrição</string>
 </resources>
