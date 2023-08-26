@@ -34,7 +34,7 @@ fun TextAdvancedFilter(
     viewModel: TextAdvancedFilterViewModel,
     onBackClick: () -> Unit,
     onCancelClick: () -> Unit,
-    onConfirmClick: (String) -> Unit
+    onConfirmClick: (String?) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -52,7 +52,7 @@ fun TextAdvancedFilter(
     state: TextAdvancedFilterUIState = TextAdvancedFilterUIState(),
     onBackClick: () -> Unit = { },
     onCancelClick: () -> Unit = { },
-    onConfirmClick: (String) -> Unit = { }
+    onConfirmClick: (String?) -> Unit = { }
 ) {
     Scaffold(
         topBar = {
@@ -84,7 +84,7 @@ fun TextAdvancedFilter(
                         width = Dimension.fillToConstraints
                         height = Dimension.fillToConstraints
                     },
-                value = state.value,
+                value = state.value ?: "",
                 onValueChange = state.onValueChange,
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,

@@ -8,19 +8,17 @@ class NumberAdvancedFilterFormatter(
     private val maxFractionDigits: Int = 2
 ) : IAdvancedFilterFormatter {
 
-    override fun formatToString(value: Any?): String {
-        if (value == null) return ""
-
+    override fun formatToString(value: Any?): String? {
         return if (integer) {
-            (value as Long).toString()
+            (value as Long?)?.toString()
         } else {
-            value as Double
-            DecimalFormat.getNumberInstance().run {
-                minimumFractionDigits = minFractionDigits
-                maximumFractionDigits = maxFractionDigits
-                format(value)
+            (value as Double?)?.let {
+                DecimalFormat.getNumberInstance().run {
+                    minimumFractionDigits = minFractionDigits
+                    maximumFractionDigits = maxFractionDigits
+                    format(it)
+                }
             }
         }
-
     }
 }

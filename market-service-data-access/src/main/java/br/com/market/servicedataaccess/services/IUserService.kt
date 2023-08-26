@@ -7,7 +7,6 @@ import br.com.market.servicedataaccess.responses.types.ReadResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Query
 
@@ -29,5 +28,5 @@ interface IUserService {
     suspend fun authenticate(@Body authenticationRequestSDO: AuthenticationRequestSDO): Response<AuthenticationResponse>
 
     @GET("user")
-    suspend fun findAllUserSDOs(@Header("Authorization") token: String, @Query("marketId") marketId: Long): Response<ReadResponse<UserSDO>>
+    suspend fun findAllUserSDOs(@Query("marketId") marketId: Long): Response<ReadResponse<UserSDO>>
 }

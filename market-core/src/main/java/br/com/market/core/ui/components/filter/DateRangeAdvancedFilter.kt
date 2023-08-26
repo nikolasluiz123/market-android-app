@@ -48,6 +48,7 @@ import br.com.market.core.ui.components.dialog.TimePickerDialog
 import br.com.market.core.ui.states.filter.DateRangeAdvancedFilterUIState
 import br.com.market.core.ui.viewmodel.filter.DateRangeAdvancedFilterViewModel
 import java.time.Instant
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
@@ -59,7 +60,7 @@ fun DateRangeAdvancedFilter(
     viewModel: DateRangeAdvancedFilterViewModel,
     onBackClick: () -> Unit,
     onCancelClick: () -> Unit,
-    onConfirmClick: (LocalDateTime, LocalDateTime) -> Unit
+    onConfirmClick: (LocalDateTime?, LocalDateTime?) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -77,7 +78,7 @@ fun DateRangeAdvancedFilter(
     state: DateRangeAdvancedFilterUIState = DateRangeAdvancedFilterUIState(),
     onBackClick: () -> Unit = { },
     onCancelClick: () -> Unit = { },
-    onConfirmClick: (LocalDateTime, LocalDateTime) -> Unit = { _,_ -> }
+    onConfirmClick: (LocalDateTime?, LocalDateTime?) -> Unit = { _, _ -> }
 ) {
     Scaffold(
         topBar = {
@@ -86,10 +87,10 @@ fun DateRangeAdvancedFilter(
                 showMenuWithLogout = false,
                 actions = {
                     IconButtonClear {
-                        state.dateFrom = ""
-                        state.timeFrom = ""
-                        state.dateTo = ""
-                        state.timeTo = ""
+                        state.dateFrom = null
+                        state.timeFrom = null
+                        state.dateTo = null
+                        state.timeTo = null
                     }
                 },
                 onBackClick = onBackClick
@@ -338,15 +339,53 @@ fun DateRangeAdvancedFilter(
                     bottom.linkTo(parent.bottom, margin = 8.dp)
                 },
                 onClick = {
-                    val localDateTimeFrom = LocalDateTime.of(
-                        state.dateFrom.parseToLocalDate(EnumDateTimePatterns.DATE),
-                        state.timeFrom.parseToLocalTime(EnumDateTimePatterns.TIME)
-                    )
+                    val localDateTimeFrom = when {
+                        state.dateFrom?.isNotEmpty() == true && state.timeFrom?.isNotEmpty() == true -> {
+                            LocalDateTime.of(
+                                state.dateFrom?.parseToLocalDate(EnumDateTimePatterns.DATE),
+                                state.timeFrom?.parseToLocalTime(EnumDateTimePatterns.TIME)
+                            )
+                        }
+                        state.dateFrom?.isNotEmpty() == true -> {
+                            LocalDateTime.of(
+                                state.dateFrom?.parseToLocalDate(EnumDateTimePatterns.DATE),
+                                LocalTime.MIN
+                            )
+                        }
+                        state.timeFrom?.isNotEmpty() == true -> {
+                            LocalDateTime.of(
+                                LocalDate.now(),
+                                state.timeFrom?.parseToLocalTime(EnumDateTimePatterns.TIME)
+                            )
+                        }
+                        else -> {
+                            null
+                        }
+                    }
 
-                    val localDateTimeTo = LocalDateTime.of(
-                        state.dateTo.parseToLocalDate(EnumDateTimePatterns.DATE),
-                        state.timeTo.parseToLocalTime(EnumDateTimePatterns.TIME)
-                    )
+                    val localDateTimeTo = when {
+                        state.dateTo?.isNotEmpty() == true && state.timeTo?.isNotEmpty() == true -> {
+                            LocalDateTime.of(
+                                state.dateTo?.parseToLocalDate(EnumDateTimePatterns.DATE),
+                                state.timeTo?.parseToLocalTime(EnumDateTimePatterns.TIME)
+                            )
+                        }
+                        state.dateTo?.isNotEmpty() == true -> {
+                            LocalDateTime.of(
+                                state.dateTo?.parseToLocalDate(EnumDateTimePatterns.DATE),
+                                LocalTime.MIN
+                            )
+                        }
+                        state.timeTo?.isNotEmpty() == true -> {
+                            LocalDateTime.of(
+                                LocalDate.now(),
+                                state.timeTo?.parseToLocalTime(EnumDateTimePatterns.TIME)
+                            )
+                        }
+                        else -> {
+                            null
+                        }
+                    }
 
                     onConfirmClick(localDateTimeFrom, localDateTimeTo)
                 },

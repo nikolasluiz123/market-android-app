@@ -6,11 +6,24 @@ import java.time.LocalDateTime
 
 class DateTimeRangeAdvancedFilterFormatter : IAdvancedFilterFormatter {
 
-    override fun formatToString(value: Any?): String {
-        value as Pair<LocalDateTime, LocalDateTime>?
+    @Suppress("UNCHECKED_CAST")
+    override fun formatToString(value: Any?): String? {
+        value as Pair<LocalDateTime?, LocalDateTime?>?
 
-        return value?.let {
-            "${value.first.format(EnumDateTimePatterns.DATE_TIME)} - ${value.second.format(EnumDateTimePatterns.DATE_TIME)}"
-        } ?: ""
+        return when {
+            value?.first != null && value?.second != null -> {
+                "${value!!.first!!.format(EnumDateTimePatterns.DATE_TIME)} - ${value.second!!.format(EnumDateTimePatterns.DATE_TIME)}"
+            }
+
+            value?.first != null -> {
+                value!!.first!!.format(EnumDateTimePatterns.DATE_TIME)
+            }
+
+            value?.second != null -> {
+                value!!.second!!.format(EnumDateTimePatterns.DATE_TIME)
+            }
+
+            else -> null
+        }
     }
 }

@@ -48,7 +48,7 @@ class UserWebClient @Inject constructor(
     suspend fun findAllUsers(marketId: Long): ReadResponse<User> {
         return readServiceErrorHandlingBlock(
             codeBlock = {
-                val response = service.findAllUserSDOs(getToken(), marketId).getReadResponseBody()
+                val response = service.findAllUserSDOs(marketId).getReadResponseBody()
 
                 val users = response.values.map {
                     User(

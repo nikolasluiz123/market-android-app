@@ -11,6 +11,7 @@ import br.com.market.models.StorageOperationHistory
 import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
 import br.com.market.servicedataaccess.webclients.StorageOperationsHistoryWebClient
+import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
 import br.com.market.storage.pagination.StorageOperationsHistoryPagingSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -22,7 +23,13 @@ class StorageOperationsHistoryRepository @Inject constructor(
     private val webClient: StorageOperationsHistoryWebClient
 ) {
 
-    fun findStorageOperationHistory(productId: String?, categoryId: String, brandId: String, simpleFilter: String?): Flow<PagingData<StorageOperationHistoryTuple>> {
+    fun findStorageOperationHistory(
+        productId: String?,
+        categoryId: String,
+        brandId: String,
+        simpleFilter: String?,
+        advancedFilter: MovementSearchScreenFilters
+    ): Flow<PagingData<StorageOperationHistoryTuple>> {
         return Pager(
             config = PagingConfigUtils.defaultPagingConfig(),
             pagingSourceFactory = {
@@ -31,7 +38,8 @@ class StorageOperationsHistoryRepository @Inject constructor(
                     productId = productId,
                     categoryId = categoryId,
                     brandId = brandId,
-                    simpleFilter = simpleFilter
+                    simpleFilter = simpleFilter,
+                    advancedFilter = advancedFilter
                 )
             }
         ).flow

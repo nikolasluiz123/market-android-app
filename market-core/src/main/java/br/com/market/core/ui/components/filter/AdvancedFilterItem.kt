@@ -27,7 +27,7 @@ import br.com.market.core.ui.components.LabeledText
 @Composable
 fun AdvancedFilterItem(
     item: CommonAdvancedFilterItem,
-    onItemClick: ((Any) -> Unit) -> Unit
+    onItemClick: ((Any?) -> Unit) -> Unit
 ) {
     ConstraintLayout(
         modifier = Modifier
@@ -55,7 +55,9 @@ fun AdvancedFilterItem(
             }
         )
 
-        if (item.value == null) {
+        val valueFormatted = item.formatter.formatToString(item.value)
+
+        if (valueFormatted == null) {
             Text(
                 modifier = Modifier.constrainAs(labelRef) {
                     start.linkTo(checkboxRef.end, margin = 4.dp)
@@ -73,7 +75,7 @@ fun AdvancedFilterItem(
                     linkTo(top = checkboxRef.top, bottom = checkboxRef.bottom)
                 },
                 label = stringResource(id = item.labelResId),
-                value = item.formatter.formatToString(item.value),
+                value = valueFormatted,
                 maxLinesValue = 1
             )
         }

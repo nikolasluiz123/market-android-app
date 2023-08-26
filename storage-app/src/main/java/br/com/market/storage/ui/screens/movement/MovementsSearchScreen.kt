@@ -41,6 +41,7 @@ import br.com.market.core.ui.components.buttons.SmallFabActions
 import br.com.market.core.ui.components.buttons.fab.SubActionFabItem
 import br.com.market.core.ui.components.buttons.rememberFabMultiActionsState
 import br.com.market.enums.EnumOperationType
+import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
 import br.com.market.localdataaccess.tuples.StorageOperationHistoryTuple
 import br.com.market.storage.R.*
 import br.com.market.storage.ui.states.MovementsSearchUIState
@@ -52,7 +53,7 @@ fun MovementsSearchScreen(
     onAddMovementClick: (String, String, EnumOperationType, String?) -> Unit,
     onBackClick: () -> Unit,
     onMovementClick: (StorageOperationHistoryTuple) -> Unit,
-    onAdvancedFiltersClick: () -> Unit,
+    onAdvancedFiltersClick: (MovementSearchScreenFilters, (MovementSearchScreenFilters) -> Unit) -> Unit,
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -61,8 +62,14 @@ fun MovementsSearchScreen(
         onAddMovementClick = onAddMovementClick,
         onBackClick = onBackClick,
         onMovementClick = onMovementClick,
-        onSimpleFilterChange = viewModel::updateList,
-        onAdvancedFiltersClick = onAdvancedFiltersClick,
+        onSimpleFilterChange = {
+            viewModel.updateList(simpleFilterText = it)
+        },
+        onAdvancedFiltersClick = {
+            onAdvancedFiltersClick(viewModel.filter) {
+                viewModel.updateList(advancedFilter = it)
+            }
+        },
     )
 }
 
@@ -180,8 +187,8 @@ fun MovementsSearchScreen(
                     pagingItems = pagingData,
                     modifier = Modifier.constrainAs(listRef) {
                         linkTo(start = parent.start, end = parent.end, bias = 0F)
-                        top.linkTo(searchDividerRef.bottom)
-                    }
+                        linkTo(top = searchDividerRef.bottom, bottom = parent.bottom, bias = 0F)
+                    }.padding(bottom = 74.dp)
                 ) {
                     MovementListItem(
                         productName = it.productName,

@@ -16,7 +16,7 @@ internal const val numberAdvancedFilterArguments = "numberAdvancedFilterArgument
 fun NavGraphBuilder.numberAdvancedFilterScreen(
     onBackClick: () -> Unit,
     onCancelClick: () -> Unit,
-    onConfirmClick: (Number) -> Unit
+    onConfirmClick: (Number?) -> Unit
 ) {
     composable(
         route = "$numberAdvancedFilterScreenRoute?$numberAdvancedFilterArguments={$numberAdvancedFilterArguments}"

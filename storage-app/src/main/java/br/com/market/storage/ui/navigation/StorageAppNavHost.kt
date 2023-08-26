@@ -33,6 +33,7 @@ import br.com.market.storage.ui.navigation.lovs.productLovNavResultCallbackKey
 import br.com.market.storage.ui.navigation.lovs.userLov
 import br.com.market.storage.ui.navigation.lovs.userLovNavResultCallbackKey
 import br.com.market.storage.ui.navigation.movement.movementScreen
+import br.com.market.storage.ui.navigation.movement.movementSearchAdvancedFilterNavResultCallbackKey
 import br.com.market.storage.ui.navigation.movement.movementSearchAdvancedFiltersScreen
 import br.com.market.storage.ui.navigation.movement.movementsSearchScreen
 import br.com.market.storage.ui.navigation.movement.navigateToMovementScreen
@@ -141,7 +142,7 @@ fun StorageAppNavHost(
             onMovementClick = {
                 navController.navigateToMovementScreen(it.categoryId, it.brandId, it.operationType, it.productId, it.id)
             },
-            onAdvancedFiltersClick = { navController.navigateToMovementSearchAdvancedFilterScreen() }
+            onAdvancedFiltersClick = navController::navigateToMovementSearchAdvancedFilterScreen
         )
 
         movementScreen(
@@ -197,6 +198,9 @@ fun StorageAppNavHost(
             },
             onNavigateToUserLovFilter = { callback ->
                 navController.navigateToUserLov(callback)
+            },
+            onApplyFilters = {
+                navController.popBackStackWithResult(movementSearchAdvancedFilterNavResultCallbackKey, it)
             }
         )
 

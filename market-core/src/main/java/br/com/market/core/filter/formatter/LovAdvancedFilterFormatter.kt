@@ -2,5 +2,6 @@ package br.com.market.core.filter.formatter
 
 class LovAdvancedFilterFormatter: IAdvancedFilterFormatter {
 
-    override fun formatToString(value: Any?): String = (value as Pair<String, String>?)?.second ?: ""
+    @Suppress("UNCHECKED_CAST")
+    override fun formatToString(value: Any?): String? = (value as Pair<String, String>?)?.second
 }

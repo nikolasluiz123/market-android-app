@@ -16,7 +16,7 @@ internal const val textAdvancedFilterArguments = "textAdvancedFilterArguments"
 fun NavGraphBuilder.textAdvancedFilterScreen(
     onBackClick: () -> Unit,
     onCancelClick: () -> Unit,
-    onConfirmClick: (String) -> Unit
+    onConfirmClick: (String?) -> Unit
 ) {
     composable(
         route = "$textAdvancedFilterScreenRoute?$textAdvancedFilterArguments={$textAdvancedFilterArguments}"

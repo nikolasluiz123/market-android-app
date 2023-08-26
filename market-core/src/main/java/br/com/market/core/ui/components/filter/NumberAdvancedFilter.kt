@@ -37,7 +37,7 @@ fun NumberAdvancedFilter(
     viewModel: NumberAdvancedFilterViewModel,
     onBackClick: () -> Unit,
     onCancelClick: () -> Unit,
-    onConfirmClick: (Number) -> Unit
+    onConfirmClick: (Number?) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -55,7 +55,7 @@ fun NumberAdvancedFilter(
     state: NumberAdvancedFilterUIState = NumberAdvancedFilterUIState(),
     onBackClick: () -> Unit = { },
     onCancelClick: () -> Unit = { },
-    onConfirmClick: (Number) -> Unit = { }
+    onConfirmClick: (Number?) -> Unit = { }
 ) {
     Scaffold(
         topBar = {
@@ -112,7 +112,7 @@ fun NumberAdvancedFilter(
                     bottom.linkTo(parent.bottom, margin = 8.dp)
                 },
                 onClick = {
-                    onConfirmClick(if (state.integer) state.value.toLong() else state.value.toDouble())
+                    onConfirmClick(getNumber(state))
                 },
                 colors = ButtonDefaults.outlinedButtonColors(containerColor = colorSecondary),
                 border = null
@@ -134,6 +134,15 @@ fun NumberAdvancedFilter(
         }
     }
 }
+
+private fun getNumber(state: NumberAdvancedFilterUIState): Number? {
+    if (state.value.isEmpty()) {
+        return null
+    }
+
+    return if (state.integer) state.value.toLong() else state.value.toDouble()
+}
+
 
 @Preview
 @Composable

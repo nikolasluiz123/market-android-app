@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import br.com.market.core.theme.GREY_700
 import br.com.market.core.theme.GREY_800
 import br.com.market.core.theme.MarketTheme
 import java.util.UUID
@@ -37,7 +38,7 @@ fun LabeledText(
             modifier = Modifier.fillMaxWidth(),
             text = value,
             style = MaterialTheme.typography.bodyMedium,
-            color = GREY_800,
+            color = GREY_700,
             maxLines = maxLinesValue,
             overflow = overflowValue,
             textAlign = textAlign

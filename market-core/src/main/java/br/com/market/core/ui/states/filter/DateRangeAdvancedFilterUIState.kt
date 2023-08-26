@@ -6,8 +6,8 @@ data class DateRangeAdvancedFilterUIState(
     var onTimeFromChange: (String) -> Unit = { },
     var onDateToChange: (String) -> Unit = { },
     var onTimeToChange: (String) -> Unit = { },
-    var dateFrom: String = "",
-    var timeFrom: String = "",
-    var dateTo: String = "",
-    var timeTo: String = ""
+    var dateFrom: String? = null,
+    var timeFrom: String? = null,
+    var dateTo: String? = null,
+    var timeTo: String? = null
 )

@@ -1,15 +1,18 @@
 package br.com.market.storage.ui.screens.movement
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Surface
@@ -35,11 +38,20 @@ import br.com.market.core.filter.CommonAdvancedFilterItem
 import br.com.market.core.filter.DateAdvancedFilterArgs
 import br.com.market.core.filter.NumberAdvancedFilterArgs
 import br.com.market.core.theme.MarketTheme
+import br.com.market.core.theme.colorSecondary
 import br.com.market.core.ui.components.LazyVerticalListComponent
 import br.com.market.core.ui.components.filter.AdvancedFilterItem
 import br.com.market.core.ui.components.filter.SelectOneAdvancedFilter
 import br.com.market.core.ui.states.filter.AdvancedFilterUIState
-import br.com.market.storage.enums.filter.EnumMovementsSearchScreenFilters.*
+import br.com.market.enums.EnumOperationType
+import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
+import br.com.market.storage.filter.enums.EnumMovementsSearchScreenFilters.DATE_PREVISION
+import br.com.market.storage.filter.enums.EnumMovementsSearchScreenFilters.DATE_REALIZATION
+import br.com.market.storage.filter.enums.EnumMovementsSearchScreenFilters.DESCRIPTION
+import br.com.market.storage.filter.enums.EnumMovementsSearchScreenFilters.OPERATION_TYPE
+import br.com.market.storage.filter.enums.EnumMovementsSearchScreenFilters.PRODUCT_NAME
+import br.com.market.storage.filter.enums.EnumMovementsSearchScreenFilters.QUANTITY
+import br.com.market.storage.filter.enums.EnumMovementsSearchScreenFilters.RESPONSIBLE
 import br.com.market.storage.ui.viewmodels.movements.MovementSearchAdvancedFilterViewModel
 import java.time.LocalDateTime
 
@@ -49,7 +61,8 @@ fun MovementSearchAdvancedFilterScreen(
     onNavigateToTextFilter: (AdvancedFilterArgs, (Any) -> Unit) -> Unit,
     onNavigateToDateRangeFilter: (DateAdvancedFilterArgs, (Any) -> Unit) -> Unit,
     onNavigateToNumberFilter: (NumberAdvancedFilterArgs, (Any) -> Unit) -> Unit,
-    onNavigateToUserLovFilter: ((Any) -> Unit) -> Unit
+    onNavigateToUserLovFilter: ((Any) -> Unit) -> Unit,
+    onApplyFilters: (MovementSearchScreenFilters) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -61,10 +74,12 @@ fun MovementSearchAdvancedFilterScreen(
         onNavigateToTextFilter = onNavigateToTextFilter,
         onNavigateToDateRangeFilter = onNavigateToDateRangeFilter,
         onNavigateToNumberFilter = onNavigateToNumberFilter,
-        onNavigateToUserLovFilter = onNavigateToUserLovFilter
+        onNavigateToUserLovFilter = onNavigateToUserLovFilter,
+        onApplyFilters = onApplyFilters
     )
 }
 
+@Suppress("UNCHECKED_CAST")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovementSearchAdvancedFilterScreen(
@@ -73,10 +88,11 @@ fun MovementSearchAdvancedFilterScreen(
     onNavigateToTextFilter: (AdvancedFilterArgs, (Any) -> Unit) -> Unit = { _, _ -> },
     onNavigateToDateRangeFilter: (DateAdvancedFilterArgs, (Any) -> Unit) -> Unit = { _, _ -> },
     onNavigateToNumberFilter: (NumberAdvancedFilterArgs, (Any) -> Unit) -> Unit = { _, _ -> },
-    onNavigateToUserLovFilter: ((Any) -> Unit) -> Unit = { }
+    onNavigateToUserLovFilter: ((Any) -> Unit) -> Unit = { },
+    onApplyFilters: (MovementSearchScreenFilters) -> Unit = { },
 ) {
     ConstraintLayout(Modifier.fillMaxSize()) {
-        val (listRef, searchBarRef, searchDividerRef) = createRefs()
+        val (listRef, searchBarRef, searchDividerRef, buttonApplyRef, buttonClearRef) = createRefs()
         var text by rememberSaveable { mutableStateOf("") }
         var searchActive by remember { mutableStateOf(false) }
         var openSelectOn by remember { mutableStateOf(false) }
@@ -162,7 +178,7 @@ fun MovementSearchAdvancedFilterScreen(
             LazyVerticalListComponent(
                 modifier = Modifier.constrainAs(listRef) {
                     linkTo(start = parent.start, end = parent.end, bias = 0F)
-                    top.linkTo(searchDividerRef.bottom)
+                    linkTo(top = searchDividerRef.bottom, bottom = buttonApplyRef.top, bottomMargin = 8.dp, bias = 0f)
                 },
                 items = state.filters,
                 verticalArrangementSpace = 0.dp,
@@ -191,6 +207,48 @@ fun MovementSearchAdvancedFilterScreen(
                         }
                     )
                 }
+            }
+
+            OutlinedButton(
+                modifier = Modifier.constrainAs(buttonApplyRef) {
+                    end.linkTo(parent.end, margin = 8.dp)
+                    bottom.linkTo(parent.bottom, margin = 8.dp)
+                },
+                onClick = {
+                    val filter = MovementSearchScreenFilters()
+
+                    state.filters.map { item ->
+                        when (item.identifier) {
+                            PRODUCT_NAME.name -> filter.productName = item.value as String?
+                            DESCRIPTION.name -> filter.description = item.value as String?
+                            DATE_PREVISION.name -> filter.datePrevision = item.value as Pair<LocalDateTime?, LocalDateTime?>?
+                            DATE_REALIZATION.name -> filter.dateRealization = item.value as Pair<LocalDateTime?, LocalDateTime?>?
+                            OPERATION_TYPE.name -> filter.operationType = (item.value as Pair<String, Int>?)?.second?.let { EnumOperationType.values()[it] }
+                            QUANTITY.name -> filter.quantity = item.value as Long?
+                            RESPONSIBLE.name -> filter.responsible = (item.value as Pair<String, String>?)
+                        }
+                    }
+
+                    onApplyFilters(filter)
+                },
+                colors = ButtonDefaults.outlinedButtonColors(containerColor = colorSecondary),
+                border = null
+            ) {
+                Text(stringResource(R.string.label_apply_advanced_filter), color = Color.White)
+            }
+
+            OutlinedButton(
+                modifier = Modifier.constrainAs(buttonClearRef) {
+                    end.linkTo(buttonApplyRef.start, margin = 8.dp)
+                    bottom.linkTo(parent.bottom, margin = 8.dp)
+                },
+                onClick = {
+                    onApplyFilters(MovementSearchScreenFilters())
+                },
+                colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.Transparent),
+                border = BorderStroke(1.dp, colorSecondary)
+            ) {
+                Text(stringResource(R.string.label_clear), color = colorSecondary)
             }
         }
     }
@@ -254,7 +312,7 @@ fun MovementSearchAdvancedFilterItem(
                         NumberAdvancedFilterArgs(
                             integer = true,
                             titleResId = item.labelResId,
-                            value = item.formatter.formatToString(item.value)
+                            value = item.formatter.formatToString(item.value) ?: ""
                         ), callback
                     )
                 }
@@ -263,7 +321,7 @@ fun MovementSearchAdvancedFilterItem(
                     onOperationTypeClick(callback)
                 }
 
-                USER.name -> {
+                RESPONSIBLE.name -> {
                     onNavigateToUserLovFilter(callback)
                 }
             }

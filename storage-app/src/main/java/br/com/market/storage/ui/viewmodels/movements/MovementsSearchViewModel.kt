@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.market.core.extensions.navParamToString
+import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
 import br.com.market.storage.repository.ProductRepository
 import br.com.market.storage.repository.StorageOperationsHistoryRepository
 import br.com.market.storage.repository.brand.BrandRepository
@@ -36,6 +37,9 @@ class MovementsSearchViewModel @Inject constructor(
     private val brandId: String? = savedStateHandle[argumentBrandId]
     private val productId: String? = savedStateHandle[argumentProductId]
 
+    var filter: MovementSearchScreenFilters = MovementSearchScreenFilters()
+        private set
+
     init {
         _uiState.update { currentState ->
             currentState.copy(
@@ -46,7 +50,8 @@ class MovementsSearchViewModel @Inject constructor(
                     productId = productId.navParamToString(),
                     categoryId = categoryId.navParamToString()!!,
                     brandId = brandId.navParamToString()!!,
-                    simpleFilter = null
+                    simpleFilter = null,
+                    advancedFilter = filter
                 )
             )
         }
@@ -72,14 +77,17 @@ class MovementsSearchViewModel @Inject constructor(
         }
     }
 
-    fun updateList(simpleFilterText: String? = null) {
+    fun updateList(advancedFilter: MovementSearchScreenFilters = MovementSearchScreenFilters(), simpleFilterText: String? = null) {
+        filter = advancedFilter
+
         _uiState.update { currentState ->
             currentState.copy(
                 operations = storageOperationsHistoryRepository.findStorageOperationHistory(
                     productId = productId.navParamToString(),
                     categoryId = categoryId.navParamToString()!!,
                     brandId = brandId.navParamToString()!!,
-                    simpleFilter = simpleFilterText
+                    simpleFilter = simpleFilterText,
+                    advancedFilter = filter
                 )
             )
         }

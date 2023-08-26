@@ -8,6 +8,7 @@ import androidx.room.RawQuery
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import br.com.market.enums.EnumOperationType
+import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
 import br.com.market.localdataaccess.tuples.StorageOperationHistoryTuple
 import br.com.market.models.Product
 import br.com.market.models.StorageOperationHistory
@@ -35,7 +36,8 @@ abstract class StorageOperationsHistoryDAO : AbstractBaseDAO() {
         categoryId: String,
         brandId: String,
         productId: String? = null,
-        simpleFilter: String? = null
+        simpleFilter: String? = null,
+        advancedFilter: MovementSearchScreenFilters
     ): List<StorageOperationHistoryTuple> {
         val params = mutableListOf<Any>()
 
@@ -89,6 +91,73 @@ abstract class StorageOperationsHistoryDAO : AbstractBaseDAO() {
                 params.add("%${simpleFilter}%")
                 params.add("%${simpleFilter}%")
                 params.add("%${simpleFilter}%")
+            }
+
+            if (!advancedFilter.productName.isNullOrEmpty()) {
+                add(" and product.name like ? ")
+                params.add("%${advancedFilter.productName}%")
+            }
+
+            if (!advancedFilter.description.isNullOrEmpty()) {
+                add(" and operation.description like ? ")
+                params.add("%${advancedFilter.description}%")
+            }
+
+            if (advancedFilter.datePrevision != null) {
+                val dateFrom = advancedFilter.datePrevision!!.first?.toString()
+                val dateTo = advancedFilter.datePrevision!!.second?.toString()
+
+                when {
+                    dateFrom != null && dateTo != null -> {
+                        add(" and operation.date_prevision between ? and ? ")
+                        params.add(dateFrom)
+                        params.add(dateTo)
+                    }
+                    dateFrom != null -> {
+                        add(" and operation.date_prevision >= ? ")
+                        params.add(dateFrom)
+                    }
+                    dateTo != null -> {
+                        add(" and operation.date_prevision <= ? ")
+                        params.add(dateTo)
+                    }
+                }
+            }
+
+            if (advancedFilter.dateRealization != null) {
+                val dateFrom = advancedFilter.dateRealization!!.first?.toString()
+                val dateTo = advancedFilter.dateRealization!!.second?.toString()
+
+                when {
+                    dateFrom != null && dateTo != null -> {
+                        add(" and operation.date_realization between ? and ? ")
+                        params.add(dateFrom)
+                        params.add(dateTo)
+                    }
+                    dateFrom != null -> {
+                        add(" and operation.date_realization >= ? ")
+                        params.add(dateFrom)
+                    }
+                    dateTo != null -> {
+                        add(" and operation.date_realization <= ? ")
+                        params.add(dateTo)
+                    }
+                }
+            }
+
+            if (advancedFilter.operationType != null) {
+                add(" and operation.operation_type = ? ")
+                params.add(advancedFilter.operationType!!)
+            }
+
+            if (advancedFilter.quantity != null) {
+                add(" and operation.quantity = ? ")
+                params.add(advancedFilter.quantity!!)
+            }
+
+            if (!advancedFilter.responsible?.second.isNullOrEmpty()) {
+                add(" and user.id = ? ")
+                params.add(advancedFilter.responsible!!.second)
             }
         }
 

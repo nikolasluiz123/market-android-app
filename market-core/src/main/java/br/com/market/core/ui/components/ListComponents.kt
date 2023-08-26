@@ -199,8 +199,8 @@ private fun <T> LazyVerticalList(
 private fun <T : Any> PagedVerticalList(
     modifier: Modifier = Modifier,
     pagingItems: LazyPagingItems<T>,
-    verticalArrangementSpace: Dp = 16.dp,
-    contentPadding: Dp = 16.dp,
+    verticalArrangementSpace: Dp = 0.dp,
+    contentPadding: Dp = 0.dp,
     refreshLoadStateError: @Composable (() -> Unit?)? = null,
     refreshLoadStateLoading: @Composable (() -> Unit?)? = null,
     appendLoadStateError: @Composable (() -> Unit?)? = null,

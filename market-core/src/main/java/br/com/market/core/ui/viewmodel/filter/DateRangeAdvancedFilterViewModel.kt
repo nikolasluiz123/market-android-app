@@ -48,19 +48,19 @@ class DateRangeAdvancedFilterViewModel @Inject constructor(
         }
     }
 
-    private fun getDateFrom(args: DateAdvancedFilterArgs): String {
-        return args.value?.first?.format(DateTimeFormatter.ofPattern(EnumDateTimePatterns.DATE.pattern)) ?: ""
+    private fun getDateFrom(args: DateAdvancedFilterArgs): String? {
+        return args.value?.first?.format(DateTimeFormatter.ofPattern(EnumDateTimePatterns.DATE.pattern))
     }
 
-    private fun getTimeFrom(args: DateAdvancedFilterArgs): String {
-        return args.value?.first?.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)) ?: ""
+    private fun getTimeFrom(args: DateAdvancedFilterArgs): String? {
+        return args.value?.first?.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
     }
 
-    private fun getDateTo(args: DateAdvancedFilterArgs): String {
-        return args.value?.second?.format(DateTimeFormatter.ofPattern(EnumDateTimePatterns.DATE.pattern)) ?: ""
+    private fun getDateTo(args: DateAdvancedFilterArgs): String? {
+        return args.value?.second?.format(DateTimeFormatter.ofPattern(EnumDateTimePatterns.DATE.pattern))
     }
 
-    private fun getTimeTo(args: DateAdvancedFilterArgs): String {
-        return args.value?.second?.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)) ?: ""
+    private fun getTimeTo(args: DateAdvancedFilterArgs): String? {
+        return args.value?.second?.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
     }
 }

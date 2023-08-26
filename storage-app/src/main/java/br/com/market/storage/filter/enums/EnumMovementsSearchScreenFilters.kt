@@ -1,4 +1,4 @@
-package br.com.market.storage.enums.filter
+package br.com.market.storage.filter.enums
 
 enum class EnumMovementsSearchScreenFilters {
     PRODUCT_NAME,
@@ -7,5 +7,5 @@ enum class EnumMovementsSearchScreenFilters {
     DATE_REALIZATION,
     OPERATION_TYPE,
     QUANTITY,
-    USER
+    RESPONSIBLE
 }
