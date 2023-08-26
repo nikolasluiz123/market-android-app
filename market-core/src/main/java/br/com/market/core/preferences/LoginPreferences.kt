@@ -36,6 +36,3 @@ object PreferencesKey{
 suspend fun DataStore<Preferences>.getToken(): String? {
     return this.data.first()[PreferencesKey.TOKEN]
 }
-suspend fun DataStore<Preferences>.getUserId(): String? {
-    return this.data.first()[PreferencesKey.USER]
-}

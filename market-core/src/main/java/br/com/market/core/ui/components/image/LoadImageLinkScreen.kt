@@ -26,7 +26,7 @@ import br.com.market.core.ui.components.CoilImageViewer
 import br.com.market.core.ui.components.MarketBottomAppBar
 import br.com.market.core.ui.components.OutlinedTextFieldValidation
 import br.com.market.core.ui.components.SimpleMarketTopAppBar
-import br.com.market.core.ui.components.buttons.FloatingActionButtonSave
+import br.com.market.core.ui.components.buttons.fab.FloatingActionButtonSave
 import br.com.market.core.ui.states.LoadImageLinkUIState
 import br.com.market.core.ui.viewmodel.LoadImageLinkViewModel
 import kotlinx.coroutines.launch

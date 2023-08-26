@@ -34,6 +34,7 @@ import br.com.market.core.ui.components.SimpleMarketTopAppBar
 import br.com.market.core.ui.components.bottomsheet.BottomSheetLoadImage
 import br.com.market.core.ui.components.bottomsheet.loadimage.EnumOptionsBottomSheetLoadImage
 import br.com.market.core.ui.components.buttons.*
+import br.com.market.core.ui.components.buttons.fab.FloatingActionButtonSave
 import br.com.market.core.ui.components.dialog.DialogMessage
 import br.com.market.core.utils.MediaUtils.openCameraLauncher
 import br.com.market.core.utils.MediaUtils.openGalleryLauncher

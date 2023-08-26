@@ -45,7 +45,7 @@ import br.com.market.core.ui.components.Banner
 import br.com.market.core.ui.components.MarketBottomAppBar
 import br.com.market.core.ui.components.OutlinedTextFieldValidation
 import br.com.market.core.ui.components.SimpleMarketTopAppBar
-import br.com.market.core.ui.components.buttons.FloatingActionButtonSave
+import br.com.market.core.ui.components.buttons.fab.FloatingActionButtonSave
 import br.com.market.core.ui.components.buttons.IconButtonCalendar
 import br.com.market.core.ui.components.buttons.IconButtonInactivate
 import br.com.market.core.ui.components.buttons.IconButtonSearch

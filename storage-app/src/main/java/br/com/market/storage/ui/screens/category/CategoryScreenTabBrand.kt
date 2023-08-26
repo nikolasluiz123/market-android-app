@@ -13,7 +13,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.MarketBottomAppBar
 import br.com.market.core.ui.components.PagedVerticalListComponent
-import br.com.market.core.ui.components.buttons.FloatingActionButtonAdd
+import br.com.market.core.ui.components.buttons.fab.FloatingActionButtonAdd
 import br.com.market.core.ui.components.buttons.IconButtonInactivate
 import br.com.market.storage.ui.screens.brand.BrandListItem
 import br.com.market.storage.ui.states.category.CategoryUIState

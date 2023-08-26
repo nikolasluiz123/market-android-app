@@ -36,10 +36,10 @@ import br.com.market.core.ui.components.MarketBottomAppBar
 import br.com.market.core.ui.components.PagedVerticalListComponent
 import br.com.market.core.ui.components.SimpleMarketTopAppBar
 import br.com.market.core.ui.components.buttons.IconButtonAdvancedFilters
-import br.com.market.core.ui.components.buttons.MarketFloatingActionButtonMultiActions
-import br.com.market.core.ui.components.buttons.SmallFabActions
+import br.com.market.core.ui.components.buttons.fab.MarketFloatingActionButtonMultiActions
+import br.com.market.core.ui.components.buttons.fab.SmallFabActions
 import br.com.market.core.ui.components.buttons.fab.SubActionFabItem
-import br.com.market.core.ui.components.buttons.rememberFabMultiActionsState
+import br.com.market.core.ui.components.buttons.fab.rememberFabMultiActionsState
 import br.com.market.enums.EnumOperationType
 import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
 import br.com.market.localdataaccess.tuples.StorageOperationHistoryTuple

@@ -24,6 +24,15 @@ import br.com.market.core.theme.GREY_800
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.LabeledText
 
+/**
+ * Item de filtro avançado.
+ *
+ * @param item Instância de [CommonAdvancedFilterItem].
+ * @param onItemClick Callback para manipular o clique no item.
+ *
+ * @see CommonAdvancedFilterItem
+ * @see LabeledText
+ */
 @Composable
 fun AdvancedFilterItem(
     item: CommonAdvancedFilterItem,
@@ -70,7 +79,7 @@ fun AdvancedFilterItem(
             )
         } else {
             LabeledText(
-                modifier =  Modifier.constrainAs(labelRef) {
+                modifier = Modifier.constrainAs(labelRef) {
                     start.linkTo(checkboxRef.end, margin = 4.dp)
                     linkTo(top = checkboxRef.top, bottom = checkboxRef.bottom)
                 },

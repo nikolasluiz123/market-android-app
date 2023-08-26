@@ -11,7 +11,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.paging.compose.collectAsLazyPagingItems
 import br.com.market.core.ui.components.MarketBottomAppBar
 import br.com.market.core.ui.components.PagedVerticalListComponent
-import br.com.market.core.ui.components.buttons.FloatingActionButtonAdd
+import br.com.market.core.ui.components.buttons.fab.FloatingActionButtonAdd
 import br.com.market.core.ui.components.buttons.IconButtonInactivate
 import br.com.market.core.ui.components.buttons.IconButtonStorage
 import br.com.market.storage.ui.states.brand.BrandUIState

@@ -18,7 +18,7 @@ import androidx.constraintlayout.compose.Dimension
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.MarketBottomAppBar
 import br.com.market.core.ui.components.OutlinedTextFieldValidation
-import br.com.market.core.ui.components.buttons.FloatingActionButtonSave
+import br.com.market.core.ui.components.buttons.fab.FloatingActionButtonSave
 import br.com.market.core.ui.components.buttons.IconButtonInactivate
 import br.com.market.core.ui.components.buttons.IconButtonReactivate
 import br.com.market.domain.CategoryDomain

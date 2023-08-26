@@ -19,7 +19,7 @@ import br.com.market.core.ui.components.MarketBottomAppBar
 import br.com.market.core.ui.components.MarketCircularBlockUIProgressIndicator
 import br.com.market.core.ui.components.PagedVerticalListComponent
 import br.com.market.core.ui.components.SimpleMarketTopAppBar
-import br.com.market.core.ui.components.buttons.FloatingActionButtonAdd
+import br.com.market.core.ui.components.buttons.fab.FloatingActionButtonAdd
 import br.com.market.core.ui.components.buttons.IconButtonInactivate
 import br.com.market.core.ui.components.buttons.IconButtonLogout
 import br.com.market.core.ui.components.buttons.IconButtonSync

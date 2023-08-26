@@ -20,7 +20,7 @@ import br.com.market.core.ui.components.CoilImageViewer
 import br.com.market.core.ui.components.MarketBottomAppBar
 import br.com.market.core.ui.components.SimpleMarketTopAppBar
 import br.com.market.core.ui.components.bottomsheet.BottomSheetLoadImage
-import br.com.market.core.ui.components.buttons.FloatingActionButtonSave
+import br.com.market.core.ui.components.buttons.fab.FloatingActionButtonSave
 import br.com.market.core.ui.components.buttons.IconButtonInactivate
 import br.com.market.domain.ProductImageDomain
 import br.com.market.storage.ui.states.ImageViewerUIState

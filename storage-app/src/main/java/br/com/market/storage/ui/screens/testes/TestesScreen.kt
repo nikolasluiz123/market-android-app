@@ -27,8 +27,8 @@ import br.com.market.core.ui.components.Banner
 import br.com.market.core.ui.components.MarketBottomAppBar
 import br.com.market.core.ui.components.bottomsheet.BottomSheetLoadImage
 import br.com.market.core.ui.components.bottomsheet.IEnumOptionsBottomSheet
-import br.com.market.core.ui.components.buttons.MarketFloatingActionButtonMultiActions
-import br.com.market.core.ui.components.buttons.rememberFabMultiActionsState
+import br.com.market.core.ui.components.buttons.fab.MarketFloatingActionButtonMultiActions
+import br.com.market.core.ui.components.buttons.fab.rememberFabMultiActionsState
 import br.com.market.core.ui.components.image.HorizontalGallery
 
 

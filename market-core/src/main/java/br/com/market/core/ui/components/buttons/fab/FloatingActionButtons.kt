@@ -1,4 +1,4 @@
-package br.com.market.core.ui.components.buttons
+package br.com.market.core.ui.components.buttons.fab
 
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloat
@@ -37,13 +37,12 @@ import androidx.compose.ui.unit.dp
 import br.com.market.core.R
 import br.com.market.core.theme.BLUE_500
 import br.com.market.core.theme.MarketTheme
-import br.com.market.core.ui.components.buttons.fab.EnumFabMultiActionState
-import br.com.market.core.ui.components.buttons.fab.FabMultiActionState
-import br.com.market.core.ui.components.buttons.fab.SubActionFabItem
 
 /**
  * FAB que representa a ação de adicionar.
  *
+ * @param modifier O modificador para aplicar ao componente.
+ * @param onClick A ação a ser realizada quando o botão é clicado.
  * @author Nikolas Luiz Schmitt
  */
 @Composable
@@ -66,7 +65,9 @@ fun FloatingActionButtonAdd(
 /**
  * FAB que representa a ação de salvar.
  *
- * @author Nikolas Luiz Schmitt
+ * @param modifier O modificador para aplicar ao componente.
+ * @param onClick A ação a ser realizada quando o botão é clicado.
+ * @uthor Nikolas Luiz Schmitt
  */
 @Composable
 fun FloatingActionButtonSave(
@@ -86,12 +87,12 @@ fun FloatingActionButtonSave(
 }
 
 /**
- * FAB padrão do APP
+ * FAB padrão do aplicativo.
  *
- * @param containerColor Cor de fundo do botão.
- * @param onClick Ação realizada ao clicar.
- * @param content Conteúdo do botão, normalmente um ícone.
- *
+ * @param modifier O modificador para aplicar ao componente.
+ * @param containerColor A cor de fundo do botão.
+ * @param onClick A ação a ser realizada quando o botão é clicado.
+ * @param content O conteúdo do botão, geralmente um ícone.
  * @author Nikolas Luiz Schmitt
  */
 @Composable
@@ -111,15 +112,14 @@ fun MarketFloatingActionButton(
 }
 
 /**
- * FAB que suporta multiplas ações
+ * FAB que suporta múltiplas ações.
  *
- * @param state
- * @param modifier
- * @param containerColor
- * @param onClick
- * @param content
- *
- * @author Nikolas Luiz Schmitt
+ * @param state O estado atual do botão.
+ * @param modifier O modificador para aplicar ao componente.
+ * @param containerColor A cor de fundo do botão.
+ * @param onClick A ação a ser realizada quando o botão é clicado.
+ * @param content O conteúdo do botão, geralmente um ícone.
+ * @uthor Nikolas Luiz Schmitt
  */
 @Composable
 fun MarketFloatingActionButtonMultiActions(
@@ -157,6 +157,15 @@ fun MarketFloatingActionButtonMultiActions(
     }
 }
 
+/**
+ * Sub-ação para o FAB com suporte a múltiplas ações.
+ *
+ * @param iconPainter O ícone a ser exibido.
+ * @param onClick A ação a ser realizada quando o botão é clicado.
+ * @param modifier O modificador para aplicar ao componente.
+ * @param label O rótulo a ser exibido.
+ * @uthor Nikolas Luiz Schmitt
+ */
 @Composable
 fun MarketSmallFabSubAction(
     iconPainter: Painter,
@@ -185,10 +194,19 @@ fun MarketSmallFabSubAction(
                 tint = BLUE_500
             )
         }
-
     }
 }
 
+/**
+ * FAB com animações para suportar rótulos.
+ *
+ * @param modifier O modificador para aplicar ao componente.
+ * @param showLabel Indica se o rótulo deve ser exibido.
+ * @param fabContent O conteúdo do FAB.
+ * @param state O estado do FAB com suporte a múltiplas ações.
+ * @param labelContent O conteúdo do rótulo.
+ * @uthor Nikolas Luiz Schmitt
+ */
 @Composable
 fun AnimatedSmallFabWithLabel(
     modifier: Modifier = Modifier,
@@ -225,6 +243,12 @@ fun AnimatedSmallFabWithLabel(
     }
 }
 
+/**
+ * Retorna o estado do FAB com suporte a múltiplas ações.
+ *
+ * @return O estado do FAB.
+ * @uthor Nikolas Luiz Schmitt
+ */
 @Composable
 fun rememberFabMultiActionsState(): FabMultiActionState {
     val state = remember {
@@ -236,6 +260,14 @@ fun rememberFabMultiActionsState(): FabMultiActionState {
     return state
 }
 
+/**
+ * Exibe as sub-ações do FAB com suporte a múltiplas ações.
+ *
+ * @param modifier O modificador para aplicar ao componente.
+ * @param state O estado do FAB com suporte a múltiplas ações.
+ * @param subActionsFab A lista de sub-ações.
+ * @uthor Nikolas Luiz Schmitt
+ */
 @Composable
 fun SmallFabActions(
     modifier: Modifier,
