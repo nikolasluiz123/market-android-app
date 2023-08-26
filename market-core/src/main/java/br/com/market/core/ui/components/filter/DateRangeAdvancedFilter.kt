@@ -60,7 +60,7 @@ fun DateRangeAdvancedFilter(
     viewModel: DateRangeAdvancedFilterViewModel,
     onBackClick: () -> Unit,
     onCancelClick: () -> Unit,
-    onConfirmClick: (LocalDateTime?, LocalDateTime?) -> Unit
+    onConfirmClick: (Pair<LocalDateTime?, LocalDateTime?>?) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -78,7 +78,7 @@ fun DateRangeAdvancedFilter(
     state: DateRangeAdvancedFilterUIState = DateRangeAdvancedFilterUIState(),
     onBackClick: () -> Unit = { },
     onCancelClick: () -> Unit = { },
-    onConfirmClick: (LocalDateTime?, LocalDateTime?) -> Unit = { _, _ -> }
+    onConfirmClick: (Pair<LocalDateTime?, LocalDateTime?>?) -> Unit = {  }
 ) {
     Scaffold(
         topBar = {
@@ -87,10 +87,10 @@ fun DateRangeAdvancedFilter(
                 showMenuWithLogout = false,
                 actions = {
                     IconButtonClear {
-                        state.dateFrom = null
-                        state.timeFrom = null
-                        state.dateTo = null
-                        state.timeTo = null
+                        state.onDateFromChange(null)
+                        state.onTimeFromChange(null)
+                        state.onDateToChange(null)
+                        state.onTimeToChange(null)
                     }
                 },
                 onBackClick = onBackClick
@@ -339,55 +339,11 @@ fun DateRangeAdvancedFilter(
                     bottom.linkTo(parent.bottom, margin = 8.dp)
                 },
                 onClick = {
-                    val localDateTimeFrom = when {
-                        state.dateFrom?.isNotEmpty() == true && state.timeFrom?.isNotEmpty() == true -> {
-                            LocalDateTime.of(
-                                state.dateFrom?.parseToLocalDate(EnumDateTimePatterns.DATE),
-                                state.timeFrom?.parseToLocalTime(EnumDateTimePatterns.TIME)
-                            )
-                        }
-                        state.dateFrom?.isNotEmpty() == true -> {
-                            LocalDateTime.of(
-                                state.dateFrom?.parseToLocalDate(EnumDateTimePatterns.DATE),
-                                LocalTime.MIN
-                            )
-                        }
-                        state.timeFrom?.isNotEmpty() == true -> {
-                            LocalDateTime.of(
-                                LocalDate.now(),
-                                state.timeFrom?.parseToLocalTime(EnumDateTimePatterns.TIME)
-                            )
-                        }
-                        else -> {
-                            null
-                        }
-                    }
+                    val localDateTimeFrom = getLocalDateTimeFrom(state)
+                    val localDateTimeTo = getLocalDateTimeTo(state)
+                    val pair = getPairLocalDateTimeRange(localDateTimeFrom, localDateTimeTo)
 
-                    val localDateTimeTo = when {
-                        state.dateTo?.isNotEmpty() == true && state.timeTo?.isNotEmpty() == true -> {
-                            LocalDateTime.of(
-                                state.dateTo?.parseToLocalDate(EnumDateTimePatterns.DATE),
-                                state.timeTo?.parseToLocalTime(EnumDateTimePatterns.TIME)
-                            )
-                        }
-                        state.dateTo?.isNotEmpty() == true -> {
-                            LocalDateTime.of(
-                                state.dateTo?.parseToLocalDate(EnumDateTimePatterns.DATE),
-                                LocalTime.MIN
-                            )
-                        }
-                        state.timeTo?.isNotEmpty() == true -> {
-                            LocalDateTime.of(
-                                LocalDate.now(),
-                                state.timeTo?.parseToLocalTime(EnumDateTimePatterns.TIME)
-                            )
-                        }
-                        else -> {
-                            null
-                        }
-                    }
-
-                    onConfirmClick(localDateTimeFrom, localDateTimeTo)
+                    onConfirmClick(pair)
                 },
                 colors = ButtonDefaults.outlinedButtonColors(containerColor = colorSecondary),
                 border = null
@@ -408,6 +364,69 @@ fun DateRangeAdvancedFilter(
             }
         }
     }
+}
+
+private fun getLocalDateTimeFrom(state: DateRangeAdvancedFilterUIState) = when {
+    state.dateFrom?.isNotEmpty() == true && state.timeFrom?.isNotEmpty() == true -> {
+        LocalDateTime.of(
+            state.dateFrom?.parseToLocalDate(EnumDateTimePatterns.DATE),
+            state.timeFrom?.parseToLocalTime(EnumDateTimePatterns.TIME)
+        )
+    }
+
+    state.dateFrom?.isNotEmpty() == true -> {
+        LocalDateTime.of(
+            state.dateFrom?.parseToLocalDate(EnumDateTimePatterns.DATE),
+            LocalTime.MIN
+        )
+    }
+
+    state.timeFrom?.isNotEmpty() == true -> {
+        LocalDateTime.of(
+            LocalDate.now(),
+            state.timeFrom?.parseToLocalTime(EnumDateTimePatterns.TIME)
+        )
+    }
+
+    else -> {
+        null
+    }
+}
+
+private fun getLocalDateTimeTo(state: DateRangeAdvancedFilterUIState) = when {
+    state.dateTo?.isNotEmpty() == true && state.timeTo?.isNotEmpty() == true -> {
+        LocalDateTime.of(
+            state.dateTo?.parseToLocalDate(EnumDateTimePatterns.DATE),
+            state.timeTo?.parseToLocalTime(EnumDateTimePatterns.TIME)
+        )
+    }
+
+    state.dateTo?.isNotEmpty() == true -> {
+        LocalDateTime.of(
+            state.dateTo?.parseToLocalDate(EnumDateTimePatterns.DATE),
+            LocalTime.MIN
+        )
+    }
+
+    state.timeTo?.isNotEmpty() == true -> {
+        LocalDateTime.of(
+            LocalDate.now(),
+            state.timeTo?.parseToLocalTime(EnumDateTimePatterns.TIME)
+        )
+    }
+
+    else -> {
+        null
+    }
+}
+
+private fun getPairLocalDateTimeRange(
+    localDateTimeFrom: LocalDateTime?,
+    localDateTimeTo: LocalDateTime?
+) = if (localDateTimeFrom != null || localDateTimeTo != null) {
+    Pair(localDateTimeFrom, localDateTimeTo)
+} else {
+    null
 }
 
 @Preview

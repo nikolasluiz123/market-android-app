@@ -45,6 +45,7 @@ fun AdvancedFilterItem(
             .clickable {
                 onItemClick {
                     item.value = it
+                    item.checked = it != null
                 }
             }
     ) {

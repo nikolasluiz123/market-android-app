@@ -41,7 +41,7 @@ import br.com.market.core.theme.MarketTheme
 import br.com.market.core.theme.colorSecondary
 import br.com.market.core.ui.components.LazyVerticalListComponent
 import br.com.market.core.ui.components.filter.AdvancedFilterItem
-import br.com.market.core.ui.components.filter.SelectOneAdvancedFilter
+import br.com.market.core.ui.components.filter.SelectOneOption
 import br.com.market.core.ui.states.filter.AdvancedFilterUIState
 import br.com.market.enums.EnumOperationType
 import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
@@ -68,9 +68,7 @@ fun MovementSearchAdvancedFilterScreen(
 
     MovementSearchAdvancedFilterScreen(
         state = state,
-        onSimpleFilterChange = {
-            // fazer a pesquisa entre os filtros da lista
-        },
+        onSimpleFilterChange = viewModel::onSearch,
         onNavigateToTextFilter = onNavigateToTextFilter,
         onNavigateToDateRangeFilter = onNavigateToDateRangeFilter,
         onNavigateToNumberFilter = onNavigateToNumberFilter,
@@ -95,7 +93,7 @@ fun MovementSearchAdvancedFilterScreen(
         val (listRef, searchBarRef, searchDividerRef, buttonApplyRef, buttonClearRef) = createRefs()
         var text by rememberSaveable { mutableStateOf("") }
         var searchActive by remember { mutableStateOf(false) }
-        var openSelectOn by remember { mutableStateOf(false) }
+        var openSelectOneOptionFilter by remember { mutableStateOf(false) }
         var callbackSelectOne: ((Any) -> Unit)? = null
 
         SearchBar(
@@ -146,18 +144,18 @@ fun MovementSearchAdvancedFilterScreen(
                     onNavigateToUserLovFilter = onNavigateToUserLovFilter,
                     onOperationTypeClick = { callback ->
                         callbackSelectOne = callback
-                        openSelectOn = true
+                        openSelectOneOptionFilter = true
                     }
                 )
                 Divider(Modifier.fillMaxWidth())
 
-                if (openSelectOn) {
-                    OpenSelectOneOption(
+                if (openSelectOneOptionFilter) {
+                    OpenSelectOneOptionFilter(
                         item,
-                        onDismiss = { openSelectOn = false },
+                        onDismiss = { openSelectOneOptionFilter = false },
                         onItemClick = {
                             callbackSelectOne!!.invoke(it)
-                            openSelectOn = false
+                            openSelectOneOptionFilter = false
                         }
                     )
                 }
@@ -192,18 +190,18 @@ fun MovementSearchAdvancedFilterScreen(
                     onNavigateToUserLovFilter = onNavigateToUserLovFilter,
                     onOperationTypeClick = { callback ->
                         callbackSelectOne = callback
-                        openSelectOn = true
+                        openSelectOneOptionFilter = true
                     }
                 )
                 Divider(Modifier.fillMaxWidth())
 
-                if (openSelectOn) {
-                    OpenSelectOneOption(
+                if (openSelectOneOptionFilter) {
+                    OpenSelectOneOptionFilter(
                         item = item,
-                        onDismiss = { openSelectOn = false },
+                        onDismiss = { openSelectOneOptionFilter = false },
                         onItemClick = {
                             callbackSelectOne!!.invoke(it)
-                            openSelectOn = false
+                            openSelectOneOptionFilter = false
                         }
                     )
                 }
@@ -255,7 +253,7 @@ fun MovementSearchAdvancedFilterScreen(
 }
 
 @Composable
-private fun OpenSelectOneOption(
+private fun OpenSelectOneOptionFilter(
     item: CommonAdvancedFilterItem,
     onDismiss: () -> Unit,
     onItemClick: (Pair<String, Int>) -> Unit
@@ -266,7 +264,7 @@ private fun OpenSelectOneOption(
             options.add(label to index)
         }
 
-        SelectOneAdvancedFilter(
+        SelectOneOption(
             items = options,
             onDismiss = onDismiss,
             onItemClick = onItemClick

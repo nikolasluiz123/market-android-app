@@ -15,7 +15,7 @@ import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.LazyVerticalListComponent
 
 @Composable
-fun SelectOneAdvancedFilter(
+fun SelectOneOption(
     modifier: Modifier = Modifier,
     items: List<Pair<String, Int>>,
     onDismiss: () -> Unit = { },
@@ -41,10 +41,10 @@ fun SelectOneAdvancedFilter(
 
 @Preview
 @Composable
-fun SelectOneAdvancedFilterPreview() {
+fun SelectOneOptionPreview() {
     MarketTheme {
         Surface {
-            SelectOneAdvancedFilter(
+            SelectOneOption(
                 items = emptyList()
             )
         }

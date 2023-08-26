@@ -214,8 +214,8 @@ fun StorageAppNavHost(
 
         dateRangeAdvancedFilterScreen(
             onBackClick = navController::popBackStack,
-            onConfirmClick = { localDateTimeFrom, localDateTimeTo ->
-                navController.popBackStackWithResult(dateRangeAdvancedFilterScreenNavResultCallbackKey, Pair(localDateTimeFrom, localDateTimeTo))
+            onConfirmClick = { pair ->
+                navController.popBackStackWithResult(dateRangeAdvancedFilterScreenNavResultCallbackKey, pair)
             },
             onCancelClick = navController::popBackStack
         )

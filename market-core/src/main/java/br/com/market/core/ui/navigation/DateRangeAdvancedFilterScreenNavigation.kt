@@ -18,7 +18,7 @@ internal const val dateRangeAdvancedFilterArguments = "dateRangeAdvancedFilterAr
 fun NavGraphBuilder.dateRangeAdvancedFilterScreen(
     onBackClick: () -> Unit,
     onCancelClick: () -> Unit,
-    onConfirmClick: (LocalDateTime?, LocalDateTime?) -> Unit
+    onConfirmClick: (Pair<LocalDateTime?, LocalDateTime?>?) -> Unit
 ) {
     composable(
         route = "$dateRangeAdvancedFilterScreenRoute?$dateRangeAdvancedFilterArguments={$dateRangeAdvancedFilterArguments}"

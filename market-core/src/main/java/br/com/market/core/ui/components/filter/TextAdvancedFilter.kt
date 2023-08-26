@@ -61,7 +61,7 @@ fun TextAdvancedFilter(
                 showMenuWithLogout = false,
                 actions = {
                     IconButtonClear {
-                        state.onValueChange("")
+                        state.onValueChange(null)
                     }
                 },
                 onBackClick = onBackClick
@@ -99,7 +99,12 @@ fun TextAdvancedFilter(
                     end.linkTo(parent.end, margin = 8.dp)
                     bottom.linkTo(parent.bottom, margin = 8.dp)
                 },
-                onClick = { onConfirmClick(state.value) },
+                onClick = {
+                    var value = state.value?.trim()
+                    value = if(value?.isEmpty() == true) null else value
+
+                    onConfirmClick(value)
+                },
                 colors = ButtonDefaults.outlinedButtonColors(containerColor = colorSecondary),
                 border = null
             ) {

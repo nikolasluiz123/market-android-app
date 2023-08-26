@@ -2,6 +2,7 @@ package br.com.market.core.extensions
 
 import com.google.gson.Gson
 import java.text.DecimalFormat
+import java.text.Normalizer
 
 /**
  * Função para converter um ID enviado por navegação para um Long.
@@ -48,4 +49,27 @@ fun String.formatJsonNavParam() = this.substring(1, this.length - 1)
  */
 fun <ARG> String.fromJsonNavParamToArgs(clazz: Class<ARG>, gson: Gson = Gson()): ARG {
     return gson.getAdapter(clazz).fromJson(this.formatJsonNavParam())
+}
+
+fun String?.searchWordsInText(search: String?): Boolean {
+    if (this == null || search == null) {
+        return false
+    }
+
+    val textNormalized = this.unAccent()!!.lowercase()
+    val searchNormalized = search.unAccent()!!.lowercase()
+    val words = extractSearchParametersTokens(searchNormalized)
+
+    return words.any { it in textNormalized }
+}
+
+fun String?.unAccent(): String? {
+    if (this == null) return null
+
+    val normalizedString = Normalizer.normalize(this, Normalizer.Form.NFD)
+    return normalizedString.replace("[^\\p{ASCII}]".toRegex(), "")
+}
+
+fun extractSearchParametersTokens(text: String): List<String> {
+    return text.trim().split("\\s+".toRegex())
 }

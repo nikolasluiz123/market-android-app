@@ -29,9 +29,7 @@ class TextAdvancedFilterViewModel @Inject constructor(
                     titleResId = args.titleResId,
                     value = args.value as String?,
                     onValueChange = {
-                        if ((_uiState.value.value?.length ?: 0) < 128) {
-                            _uiState.value = _uiState.value.copy(value = it)
-                        }
+                        _uiState.value = _uiState.value.copy(value = it)
                     }
                 )
             }
