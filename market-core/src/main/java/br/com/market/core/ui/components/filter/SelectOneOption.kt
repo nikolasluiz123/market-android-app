@@ -25,7 +25,9 @@ fun SelectOneOption(
         Surface {
             LazyVerticalListComponent(
                 modifier = modifier.widthIn(min = 300.dp),
-                items = items
+                items = items,
+                verticalArrangementSpace = 16.dp,
+                contentPadding = 16.dp
             ) {
                 Text(
                     modifier = Modifier

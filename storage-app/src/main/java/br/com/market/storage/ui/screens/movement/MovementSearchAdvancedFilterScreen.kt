@@ -4,26 +4,16 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
-import androidx.compose.material3.DividerDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.SearchBar
-import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -47,6 +37,7 @@ import br.com.market.core.theme.colorSecondary
 import br.com.market.core.ui.components.LazyVerticalListComponent
 import br.com.market.core.ui.components.filter.AdvancedFilterItem
 import br.com.market.core.ui.components.filter.SelectOneOption
+import br.com.market.core.ui.components.filter.SimpleFilter
 import br.com.market.core.ui.states.filter.AdvancedFilterUIState
 import br.com.market.enums.EnumOperationType
 import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
@@ -82,7 +73,6 @@ fun MovementSearchAdvancedFilterScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovementSearchAdvancedFilterScreen(
     state: AdvancedFilterUIState = AdvancedFilterUIState(),
@@ -95,74 +85,43 @@ fun MovementSearchAdvancedFilterScreen(
 ) {
     ConstraintLayout(Modifier.fillMaxSize()) {
         val (listRef, searchBarRef, searchDividerRef, buttonApplyRef, buttonClearRef) = createRefs()
-        var text by rememberSaveable { mutableStateOf("") }
         var searchActive by remember { mutableStateOf(false) }
         var openSelectOneOptionFilter by remember { mutableStateOf(false) }
         var callbackSelectOne: ((Any) -> Unit)? = null
 
-        SearchBar(
+        SimpleFilter(
             modifier = Modifier
                 .constrainAs(searchBarRef) {
                     linkTo(start = parent.start, end = parent.end, bias = 0F)
                     top.linkTo(parent.top)
                 }
                 .fillMaxWidth(),
-            query = text,
-            onQueryChange = {
-                text = it
-                onSimpleFilterChange(text)
-            },
-            onSearch = {
-                onSimpleFilterChange(text)
-            },
+            onSimpleFilterChange = onSimpleFilterChange,
             active = searchActive,
             onActiveChange = { searchActive = it },
-            placeholder = {
-                Text(
-                    text = stringResource(R.string.advanced_filter_screen_search_for),
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            },
-            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-            colors = SearchBarDefaults.colors(
-                containerColor = Color.Transparent,
-                inputFieldColors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    disabledContainerColor = Color.Transparent,
-                ),
-                dividerColor = DividerDefaults.color
-            ),
-            shape = SearchBarDefaults.fullScreenShape
-        ) {
-            LazyVerticalListComponent(
-                items = state.filters,
-                verticalArrangementSpace = 0.dp,
-                contentPadding = 0.dp
-            ) { item ->
-                MovementSearchAdvancedFilterItem(
+            items = state.filters
+        ) { item ->
+            MovementSearchAdvancedFilterItem(
+                item = item,
+                onNavigateToTextFilter = onNavigateToTextFilter,
+                onNavigateToDateRangeFilter = onNavigateToDateRangeFilter,
+                onNavigateToNumberFilter = onNavigateToNumberFilter,
+                onNavigateToUserLovFilter = onNavigateToUserLovFilter,
+                onOperationTypeClick = { callback ->
+                    callbackSelectOne = callback
+                    openSelectOneOptionFilter = true
+                }
+            )
+
+            if (openSelectOneOptionFilter) {
+                OpenSelectOneOptionFilter(
                     item = item,
-                    onNavigateToTextFilter = onNavigateToTextFilter,
-                    onNavigateToDateRangeFilter = onNavigateToDateRangeFilter,
-                    onNavigateToNumberFilter = onNavigateToNumberFilter,
-                    onNavigateToUserLovFilter = onNavigateToUserLovFilter,
-                    onOperationTypeClick = { callback ->
-                        callbackSelectOne = callback
-                        openSelectOneOptionFilter = true
+                    onDismiss = { openSelectOneOptionFilter = false },
+                    onItemClick = {
+                        callbackSelectOne!!.invoke(it)
+                        openSelectOneOptionFilter = false
                     }
                 )
-                Divider(Modifier.fillMaxWidth())
-
-                if (openSelectOneOptionFilter) {
-                    OpenSelectOneOptionFilter(
-                        item,
-                        onDismiss = { openSelectOneOptionFilter = false },
-                        onItemClick = {
-                            callbackSelectOne!!.invoke(it)
-                            openSelectOneOptionFilter = false
-                        }
-                    )
-                }
             }
         }
 
@@ -182,9 +141,7 @@ fun MovementSearchAdvancedFilterScreen(
                     linkTo(start = parent.start, end = parent.end, bias = 0F)
                     linkTo(top = searchDividerRef.bottom, bottom = buttonApplyRef.top, bottomMargin = 8.dp, bias = 0f)
                 },
-                items = state.filters,
-                verticalArrangementSpace = 0.dp,
-                contentPadding = 0.dp
+                items = state.filters
             ) { item ->
                 MovementSearchAdvancedFilterItem(
                     item = item,

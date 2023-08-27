@@ -44,8 +44,8 @@ fun <T> LazyVerticalListComponent(
     modifier: Modifier = Modifier,
     items: List<T>,
     emptyStateText: String = stringResource(R.string.text_empty_state_default),
-    verticalArrangementSpace: Dp = 16.dp,
-    contentPadding: Dp = 16.dp,
+    verticalArrangementSpace: Dp = 0.dp,
+    contentPadding: Dp = 0.dp,
     itemList: @Composable (T) -> Unit,
 ) {
     ConstraintLayout(modifier = modifier) {
@@ -180,8 +180,8 @@ fun <T : Any> PagedVerticalListComponent(
 private fun <T> LazyVerticalList(
     modifier: Modifier = Modifier,
     items: List<T>,
-    verticalArrangementSpace: Dp = 16.dp,
-    contentPadding: Dp = 16.dp,
+    verticalArrangementSpace: Dp = 0.dp,
+    contentPadding: Dp = 0.dp,
     itemList: @Composable (T) -> Unit
 ) {
     LazyColumn(
