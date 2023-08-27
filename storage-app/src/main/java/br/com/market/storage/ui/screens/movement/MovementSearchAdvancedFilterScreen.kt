@@ -33,10 +33,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import br.com.market.core.R
-import br.com.market.core.filter.AdvancedFilterArgs
+import br.com.market.core.extensions.getDateRangeFilterValue
+import br.com.market.core.extensions.getEnumFilterValue
+import br.com.market.core.extensions.getLongFilterValue
+import br.com.market.core.extensions.getLovPairFilterValue
+import br.com.market.core.extensions.getStringFilterValue
 import br.com.market.core.filter.CommonAdvancedFilterItem
-import br.com.market.core.filter.DateAdvancedFilterArgs
-import br.com.market.core.filter.NumberAdvancedFilterArgs
+import br.com.market.core.filter.arguments.AdvancedFilterArgs
+import br.com.market.core.filter.arguments.DateAdvancedFilterArgs
+import br.com.market.core.filter.arguments.NumberAdvancedFilterArgs
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.theme.colorSecondary
 import br.com.market.core.ui.components.LazyVerticalListComponent
@@ -77,7 +82,6 @@ fun MovementSearchAdvancedFilterScreen(
     )
 }
 
-@Suppress("UNCHECKED_CAST")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovementSearchAdvancedFilterScreen(
@@ -217,13 +221,13 @@ fun MovementSearchAdvancedFilterScreen(
 
                     state.filters.map { item ->
                         when (item.identifier) {
-                            PRODUCT_NAME.name -> filter.productName = item.value as String?
-                            DESCRIPTION.name -> filter.description = item.value as String?
-                            DATE_PREVISION.name -> filter.datePrevision = item.value as Pair<LocalDateTime?, LocalDateTime?>?
-                            DATE_REALIZATION.name -> filter.dateRealization = item.value as Pair<LocalDateTime?, LocalDateTime?>?
-                            OPERATION_TYPE.name -> filter.operationType = (item.value as Pair<String, Int>?)?.second?.let { EnumOperationType.values()[it] }
-                            QUANTITY.name -> filter.quantity = item.value as Long?
-                            RESPONSIBLE.name -> filter.responsible = (item.value as Pair<String, String>?)
+                            PRODUCT_NAME.name -> filter.productName = item.getStringFilterValue()
+                            DESCRIPTION.name -> filter.description = item.getStringFilterValue()
+                            DATE_PREVISION.name -> filter.datePrevision = item.getDateRangeFilterValue()
+                            DATE_REALIZATION.name -> filter.dateRealization = item.getDateRangeFilterValue()
+                            OPERATION_TYPE.name -> filter.operationType = item.getEnumFilterValue(EnumOperationType.values())
+                            QUANTITY.name -> filter.quantity = item.getLongFilterValue()
+                            RESPONSIBLE.name -> filter.responsible = item.getLovPairFilterValue()
                         }
                     }
 

@@ -92,4 +92,14 @@ class MovementsSearchViewModel @Inject constructor(
             )
         }
     }
+
+    fun hasAdvancedFilterApplied(): Boolean {
+        return filter.dateRealization.isFilterApplied() ||
+                filter.responsible.isFilterApplied() ||
+                filter.datePrevision.isFilterApplied() ||
+                filter.description.isFilterApplied() ||
+                filter.operationType.isFilterApplied() ||
+                filter.productName.isFilterApplied() ||
+                filter.quantity.isFilterApplied()
+    }
 }

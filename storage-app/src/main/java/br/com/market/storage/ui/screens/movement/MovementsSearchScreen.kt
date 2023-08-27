@@ -36,6 +36,7 @@ import br.com.market.core.ui.components.MarketBottomAppBar
 import br.com.market.core.ui.components.PagedVerticalListComponent
 import br.com.market.core.ui.components.SimpleMarketTopAppBar
 import br.com.market.core.ui.components.buttons.IconButtonAdvancedFilters
+import br.com.market.core.ui.components.buttons.IconButtonAdvancedFiltersApply
 import br.com.market.core.ui.components.buttons.fab.MarketFloatingActionButtonMultiActions
 import br.com.market.core.ui.components.buttons.fab.SmallFabActions
 import br.com.market.core.ui.components.buttons.fab.SubActionFabItem
@@ -70,6 +71,7 @@ fun MovementsSearchScreen(
                 viewModel.updateList(advancedFilter = it)
             }
         },
+        hasFilterApplied = viewModel.hasAdvancedFilterApplied()
     )
 }
 
@@ -82,6 +84,7 @@ fun MovementsSearchScreen(
     onMovementClick: (StorageOperationHistoryTuple) -> Unit = { },
     onSimpleFilterChange: (String) -> Unit = { },
     onAdvancedFiltersClick: () -> Unit = { },
+    hasFilterApplied: Boolean = false
 ) {
     val bottomBarState = rememberFabMultiActionsState()
     val pagingData = state.operations.collectAsLazyPagingItems()
@@ -150,8 +153,10 @@ fun MovementsSearchScreen(
                 ),
                 shape = SearchBarDefaults.fullScreenShape,
                 trailingIcon = {
-                    IconButtonAdvancedFilters {
-                        onAdvancedFiltersClick()
+                    if (hasFilterApplied) {
+                        IconButtonAdvancedFiltersApply(onAdvancedFiltersClick)
+                    } else {
+                        IconButtonAdvancedFilters(onAdvancedFiltersClick)
                     }
                 }
             ) {

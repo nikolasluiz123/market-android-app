@@ -3,7 +3,7 @@ package br.com.market.core.ui.viewmodel.filter
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import br.com.market.core.extensions.fromJsonNavParamToArgs
-import br.com.market.core.filter.AdvancedFilterArgs
+import br.com.market.core.filter.arguments.AdvancedFilterArgs
 import br.com.market.core.ui.navigation.textAdvancedFilterArguments
 import br.com.market.core.ui.states.filter.TextAdvancedFilterUIState
 import dagger.hilt.android.lifecycle.HiltViewModel

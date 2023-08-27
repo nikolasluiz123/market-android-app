@@ -48,7 +48,8 @@ class MovementSearchAdvancedFilterViewModel @Inject constructor(
                     labelResId = R.string.movements_search_screen_label_filter_product_name,
                     formatter = StringAdvancedFilterFormatter(),
                     identifier = EnumMovementsSearchScreenFilters.PRODUCT_NAME.name,
-                    value = filter.productName
+                    value = filter.productName.value,
+                    checked = filter.productName.checked
                 )
             )
             filters.add(
@@ -56,7 +57,8 @@ class MovementSearchAdvancedFilterViewModel @Inject constructor(
                     labelResId = R.string.movements_search_screen_label_filter_description,
                     formatter = StringAdvancedFilterFormatter(),
                     identifier = EnumMovementsSearchScreenFilters.DESCRIPTION.name,
-                    value = filter.description
+                    value = filter.description.value,
+                    checked = filter.description.checked
                 )
             )
             filters.add(
@@ -64,7 +66,8 @@ class MovementSearchAdvancedFilterViewModel @Inject constructor(
                     labelResId = R.string.movements_search_screen_label_filter_date_prevision,
                     formatter = DateTimeRangeAdvancedFilterFormatter(),
                     identifier = EnumMovementsSearchScreenFilters.DATE_PREVISION.name,
-                    value = filter.datePrevision
+                    value = filter.datePrevision.value,
+                    checked = filter.datePrevision.checked
                 )
             )
             filters.add(
@@ -72,7 +75,8 @@ class MovementSearchAdvancedFilterViewModel @Inject constructor(
                     labelResId = R.string.movements_search_screen_label_filter_date_realization,
                     formatter = DateTimeRangeAdvancedFilterFormatter(),
                     identifier = EnumMovementsSearchScreenFilters.DATE_REALIZATION.name,
-                    value = filter.dateRealization
+                    value = filter.dateRealization.value,
+                    checked = filter.dateRealization.checked
                 )
             )
             filters.add(
@@ -81,7 +85,8 @@ class MovementSearchAdvancedFilterViewModel @Inject constructor(
                     labelResId = R.string.movements_search_screen_label_filter_operation_type,
                     formatter = SelectOneFormatter(),
                     identifier = EnumMovementsSearchScreenFilters.OPERATION_TYPE.name,
-                    value = filter.operationType
+                    value = filter.operationType.value,
+                    checked = filter.operationType.checked
                 )
             )
             filters.add(
@@ -89,7 +94,8 @@ class MovementSearchAdvancedFilterViewModel @Inject constructor(
                     labelResId = R.string.movements_search_screen_label_filter_quantity,
                     formatter = NumberAdvancedFilterFormatter(integer = true),
                     identifier = EnumMovementsSearchScreenFilters.QUANTITY.name,
-                    value = filter.quantity
+                    value = filter.quantity.value,
+                    checked = filter.quantity.checked
                 )
             )
             filters.add(
@@ -97,7 +103,8 @@ class MovementSearchAdvancedFilterViewModel @Inject constructor(
                     labelResId = R.string.movements_search_screen_label_filter_user,
                     formatter = LovAdvancedFilterFormatter(),
                     identifier = EnumMovementsSearchScreenFilters.RESPONSIBLE.name,
-                    value = filter.responsible
+                    value = filter.responsible.value,
+                    checked = filter.responsible.checked
                 )
             )
 

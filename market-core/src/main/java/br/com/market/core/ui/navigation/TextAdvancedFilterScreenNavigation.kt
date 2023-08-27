@@ -4,7 +4,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import br.com.market.core.filter.AdvancedFilterArgs
+import br.com.market.core.filter.arguments.AdvancedFilterArgs
 import br.com.market.core.ui.components.filter.TextAdvancedFilter
 import br.com.market.core.ui.viewmodel.filter.TextAdvancedFilterViewModel
 import com.google.gson.Gson

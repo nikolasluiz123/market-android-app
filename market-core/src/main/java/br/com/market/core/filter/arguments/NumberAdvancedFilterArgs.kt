@@ -1,4 +1,4 @@
-package br.com.market.core.filter
+package br.com.market.core.filter.arguments
 
 /**
  * Argumentos para um filtro avançado de números.

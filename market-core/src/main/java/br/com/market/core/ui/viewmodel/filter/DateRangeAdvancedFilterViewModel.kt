@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import br.com.market.core.enums.EnumDateTimePatterns
 import br.com.market.core.extensions.fromJsonNavParamToArgs
-import br.com.market.core.filter.DateAdvancedFilterArgs
+import br.com.market.core.filter.arguments.DateAdvancedFilterArgs
 import br.com.market.core.gson.LocalDateTimeAdapter
 import br.com.market.core.ui.navigation.dateRangeAdvancedFilterArguments
 import br.com.market.core.ui.states.filter.DateRangeAdvancedFilterUIState

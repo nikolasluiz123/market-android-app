@@ -4,7 +4,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import br.com.market.core.filter.DateAdvancedFilterArgs
+import br.com.market.core.filter.arguments.DateAdvancedFilterArgs
 import br.com.market.core.gson.LocalDateTimeAdapter
 import br.com.market.core.ui.components.filter.DateRangeAdvancedFilter
 import br.com.market.core.ui.viewmodel.filter.DateRangeAdvancedFilterViewModel

@@ -1,4 +1,4 @@
-package br.com.market.core.filter
+package br.com.market.core.filter.arguments
 
 import java.time.LocalDateTime
 

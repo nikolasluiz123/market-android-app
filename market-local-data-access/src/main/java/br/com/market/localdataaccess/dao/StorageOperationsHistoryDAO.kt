@@ -93,19 +93,19 @@ abstract class StorageOperationsHistoryDAO : AbstractBaseDAO() {
                 params.add("%${simpleFilter}%")
             }
 
-            if (!advancedFilter.productName.isNullOrEmpty()) {
+            if (advancedFilter.productName.isFilterApplied()) {
                 add(" and product.name like ? ")
-                params.add("%${advancedFilter.productName}%")
+                params.add("%${advancedFilter.productName.value}%")
             }
 
-            if (!advancedFilter.description.isNullOrEmpty()) {
+            if (advancedFilter.description.isFilterApplied()) {
                 add(" and operation.description like ? ")
-                params.add("%${advancedFilter.description}%")
+                params.add("%${advancedFilter.description.value}%")
             }
 
-            if (advancedFilter.datePrevision != null) {
-                val dateFrom = advancedFilter.datePrevision!!.first?.toString()
-                val dateTo = advancedFilter.datePrevision!!.second?.toString()
+            if (advancedFilter.datePrevision.isFilterApplied()) {
+                val dateFrom = advancedFilter.datePrevision.value?.first?.toString()
+                val dateTo = advancedFilter.datePrevision.value?.second?.toString()
 
                 when {
                     dateFrom != null && dateTo != null -> {
@@ -124,9 +124,9 @@ abstract class StorageOperationsHistoryDAO : AbstractBaseDAO() {
                 }
             }
 
-            if (advancedFilter.dateRealization != null) {
-                val dateFrom = advancedFilter.dateRealization!!.first?.toString()
-                val dateTo = advancedFilter.dateRealization!!.second?.toString()
+            if (advancedFilter.dateRealization.isFilterApplied()) {
+                val dateFrom = advancedFilter.dateRealization.value?.first?.toString()
+                val dateTo = advancedFilter.dateRealization.value?.second?.toString()
 
                 when {
                     dateFrom != null && dateTo != null -> {
@@ -145,19 +145,19 @@ abstract class StorageOperationsHistoryDAO : AbstractBaseDAO() {
                 }
             }
 
-            if (advancedFilter.operationType != null) {
+            if (advancedFilter.operationType.isFilterApplied()) {
                 add(" and operation.operation_type = ? ")
-                params.add(advancedFilter.operationType!!)
+                params.add(advancedFilter.operationType.value!!)
             }
 
-            if (advancedFilter.quantity != null) {
+            if (advancedFilter.quantity.isFilterApplied()) {
                 add(" and operation.quantity = ? ")
-                params.add(advancedFilter.quantity!!)
+                params.add(advancedFilter.quantity.value!!)
             }
 
-            if (!advancedFilter.responsible?.second.isNullOrEmpty()) {
+            if (advancedFilter.responsible.isFilterApplied()) {
                 add(" and user.id = ? ")
-                params.add(advancedFilter.responsible!!.second)
+                params.add(advancedFilter.responsible.value?.second!!)
             }
         }
 
