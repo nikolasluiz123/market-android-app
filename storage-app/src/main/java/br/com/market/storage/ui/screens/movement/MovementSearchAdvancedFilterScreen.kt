@@ -99,29 +99,32 @@ fun MovementSearchAdvancedFilterScreen(
             onSimpleFilterChange = onSimpleFilterChange,
             active = searchActive,
             onActiveChange = { searchActive = it },
-            items = state.filters
-        ) { item ->
-            MovementSearchAdvancedFilterItem(
-                item = item,
-                onNavigateToTextFilter = onNavigateToTextFilter,
-                onNavigateToDateRangeFilter = onNavigateToDateRangeFilter,
-                onNavigateToNumberFilter = onNavigateToNumberFilter,
-                onNavigateToUserLovFilter = onNavigateToUserLovFilter,
-                onOperationTypeClick = { callback ->
-                    callbackSelectOne = callback
-                    openSelectOneOptionFilter = true
-                }
-            )
-
-            if (openSelectOneOptionFilter) {
-                OpenSelectOneOptionFilter(
+            placeholderResId = R.string.advanced_filter_screen_search_for,
+        ) {
+            LazyVerticalListComponent(items = state.filters) { item ->
+                MovementSearchAdvancedFilterItem(
                     item = item,
-                    onDismiss = { openSelectOneOptionFilter = false },
-                    onItemClick = {
-                        callbackSelectOne!!.invoke(it)
-                        openSelectOneOptionFilter = false
+                    onNavigateToTextFilter = onNavigateToTextFilter,
+                    onNavigateToDateRangeFilter = onNavigateToDateRangeFilter,
+                    onNavigateToNumberFilter = onNavigateToNumberFilter,
+                    onNavigateToUserLovFilter = onNavigateToUserLovFilter,
+                    onOperationTypeClick = { callback ->
+                        callbackSelectOne = callback
+                        openSelectOneOptionFilter = true
                     }
                 )
+                Divider(Modifier.fillMaxWidth())
+
+                if (openSelectOneOptionFilter) {
+                    OpenSelectOneOptionFilter(
+                        item = item,
+                        onDismiss = { openSelectOneOptionFilter = false },
+                        onItemClick = {
+                            callbackSelectOne!!.invoke(it)
+                            openSelectOneOptionFilter = false
+                        }
+                    )
+                }
             }
         }
 

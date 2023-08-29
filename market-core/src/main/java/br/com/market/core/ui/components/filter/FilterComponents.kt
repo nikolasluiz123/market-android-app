@@ -1,9 +1,7 @@
 package br.com.market.core.ui.components.filter
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -20,9 +18,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import br.com.market.core.R
-import br.com.market.core.filter.CommonAdvancedFilterItem
-import br.com.market.core.ui.components.LazyVerticalListComponent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,8 +26,9 @@ fun SimpleFilter(
     onSimpleFilterChange: (String) -> Unit,
     active: Boolean,
     onActiveChange: (Boolean) -> Unit,
-    items:  List<CommonAdvancedFilterItem>,
-    content: @Composable (CommonAdvancedFilterItem) -> Unit
+    placeholderResId: Int,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    content: @Composable () -> Unit
 ) {
     var text by rememberSaveable { mutableStateOf("") }
 
@@ -48,7 +44,7 @@ fun SimpleFilter(
         onActiveChange = onActiveChange,
         placeholder = {
             Text(
-                text = stringResource(R.string.advanced_filter_screen_search_for),
+                text = stringResource(placeholderResId),
                 style = MaterialTheme.typography.bodyMedium
             )
         },
@@ -62,11 +58,9 @@ fun SimpleFilter(
             ),
             dividerColor = DividerDefaults.color
         ),
-        shape = SearchBarDefaults.fullScreenShape
+        shape = SearchBarDefaults.fullScreenShape,
+        trailingIcon = trailingIcon
     ) {
-        LazyVerticalListComponent(items = items) { item ->
-            content(item)
-            Divider(Modifier.fillMaxWidth())
-        }
+        content()
     }
 }

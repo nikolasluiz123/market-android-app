@@ -4,23 +4,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SearchBar
-import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,6 +34,7 @@ import br.com.market.core.ui.components.buttons.fab.MarketFloatingActionButtonMu
 import br.com.market.core.ui.components.buttons.fab.SmallFabActions
 import br.com.market.core.ui.components.buttons.fab.SubActionFabItem
 import br.com.market.core.ui.components.buttons.fab.rememberFabMultiActionsState
+import br.com.market.core.ui.components.filter.SimpleFilter
 import br.com.market.enums.EnumOperationType
 import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
 import br.com.market.localdataaccess.tuples.StorageOperationHistoryTuple
@@ -115,43 +109,19 @@ fun MovementsSearchScreen(
         ) {
             val (fabActionRef, listRef, searchBarRef, searchDividerRef) = createRefs()
 
-            var text by rememberSaveable { mutableStateOf("") }
             var searchActive by remember { mutableStateOf(false) }
 
-            SearchBar(
-                query = text,
-                onQueryChange = {
-                    text = it
-                    onSimpleFilterChange(text)
-                },
-                onSearch = {
-                    onSimpleFilterChange(text)
-                },
-                active = searchActive,
-                onActiveChange = { searchActive = it },
-                placeholder = {
-                    Text(
-                        text = stringResource(string.movements_search_screen_buscar_por),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                },
-                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+            SimpleFilter(
                 modifier = Modifier
                     .constrainAs(searchBarRef) {
                         linkTo(start = parent.start, end = parent.end, bias = 0F)
                         top.linkTo(parent.top)
                     }
                     .fillMaxWidth(),
-                colors = SearchBarDefaults.colors(
-                    containerColor = Color.Transparent,
-                    inputFieldColors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent,
-                        disabledContainerColor = Color.Transparent,
-                    ),
-                    dividerColor = Color.Transparent
-                ),
-                shape = SearchBarDefaults.fullScreenShape,
+                onSimpleFilterChange = onSimpleFilterChange,
+                active = searchActive,
+                onActiveChange = { searchActive = it },
+                placeholderResId = string.movements_search_screen_buscar_por,
                 trailingIcon = {
                     if (hasFilterApplied) {
                         IconButtonAdvancedFiltersApply(onAdvancedFiltersClick)
@@ -190,10 +160,12 @@ fun MovementsSearchScreen(
 
                 PagedVerticalListComponent(
                     pagingItems = pagingData,
-                    modifier = Modifier.constrainAs(listRef) {
-                        linkTo(start = parent.start, end = parent.end, bias = 0F)
-                        linkTo(top = searchDividerRef.bottom, bottom = parent.bottom, bias = 0F)
-                    }.padding(bottom = 74.dp)
+                    modifier = Modifier
+                        .constrainAs(listRef) {
+                            linkTo(start = parent.start, end = parent.end, bias = 0F)
+                            linkTo(top = searchDividerRef.bottom, bottom = parent.bottom, bias = 0F)
+                        }
+                        .padding(bottom = 74.dp)
                 ) {
                     MovementListItem(
                         productName = it.productName,
