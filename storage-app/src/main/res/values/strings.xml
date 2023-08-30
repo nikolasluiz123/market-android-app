@@ -104,4 +104,5 @@
     <string name="brand_lov_placeholder">Buscar por Nome</string>
     <string name="brand_screen_tab_product_buscar_por">Buscar por Nome</string>
     <string name="product_lov_placeholder_filter">Buscar por Nome</string>
+    <string name="category_screen_tab_brand_buscar_por">Buscar por Nome</string>
 </resources>

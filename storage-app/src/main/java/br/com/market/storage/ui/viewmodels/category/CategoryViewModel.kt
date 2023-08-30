@@ -94,4 +94,10 @@ class CategoryViewModel @Inject constructor(
             }
         }
     }
+
+    fun updateList(simpleFilterText: String? = null) {
+        _uiState.update { currentState ->
+            currentState.copy(brands = brandRepository.findBrands(currentState.categoryDomain?.id!!, simpleFilterText))
+        }
+    }
 }

@@ -55,7 +55,8 @@ fun CategoryScreen(
         },
         onBackClick = onBackClick,
         onFabAddBrandClick = onFabAddBrandClick,
-        onBrandItemClick = onBrandItemClick
+        onBrandItemClick = onBrandItemClick,
+        onSimpleFilterChange = viewModel::updateList
     )
 }
 
@@ -67,7 +68,8 @@ fun CategoryScreen(
     onSaveCategoryClick: (Boolean) -> Unit = { },
     onBackClick: () -> Unit = { },
     onFabAddBrandClick: (String) -> Unit = { },
-    onBrandItemClick: (String, String) -> Unit = { _: String, _: String -> }
+    onBrandItemClick: (String, String) -> Unit = { _: String, _: String -> },
+    onSimpleFilterChange: (String) -> Unit = { }
 ) {
     var isEditMode by remember(state.categoryDomain) {
         mutableStateOf(state.categoryDomain != null)
@@ -171,7 +173,8 @@ fun CategoryScreen(
                             onFabAddClick = {
                                 onFabAddBrandClick(state.categoryDomain?.id!!)
                             },
-                            onItemClick = onBrandItemClick
+                            onItemClick = onBrandItemClick,
+                            onSimpleFilterChange = onSimpleFilterChange
                         )
                     }
                 }
