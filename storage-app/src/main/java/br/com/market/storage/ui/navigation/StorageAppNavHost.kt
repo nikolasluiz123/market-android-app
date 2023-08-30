@@ -1,7 +1,7 @@
 package br.com.market.storage.ui.navigation
 
+import android.os.Bundle
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -41,6 +41,9 @@ import br.com.market.storage.ui.navigation.movement.navigateToMovementSearchAdva
 import br.com.market.storage.ui.navigation.movement.navigateToMovementsSearchScreen
 import br.com.market.storage.ui.navigation.product.navigateToProductScreen
 import br.com.market.storage.ui.navigation.product.productScreen
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 
 /**
  * Host de Navegação que configura o grafo do APP
@@ -55,7 +58,13 @@ fun StorageAppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController
 ) {
-    val scope = rememberCoroutineScope()
+    navController.addOnDestinationChangedListener { _, destinations, arguments ->
+        val params = Bundle()
+        params.putString(FirebaseAnalytics.Param.SCREEN_NAME, destinations.label as String?)
+        params.putString(FirebaseAnalytics.Param.SCREEN_CLASS, destinations.label as String?)
+
+        Firebase.analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, params)
+    }
 
     NavHost(
         navController = navController,
