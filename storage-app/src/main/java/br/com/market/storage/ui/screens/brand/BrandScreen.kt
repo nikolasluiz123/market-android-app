@@ -63,7 +63,8 @@ fun BrandScreen(
         },
         onFabAddProductClick = onFabAddProductClick,
         onProductClick = onProductClick,
-        onStorageButtonClick = onStorageButtonClick
+        onStorageButtonClick = onStorageButtonClick,
+        onSimpleFilterChange = viewModel::updateList
     )
 }
 
@@ -76,8 +77,9 @@ fun BrandScreen(
     onSaveBrandClick: (Boolean) -> Unit = { },
     onNavToBrandLov: (String) -> Unit = { },
     onFabAddProductClick: (String, String) -> Unit = { _, _ -> },
-    onProductClick: (String, String, String) -> Unit = { _,_,_ -> },
-    onStorageButtonClick: (String, String) -> Unit = { _,_ -> }
+    onProductClick: (String, String, String) -> Unit = { _, _, _ -> },
+    onStorageButtonClick: (String, String) -> Unit = { _, _ -> },
+    onSimpleFilterChange: (String) -> Unit = { }
 ) {
     var isEditMode by remember(state.brandDomain) {
         mutableStateOf(state.brandDomain != null)
@@ -188,7 +190,8 @@ fun BrandScreen(
                             onProductClick = { productId ->
                                 onProductClick(state.categoryDomain?.id!!, state.brandDomain?.id!!, productId)
                             },
-                            onStorageButtonClick = onStorageButtonClick
+                            onStorageButtonClick = onStorageButtonClick,
+                            onSimpleFilterChange = onSimpleFilterChange
                         )
                     }
                 }

@@ -102,4 +102,6 @@
     <string name="category_search_title">Categorias</string>
     <string name="brand_lov_label_title">Marcas</string>
     <string name="brand_lov_placeholder">Buscar por Nome</string>
+    <string name="brand_screen_tab_product_buscar_por">Buscar por Nome</string>
+    <string name="product_lov_placeholder_filter">Buscar por Nome</string>
 </resources>

@@ -18,7 +18,6 @@ fun NavGraphBuilder.brandScreen(
     onFabAddProductClick: (String, String) -> Unit,
     onProductClick: (String, String, String) -> Unit,
     onStorageButtonClick: (String, String) -> Unit
-
 ) {
     composable(route = "$brandScreenRoute?$argumentCategoryId={$argumentCategoryId}&$argumentBrandId={$argumentBrandId}") {
         val brandViewModel = hiltViewModel<BrandViewModel>()

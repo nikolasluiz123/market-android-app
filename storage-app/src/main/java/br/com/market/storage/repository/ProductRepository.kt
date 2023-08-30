@@ -28,10 +28,17 @@ class ProductRepository @Inject constructor(
     private val webClient: ProductWebClient
 ) {
 
-    fun findProducts(categoryId: String, brandId: String): Flow<PagingData<ProductImageTuple>> {
+    fun findProducts(categoryId: String, brandId: String, simpleFilter: String?): Flow<PagingData<ProductImageTuple>> {
         return Pager(
             config = PagingConfigUtils.defaultPagingConfig(),
-            pagingSourceFactory = { ProductPagingSource(dao = productDAO, categoryId = categoryId, brandId = brandId) }
+            pagingSourceFactory = {
+                ProductPagingSource(
+                    dao = productDAO,
+                    categoryId = categoryId,
+                    brandId = brandId,
+                    simpleFilter = simpleFilter
+                )
+            }
         ).flow
     }
 

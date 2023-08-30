@@ -26,15 +26,16 @@ class ProductLovViewModel @Inject constructor(
     val uiState get() = _uiState.asStateFlow()
 
     init {
-        findProduct()
+        updateList()
     }
 
-    fun findProduct() {
+    fun updateList(simpleFilterText: String? = null) {
         _uiState.update {
             it.copy(
                 products = productRepository.findProducts(
                     categoryId = categoryId.navParamToString()!!,
-                    brandId = brandId.navParamToString()!!
+                    brandId = brandId.navParamToString()!!,
+                    simpleFilter = simpleFilterText
                 )
             )
         }

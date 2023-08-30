@@ -1,8 +1,12 @@
 package br.com.market.localdataaccess.dao
 
 import androidx.room.*
+import androidx.sqlite.db.SimpleSQLiteQuery
+import androidx.sqlite.db.SupportSQLiteQuery
 import br.com.market.localdataaccess.tuples.ProductImageTuple
 import br.com.market.models.Product
+import br.com.market.models.StorageOperationHistory
+import br.com.market.models.User
 import java.util.*
 
 @Dao
@@ -17,22 +21,69 @@ abstract class ProductDAO : AbstractBaseDAO() {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun save(products: List<Product>)
 
-    @Query(" select p.id as productId, " +
-            "         p.name as productName, " +
-            "         p.price as productPrice, " +
-            "         p.quantity as productQuantity, " +
-            "         p.quantity_unit as productQuantityUnit, " +
-            "         p.category_brand_id as categoryBrandId, " +
-            "         p.active as productActive, " +
-            "         pi.bytes as imageBytes, " +
-            "         pi.imageUrl as imageUrl " +
-            " from products p " +
-            " inner join products_images pi on pi.id = (select id from products_images where product_id = p.id and principal and active) " +
-            " inner join categories_brands cb on p.category_brand_id = cb.id " +
-            " where cb.category_id = :categoryId and cb.brand_id = :brandId and p.active " +
-            " order by p.name " +
-            " limit :limit offset :offset ")
-    abstract suspend fun findProducts(categoryId: String, brandId: String, limit: Int, offset: Int): List<ProductImageTuple>
+    suspend fun findProducts(
+        categoryId: String,
+        brandId: String,
+        limit: Int,
+        offset: Int,
+        simpleFilter: String?
+    ): List<ProductImageTuple> {
+        val params = mutableListOf<Any>()
+
+        val select = StringJoiner("\r\n")
+        with(select) {
+            add(" select p.id as productId, ")
+            add("        p.name as productName, ")
+            add("        p.price as productPrice, ")
+            add("        p.quantity as productQuantity, ")
+            add("        p.quantity_unit as productQuantityUnit, ")
+            add("        p.category_brand_id as categoryBrandId, ")
+            add("        p.active as productActive, ")
+            add("        pi.bytes as imageBytes, ")
+            add("        pi.imageUrl as imageUrl ")
+        }
+
+        val from = StringJoiner("\r\n")
+        with(from) {
+            add(" from products p ")
+            add(" inner join products_images pi on pi.id = (select id from products_images where product_id = p.id and principal and active) ")
+            add(" inner join categories_brands cb on p.category_brand_id = cb.id ")
+        }
+
+        val where = StringJoiner("\r\n")
+        with(where) {
+            add(" where cb.category_id = ? and cb.brand_id = ? and p.active ")
+            params.add(categoryId)
+            params.add(brandId)
+
+            if (!simpleFilter.isNullOrBlank()) {
+                add(" and p.name like ? ")
+                params.add("%${simpleFilter}%")
+            }
+        }
+
+        val orderBy = StringJoiner("\r\n")
+        with(orderBy) {
+            add(" order by p.name ")
+            add(" limit ? offset ? ")
+        }
+
+        params.add(limit)
+        params.add(offset)
+
+        val sql = StringJoiner("\r\n")
+        with(sql) {
+            add(select.toString())
+            add(from.toString())
+            add(where.toString())
+            add(orderBy.toString())
+        }
+
+        return executeQueryFindProducts(SimpleSQLiteQuery(sql.toString(), params.toTypedArray()))
+    }
+
+    @RawQuery(observedEntities = [StorageOperationHistory::class, Product::class, User::class])
+    abstract suspend fun executeQueryFindProducts(query: SupportSQLiteQuery): List<ProductImageTuple>
 
     @Transaction
     open suspend fun toggleActiveProductAndImages(productId: String, sync: Boolean) {

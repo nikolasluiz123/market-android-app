@@ -3,13 +3,10 @@ package br.com.market.storage.ui.component.lov
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -19,6 +16,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.PagedVerticalListComponent
 import br.com.market.core.ui.components.SimpleMarketTopAppBar
+import br.com.market.core.ui.components.filter.SimpleFilter
 import br.com.market.localdataaccess.tuples.ProductImageTuple
 import br.com.market.storage.R
 import br.com.market.storage.ui.screens.brand.ProductListItem
@@ -37,9 +35,7 @@ fun ProductLov(
     ProductLov(
         state = state,
         onItemClick = onItemClick,
-        onFilterChange = {
-
-        },
+        onFilterChange = viewModel::updateList,
         onBackClick = onBackClick
     )
 }
@@ -62,45 +58,53 @@ fun ProductLov(
                     showMenuWithLogout = false,
                     onBackClick = onBackClick
                 )
-
-                var text by rememberSaveable { mutableStateOf("") }
-                var active by rememberSaveable { mutableStateOf(false) }
-
-                SearchBar(
-                    query = text,
-                    onQueryChange = {
-                        text = it
-                        onFilterChange(text)
-                    },
-                    onSearch = {
-                        active = false
-                    },
-                    active = active,
-                    onActiveChange = { active = it },
-                    placeholder = { Text(text = "Buscar por Nome") },
-                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = SearchBarDefaults.colors(
-                        containerColor = Color.Transparent,
-                        inputFieldColors = TextFieldDefaults.colors(
-                            focusedContainerColor = Color.Transparent,
-                            unfocusedContainerColor = Color.Transparent,
-                            disabledContainerColor = Color.Transparent,
-                        ),
-                        dividerColor = DividerDefaults.color
-                    ),
-                    shape = SearchBarDefaults.fullScreenShape
-                ) {
-                    ProductList(pagingData, onItemClick)
-                }
-                if (!active) {
-                    Divider(modifier = Modifier.fillMaxWidth().padding(top = 8.dp))
-                }
             }
         }
     ) { padding ->
         ConstraintLayout(modifier = Modifier.padding(padding)) {
-            ProductList(pagingData, onItemClick)
+            val (listRef, searchBarRef, searchDividerRef) = createRefs()
+            var searchActive by rememberSaveable { mutableStateOf(false) }
+
+            SimpleFilter(
+                modifier = Modifier
+                    .constrainAs(searchBarRef) {
+                        linkTo(start = parent.start, end = parent.end, bias = 0F)
+                        top.linkTo(parent.top)
+                    }
+                    .fillMaxWidth(),
+                onSimpleFilterChange = onFilterChange,
+                active = searchActive,
+                onActiveChange = { searchActive = it },
+                placeholderResId = R.string.product_lov_placeholder_filter
+            ) {
+                ProductList(
+                    pagingData = pagingData,
+                    onItemClick = onItemClick
+                )
+            }
+
+            if (!searchActive) {
+                Divider(
+                    Modifier
+                        .fillMaxWidth()
+                        .constrainAs(searchDividerRef) {
+                            linkTo(start = parent.start, end = parent.end, bias = 0F)
+                            top.linkTo(searchBarRef.bottom)
+                        }
+                        .padding(top = 8.dp)
+                )
+
+                ProductList(
+                    modifier = Modifier
+                        .constrainAs(listRef) {
+                            linkTo(start = parent.start, end = parent.end, bias = 0F)
+                            linkTo(top = searchDividerRef.bottom, bottom = parent.bottom, bias = 0F)
+                        }
+                        .padding(bottom = 74.dp),
+                    pagingData = pagingData,
+                    onItemClick = onItemClick
+                )
+            }
         }
     }
 }
@@ -108,9 +112,10 @@ fun ProductLov(
 @Composable
 private fun ProductList(
     pagingData: LazyPagingItems<ProductImageTuple>,
-    onItemClick: (String) -> Unit
+    onItemClick: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    PagedVerticalListComponent(pagingItems = pagingData) { productTuple ->
+    PagedVerticalListComponent(modifier = modifier, pagingItems = pagingData) { productTuple ->
         ProductListItem(
             name = productTuple.productName,
             price = productTuple.productPrice,

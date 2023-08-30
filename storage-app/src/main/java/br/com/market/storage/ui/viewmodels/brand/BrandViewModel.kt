@@ -112,12 +112,12 @@ class BrandViewModel @Inject constructor(
         }
     }
 
-    private fun getProducts(): Flow<PagingData<ProductImageTuple>> {
+    private fun getProducts(simpleFilterText: String? = null): Flow<PagingData<ProductImageTuple>> {
         val categoryId = categoryId?.navParamToString()
         val brandId = brandId?.navParamToString()
 
         return if (categoryId != null && brandId != null) {
-            productRepository.findProducts(categoryId = categoryId, brandId = brandId)
+            productRepository.findProducts(categoryId = categoryId, brandId = brandId, simpleFilter = simpleFilterText)
         } else {
             emptyFlow()
         }
@@ -149,6 +149,14 @@ class BrandViewModel @Inject constructor(
                     brandName = brandDomain.name
                 )
             }
+        }
+    }
+
+    fun updateList(simpleFilterText: String? = null) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                products = getProducts(simpleFilterText)
+            )
         }
     }
 }
