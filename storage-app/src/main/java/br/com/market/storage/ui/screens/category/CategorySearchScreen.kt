@@ -11,6 +11,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.paging.compose.collectAsLazyPagingItems
 import br.com.market.core.R
@@ -19,10 +20,11 @@ import br.com.market.core.ui.components.MarketBottomAppBar
 import br.com.market.core.ui.components.MarketCircularBlockUIProgressIndicator
 import br.com.market.core.ui.components.PagedVerticalListComponent
 import br.com.market.core.ui.components.SimpleMarketTopAppBar
-import br.com.market.core.ui.components.buttons.fab.FloatingActionButtonAdd
 import br.com.market.core.ui.components.buttons.IconButtonInactivate
 import br.com.market.core.ui.components.buttons.IconButtonLogout
 import br.com.market.core.ui.components.buttons.IconButtonSync
+import br.com.market.core.ui.components.buttons.fab.FloatingActionButtonAdd
+import br.com.market.core.ui.components.filter.SimpleFilter
 import br.com.market.storage.ui.states.category.CategorySearchUIState
 import br.com.market.storage.ui.viewmodels.category.CategorySearchViewModel
 import java.util.*
@@ -47,7 +49,8 @@ fun CategorySearchScreen(
             viewModel.logout()
             onAfterLogout()
         },
-        onAboutClick = onAboutClick
+        onAboutClick = onAboutClick,
+        onSimpleFilterChange = viewModel::updateList
     )
 }
 
@@ -60,7 +63,8 @@ fun CategorySearchScreen(
     onCategoryClick: (String) -> Unit = { },
     onSyncClick: (onFinish: () -> Unit) -> Unit = { },
     onLogoutClick: () -> Unit = { },
-    onAboutClick: () -> Unit = { }
+    onAboutClick: () -> Unit = { },
+    onSimpleFilterChange: (String) -> Unit = { }
 ) {
     val pagingData = state.categories.collectAsLazyPagingItems()
     var showLoadingBlockUI by remember { mutableStateOf(false) }
@@ -101,21 +105,67 @@ fun CategorySearchScreen(
         }
     ) { padding ->
         ConstraintLayout(modifier = Modifier.padding(padding)) {
+            val (listRef, searchBarRef, searchDividerRef) = createRefs()
+            var searchActive by remember { mutableStateOf(false) }
 
             MarketCircularBlockUIProgressIndicator(
                 show = showLoadingBlockUI,
                 label = stringResource(R.string.label_sincronizing)
             )
 
-            PagedVerticalListComponent(pagingItems = pagingData) {
-                CategoryListItem(
-                    categoryName = it.name,
-                    active = it.active,
-                    onItemClick = {
-                        onCategoryClick(it.id!!)
+            SimpleFilter(
+                modifier = Modifier
+                    .constrainAs(searchBarRef) {
+                        linkTo(start = parent.start, end = parent.end, bias = 0F)
+                        top.linkTo(parent.top)
                     }
+                    .fillMaxWidth(),
+                onSimpleFilterChange = onSimpleFilterChange,
+                active = searchActive,
+                onActiveChange = { searchActive = it },
+                placeholderResId = br.com.market.storage.R.string.category_screen_tab_brand_buscar_por
+            ) {
+                PagedVerticalListComponent(pagingItems = pagingData) {
+                    CategoryListItem(
+                        categoryName = it.name,
+                        active = it.active,
+                        onItemClick = {
+                            onCategoryClick(it.id!!)
+                        }
+                    )
+                    Divider(modifier = Modifier.fillMaxWidth())
+                }
+            }
+
+            if (!searchActive) {
+                Divider(
+                    Modifier
+                        .fillMaxWidth()
+                        .constrainAs(searchDividerRef) {
+                            linkTo(start = parent.start, end = parent.end, bias = 0F)
+                            top.linkTo(searchBarRef.bottom)
+                        }
+                        .padding(top = 8.dp)
                 )
-                Divider(modifier = Modifier.fillMaxWidth())
+
+                PagedVerticalListComponent(
+                    pagingItems = pagingData,
+                    modifier = Modifier
+                        .constrainAs(listRef) {
+                            linkTo(start = parent.start, end = parent.end, bias = 0F)
+                            linkTo(top = searchDividerRef.bottom, bottom = parent.bottom, bias = 0F)
+                        }
+                        .padding(bottom = 74.dp)
+                ) {
+                    CategoryListItem(
+                        categoryName = it.name,
+                        active = it.active,
+                        onItemClick = {
+                            onCategoryClick(it.id!!)
+                        }
+                    )
+                    Divider(modifier = Modifier.fillMaxWidth())
+                }
             }
         }
     }

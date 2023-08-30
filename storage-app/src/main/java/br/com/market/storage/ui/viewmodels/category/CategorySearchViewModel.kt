@@ -59,4 +59,10 @@ class CategorySearchViewModel @Inject constructor(
             }
         }
     }
+
+    fun updateList(simpleFilterText: String? = null) {
+        _uiState.update { currentState ->
+            currentState.copy(categories = categoryRepository.findCategories(simpleFilterText))
+        }
+    }
 }

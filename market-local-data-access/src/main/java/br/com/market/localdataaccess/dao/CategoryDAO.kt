@@ -1,6 +1,8 @@
 package br.com.market.localdataaccess.dao
 
 import androidx.room.*
+import androidx.sqlite.db.SimpleSQLiteQuery
+import androidx.sqlite.db.SupportSQLiteQuery
 import br.com.market.domain.CategoryDomain
 import br.com.market.models.Category
 import java.util.*
@@ -21,8 +23,41 @@ abstract class CategoryDAO : AbstractBaseDAO() {
      *
      * @author Nikolas Luiz Schmitt
      */
-    @Query("select * from categories where active order by name limit :limit offset :offset")
-    abstract suspend fun findCategories(limit: Int, offset: Int): List<CategoryDomain>
+    suspend fun findCategories(simpleFilterText: String?, limit: Int, offset: Int): List<CategoryDomain> {
+        val params = mutableListOf<Any>()
+
+        val select = StringJoiner("\r\n")
+        select.add(" select c.* ")
+
+        val from = StringJoiner("\r\n")
+        from.add(" from categories c ")
+
+        val where = StringJoiner("\r\n")
+        where.add(" where c.active ")
+
+        if (simpleFilterText != null) {
+            where.add(" and c.name like '%' || ? || '%'")
+            params.add(simpleFilterText)
+        }
+
+        val orderBy = StringJoiner("\r\n")
+        orderBy.add(" order by c.name ")
+        orderBy.add(" limit ? offset ? ")
+
+        params.add(limit)
+        params.add(offset)
+
+        val sql = StringJoiner("\r\n")
+        sql.add(select.toString())
+        sql.add(from.toString())
+        sql.add(where.toString())
+        sql.add(orderBy.toString())
+
+        return executeQueryFindCategories(SimpleSQLiteQuery(sql.toString(), params.toTypedArray()))
+    }
+
+    @RawQuery(observedEntities = [Category::class])
+    abstract suspend fun executeQueryFindCategories(query: SupportSQLiteQuery): List<CategoryDomain>
 
     /**
      * Função para salvar uma categoria

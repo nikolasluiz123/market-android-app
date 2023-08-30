@@ -36,10 +36,10 @@ class CategoryRepository @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    fun findCategories(): Flow<PagingData<CategoryDomain>> {
+    fun findCategories(simpleFilterText: String? = null): Flow<PagingData<CategoryDomain>> {
         return Pager(
             config = PagingConfigUtils.defaultPagingConfig(),
-            pagingSourceFactory = { CategoryPagingSource(dao) }
+            pagingSourceFactory = { CategoryPagingSource(dao, simpleFilterText) }
         ).flow
     }
 
