@@ -1,6 +1,5 @@
 package br.com.market.storage.ui.viewmodels.movements
 
-import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,7 +13,6 @@ import br.com.market.storage.ui.navigation.category.argumentCategoryId
 import br.com.market.storage.ui.navigation.product.argumentProductId
 import br.com.market.storage.ui.states.MovementsSearchUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -23,7 +21,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MovementsSearchViewModel @Inject constructor(
-    @ApplicationContext context: Context,
     savedStateHandle: SavedStateHandle,
     private val brandRepository: BrandRepository,
     private val productRepository: ProductRepository,

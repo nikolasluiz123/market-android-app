@@ -57,7 +57,6 @@ fun ImageViewerScreen(
     onButtonInactivateClick: () -> Unit = { },
     onFABSaveClick: (ProductImageDomain) -> Unit = { }
 ) {
-    val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(

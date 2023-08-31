@@ -66,6 +66,7 @@ fun ByteArray.resizeImage(maxWidth: Int, maxHeight: Int): ByteArray? {
     val outputStream = ByteArrayOutputStream()
 
     // Usando o WEBP depreciado pois ele é o único que faz uma compressão descente na versão android mínima do projeto.
+    @Suppress("DEPRECATION")
     resizedBitmap.compress(Bitmap.CompressFormat.WEBP, if(resizedBitmap.byteCount > (1024 * 1024)) 50 else 100, outputStream)
 
     return outputStream.toByteArray()

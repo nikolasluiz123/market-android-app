@@ -58,7 +58,7 @@ fun StorageAppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController
 ) {
-    navController.addOnDestinationChangedListener { _, destinations, arguments ->
+    navController.addOnDestinationChangedListener { _, destinations, _ ->
         val params = Bundle()
         params.putString(FirebaseAnalytics.Param.SCREEN_NAME, destinations.label as String?)
         params.putString(FirebaseAnalytics.Param.SCREEN_CLASS, destinations.label as String?)

@@ -260,6 +260,7 @@ fun MovementSearchAdvancedFilterItem(
                 }
 
                 DATE_PREVISION.name, DATE_REALIZATION.name -> {
+                    @Suppress("UNCHECKED_CAST")
                     onNavigateToDateRangeFilter(
                         DateAdvancedFilterArgs(
                             titleResId = item.labelResId,
