@@ -29,7 +29,6 @@ import br.com.market.core.ui.components.MarketLinearProgressIndicator
 import br.com.market.core.ui.components.OutlinedTextFieldPasswordValidation
 import br.com.market.core.ui.components.OutlinedTextFieldValidation
 import br.com.market.core.ui.components.SimpleMarketTopAppBar
-import br.com.market.core.ui.components.buttons.IconButtonSync
 import br.com.market.core.ui.components.dialog.DialogMessage
 import br.com.market.domain.UserDomain
 import br.com.market.storage.R
@@ -42,7 +41,6 @@ import kotlinx.coroutines.launch
  *
  * @param viewModel ViewModel da tela de login.
  * @param onAuthenticateSuccess Listener executado ao logar com sucesso.
- * @param onRegisterUserClick Listener executado ao clicar no botão de cadastrar-se.
  *
  * @author Nikolas Luiz Schmitt
  */
@@ -70,7 +68,6 @@ fun LoginScreen(
                 state.onToggleLoading()
             }
         },
-        onSyncClick = viewModel::sync,
         onAboutClick = onAboutClick
     )
 }
@@ -88,16 +85,12 @@ fun LoginScreen(
 fun LoginScreen(
     state: LoginUiState = LoginUiState(),
     onAuthenticate: (UserDomain) -> Unit = {},
-    onSyncClick: () -> Unit = { },
     onAboutClick: () -> Unit = { }
 ) {
     Scaffold(
         topBar = {
             SimpleMarketTopAppBar(
                 title = "Bem-Vindo",
-                actions = {
-                    IconButtonSync(onSyncClick)
-                },
                 menuItems = {
                     DropdownMenuItem(text = { Text("Sobre") }, onClick = onAboutClick)
                 }

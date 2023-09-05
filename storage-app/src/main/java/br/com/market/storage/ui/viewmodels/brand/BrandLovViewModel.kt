@@ -1,7 +1,7 @@
 package br.com.market.storage.ui.viewmodels.brand
 
 import androidx.lifecycle.ViewModel
-import br.com.market.storage.repository.brand.BrandRepository
+import br.com.market.storage.repository.BrandRepository
 import br.com.market.storage.ui.states.brand.BrandLovUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -29,12 +29,13 @@ import java.util.UUID
 fun AboutScreen(
     viewModel: AboutViewModel,
     onBackClick: () -> Unit,
+    onFinishSync: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
     AboutScreen(
         state = state,
         onBackClick = onBackClick,
-        onSyncClick = viewModel::sync
+        onSyncClick = { viewModel.sync(onFinishSync) }
     )
 }
 

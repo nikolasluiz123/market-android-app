@@ -128,10 +128,15 @@ class ProductWebClient @Inject constructor(
         )
     }
 
-    suspend fun findAllProducts(marketId: Long): ReadResponse<Product> {
+    suspend fun findProducts(marketId: Long, limit: Int? = null, offset: Int? = null): ReadResponse<Product> {
         return readServiceErrorHandlingBlock(
             codeBlock = {
-                val response = service.findAllProductDTOs(getToken(), marketId).getReadResponseBody()
+                val response = service.findProductSDOs(
+                    token = getToken(),
+                    marketId = marketId,
+                    limit = limit,
+                    offset = offset
+                ).getReadResponseBody()
 
                 val products = response.values.map {
                     Product(
@@ -152,10 +157,15 @@ class ProductWebClient @Inject constructor(
         )
     }
 
-    suspend fun findAllProductImages(marketId: Long): ReadResponse<ProductImage> {
+    suspend fun findProductImages(marketId: Long, limit: Int? = null, offset: Int? = null): ReadResponse<ProductImage> {
         return readServiceErrorHandlingBlock(
             codeBlock = {
-                val response = service.findAllProductImageDTOs(getToken(), marketId).getReadResponseBody()
+                val response = service.findProductImageSDOs(
+                    token = getToken(),
+                    marketId = marketId,
+                    limit = limit,
+                    offset = offset
+                ).getReadResponseBody()
 
                 val images = response.values.map {
                     ProductImage(

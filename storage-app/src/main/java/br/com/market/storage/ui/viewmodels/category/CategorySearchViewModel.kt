@@ -1,16 +1,17 @@
 package br.com.market.storage.ui.viewmodels.category
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.market.core.preferences.PreferencesKey
 import br.com.market.core.preferences.dataStore
+import br.com.market.storage.repository.BrandRepository
 import br.com.market.storage.repository.CategoryRepository
 import br.com.market.storage.repository.ProductRepository
 import br.com.market.storage.repository.StorageOperationsHistoryRepository
 import br.com.market.storage.repository.UserRepository
-import br.com.market.storage.repository.brand.BrandRepository
 import br.com.market.storage.ui.states.category.CategorySearchUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -21,6 +22,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
+@SuppressLint("StaticFieldLeak")
 class CategorySearchViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val categoryRepository: CategoryRepository,

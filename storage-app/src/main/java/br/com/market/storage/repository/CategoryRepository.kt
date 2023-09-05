@@ -28,7 +28,7 @@ class CategoryRepository @Inject constructor(
     private val dao: CategoryDAO,
     private val marketDAO: MarketDAO,
     private val webClient: CategoryWebClient
-) {
+): BaseRepository() {
 
     /**
      * Função para obter um fluxo de dados paginados que possa ser
@@ -148,12 +148,13 @@ class CategoryRepository @Inject constructor(
      * @author Nikolas Luiz Schmitt
      */
     private suspend fun updateCategoriesOfLocalDB(): MarketServiceResponse {
-        val response = webClient.findAll(marketDAO.findFirst().first()?.id!!)
+        val marketId = marketDAO.findFirst().first()?.id!!
 
-        if (response.success) {
-            dao.save(response.values)
-        }
-
-        return response.toBaseResponse()
+        return importPagingData(
+            onWebServiceFind = { limit, offset ->
+                webClient.findCategorySDOs(marketId = marketId, limit = limit, offset = offset)
+            },
+            onPersistData = dao::save
+        )
     }
 }

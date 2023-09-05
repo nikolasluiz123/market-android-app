@@ -1,4 +1,4 @@
-package br.com.market.storage.repository.brand
+package br.com.market.storage.repository
 
 import androidx.paging.Pager
 import androidx.paging.PagingData
@@ -29,7 +29,7 @@ class BrandRepository @Inject constructor(
     private val brandDAO: BrandDAO,
     private val marketDAO: MarketDAO,
     private val webClient: BrandWebClient
-) {
+) : BaseRepository() {
 
     /**
      * Função para obter um fluxo de dados paginados que possa ser
@@ -38,10 +38,8 @@ class BrandRepository @Inject constructor(
      * @author Nikolas Luiz Schmitt
      */
     fun findBrands(categoryId: String? = null, brandName: String? = null): Flow<PagingData<BrandDomain>> {
-        return Pager(
-            config = PagingConfigUtils.defaultPagingConfig(),
-            pagingSourceFactory = { BrandPagingSource(brandDAO, categoryId, brandName) }
-        ).flow
+        return Pager(config = PagingConfigUtils.defaultPagingConfig(),
+            pagingSourceFactory = { BrandPagingSource(brandDAO, categoryId, brandName) }).flow
     }
 
     /**
@@ -69,12 +67,9 @@ class BrandRepository @Inject constructor(
         }
 
         val categoryBrand = brandDAO.findCategoryBrandBy(
-            brandId = brand.id,
-            categoryId = categoryId
+            brandId = brand.id, categoryId = categoryId
         ) ?: CategoryBrand(
-            categoryId = categoryId,
-            brandId = brand.id,
-            marketId = market
+            categoryId = categoryId, brandId = brand.id, marketId = market
         )
 
         domain.id = brand.id
@@ -101,11 +96,7 @@ class BrandRepository @Inject constructor(
         val brand = brandDAO.findBrandById(brandId)
 
         return BrandDomain(
-            id = brand.id,
-            name = brand.name!!,
-            active = brand.active,
-            marketId = brand.marketId,
-            synchronized = brand.synchronized
+            id = brand.id, name = brand.name!!, active = brand.active, marketId = brand.marketId, synchronized = brand.synchronized
         )
     }
 
@@ -177,19 +168,23 @@ class BrandRepository @Inject constructor(
     private suspend fun updateBrandsOfLocalDB(): MarketServiceResponse {
         val marketId = marketDAO.findFirst().first()?.id!!
 
-        val responseFindAllBrands = webClient.findAllBrands(marketId)
-        if (!responseFindAllBrands.success) {
-            return responseFindAllBrands.toBaseResponse()
+        var response = importPagingData(
+            onWebServiceFind = { limit, offset ->
+                webClient.findBrands(marketId = marketId, limit = limit, offset = offset)
+            },
+            onPersistData = brandDAO::saveBrands
+        )
+
+        if (response.success) {
+            response = importPagingData(
+                onWebServiceFind = { limit, offset ->
+                    webClient.findCategoryBrands(marketId = marketId, limit = limit, offset = offset)
+                },
+                onPersistData = brandDAO::saveCategoryBrands
+            )
         }
 
-        val responseFindAllCategoryBrands = webClient.findAllCategoryBrands(marketId)
-        if (!responseFindAllCategoryBrands.success) {
-            return responseFindAllCategoryBrands.toBaseResponse()
-        }
-
-        brandDAO.saveBrandsAndReferences(responseFindAllBrands.values, responseFindAllCategoryBrands.values)
-
-        return responseFindAllBrands.toBaseResponse()
+        return response
     }
 
 }

@@ -9,8 +9,8 @@ import br.com.market.core.extensions.format
 import br.com.market.core.extensions.navParamToString
 import br.com.market.domain.ProductImageDomain
 import br.com.market.storage.R
+import br.com.market.storage.repository.BrandRepository
 import br.com.market.storage.repository.ProductRepository
-import br.com.market.storage.repository.brand.BrandRepository
 import br.com.market.storage.ui.navigation.brand.argumentBrandId
 import br.com.market.storage.ui.navigation.category.argumentCategoryId
 import br.com.market.storage.ui.navigation.product.argumentProductId
@@ -34,9 +34,9 @@ class ProductViewModel @Inject constructor(
     private val _uiState: MutableStateFlow<ProductUIState> = MutableStateFlow(ProductUIState())
     val uiState get() = _uiState.asStateFlow()
 
-    private var categoryId = savedStateHandle.get<String>(argumentCategoryId)
-    private var brandId = savedStateHandle.get<String>(argumentBrandId)
-    private var productId = savedStateHandle.get<String>(argumentProductId)
+    private var categoryId: String? = savedStateHandle[argumentCategoryId]
+    private var brandId: String? = savedStateHandle[argumentBrandId]
+    private var productId: String? = savedStateHandle[argumentProductId]
 
     init {
         _uiState.update { currentState ->

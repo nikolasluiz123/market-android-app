@@ -1,5 +1,6 @@
 package br.com.market.storage.ui.viewmodels.movements
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -8,9 +9,9 @@ import br.com.market.core.enums.EnumDateTimePatterns
 import br.com.market.core.extensions.navParamToString
 import br.com.market.enums.EnumOperationType
 import br.com.market.storage.R
+import br.com.market.storage.repository.BrandRepository
 import br.com.market.storage.repository.ProductRepository
 import br.com.market.storage.repository.StorageOperationsHistoryRepository
-import br.com.market.storage.repository.brand.BrandRepository
 import br.com.market.storage.ui.navigation.brand.argumentBrandId
 import br.com.market.storage.ui.navigation.category.argumentCategoryId
 import br.com.market.storage.ui.navigation.movement.argumentMovementId
@@ -29,6 +30,7 @@ import java.time.format.FormatStyle
 import javax.inject.Inject
 
 @HiltViewModel
+@SuppressLint("StaticFieldLeak")
 class MovementViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     savedStateHandle: SavedStateHandle,

@@ -6,12 +6,12 @@ import br.com.market.core.pagination.PagingConfigUtils
 import br.com.market.domain.StorageOperationHistoryDomain
 import br.com.market.localdataaccess.dao.MarketDAO
 import br.com.market.localdataaccess.dao.StorageOperationsHistoryDAO
+import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
 import br.com.market.localdataaccess.tuples.StorageOperationHistoryTuple
 import br.com.market.models.StorageOperationHistory
 import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
 import br.com.market.servicedataaccess.webclients.StorageOperationsHistoryWebClient
-import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
 import br.com.market.storage.pagination.StorageOperationsHistoryPagingSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -21,7 +21,7 @@ class StorageOperationsHistoryRepository @Inject constructor(
     private val dao: StorageOperationsHistoryDAO,
     private val marketDAO: MarketDAO,
     private val webClient: StorageOperationsHistoryWebClient
-) {
+): BaseRepository() {
 
     fun findStorageOperationHistory(
         productId: String?,
@@ -120,13 +120,14 @@ class StorageOperationsHistoryRepository @Inject constructor(
     }
 
     private suspend fun updateStorageOperationsHistoryOfLocalDB(): MarketServiceResponse {
-        val responseFindAllProducts = webClient.findAllStorageOperationsHistory(marketDAO.findFirst().first()?.id!!)
+        val marketId = marketDAO.findFirst().first()?.id!!
 
-        if (responseFindAllProducts.success) {
-            dao.save(responseFindAllProducts.values)
-        }
-
-        return responseFindAllProducts.toBaseResponse()
+        return importPagingData(
+            onWebServiceFind = { limit, offset ->
+                webClient.findStorageOperationsHistory(marketId = marketId, limit = limit, offset = offset)
+            },
+            onPersistData = dao::save
+        )
     }
 
     suspend fun inactivate(id: String) {

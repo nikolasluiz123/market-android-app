@@ -10,7 +10,7 @@ import br.com.market.localdataaccess.tuples.ProductImageTuple
 import br.com.market.storage.R
 import br.com.market.storage.repository.CategoryRepository
 import br.com.market.storage.repository.ProductRepository
-import br.com.market.storage.repository.brand.BrandRepository
+import br.com.market.storage.repository.BrandRepository
 import br.com.market.storage.ui.navigation.brand.argumentBrandId
 import br.com.market.storage.ui.navigation.category.argumentCategoryId
 import br.com.market.storage.ui.states.brand.BrandUIState

@@ -26,7 +26,7 @@ class ProductRepository @Inject constructor(
     private val productImageDAO: ProductImageDAO,
     private val brandDAO: BrandDAO,
     private val webClient: ProductWebClient
-) {
+): BaseRepository() {
 
     fun findProducts(categoryId: String, brandId: String, simpleFilter: String?): Flow<PagingData<ProductImageTuple>> {
         return Pager(
@@ -213,19 +213,22 @@ class ProductRepository @Inject constructor(
     private suspend fun updateProductsOfLocalDB(): MarketServiceResponse {
         val marketId = marketDAO.findFirst().first()?.id!!
 
-        val responseFindAllProducts = webClient.findAllProducts(marketId)
-        if (!responseFindAllProducts.success) {
-            return responseFindAllProducts.toBaseResponse()
+        var response = importPagingData(
+            onWebServiceFind = { limit, offset ->
+                webClient.findProducts(marketId = marketId, limit = limit, offset = offset)
+            },
+            onPersistData = productDAO::save
+        )
+
+        if (response.success) {
+            response = importPagingData(
+                onWebServiceFind = { limit, offset ->
+                    webClient.findProductImages(marketId = marketId, limit = limit, offset = offset)
+                },
+                onPersistData = productImageDAO::save
+            )
         }
 
-        val responseFindAllProductImages = webClient.findAllProductImages(marketId)
-        if (!responseFindAllProductImages.success) {
-            return responseFindAllProductImages.toBaseResponse()
-        }
-
-        productDAO.save(responseFindAllProducts.values)
-        productImageDAO.save(responseFindAllProductImages.values)
-
-        return responseFindAllProducts.toBaseResponse()
+        return response
     }
 }

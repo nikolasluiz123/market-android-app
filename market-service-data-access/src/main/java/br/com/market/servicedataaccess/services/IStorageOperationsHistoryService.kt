@@ -20,7 +20,13 @@ interface IStorageOperationsHistoryService {
     suspend fun sync(@Header("Authorization") token: String, @Body operationsSDO: List<StorageOperationHistorySDO>): Response<MarketServiceResponse>
 
     @GET("storageOperationsHistory")
-    suspend fun findAllStorageOperationDTOs(@Header("Authorization") token: String, @Query("marketId") marketId: Long): Response<ReadResponse<StorageOperationHistorySDO>>
+    suspend fun findStorageOperationSDOs(
+        @Header("Authorization") token: String,
+        @Query("marketId") marketId: Long,
+        @Query("limit") limit: Int? = null,
+        @Query("offset") offset: Int? = null
+    ): Response<ReadResponse<StorageOperationHistorySDO>>
+
     @POST("storageOperationsHistory/inactivate")
     suspend fun inactivate(@Header("Authorization") token: String, @Query("localId") localId: String): Response<PersistenceResponse>
 }

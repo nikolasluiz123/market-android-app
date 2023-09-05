@@ -20,6 +20,11 @@ interface ICategoryService {
     suspend fun sync(@Header("Authorization") token: String, @Body categoriesSDOs: List<CategorySDO>): Response<MarketServiceResponse>
 
     @GET("category")
-    suspend fun findAll(@Header("Authorization") token: String, @Query("marketId") marketId: Long): Response<ReadResponse<CategorySDO>>
+    suspend fun findCategorySDOs(
+        @Header("Authorization") token: String,
+        @Query("marketId") marketId: Long,
+        @Query("limit") limit: Int? = null,
+        @Query("offset") offset: Int? = null
+    ): Response<ReadResponse<CategorySDO>>
 
 }

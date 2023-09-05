@@ -26,9 +26,19 @@ interface IBrandService {
     suspend fun sync(@Header("Authorization") token: String, @Body brandBodySDOs: List<BrandBodySDO>): Response<MarketServiceResponse>
 
     @GET("brand")
-    suspend fun findAllBrandDTOs(@Header("Authorization") token: String, @Query("marketId") marketId: Long): Response<ReadResponse<BrandSDO>>
+    suspend fun findBrandSDOs(
+        @Header("Authorization") token: String,
+        @Query("marketId") marketId: Long,
+        @Query("limit") limit: Int? = null,
+        @Query("offset") offset: Int? = null
+    ): Response<ReadResponse<BrandSDO>>
 
     @GET("brand/categoryBrand")
-    suspend fun findAllCategoryBrandDTOs(@Header("Authorization") token: String, @Query("marketId") marketId: Long): Response<ReadResponse<CategoryBrandSDO>>
+    suspend fun findCategoryBrandSDOs(
+        @Header("Authorization") token: String,
+        @Query("marketId") marketId: Long,
+        @Query("limit") limit: Int? = null,
+        @Query("offset") offset: Int? = null
+    ): Response<ReadResponse<CategoryBrandSDO>>
 
 }

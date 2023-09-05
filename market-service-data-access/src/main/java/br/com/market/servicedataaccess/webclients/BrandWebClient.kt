@@ -134,12 +134,14 @@ class BrandWebClient @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun findAllBrands(marketId: Long): ReadResponse<Brand> {
+    suspend fun findBrands(marketId: Long, limit: Int? = null, offset: Int? = null): ReadResponse<Brand> {
         return readServiceErrorHandlingBlock(
             codeBlock = {
-                val response = service.findAllBrandDTOs(
+                val response = service.findBrandSDOs(
                     token = getToken(),
-                    marketId = marketId
+                    marketId = marketId,
+                    limit = limit,
+                    offset = offset
                 ).getReadResponseBody()
 
                 val brands = response.values.map {
@@ -162,10 +164,15 @@ class BrandWebClient @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun findAllCategoryBrands(marketId: Long): ReadResponse<CategoryBrand> {
+    suspend fun findCategoryBrands(marketId: Long, limit: Int? = null, offset: Int? = null): ReadResponse<CategoryBrand> {
         return readServiceErrorHandlingBlock(
             codeBlock = {
-                val response = service.findAllCategoryBrandDTOs(getToken(), marketId).getReadResponseBody()
+                val response = service.findCategoryBrandSDOs(
+                    token = getToken(),
+                    marketId = marketId,
+                    limit = limit,
+                    offset = offset
+                ).getReadResponseBody()
 
                 val brands = response.values.map {
                     CategoryBrand(

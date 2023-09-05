@@ -1,27 +1,22 @@
 package br.com.market.storage.ui.viewmodels
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Patterns
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import br.com.market.core.preferences.PreferencesKey
 import br.com.market.core.preferences.dataStore
 import br.com.market.domain.UserDomain
 import br.com.market.servicedataaccess.responses.types.AuthenticationResponse
 import br.com.market.storage.R
-import br.com.market.storage.repository.CompanyRepository
-import br.com.market.storage.repository.DeviceRepository
-import br.com.market.storage.repository.MarketRepository
 import br.com.market.storage.repository.UserRepository
 import br.com.market.storage.ui.states.LoginUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -34,11 +29,9 @@ import javax.inject.Inject
  * @author Nikolas Luiz Schmitt
  */
 @HiltViewModel
+@SuppressLint("StaticFieldLeak")
 class LoginViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val deviceRepository: DeviceRepository,
-    private val companyRepository: CompanyRepository,
-    private val marketRepository: MarketRepository,
     private val userRepository: UserRepository,
 ) : ViewModel() {
 
@@ -107,16 +100,5 @@ class LoginViewModel @Inject constructor(
         }
 
         return response
-    }
-
-    fun sync() {
-        viewModelScope.launch {
-            val deviceId = context.dataStore.data.first()[PreferencesKey.TEMP_DEVICE_ID] ?: deviceRepository.findFirst().first()?.id!!
-
-            companyRepository.sync(deviceId)
-            marketRepository.sync(deviceId)
-            deviceRepository.sync(deviceId)
-            userRepository.sync()
-        }
     }
 }

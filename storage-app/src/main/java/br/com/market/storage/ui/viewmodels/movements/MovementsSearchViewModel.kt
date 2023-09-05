@@ -7,7 +7,7 @@ import br.com.market.core.extensions.navParamToString
 import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
 import br.com.market.storage.repository.ProductRepository
 import br.com.market.storage.repository.StorageOperationsHistoryRepository
-import br.com.market.storage.repository.brand.BrandRepository
+import br.com.market.storage.repository.BrandRepository
 import br.com.market.storage.ui.navigation.brand.argumentBrandId
 import br.com.market.storage.ui.navigation.category.argumentCategoryId
 import br.com.market.storage.ui.navigation.product.argumentProductId

@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.market.core.extensions.navParamToString
 import br.com.market.storage.R
+import br.com.market.storage.repository.BrandRepository
 import br.com.market.storage.repository.CategoryRepository
-import br.com.market.storage.repository.brand.BrandRepository
 import br.com.market.storage.ui.navigation.category.argumentCategoryId
 import br.com.market.storage.ui.states.category.CategoryUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,7 +29,7 @@ class CategoryViewModel @Inject constructor(
     private val _uiState: MutableStateFlow<CategoryUIState> = MutableStateFlow(CategoryUIState())
     val uiState get() = _uiState.asStateFlow()
 
-    private var categoryId = savedStateHandle.get<String>(argumentCategoryId)
+    private var categoryId: String? = savedStateHandle[argumentCategoryId]
 
     init {
         _uiState.update { currentState ->

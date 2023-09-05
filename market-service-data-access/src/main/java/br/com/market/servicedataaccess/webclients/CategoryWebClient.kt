@@ -99,10 +99,15 @@ class CategoryWebClient @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun findAll(marketId: Long): ReadResponse<Category> {
+    suspend fun findCategorySDOs(marketId: Long, limit: Int? = null, offset: Int? = null): ReadResponse<Category> {
         return readServiceErrorHandlingBlock(
             codeBlock = {
-                val response = service.findAll(getToken(), marketId = marketId).getReadResponseBody()
+                val response = service.findCategorySDOs(
+                    token = getToken(),
+                    marketId = marketId,
+                    limit = limit,
+                    offset = offset
+                ).getReadResponseBody()
 
                 val categories = response.values.map {
                     Category(

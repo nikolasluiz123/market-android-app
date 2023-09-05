@@ -64,10 +64,15 @@ class StorageOperationsHistoryWebClient @Inject constructor(
         )
     }
 
-    suspend fun findAllStorageOperationsHistory(marketId: Long): ReadResponse<StorageOperationHistory> {
+    suspend fun findStorageOperationsHistory(marketId: Long, limit: Int? = null, offset: Int? = null): ReadResponse<StorageOperationHistory> {
         return readServiceErrorHandlingBlock(
             codeBlock = {
-                val response = service.findAllStorageOperationDTOs(getToken(), marketId).getReadResponseBody()
+                val response = service.findStorageOperationSDOs(
+                    token = getToken(),
+                    marketId = marketId,
+                    limit = limit,
+                    offset = offset
+                ).getReadResponseBody()
 
                 val operations = response.values.map {
                     StorageOperationHistory(

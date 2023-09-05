@@ -28,8 +28,18 @@ interface IProductService {
     suspend fun sync(@Header("Authorization") token: String, @Body productBodySDOs: List<ProductBodySDO>): Response<MarketServiceResponse>
 
     @GET("product")
-    suspend fun findAllProductDTOs(@Header("Authorization") token: String, @Query("marketId") marketId: Long): Response<ReadResponse<ProductSDO>>
+    suspend fun findProductSDOs(
+        @Header("Authorization") token: String,
+        @Query("marketId") marketId: Long,
+        @Query("limit") limit: Int? = null,
+        @Query("offset") offset: Int? = null
+    ): Response<ReadResponse<ProductSDO>>
 
     @GET("product/images")
-    suspend fun findAllProductImageDTOs(@Header("Authorization") token: String,  @Query("marketId") marketId: Long): Response<ReadResponse<ProductImageSDO>>
+    suspend fun findProductImageSDOs(
+        @Header("Authorization") token: String,
+        @Query("marketId") marketId: Long,
+        @Query("limit") limit: Int? = null,
+        @Query("offset") offset: Int? = null
+    ): Response<ReadResponse<ProductImageSDO>>
 }

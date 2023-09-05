@@ -7,9 +7,9 @@ import br.com.market.localdataaccess.dao.UserDAO
 import br.com.market.servicedataaccess.webclients.BrandWebClient
 import br.com.market.servicedataaccess.webclients.CategoryWebClient
 import br.com.market.servicedataaccess.webclients.UserWebClient
+import br.com.market.storage.repository.BrandRepository
 import br.com.market.storage.repository.CategoryRepository
 import br.com.market.storage.repository.UserRepository
-import br.com.market.storage.repository.brand.BrandRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -44,7 +44,6 @@ class ViewModelModule {
     /**
      * Função para instanciar um UserRepository.
      *
-     * @param context Contexto do APP.
      * @param userWebClient Classe de acesso ao serviço para operações referentes ao produto.
      *
      * @author Nikolas Luiz Schmitt
