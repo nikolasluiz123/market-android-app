@@ -47,6 +47,7 @@
     <string name="date_range_advanced_filter_screen_label_time_to">Hora Final</string>
     <string name="label_sincronizing">Sincronizando...</string>
     <string name="label_apply_advanced_filter">Aplicar</string>
+    <string name="load_image_error">Erro ao carregar a imagem</string>
 
     <string-array name="movement_screen_advanced_filter_operation_type_labels">
         <item>Entrada</item>

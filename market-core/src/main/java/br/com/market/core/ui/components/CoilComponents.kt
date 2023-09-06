@@ -1,14 +1,19 @@
 package br.com.market.core.ui.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -18,7 +23,6 @@ import br.com.market.core.theme.GREY_900_TRANSPARENT
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.buttons.IconButtonClose
 import coil.compose.SubcomposeAsyncImage
-import coil.request.ImageRequest
 
 /**
  * Componente de exibição de imagens usando a lib do Coil.
@@ -44,15 +48,29 @@ fun CoilImageViewer(
         val (buttonDeleteRef) = createRefs()
 
         SubcomposeAsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(data)
-                .crossfade(true)
-                .placeholder(R.drawable.placeholder)
-                .error(R.drawable.placeholder)
-                .build(),
+            model = data,
             contentDescription = stringResource(R.string.label_image),
             contentScale = contentScale,
-            modifier = imageModifier
+            modifier = imageModifier,
+            loading = {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .align(Alignment.Center),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            },
+            error = {
+                Box(modifier = Modifier.align(Alignment.Center)) {
+                    Image(
+                        painter = painterResource(id = R.drawable.warnin_100),
+                        contentDescription = stringResource(id = R.string.load_image_error),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+            }
         )
 
         if (showDeleteButton) {
