@@ -187,7 +187,9 @@ fun MovementsSearchScreen(
                     modifier = Modifier
                         .constrainAs(listRef) {
                             linkTo(start = parent.start, end = parent.end, bias = 0F)
-                            linkTo(top = headerRef.bottom, bottom = parent.bottom, bias = 0F)
+
+                            val constraintTop = if (state.productName.isNullOrBlank()) searchDividerRef.top else headerRef.bottom
+                            linkTo(top = constraintTop, bottom = parent.bottom, bias = 0F)
                         }
                         .padding(bottom = 74.dp)
                 ) {
