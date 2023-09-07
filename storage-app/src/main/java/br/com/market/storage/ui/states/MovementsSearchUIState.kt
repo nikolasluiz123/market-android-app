@@ -12,6 +12,7 @@ data class MovementsSearchUIState(
     var productId: String? = null,
     var productName: String? = null,
     var brandName: String? = null,
+    var productQuantity: Int = 0,
     val operations: Flow<PagingData<StorageOperationHistoryTuple>> = emptyFlow(),
     override val onValidate: () -> Boolean = { false }
 ) : IValidationUIState {

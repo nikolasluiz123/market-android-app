@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.market.core.extensions.navParamToString
 import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
+import br.com.market.storage.repository.BrandRepository
 import br.com.market.storage.repository.ProductRepository
 import br.com.market.storage.repository.StorageOperationsHistoryRepository
-import br.com.market.storage.repository.BrandRepository
 import br.com.market.storage.ui.navigation.brand.argumentBrandId
 import br.com.market.storage.ui.navigation.category.argumentCategoryId
 import br.com.market.storage.ui.navigation.product.argumentProductId
@@ -49,7 +49,7 @@ class MovementsSearchViewModel @Inject constructor(
                     brandId = brandId.navParamToString()!!,
                     simpleFilter = null,
                     advancedFilter = filter
-                )
+                ),
             )
         }
 
@@ -67,7 +67,10 @@ class MovementsSearchViewModel @Inject constructor(
             viewModelScope.launch {
                 productRepository.findProductDomain(productId).apply {
                     _uiState.update { currentState ->
-                        currentState.copy(productName = name)
+                        currentState.copy(
+                            productName = name,
+                            productQuantity = storageOperationsHistoryRepository.findProductStorageQuantity(productId)
+                        )
                     }
                 }
             }

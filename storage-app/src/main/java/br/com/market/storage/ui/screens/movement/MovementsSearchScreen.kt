@@ -7,8 +7,10 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -24,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.paging.compose.collectAsLazyPagingItems
 import br.com.market.core.R
+import br.com.market.core.theme.GREY_800
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.MarketBottomAppBar
 import br.com.market.core.ui.components.PagedVerticalListComponent
@@ -107,7 +110,8 @@ fun MovementsSearchScreen(
         ConstraintLayout(
             Modifier.padding(padding)
         ) {
-            val (fabActionRef, listRef, searchBarRef, searchDividerRef) = createRefs()
+            val (fabActionRef, listRef, searchBarRef,
+                searchDividerRef, headerRef, headerDivider) = createRefs()
 
             var searchActive by remember { mutableStateOf(false) }
 
@@ -158,12 +162,32 @@ fun MovementsSearchScreen(
                         .padding(top = 8.dp)
                 )
 
+                if (!state.productName.isNullOrBlank()) {
+                    Header(
+                        modifier = Modifier
+                            .constrainAs(headerRef) {
+                                top.linkTo(searchDividerRef.bottom)
+                                linkTo(start = parent.start, end = parent.end, bias = 0f)
+                            },
+                        state = state
+                    )
+
+                    Divider(
+                        Modifier
+                            .fillMaxWidth()
+                            .constrainAs(headerDivider) {
+                                linkTo(start = parent.start, end = parent.end, bias = 0F)
+                                top.linkTo(headerRef.bottom)
+                            }
+                    )
+                }
+
                 PagedVerticalListComponent(
                     pagingItems = pagingData,
                     modifier = Modifier
                         .constrainAs(listRef) {
                             linkTo(start = parent.start, end = parent.end, bias = 0F)
-                            linkTo(top = searchDividerRef.bottom, bottom = parent.bottom, bias = 0F)
+                            linkTo(top = headerRef.bottom, bottom = parent.bottom, bias = 0F)
                         }
                         .padding(bottom = 74.dp)
                 ) {
@@ -229,6 +253,40 @@ fun MovementsSearchScreen(
                 )
             )
         }
+    }
+}
+
+@Composable
+private fun Header(
+    modifier: Modifier,
+    state: MovementsSearchUIState
+) {
+    ConstraintLayout(
+        modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        val (productNameRef, quantity) = createRefs()
+
+        Text(
+            modifier = Modifier.constrainAs(productNameRef) {
+                start.linkTo(parent.start)
+                top.linkTo(parent.top)
+            },
+            text = stringResource(string.movements_search_screen_label_quantity_header),
+            style = MaterialTheme.typography.titleSmall,
+            color = GREY_800,
+        )
+
+        Text(
+            modifier = Modifier.constrainAs(quantity) {
+                end.linkTo(parent.end)
+                top.linkTo(parent.top)
+            },
+            text = state.productQuantity.toString(),
+            style = MaterialTheme.typography.titleSmall,
+            color = GREY_800,
+        )
     }
 }
 

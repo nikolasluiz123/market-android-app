@@ -189,4 +189,41 @@ abstract class StorageOperationsHistoryDAO : AbstractBaseDAO() {
 
     @Query("update storage_operations_history set active = 0, synchronized = :sync where id = :id")
     abstract suspend fun inactivate(id: String, sync: Boolean)
+
+    suspend fun findProductStorageQuantity(productId: String): Int {
+        val params = mutableListOf<Any>()
+
+        val sqlSumInputs = StringJoiner("\r\n")
+        with(sqlSumInputs) {
+            add(" select sum(operation.quantity) ")
+            add(" from storage_operations_history operation ")
+            add(" where operation.product_id = ? ")
+            add(" and operation_type = ? ")
+
+            params.add(productId)
+            params.add(EnumOperationType.Input.name)
+        }
+
+        val inputs = executeQuerySum(SimpleSQLiteQuery(sqlSumInputs.toString(), params.toTypedArray()))
+        params.clear()
+
+        val sqlSumOutputsAndSell = StringJoiner("\r\n")
+        with(sqlSumOutputsAndSell) {
+            add(" select sum(operation.quantity) ")
+            add(" from storage_operations_history operation ")
+            add(" where operation.product_id = ? ")
+            add(" and (operation_type = ? or operation_type = ?) ")
+
+            params.add(productId)
+            params.add(EnumOperationType.Sell.name)
+            params.add(EnumOperationType.Output.name)
+        }
+
+        val outputsAndSell = executeQuerySum(SimpleSQLiteQuery(sqlSumOutputsAndSell.toString(), params.toTypedArray()))
+
+        return inputs - outputsAndSell
+    }
+
+    @RawQuery(observedEntities = [StorageOperationHistory::class])
+    abstract suspend fun executeQuerySum(query: SupportSQLiteQuery): Int
 }

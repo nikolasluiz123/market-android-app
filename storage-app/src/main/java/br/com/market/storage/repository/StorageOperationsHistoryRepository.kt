@@ -136,4 +136,8 @@ class StorageOperationsHistoryRepository @Inject constructor(
 
         dao.inactivate(id = id, sync = synchronized)
     }
+
+    suspend fun findProductStorageQuantity(productId: String): Int {
+        return dao.findProductStorageQuantity(productId)
+    }
 }
