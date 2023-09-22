@@ -1,6 +1,7 @@
 package br.com.market.storage.ui.screens
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -66,8 +67,8 @@ fun AboutScreen(
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                     top.linkTo(parent.top, margin = 8.dp)
-                },
-                imageModifier = Modifier.height(200.dp),
+                }.fillMaxWidth(),
+                imageModifier = Modifier.fillMaxWidth().height(200.dp),
                 data = state.imageLogo,
                 contentScale = ContentScale.Fit
             )

@@ -63,20 +63,22 @@ fun CoilImageViewer(
                 }
             },
             error = {
-                if (data.toString().isEmpty()) {
-                    Box(modifier = Modifier.align(Alignment.Center)) {
+                if (data == null) {
+                    Box(modifier = imageModifier) {
                         Image(
                             painter = painterResource(id = R.drawable.placeholder),
                             contentDescription = stringResource(id = R.string.placeholder),
-                            contentScale = ContentScale.Crop
+                            contentScale = contentScale,
+                            modifier = Modifier.fillMaxSize()
                         )
                     }
                 } else {
-                    Box(modifier = Modifier.align(Alignment.Center)) {
+                    Box(modifier = imageModifier) {
                         Image(
                             painter = painterResource(id = R.drawable.warnin_100),
                             contentDescription = stringResource(id = R.string.load_image_error),
-                            contentScale = ContentScale.Crop
+                            contentScale = contentScale,
+                            modifier = Modifier.fillMaxSize()
                         )
                     }
                 }
