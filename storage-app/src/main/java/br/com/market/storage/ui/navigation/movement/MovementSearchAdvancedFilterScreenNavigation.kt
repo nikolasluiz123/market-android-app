@@ -22,7 +22,7 @@ internal const val argumentMovementSearchAdvancedFilterJson = "argumentMovementS
 fun NavGraphBuilder.movementSearchAdvancedFiltersScreen(
     onNavigateToTextFilter: (InputArgs, (Any) -> Unit) -> Unit,
     onNavigateToDateRangeFilter: (DateAdvancedFilterArgs, (Any) -> Unit) -> Unit,
-    onNavigateToNumberFilter: (InputNumberArgs, (Any) -> Unit) -> Unit,
+    onNavigateToNumberFilter: (InputNumberArgs, (Number?) -> Unit) -> Unit,
     onNavigateToUserLovFilter: ((Any) -> Unit) -> Unit,
     onApplyFilters: (MovementSearchScreenFilters) -> Unit
 ) {

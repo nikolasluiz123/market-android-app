@@ -56,7 +56,7 @@ fun MovementSearchAdvancedFilterScreen(
     viewModel: MovementSearchAdvancedFilterViewModel,
     onNavigateToTextFilter: (InputArgs, (Any) -> Unit) -> Unit,
     onNavigateToDateRangeFilter: (DateAdvancedFilterArgs, (Any) -> Unit) -> Unit,
-    onNavigateToNumberFilter: (InputNumberArgs, (Any) -> Unit) -> Unit,
+    onNavigateToNumberFilter: (InputNumberArgs, (Number?) -> Unit) -> Unit,
     onNavigateToUserLovFilter: ((Any) -> Unit) -> Unit,
     onApplyFilters: (MovementSearchScreenFilters) -> Unit
 ) {
@@ -79,7 +79,7 @@ fun MovementSearchAdvancedFilterScreen(
     onSimpleFilterChange: (String) -> Unit = { },
     onNavigateToTextFilter: (InputArgs, (Any) -> Unit) -> Unit = { _, _ -> },
     onNavigateToDateRangeFilter: (DateAdvancedFilterArgs, (Any) -> Unit) -> Unit = { _, _ -> },
-    onNavigateToNumberFilter: (NumberAdvancedFilterArgs, (Any) -> Unit) -> Unit = { _, _ -> },
+    onNavigateToNumberFilter: (InputNumberArgs, (Number?) -> Unit) -> Unit = { _, _ -> },
     onNavigateToUserLovFilter: ((Any) -> Unit) -> Unit = { },
     onApplyFilters: (MovementSearchScreenFilters) -> Unit = { },
 ) {
@@ -241,7 +241,7 @@ fun MovementSearchAdvancedFilterItem(
     item: CommonAdvancedFilterItem,
     onNavigateToTextFilter: (InputArgs, (Any) -> Unit) -> Unit,
     onNavigateToDateRangeFilter: (DateAdvancedFilterArgs, (Any) -> Unit) -> Unit,
-    onNavigateToNumberFilter: (InputNumberArgs, (Any) -> Unit) -> Unit,
+    onNavigateToNumberFilter: (InputNumberArgs, (Number?) -> Unit) -> Unit,
     onNavigateToUserLovFilter: ((Any) -> Unit) -> Unit,
     onOperationTypeClick: ((Any) -> Unit) -> Unit
 ) {

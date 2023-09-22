@@ -57,6 +57,7 @@
     <string name="login_screen_password_required_validation_message">A senha é obrigatória.</string>
     <string name="login_screen_email_invalid_validation_message">O e-mail é inválido.</string>
     <string name="label_navigate">Navegar</string>
+    <string name="placeholder">Sem Imagem</string>
 
     <string-array name="movement_screen_advanced_filter_operation_type_labels">
         <item>Entrada</item>
