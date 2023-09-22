@@ -1,6 +1,7 @@
 package br.com.market.domain
 
 import br.com.market.domain.base.BaseDomain
+import br.com.market.domain.base.MarketRestrictionDomain
 
 data class ProductImageDomain(
     override var id: String? = null,
@@ -10,7 +11,7 @@ data class ProductImageDomain(
     var byteArray: ByteArray? = null,
     val productId: String? = null,
     var principal: Boolean = false
-) : BaseDomain() {
+) : MarketRestrictionDomain() {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

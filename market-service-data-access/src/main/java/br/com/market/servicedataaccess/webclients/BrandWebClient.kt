@@ -3,9 +3,9 @@ package br.com.market.servicedataaccess.webclients
 import android.content.Context
 import br.com.market.models.Brand
 import br.com.market.models.CategoryBrand
-import br.com.market.sdo.brand.BrandBodySDO
-import br.com.market.sdo.brand.BrandSDO
-import br.com.market.sdo.brand.CategoryBrandSDO
+import br.com.market.sdo.BrandBodySDO
+import br.com.market.sdo.BrandSDO
+import br.com.market.sdo.CategoryBrandSDO
 import br.com.market.servicedataaccess.responses.extensions.getPersistenceResponseBody
 import br.com.market.servicedataaccess.responses.extensions.getReadResponseBody
 import br.com.market.servicedataaccess.responses.extensions.getResponseBody

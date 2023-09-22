@@ -7,6 +7,5 @@ package br.com.market.sdo.base
  */
 abstract class BaseSDO {
     abstract var localId: String
-    abstract var marketId: Long?
     abstract var active: Boolean
 }

@@ -1,6 +1,6 @@
 package br.com.market.domain
 
-import br.com.market.domain.base.BaseDomain
+import br.com.market.domain.base.MarketRestrictionDomain
 import br.com.market.enums.EnumOperationType
 import java.time.LocalDateTime
 
@@ -16,4 +16,4 @@ data class StorageOperationHistoryDomain(
     var operationType: EnumOperationType? = null,
     var description: String? = null,
     var userId: String? = null
-) : BaseDomain()
+) : MarketRestrictionDomain()

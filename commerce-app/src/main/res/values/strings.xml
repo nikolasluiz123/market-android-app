@@ -1,0 +1,45 @@
+<resources>
+    <string name="app_name">Commerce</string>
+
+    <string name="login_screen_label_email">E-mail</string>
+    <string name="login_screen_label_password">Senha</string>
+    <string name="login_screen_label_button_login">Login</string>
+    <string name="login_screen_label_button_register">Cadastre-se</string>
+    <string name="login_screen_label_title">Bem-Vindo</string>
+    <string name="register_client_screen_label_name">Nome *</string>
+    <string name="register_client_screen_label_cpf">CPF *</string>
+    <string name="register_client_screen_label_email">E-mail *</string>
+    <string name="register_client_screen_label_password">Senha *</string>
+    <string name="register_client_screen_label_cep">CEP *</string>
+    <string name="register_client_screen_label_state">Estado *</string>
+    <string name="register_client_screen_label_city">Cidade *</string>
+    <string name="register_client_screen_label_public_place">Logradouro *</string>
+    <string name="register_client_screen_label_complement">Complemento</string>
+    <string name="register_client_screen_label_number">Número *</string>
+    <string name="register_client_screen_label_title">Cadastre-se</string>
+    <string name="register_client_email_required_validation_message">O e-mail é obrigatório.</string>
+    <string name="register_client_email_invalid_validation_message">O e-mail é inválido.</string>
+    <string name="register_client_password_required_validation_message">A senha é obrigatória.</string>
+    <string name="register_client_name_required_validation_message">O nome é obrigatório.</string>
+    <string name="register_client_cpf_required_validation_message">O CPF é obrigatório.</string>
+    <string name="register_client_cpf_invalid_validation_message">O CPF é inválido.</string>
+    <string name="register_client_cep_required_validation_message">O CEP é obrigatório.</string>
+    <string name="register_client_cep_invalid_validation_message">O CEP é inválido.</string>
+    <string name="register_client_state_required_validation_message">O estado é obrigatório.</string>
+    <string name="register_client_city_required_validation_message">A cidade é obrigatória.</string>
+    <string name="register_client_public_place_required_validation_message">O logradouro é obrigatório.</string>
+    <string name="register_client_number_required_validation_message">O número é obrigatório.</string>
+    <string name="register_client_screen_title_input_name">Digite o Nome</string>
+    <string name="register_client_screen_title_input_cpf">Digite o CPF</string>
+    <string name="register_client_screen_title_input_email">Digite o E-mail</string>
+    <string name="register_client_screen_title_input_password">Digite a Senha</string>
+    <string name="register_client_screen_title_input_cep">Digite o CEP</string>
+    <string name="register_client_screen_title_input_state">Digite o Estado</string>
+    <string name="register_client_screen_title_input_city">Digite a Cidade</string>
+    <string name="register_client_screen_title_input_public_place">Digite o Logradouro</string>
+    <string name="register_client_screen_title_input_number">Digite o Número</string>
+    <string name="register_client_screen_title_input_complement">Digite o Complemento</string>
+    <string name="register_client_email_registred_validation_message">E-mail já cadastrado.</string>
+    <string name="register_client_cpf_registred_validation_message">CPF já cadastrado.</string>
+    <string name="register_client_screen_message_success_save">Cliente Salvo com Sucesso.</string>
+</resources>

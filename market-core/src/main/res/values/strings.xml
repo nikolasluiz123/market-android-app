@@ -48,6 +48,15 @@
     <string name="label_sincronizing">Sincronizando...</string>
     <string name="label_apply_advanced_filter">Aplicar</string>
     <string name="load_image_error">Erro ao carregar a imagem</string>
+    <string name="error_dialog_title">Erro</string>
+
+    <string name="login_screen_label_email">E-mail</string>
+    <string name="login_screen_label_password">Senha</string>
+    <string name="login_screen_label_button_login">Login</string>
+    <string name="login_screen_email_required_validation_message">O e-mail é obrigatório.</string>
+    <string name="login_screen_password_required_validation_message">A senha é obrigatória.</string>
+    <string name="login_screen_email_invalid_validation_message">O e-mail é inválido.</string>
+    <string name="label_navigate">Navegar</string>
 
     <string-array name="movement_screen_advanced_filter_operation_type_labels">
         <item>Entrada</item>

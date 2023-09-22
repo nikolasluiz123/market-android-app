@@ -31,7 +31,6 @@ import br.com.market.core.ui.components.OutlinedTextFieldValidation
 import br.com.market.core.ui.components.SimpleMarketTopAppBar
 import br.com.market.core.ui.components.dialog.DialogMessage
 import br.com.market.domain.UserDomain
-import br.com.market.storage.R
 import br.com.market.storage.ui.states.LoginUiState
 import br.com.market.storage.ui.viewmodels.LoginViewModel
 import kotlinx.coroutines.launch
@@ -124,7 +123,7 @@ fun LoginScreen(
                 val (emailRef, passwordRef, loginButtonRef, registerButtonRef) = createRefs()
 
                 DialogMessage(
-                    title =  stringResource(R.string.error_dialog_title),
+                    title =  stringResource(br.com.market.core.R.string.error_dialog_title),
                     show = state.showDialogMessage,
                     onDismissRequest = { state.onToggleMessageDialog("") },
                     message = state.serverMessage
@@ -141,7 +140,7 @@ fun LoginScreen(
                     value = state.email,
                     onValueChange = state.onEmailChange,
                     error = state.emailErrorMessage,
-                    label = { Text(text = stringResource(R.string.login_screen_label_email)) },
+                    label = { Text(text = stringResource(br.com.market.core.R.string.login_screen_label_email)) },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Email,
                         imeAction = ImeAction.Next
@@ -159,7 +158,7 @@ fun LoginScreen(
                     value = state.password,
                     onValueChange = state.onPasswordChange,
                     error = state.passwordErrorMessage,
-                    label = { Text(text = stringResource(R.string.login_screen_label_password)) },
+                    label = { Text(text = stringResource(br.com.market.core.R.string.login_screen_label_password)) },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Done
@@ -184,7 +183,7 @@ fun LoginScreen(
                     },
                     enabled = !state.showLoading
                 ) {
-                    Text(text = stringResource(R.string.login_screen_label_button_login))
+                    Text(text = stringResource(br.com.market.core.R.string.login_screen_label_button_login))
                 }
 
             }

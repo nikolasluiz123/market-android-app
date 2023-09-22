@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.market.core.R
 import br.com.market.core.theme.MarketTheme
+import br.com.market.core.ui.states.Field
 
 /**
  * Um campo de texto que pode ser posto dentro da AppBar.
@@ -116,6 +117,60 @@ fun AppBarTextField(
             }
         )
     }
+}
+
+@Composable
+fun OutlinedTextFieldValidation(
+    field: Field,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    readOnly: Boolean = false,
+    textStyle: TextStyle = LocalTextStyle.current,
+    label: @Composable (() -> Unit)? = null,
+    placeholder: @Composable (() -> Unit)? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    isError: Boolean = field.errorMessage.isNotEmpty(),
+    trailingIcon: @Composable (() -> Unit)? = {
+        if (field.errorMessage.isNotEmpty())
+            Icon(
+                Icons.Default.Warning,
+                "error",
+                tint = MaterialTheme.colorScheme.error
+            )
+    },
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    singleLine: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    shape: Shape = MaterialTheme.shapes.small,
+    colors: TextFieldColors = OutlinedTextFieldDefaults.colors(
+        disabledTextColor = Color.Black,
+    )
+) {
+    OutlinedTextFieldValidation(
+        value = field.value,
+        onValueChange = field.onChange,
+        modifier = modifier,
+        enabled = enabled,
+        readOnly = readOnly,
+        textStyle = textStyle,
+        label = label,
+        placeholder = placeholder,
+        leadingIcon = leadingIcon,
+        error = field.errorMessage,
+        isError = isError,
+        trailingIcon = trailingIcon,
+        visualTransformation = visualTransformation,
+        keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
+        singleLine = singleLine,
+        maxLines = maxLines,
+        interactionSource = interactionSource,
+        shape = shape,
+        colors = colors
+    )
 }
 
 /**
@@ -208,6 +263,23 @@ fun OutlinedTextFieldValidation(
     )
 }
 
+@Composable
+fun OutlinedTextFieldPasswordValidation(
+    field: Field,
+    modifier: Modifier = Modifier,
+    label: @Composable (() -> Unit)? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
+) {
+    OutlinedTextFieldPasswordValidation(
+        value = field.value,
+        onValueChange = field.onChange,
+        error = field.errorMessage,
+        modifier = modifier,
+        label = label,
+        keyboardOptions = keyboardOptions
+    )
+}
+
 /**
  * Campo de texto com comportamento padrão para manipulação de senhas.
  *
@@ -290,7 +362,6 @@ fun OutlinedTextFieldValidationWithoutErrorPreview() {
         }
     }
 }
-
 
 
 @Preview

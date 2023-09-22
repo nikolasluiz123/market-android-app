@@ -1,8 +1,8 @@
 package br.com.market.servicedataaccess.services
 
-import br.com.market.sdo.product.ProductBodySDO
-import br.com.market.sdo.product.ProductImageSDO
-import br.com.market.sdo.product.ProductSDO
+import br.com.market.sdo.ProductBodySDO
+import br.com.market.sdo.ProductImageSDO
+import br.com.market.sdo.ProductSDO
 import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
 import br.com.market.servicedataaccess.responses.types.ReadResponse

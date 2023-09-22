@@ -1,7 +1,7 @@
 package br.com.market.domain
 
 import androidx.room.ColumnInfo
-import br.com.market.domain.base.BaseDomain
+import br.com.market.domain.base.MarketRestrictionDomain
 import br.com.market.enums.EnumUnit
 
 data class ProductDomain(
@@ -15,4 +15,4 @@ data class ProductDomain(
     var quantity: Double? = null,
     var quantityUnit: EnumUnit? = null,
     var images: MutableList<ProductImageDomain>
-): BaseDomain()
+): MarketRestrictionDomain()

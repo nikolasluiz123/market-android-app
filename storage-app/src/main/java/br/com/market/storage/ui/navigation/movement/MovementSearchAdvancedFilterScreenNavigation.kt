@@ -4,9 +4,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import br.com.market.core.filter.arguments.AdvancedFilterArgs
 import br.com.market.core.filter.arguments.DateAdvancedFilterArgs
-import br.com.market.core.filter.arguments.NumberAdvancedFilterArgs
+import br.com.market.core.filter.arguments.InputArgs
+import br.com.market.core.filter.arguments.InputNumberArgs
 import br.com.market.core.gson.LocalDateTimeAdapter
 import br.com.market.core.ui.navigation.navigateForResult
 import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
@@ -20,9 +20,9 @@ internal const val movementSearchAdvancedFilterNavResultCallbackKey = "movementS
 internal const val argumentMovementSearchAdvancedFilterJson = "argumentMovementSearchAdvancedFilterJson"
 
 fun NavGraphBuilder.movementSearchAdvancedFiltersScreen(
-    onNavigateToTextFilter: (AdvancedFilterArgs, (Any) -> Unit) -> Unit,
+    onNavigateToTextFilter: (InputArgs, (Any) -> Unit) -> Unit,
     onNavigateToDateRangeFilter: (DateAdvancedFilterArgs, (Any) -> Unit) -> Unit,
-    onNavigateToNumberFilter: (NumberAdvancedFilterArgs, (Any) -> Unit) -> Unit,
+    onNavigateToNumberFilter: (InputNumberArgs, (Any) -> Unit) -> Unit,
     onNavigateToUserLovFilter: ((Any) -> Unit) -> Unit,
     onApplyFilters: (MovementSearchScreenFilters) -> Unit
 ) {

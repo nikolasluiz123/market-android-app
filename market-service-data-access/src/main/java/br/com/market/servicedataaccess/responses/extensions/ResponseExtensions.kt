@@ -4,6 +4,7 @@ import br.com.market.servicedataaccess.responses.types.AuthenticationResponse
 import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
 import br.com.market.servicedataaccess.responses.types.ReadResponse
+import br.com.market.servicedataaccess.responses.types.SingleValueResponse
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import retrofit2.Response
@@ -61,5 +62,10 @@ fun <SDO> Response<ReadResponse<SDO>>.getReadResponseBody(): ReadResponse<SDO> {
  */
 fun Response<MarketServiceResponse>.getResponseBody(): MarketServiceResponse {
     val type = object : TypeToken<MarketServiceResponse>() {}.type
+    return this.body() ?: Gson().fromJson(this.errorBody()!!.charStream(), type)
+}
+
+fun <T> Response<SingleValueResponse<T>>.getSingleValueResponseBody(): SingleValueResponse<T> {
+    val type = object : TypeToken<SingleValueResponse<T>>() {}.type
     return this.body() ?: Gson().fromJson(this.errorBody()!!.charStream(), type)
 }

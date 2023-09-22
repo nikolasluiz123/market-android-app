@@ -1,6 +1,8 @@
 package br.com.market.storage.ui.states
 
-import br.com.market.core.ui.states.BaseUiState
+import br.com.market.core.ui.states.ILoadingUIState
+import br.com.market.core.ui.states.IServerErrorHandlerUIState
+import br.com.market.core.ui.states.IValidationUIState
 
 /**
  * Classe de estado da tela de login
@@ -27,4 +29,4 @@ data class LoginUiState(
     override val showLoading: Boolean = false,
     override val onToggleLoading: () -> Unit = { },
     override val onValidate: () -> Boolean = { false }
-) : BaseUiState()
+) : IValidationUIState, ILoadingUIState, IServerErrorHandlerUIState

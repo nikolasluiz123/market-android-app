@@ -1,6 +1,6 @@
 package br.com.market.domain
 
-import br.com.market.domain.base.BaseDomain
+import br.com.market.domain.base.MarketRestrictionDomain
 
 /**
  * Classe de domínio do usuário.
@@ -20,4 +20,4 @@ data class UserDomain(
     var name: String = "",
     var email: String = "",
     var password: String = ""
-): BaseDomain()
+): MarketRestrictionDomain()

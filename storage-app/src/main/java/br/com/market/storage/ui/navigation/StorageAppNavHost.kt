@@ -8,14 +8,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import br.com.market.core.ui.navigation.dateRangeAdvancedFilterScreen
 import br.com.market.core.ui.navigation.dateRangeAdvancedFilterScreenNavResultCallbackKey
+import br.com.market.core.ui.navigation.inputTextScreen
+import br.com.market.core.ui.navigation.inputTextScreenNavResultCallbackKey
 import br.com.market.core.ui.navigation.navigateToDateRangeAdvancedFilterScreen
-import br.com.market.core.ui.navigation.navigateToNumberAdvancedFilterScreen
-import br.com.market.core.ui.navigation.navigateToTextAdvancedFilterScreen
+import br.com.market.core.ui.navigation.navigateToInputNumber
+import br.com.market.core.ui.navigation.navigateToInputText
 import br.com.market.core.ui.navigation.numberAdvancedFilterScreen
 import br.com.market.core.ui.navigation.numberAdvancedFilterScreenNavResultCallbackKey
 import br.com.market.core.ui.navigation.popBackStackWithResult
-import br.com.market.core.ui.navigation.textAdvancedFilterScreen
-import br.com.market.core.ui.navigation.textAdvancedFilterScreenNavResultCallbackKey
 import br.com.market.storage.ui.navigation.brand.brandScreen
 import br.com.market.storage.ui.navigation.brand.navigateToBrandScreen
 import br.com.market.storage.ui.navigation.category.categoryScreen
@@ -204,13 +204,13 @@ fun StorageAppNavHost(
 
         movementSearchAdvancedFiltersScreen(
             onNavigateToTextFilter = { args, callback ->
-                navController.navigateToTextAdvancedFilterScreen(args, callback)
+                navController.navigateToInputText(args, callback)
             },
             onNavigateToDateRangeFilter = { args, callback ->
                 navController.navigateToDateRangeAdvancedFilterScreen(args, callback)
             },
             onNavigateToNumberFilter = { args, callback ->
-                navController.navigateToNumberAdvancedFilterScreen(args, callback)
+                navController.navigateToInputNumber(args, callback)
             },
             onNavigateToUserLovFilter = { callback ->
                 navController.navigateToUserLov(callback)
@@ -220,10 +220,10 @@ fun StorageAppNavHost(
             }
         )
 
-        textAdvancedFilterScreen(
+        inputTextScreen(
             onBackClick = navController::popBackStack,
             onConfirmClick = {
-                navController.popBackStackWithResult(textAdvancedFilterScreenNavResultCallbackKey, it)
+                navController.popBackStackWithResult(inputTextScreenNavResultCallbackKey, it)
             },
             onCancelClick = navController::popBackStack
         )

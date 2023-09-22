@@ -1,10 +1,5 @@
 <resources>
     <string name="app_name">storage</string>
-    <string name="login_screen_label_email">E-mail</string>
-    <string name="login_screen_label_password">Senha</string>
-    <string name="login_screen_label_button_login">Login</string>
-    <string name="login_screen_email_required_validation_message">O e-mail é obrigatório.</string>
-    <string name="login_screen_password_required_validation_message">A senha é obrigatória.</string>
     <string name="storage_products_screen_app_bar_title">Produtos em Estoque</string>
     <string name="storage_products_screen_empty_state">Não há Produtos Cadastrados</string>
     <string name="form_product_screen_tab_product_label_link_image">Link da Imagem</string>
@@ -25,7 +20,6 @@
     <string name="register_user_screen_password_required_validation_message">A senha é obrigatória.</string>
     <string name="register_user_screen_label_button_register">Cadastrar</string>
     <string name="register_user_screen_top_app_bar_title">Cadastrando um Usuário</string>
-    <string name="error_dialog_title">Erro</string>
     <string name="login_screen_label_button_register_user">Cadastrar-se</string>
     <string name="register_user_screen_email_invalid_validation_message">O e-mail é inválido.</string>
     <string name="form_product_screen_tab_product_required_product_name_message">O nome do Produto é obrigatório.</string>
@@ -33,7 +27,6 @@
     <string name="form_product_screen_tab_brand_required_brand_name_message">O nome da Marca é obrigatório.</string>
     <string name="form_product_screen_tab_brand_required_brand_qtd_message">A quantidade da Marca é obrigatória.</string>
     <string name="form_product_screen_tab_brand_invalid_brand_qtd_message">A quantidade da Marca é inválida.</string>
-    <string name="login_screen_email_invalid_validation_message">O e-mail é inválido.</string>
     <string name="save_product_service_down_error_message">Houve algum problema para conectar-se com o serviço, o produto foi salvo apenas localmente, você deve sincronizar os dados.</string>
     <string name="save_product_no_connection_error_message">Você está sem conexão com a internet, o produto foi salvo apenas localmente. Quando puder se conectar, sincronize os dados.</string>
     <string name="form_product_screen_top_app_bar_title_register">Cadastrando um Produto</string>

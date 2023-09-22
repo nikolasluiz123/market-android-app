@@ -1,6 +1,6 @@
 package br.com.market.core.filter
 
-import br.com.market.core.filter.formatter.IAdvancedFilterFormatter
+import br.com.market.core.filter.formatter.IFormatter
 
 /**
  * Representação de um item de filtro avançado comum.
@@ -9,7 +9,7 @@ import br.com.market.core.filter.formatter.IAdvancedFilterFormatter
  * formatação, identificador, referência a rótulos, estado de seleção, habilitação, visibilidade e valor associado.
  *
  * @param labelResId O ID do recurso de string que representa o rótulo do item de filtro.
- * @param formatter A instância de [IAdvancedFilterFormatter] que será usada para formatar o valor associado ao filtro.
+ * @param formatter A instância de [IFormatter] que será usada para formatar o valor associado ao filtro.
  * @param identifier Uma string que identifica exclusivamente o item de filtro.
  * @param labelsReference O ID do recurso de string que pode ser usado como referência para rótulos relacionados.
  * @param checked Indica se o item de filtro está marcado (selecionado) ou não.
@@ -18,7 +18,7 @@ import br.com.market.core.filter.formatter.IAdvancedFilterFormatter
  * @param value O valor associado ao item de filtro. Pode ser nulo.
  * @constructor Cria uma instância de [CommonAdvancedFilterItem] com os atributos fornecidos.
  * @property labelResId O ID do recurso de string que representa o rótulo do item de filtro.
- * @property formatter A instância de [IAdvancedFilterFormatter] que será usada para formatar o valor associado ao filtro.
+ * @property formatter A instância de [IFormatter] que será usada para formatar o valor associado ao filtro.
  * @property identifier Uma string que identifica exclusivamente o item de filtro.
  * @property labelsReference O ID do recurso de string que pode ser usado como referência para rótulos relacionados.
  * @property checked Indica se o item de filtro está marcado (selecionado) ou não.
@@ -28,7 +28,7 @@ import br.com.market.core.filter.formatter.IAdvancedFilterFormatter
  */
 data class CommonAdvancedFilterItem(
     val labelResId: Int,
-    val formatter: IAdvancedFilterFormatter,
+    val formatter: IFormatter,
     val identifier: String,
     val labelsReference: Int? = null,
     var checked: Boolean = false,

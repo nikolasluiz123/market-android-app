@@ -9,7 +9,6 @@ import br.com.market.core.preferences.PreferencesKey
 import br.com.market.core.preferences.dataStore
 import br.com.market.domain.UserDomain
 import br.com.market.servicedataaccess.responses.types.AuthenticationResponse
-import br.com.market.storage.R
 import br.com.market.storage.repository.UserRepository
 import br.com.market.storage.ui.states.LoginUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -57,13 +56,13 @@ class LoginViewModel @Inject constructor(
                         isValid = false
 
                         _uiState.value = _uiState.value.copy(
-                            emailErrorMessage = context.getString(R.string.login_screen_email_required_validation_message)
+                            emailErrorMessage = context.getString(br.com.market.core.R.string.login_screen_email_required_validation_message)
                         )
                     } else if (!Patterns.EMAIL_ADDRESS.matcher(_uiState.value.email).matches()) {
                         isValid = false
 
                         _uiState.value = _uiState.value.copy(
-                            emailErrorMessage = context.getString(R.string.login_screen_email_invalid_validation_message)
+                            emailErrorMessage = context.getString(br.com.market.core.R.string.login_screen_email_invalid_validation_message)
                         )
                     } else {
                         _uiState.value = _uiState.value.copy(
@@ -75,7 +74,7 @@ class LoginViewModel @Inject constructor(
                         isValid = false
 
                         _uiState.value = _uiState.value.copy(
-                            passwordErrorMessage = context.getString(R.string.login_screen_password_required_validation_message)
+                            passwordErrorMessage = context.getString(br.com.market.core.R.string.login_screen_password_required_validation_message)
                         )
                     } else {
                         _uiState.value = _uiState.value.copy(

@@ -1,7 +1,7 @@
 package br.com.market.domain
 
 import androidx.room.ColumnInfo
-import br.com.market.domain.base.BaseDomain
+import br.com.market.domain.base.MarketRestrictionDomain
 
 /**
  * Classe de dominio que representa [br.com.market.models.Category]
@@ -21,4 +21,4 @@ data class CategoryDomain(
     override var marketId: Long? = null,
     override var synchronized: Boolean = false,
     var name: String = ""
-): BaseDomain()
+): MarketRestrictionDomain()

@@ -10,4 +10,4 @@ data class LoadImageLinkUIState(
     override val showLoading: Boolean = false,
     override val onToggleLoading: () -> Unit = { },
     override val onValidate: () -> Boolean = { false }
-) : BaseUiState()
+) : IValidationUIState, ILoadingUIState, IServerErrorHandlerUIState

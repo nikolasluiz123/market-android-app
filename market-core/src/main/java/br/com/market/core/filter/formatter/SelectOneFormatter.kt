@@ -1,7 +1,7 @@
 package br.com.market.core.filter.formatter
 
 /**
- * Implementação da interface [IAdvancedFilterFormatter] para formatação avançada de seleção única.
+ * Implementação da interface [IFormatter] para formatação avançada de seleção única.
  *
  * Esta classe realiza a formatação de um valor que é um par (Pair) contendo uma string e um inteiro,
  * retornando somente a primeira parte (a string) para representação em texto formatada adequada para
@@ -10,7 +10,7 @@ package br.com.market.core.filter.formatter
  * @constructor Cria uma instância de [SelectOneFormatter].
  * @author Nikolas Luiz Schmitt
  */
-class SelectOneFormatter : IAdvancedFilterFormatter {
+class SelectOneFormatter : IFormatter {
 
     /**
      * Converte um valor do tipo [Pair] (contendo uma string e um inteiro) em uma representação de texto

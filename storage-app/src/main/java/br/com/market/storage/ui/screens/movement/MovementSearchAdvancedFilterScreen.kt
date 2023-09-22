@@ -29,9 +29,9 @@ import br.com.market.core.extensions.getLongFilterValue
 import br.com.market.core.extensions.getLovPairFilterValue
 import br.com.market.core.extensions.getStringFilterValue
 import br.com.market.core.filter.CommonAdvancedFilterItem
-import br.com.market.core.filter.arguments.AdvancedFilterArgs
 import br.com.market.core.filter.arguments.DateAdvancedFilterArgs
-import br.com.market.core.filter.arguments.NumberAdvancedFilterArgs
+import br.com.market.core.filter.arguments.InputArgs
+import br.com.market.core.filter.arguments.InputNumberArgs
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.theme.colorSecondary
 import br.com.market.core.ui.components.LazyVerticalListComponent
@@ -54,9 +54,9 @@ import java.time.LocalDateTime
 @Composable
 fun MovementSearchAdvancedFilterScreen(
     viewModel: MovementSearchAdvancedFilterViewModel,
-    onNavigateToTextFilter: (AdvancedFilterArgs, (Any) -> Unit) -> Unit,
+    onNavigateToTextFilter: (InputArgs, (Any) -> Unit) -> Unit,
     onNavigateToDateRangeFilter: (DateAdvancedFilterArgs, (Any) -> Unit) -> Unit,
-    onNavigateToNumberFilter: (NumberAdvancedFilterArgs, (Any) -> Unit) -> Unit,
+    onNavigateToNumberFilter: (InputNumberArgs, (Any) -> Unit) -> Unit,
     onNavigateToUserLovFilter: ((Any) -> Unit) -> Unit,
     onApplyFilters: (MovementSearchScreenFilters) -> Unit
 ) {
@@ -77,7 +77,7 @@ fun MovementSearchAdvancedFilterScreen(
 fun MovementSearchAdvancedFilterScreen(
     state: AdvancedFilterUIState = AdvancedFilterUIState(),
     onSimpleFilterChange: (String) -> Unit = { },
-    onNavigateToTextFilter: (AdvancedFilterArgs, (Any) -> Unit) -> Unit = { _, _ -> },
+    onNavigateToTextFilter: (InputArgs, (Any) -> Unit) -> Unit = { _, _ -> },
     onNavigateToDateRangeFilter: (DateAdvancedFilterArgs, (Any) -> Unit) -> Unit = { _, _ -> },
     onNavigateToNumberFilter: (NumberAdvancedFilterArgs, (Any) -> Unit) -> Unit = { _, _ -> },
     onNavigateToUserLovFilter: ((Any) -> Unit) -> Unit = { },
@@ -239,9 +239,9 @@ private fun OpenSelectOneOptionFilter(
 @Composable
 fun MovementSearchAdvancedFilterItem(
     item: CommonAdvancedFilterItem,
-    onNavigateToTextFilter: (AdvancedFilterArgs, (Any) -> Unit) -> Unit,
+    onNavigateToTextFilter: (InputArgs, (Any) -> Unit) -> Unit,
     onNavigateToDateRangeFilter: (DateAdvancedFilterArgs, (Any) -> Unit) -> Unit,
-    onNavigateToNumberFilter: (NumberAdvancedFilterArgs, (Any) -> Unit) -> Unit,
+    onNavigateToNumberFilter: (InputNumberArgs, (Any) -> Unit) -> Unit,
     onNavigateToUserLovFilter: ((Any) -> Unit) -> Unit,
     onOperationTypeClick: ((Any) -> Unit) -> Unit
 ) {
@@ -251,7 +251,7 @@ fun MovementSearchAdvancedFilterItem(
             when (item.identifier) {
                 PRODUCT_NAME.name, DESCRIPTION.name -> {
                     onNavigateToTextFilter(
-                        AdvancedFilterArgs(
+                        InputArgs(
                             titleResId = item.labelResId,
                             value = item.formatter.formatToString(item.value)
                         ),
@@ -272,7 +272,7 @@ fun MovementSearchAdvancedFilterItem(
 
                 QUANTITY.name -> {
                     onNavigateToNumberFilter(
-                        NumberAdvancedFilterArgs(
+                        InputNumberArgs(
                             integer = true,
                             titleResId = item.labelResId,
                             value = item.formatter.formatToString(item.value) ?: ""

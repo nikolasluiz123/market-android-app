@@ -3,7 +3,7 @@ package br.com.market.servicedataaccess.webclients
 import android.content.Context
 import br.com.market.domain.UserDomain
 import br.com.market.models.User
-import br.com.market.sdo.user.AuthenticationRequestSDO
+import br.com.market.sdo.AuthenticationRequestSDO
 import br.com.market.servicedataaccess.responses.extensions.getAuthenticationResponseBody
 import br.com.market.servicedataaccess.responses.extensions.getReadResponseBody
 import br.com.market.servicedataaccess.responses.types.AuthenticationResponse

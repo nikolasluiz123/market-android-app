@@ -1,8 +1,8 @@
 package br.com.market.servicedataaccess.services
 
-import br.com.market.sdo.brand.BrandBodySDO
-import br.com.market.sdo.brand.BrandSDO
-import br.com.market.sdo.brand.CategoryBrandSDO
+import br.com.market.sdo.BrandBodySDO
+import br.com.market.sdo.BrandSDO
+import br.com.market.sdo.CategoryBrandSDO
 import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
 import br.com.market.servicedataaccess.responses.types.ReadResponse

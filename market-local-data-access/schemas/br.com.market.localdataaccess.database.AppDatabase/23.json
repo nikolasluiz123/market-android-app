@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 23,
-    "identityHash": "59cc1757cfdaaccc017424e1faffa446",
+    "identityHash": "631730f38373b9704a9b6b25ea6f20ca",
     "entities": [
       {
         "tableName": "addresses",
@@ -546,7 +546,7 @@
       },
       {
         "tableName": "client",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `cpf` TEXT, `user_id` TEXT, `address_id` TEXT, `synchronized` INTEGER NOT NULL, `active` INTEGER NOT NULL, `market_id` INTEGER, PRIMARY KEY(`id`), FOREIGN KEY(`user_id`) REFERENCES `users`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`address_id`) REFERENCES `addresses`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`market_id`) REFERENCES `markets`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `cpf` TEXT, `user_id` TEXT, `address_id` TEXT, `synchronized` INTEGER NOT NULL, `active` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`user_id`) REFERENCES `users`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`address_id`) REFERENCES `addresses`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -583,12 +583,6 @@
             "columnName": "active",
             "affinity": "INTEGER",
             "notNull": true
-          },
-          {
-            "fieldPath": "marketId",
-            "columnName": "market_id",
-            "affinity": "INTEGER",
-            "notNull": false
           }
         ],
         "primaryKey": {
@@ -615,15 +609,6 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_client_address_id` ON `${TABLE_NAME}` (`address_id`)"
-          },
-          {
-            "name": "index_client_market_id",
-            "unique": false,
-            "columnNames": [
-              "market_id"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_client_market_id` ON `${TABLE_NAME}` (`market_id`)"
           }
         ],
         "foreignKeys": [
@@ -644,17 +629,6 @@
             "onUpdate": "NO ACTION",
             "columns": [
               "address_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          },
-          {
-            "table": "markets",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "market_id"
             ],
             "referencedColumns": [
               "id"
@@ -1955,7 +1929,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '59cc1757cfdaaccc017424e1faffa446')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '631730f38373b9704a9b6b25ea6f20ca')"
     ]
   }
 }

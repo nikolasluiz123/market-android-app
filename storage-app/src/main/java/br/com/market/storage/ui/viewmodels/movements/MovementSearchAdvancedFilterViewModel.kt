@@ -6,11 +6,11 @@ import androidx.lifecycle.ViewModel
 import br.com.market.core.extensions.fromJsonNavParamToArgs
 import br.com.market.core.extensions.searchWordsInText
 import br.com.market.core.filter.CommonAdvancedFilterItem
-import br.com.market.core.filter.formatter.DateTimeRangeAdvancedFilterFormatter
-import br.com.market.core.filter.formatter.LovAdvancedFilterFormatter
-import br.com.market.core.filter.formatter.NumberAdvancedFilterFormatter
+import br.com.market.core.filter.formatter.DateTimeRangeFormatter
+import br.com.market.core.filter.formatter.LovFormatter
+import br.com.market.core.filter.formatter.InputNumberFormatter
 import br.com.market.core.filter.formatter.SelectOneFormatter
-import br.com.market.core.filter.formatter.StringAdvancedFilterFormatter
+import br.com.market.core.filter.formatter.InputTextFormatter
 import br.com.market.core.gson.LocalDateTimeAdapter
 import br.com.market.core.ui.states.filter.AdvancedFilterUIState
 import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
@@ -46,7 +46,7 @@ class MovementSearchAdvancedFilterViewModel @Inject constructor(
             filters.add(
                 CommonAdvancedFilterItem(
                     labelResId = R.string.movements_search_screen_label_filter_product_name,
-                    formatter = StringAdvancedFilterFormatter(),
+                    formatter = InputTextFormatter(),
                     identifier = EnumMovementsSearchScreenFilters.PRODUCT_NAME.name,
                     value = filter.productName.value,
                     checked = filter.productName.checked
@@ -55,7 +55,7 @@ class MovementSearchAdvancedFilterViewModel @Inject constructor(
             filters.add(
                 CommonAdvancedFilterItem(
                     labelResId = R.string.movements_search_screen_label_filter_description,
-                    formatter = StringAdvancedFilterFormatter(),
+                    formatter = InputTextFormatter(),
                     identifier = EnumMovementsSearchScreenFilters.DESCRIPTION.name,
                     value = filter.description.value,
                     checked = filter.description.checked
@@ -64,7 +64,7 @@ class MovementSearchAdvancedFilterViewModel @Inject constructor(
             filters.add(
                 CommonAdvancedFilterItem(
                     labelResId = R.string.movements_search_screen_label_filter_date_prevision,
-                    formatter = DateTimeRangeAdvancedFilterFormatter(),
+                    formatter = DateTimeRangeFormatter(),
                     identifier = EnumMovementsSearchScreenFilters.DATE_PREVISION.name,
                     value = filter.datePrevision.value,
                     checked = filter.datePrevision.checked
@@ -73,7 +73,7 @@ class MovementSearchAdvancedFilterViewModel @Inject constructor(
             filters.add(
                 CommonAdvancedFilterItem(
                     labelResId = R.string.movements_search_screen_label_filter_date_realization,
-                    formatter = DateTimeRangeAdvancedFilterFormatter(),
+                    formatter = DateTimeRangeFormatter(),
                     identifier = EnumMovementsSearchScreenFilters.DATE_REALIZATION.name,
                     value = filter.dateRealization.value,
                     checked = filter.dateRealization.checked
@@ -92,7 +92,7 @@ class MovementSearchAdvancedFilterViewModel @Inject constructor(
             filters.add(
                 CommonAdvancedFilterItem(
                     labelResId = R.string.movements_search_screen_label_filter_quantity,
-                    formatter = NumberAdvancedFilterFormatter(integer = true),
+                    formatter = InputNumberFormatter(integer = true),
                     identifier = EnumMovementsSearchScreenFilters.QUANTITY.name,
                     value = filter.quantity.value,
                     checked = filter.quantity.checked
@@ -101,7 +101,7 @@ class MovementSearchAdvancedFilterViewModel @Inject constructor(
             filters.add(
                 CommonAdvancedFilterItem(
                     labelResId = R.string.movements_search_screen_label_filter_user,
-                    formatter = LovAdvancedFilterFormatter(),
+                    formatter = LovFormatter(),
                     identifier = EnumMovementsSearchScreenFilters.RESPONSIBLE.name,
                     value = filter.responsible.value,
                     checked = filter.responsible.checked

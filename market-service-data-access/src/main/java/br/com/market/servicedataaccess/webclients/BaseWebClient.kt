@@ -10,6 +10,7 @@ import br.com.market.servicedataaccess.responses.types.AuthenticationResponse
 import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
 import br.com.market.servicedataaccess.responses.types.ReadResponse
+import br.com.market.servicedataaccess.responses.types.SingleValueResponse
 import java.net.ConnectException
 import java.net.HttpURLConnection
 import java.net.SocketTimeoutException
@@ -78,14 +79,7 @@ open class BaseWebClient(private val context: Context) {
             codeBlock()
         } catch (e: Exception) {
             when (e) {
-                is SocketTimeoutException -> {
-                    PersistenceResponse(
-                        code = HttpURLConnection.HTTP_UNAVAILABLE,
-                        success = false,
-                        error = context.getString(R.string.connection_server_error_message)
-                    )
-                }
-                is ConnectException -> {
+                is SocketTimeoutException, is ConnectException -> {
                     PersistenceResponse(
                         code = HttpURLConnection.HTTP_UNAVAILABLE,
                         success = false,
@@ -195,15 +189,36 @@ open class BaseWebClient(private val context: Context) {
             codeBlock()
         } catch (e: Exception) {
             when (e) {
-                is SocketTimeoutException -> {
+                is SocketTimeoutException, is ConnectException -> {
                     ReadResponse(
                         code = HttpURLConnection.HTTP_UNAVAILABLE,
                         success = false,
                         error = context.getString(R.string.connection_server_error_message)
                     )
                 }
-                is ConnectException -> {
-                    ReadResponse(
+                else -> customExceptions(e)
+            }
+        }
+    }
+
+    suspend fun <T> singleValueServiceErrorHandlingBlock(
+        codeBlock: suspend () -> SingleValueResponse<T>,
+        customExceptions: (e: Exception) -> SingleValueResponse<T> = {
+            Log.e("Error", "readServiceErrorHandlingBlock: ", it)
+
+            SingleValueResponse(
+                code = HttpURLConnection.HTTP_INTERNAL_ERROR,
+                success = false,
+                error = context.getString(R.string.unknown_error_message, it.message),
+            )
+        }
+    ): SingleValueResponse<T> {
+        return try {
+            codeBlock()
+        } catch (e: Exception) {
+            when (e) {
+                is SocketTimeoutException, is ConnectException -> {
+                    SingleValueResponse(
                         code = HttpURLConnection.HTTP_UNAVAILABLE,
                         success = false,
                         error = context.getString(R.string.connection_server_error_message)
@@ -258,14 +273,7 @@ open class BaseWebClient(private val context: Context) {
             codeBlock()
         } catch (e: Exception) {
             when (e) {
-                is SocketTimeoutException -> {
-                    MarketServiceResponse(
-                        code = HttpURLConnection.HTTP_UNAVAILABLE,
-                        success = false,
-                        error = context.getString(R.string.connection_server_error_message)
-                    )
-                }
-                is ConnectException -> {
+                is SocketTimeoutException, is ConnectException -> {
                     MarketServiceResponse(
                         code = HttpURLConnection.HTTP_UNAVAILABLE,
                         success = false,

@@ -5,12 +5,14 @@ import br.com.market.servicedataaccess.responses.adapters.LocalDateTimeTypeAdapt
 import br.com.market.servicedataaccess.responses.adapters.LocalDateTypeAdapter
 import br.com.market.servicedataaccess.services.IBrandService
 import br.com.market.servicedataaccess.services.ICategoryService
+import br.com.market.servicedataaccess.services.IClientService
 import br.com.market.servicedataaccess.services.ICompanyService
 import br.com.market.servicedataaccess.services.IDeviceService
 import br.com.market.servicedataaccess.services.IMarketService
 import br.com.market.servicedataaccess.services.IProductService
 import br.com.market.servicedataaccess.services.IStorageOperationsHistoryService
 import br.com.market.servicedataaccess.services.IUserService
+import br.com.market.servicedataaccess.services.IViaCepService
 import com.google.gson.*
 import dagger.Module
 import dagger.Provides
@@ -116,6 +118,18 @@ class RetrofitModule {
     @Singleton
     fun provideMarketService(retrofit: Retrofit): IMarketService {
         return retrofit.create(IMarketService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideClientService(retrofit: Retrofit): IClientService {
+        return retrofit.create(IClientService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideViaCepService(retrofit: Retrofit): IViaCepService {
+        return retrofit.create(IViaCepService::class.java)
     }
 
     @Provides

@@ -10,6 +10,7 @@ import br.com.market.localdataaccess.converters.RoomTypeConverters
 import br.com.market.localdataaccess.dao.AddressDAO
 import br.com.market.localdataaccess.dao.BrandDAO
 import br.com.market.localdataaccess.dao.CategoryDAO
+import br.com.market.localdataaccess.dao.ClientDAO
 import br.com.market.localdataaccess.dao.CompanyDAO
 import br.com.market.localdataaccess.dao.DeviceDAO
 import br.com.market.localdataaccess.dao.MarketDAO
@@ -73,6 +74,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun marketDAO(): MarketDAO
 
     abstract fun addressDAO(): AddressDAO
+
+    abstract fun clientDAO(): ClientDAO
 }
 
 @DeleteColumn(tableName = "theme_definitions", "synchronized")
@@ -84,4 +87,5 @@ class AutoMigrationSpec21To22: AutoMigrationSpec
 @DeleteColumn(tableName = "markets", "active")
 @DeleteColumn(tableName = "users", "synchronized")
 @DeleteColumn(tableName = "users", "active")
+@DeleteColumn(tableName = "client", columnName = "market_id")
 class AutoMigrationSpec22To23: AutoMigrationSpec

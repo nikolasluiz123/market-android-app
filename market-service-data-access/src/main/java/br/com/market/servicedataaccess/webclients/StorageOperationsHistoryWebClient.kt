@@ -2,7 +2,7 @@ package br.com.market.servicedataaccess.webclients
 
 import android.content.Context
 import br.com.market.models.StorageOperationHistory
-import br.com.market.sdo.storageoperationshistory.StorageOperationHistorySDO
+import br.com.market.sdo.StorageOperationHistorySDO
 import br.com.market.servicedataaccess.responses.extensions.getPersistenceResponseBody
 import br.com.market.servicedataaccess.responses.extensions.getReadResponseBody
 import br.com.market.servicedataaccess.responses.extensions.getResponseBody

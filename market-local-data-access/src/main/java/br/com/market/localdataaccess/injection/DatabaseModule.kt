@@ -5,6 +5,7 @@ import androidx.room.Room
 import br.com.market.localdataaccess.dao.AddressDAO
 import br.com.market.localdataaccess.dao.BrandDAO
 import br.com.market.localdataaccess.dao.CategoryDAO
+import br.com.market.localdataaccess.dao.ClientDAO
 import br.com.market.localdataaccess.dao.CompanyDAO
 import br.com.market.localdataaccess.dao.DeviceDAO
 import br.com.market.localdataaccess.dao.MarketDAO
@@ -76,6 +77,10 @@ class DatabaseModule {
     @Provides
     @Singleton
     fun provideAddressDAO(appDatabase: AppDatabase): AddressDAO = appDatabase.addressDAO()
+
+    @Provides
+    @Singleton
+    fun provideClientDAO(appDatabase: AppDatabase): ClientDAO = appDatabase.clientDAO()
 
     /**
      * função para criar o DataBase uma única vez.

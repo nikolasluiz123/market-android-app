@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import br.com.market.core.R
 import br.com.market.core.filter.CommonAdvancedFilterItem
-import br.com.market.core.filter.formatter.StringAdvancedFilterFormatter
+import br.com.market.core.filter.formatter.InputTextFormatter
 import br.com.market.core.theme.GREY_800
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.LabeledText
@@ -101,7 +101,7 @@ fun AdvancedFilterItemPreview() {
                 CommonAdvancedFilterItem(
                     labelResId = R.string.app_name,
                     identifier = "teste",
-                    formatter = StringAdvancedFilterFormatter()
+                    formatter = InputTextFormatter()
                 )
             ) { }
         }

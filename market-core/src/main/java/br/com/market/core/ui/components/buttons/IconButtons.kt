@@ -11,7 +11,6 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,8 +20,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.market.core.R
 import br.com.market.core.theme.GREY_500
@@ -210,6 +211,24 @@ fun IconButtonTime(onClick: () -> Unit = { }) {
         Icon(
             painter = painterResource(id = R.drawable.ic_time_24dp), contentDescription = stringResource(R.string.label_calendar)
         )
+    }
+}
+
+@Composable
+fun IconButtonVisibility(passwordVisible: Boolean, onClick: () -> Unit) {
+    lateinit var description: String
+    lateinit var image: ImageVector
+
+    if (passwordVisible) {
+        image = ImageVector.vectorResource(R.drawable.ic_visibility_24)
+        description = stringResource(R.string.description_icon_hide_password)
+    } else {
+        image = ImageVector.vectorResource(R.drawable.ic_visibility_off_24)
+        description = stringResource(R.string.description_icon_show_password)
+    }
+
+    IconButton(onClick = onClick) {
+        Icon(imageVector = image, description)
     }
 }
 

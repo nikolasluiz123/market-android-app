@@ -1,6 +1,6 @@
 package br.com.market.sdo
 
-import br.com.market.sdo.base.BaseSDO
+import br.com.market.sdo.base.MarketRestrictionSDO
 
 /**
  * Classe para envio e recebimento de marcado do serviço.
@@ -17,4 +17,4 @@ data class CategorySDO(
     override var marketId: Long? = null,
     override var active: Boolean = true,
     var name: String? = null
-): BaseSDO()
+): MarketRestrictionSDO()

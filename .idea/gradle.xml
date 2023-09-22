@@ -11,6 +11,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/commerce-app" />
             <option value="$PROJECT_DIR$/market-core" />
             <option value="$PROJECT_DIR$/market-local-data-access" />
             <option value="$PROJECT_DIR$/market-models" />

@@ -8,6 +8,5 @@ package br.com.market.domain.base
 abstract class BaseDomain {
     abstract var id: String?
     abstract var active: Boolean
-    abstract var marketId: Long?
     abstract var synchronized: Boolean
 }
