@@ -13,6 +13,7 @@ import br.com.market.localdataaccess.dao.ProductDAO
 import br.com.market.localdataaccess.dao.ProductImageDAO
 import br.com.market.localdataaccess.dao.StorageOperationsHistoryDAO
 import br.com.market.localdataaccess.dao.UserDAO
+import br.com.market.localdataaccess.dao.report.StorageOperationsReportDAO
 import br.com.market.localdataaccess.database.AppDatabase
 import dagger.Module
 import dagger.Provides
@@ -81,6 +82,10 @@ class DatabaseModule {
     @Provides
     @Singleton
     fun provideClientDAO(appDatabase: AppDatabase): ClientDAO = appDatabase.clientDAO()
+
+    @Provides
+    @Singleton
+    fun provideStorageReportDAO(appDatabase: AppDatabase): StorageOperationsReportDAO = appDatabase.storageReportDAO()
 
     /**
      * função para criar o DataBase uma única vez.

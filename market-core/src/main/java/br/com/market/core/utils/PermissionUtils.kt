@@ -2,6 +2,7 @@ package br.com.market.core.utils
 
 import android.Manifest
 import android.os.Build
+import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
@@ -26,6 +27,11 @@ object PermissionUtils {
      */
     @Composable
     fun requestPermissionLauncher(onResult: (Boolean) -> Unit = { }) = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission(), onResult)
+
+    @Composable
+    fun requestMultiplePermissionsLauncher(onResult: (Map<String, Boolean>) -> Unit = { }): ManagedActivityResultLauncher<Array<String>, Map<String, Boolean>> {
+        return rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions(), onResult)
+    }
 
     /**
      * Função responsável por retornar a permissão para leitura

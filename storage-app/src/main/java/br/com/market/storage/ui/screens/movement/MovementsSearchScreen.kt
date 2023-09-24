@@ -29,10 +29,12 @@ import br.com.market.core.R
 import br.com.market.core.theme.GREY_800
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.MarketBottomAppBar
+import br.com.market.core.ui.components.MarketCircularBlockUIProgressIndicator
 import br.com.market.core.ui.components.PagedVerticalListComponent
 import br.com.market.core.ui.components.SimpleMarketTopAppBar
 import br.com.market.core.ui.components.buttons.IconButtonAdvancedFilters
 import br.com.market.core.ui.components.buttons.IconButtonAdvancedFiltersApply
+import br.com.market.core.ui.components.buttons.IconButtonReport
 import br.com.market.core.ui.components.buttons.fab.MarketFloatingActionButtonMultiActions
 import br.com.market.core.ui.components.buttons.fab.SmallFabActions
 import br.com.market.core.ui.components.buttons.fab.SubActionFabItem
@@ -68,7 +70,8 @@ fun MovementsSearchScreen(
                 viewModel.updateList(advancedFilter = it)
             }
         },
-        hasFilterApplied = viewModel.hasAdvancedFilterApplied()
+        hasFilterApplied = viewModel.hasAdvancedFilterApplied(),
+        onReportGenerateClick = viewModel::generateReport
     )
 }
 
@@ -81,10 +84,12 @@ fun MovementsSearchScreen(
     onMovementClick: (StorageOperationHistoryTuple) -> Unit = { },
     onSimpleFilterChange: (String) -> Unit = { },
     onAdvancedFiltersClick: () -> Unit = { },
-    hasFilterApplied: Boolean = false
+    hasFilterApplied: Boolean = false,
+    onReportGenerateClick: (onStart: () -> Unit, onFinish: () -> Unit) -> Unit = { _,_ -> }
 ) {
     val bottomBarState = rememberFabMultiActionsState()
     val pagingData = state.operations.collectAsLazyPagingItems()
+    var showLoadingBlockUI by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -96,7 +101,16 @@ fun MovementsSearchScreen(
             )
         },
         bottomBar = {
-            MarketBottomAppBar {
+            MarketBottomAppBar(
+                actions = {
+                    IconButtonReport {
+                        onReportGenerateClick(
+                            { showLoadingBlockUI = true },
+                            { showLoadingBlockUI = false }
+                        )
+                    }
+                }
+            ) {
                 MarketFloatingActionButtonMultiActions(state = bottomBarState) {
                     Icon(
                         imageVector = Icons.Default.Add,
@@ -114,6 +128,11 @@ fun MovementsSearchScreen(
                 searchDividerRef, headerRef, headerDivider) = createRefs()
 
             var searchActive by remember { mutableStateOf(false) }
+
+            MarketCircularBlockUIProgressIndicator(
+                show = showLoadingBlockUI,
+                label = stringResource(R.string.label_sincronizing)
+            )
 
             SimpleFilter(
                 modifier = Modifier

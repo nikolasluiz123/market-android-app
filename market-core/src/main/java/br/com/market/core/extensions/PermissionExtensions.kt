@@ -40,6 +40,10 @@ fun Context.verifyGalleryPermissionGranted(): Boolean {
     return verifyPermissionGranted(PermissionUtils.getMediaImagesPermission())
 }
 
+fun Context.verifyWriteExternalStoragePermissionGranted(): Boolean {
+    return verifyPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+}
+
 /**
  * Função que executa um launcher da galeria do android para exibir apenas
  * imagens.
@@ -66,4 +70,8 @@ fun ManagedActivityResultLauncher<String, Boolean>.requestCameraPermission() {
  */
 fun ManagedActivityResultLauncher<String, Boolean>.requestGalleryPermission() {
     this.launch(PermissionUtils.getMediaImagesPermission())
+}
+
+fun ManagedActivityResultLauncher<String, Boolean>.requestWriteExternalStoragePermission() {
+    this.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.market.core.extensions.navParamToString
 import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
+import br.com.market.market.pdf.generator.reports.StorageOperationsReportGenerator
 import br.com.market.storage.repository.BrandRepository
 import br.com.market.storage.repository.ProductRepository
 import br.com.market.storage.repository.StorageOperationsHistoryRepository
@@ -13,10 +14,12 @@ import br.com.market.storage.ui.navigation.category.argumentCategoryId
 import br.com.market.storage.ui.navigation.product.argumentProductId
 import br.com.market.storage.ui.states.MovementsSearchUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,7 +27,8 @@ class MovementsSearchViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val brandRepository: BrandRepository,
     private val productRepository: ProductRepository,
-    private val storageOperationsHistoryRepository: StorageOperationsHistoryRepository
+    private val storageOperationsHistoryRepository: StorageOperationsHistoryRepository,
+    private val reportGenerator: StorageOperationsReportGenerator
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<MovementsSearchUIState> = MutableStateFlow(MovementsSearchUIState())
@@ -101,5 +105,19 @@ class MovementsSearchViewModel @Inject constructor(
                 filter.operationType.isFilterApplied() ||
                 filter.productName.isFilterApplied() ||
                 filter.quantity.isFilterApplied()
+    }
+
+    fun generateReport(onStart: () -> Unit, onFinish: () -> Unit) {
+        viewModelScope.launch {
+            withContext(Main) {
+                onStart()
+            }
+
+            reportGenerator.generateReport()
+
+            withContext(Main) {
+                onFinish()
+            }
+        }
     }
 }

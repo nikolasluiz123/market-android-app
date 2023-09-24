@@ -18,6 +18,7 @@ import br.com.market.localdataaccess.dao.ProductDAO
 import br.com.market.localdataaccess.dao.ProductImageDAO
 import br.com.market.localdataaccess.dao.StorageOperationsHistoryDAO
 import br.com.market.localdataaccess.dao.UserDAO
+import br.com.market.localdataaccess.dao.report.StorageOperationsReportDAO
 import br.com.market.models.*
 
 /**
@@ -76,6 +77,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun addressDAO(): AddressDAO
 
     abstract fun clientDAO(): ClientDAO
+
+    abstract fun storageReportDAO(): StorageOperationsReportDAO
 }
 
 @DeleteColumn(tableName = "theme_definitions", "synchronized")

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <string name="storage_operations_report_label_company">Empresa:</string>
+    <string name="storage_operations_report_label_market">Mercado:</string>
+    <string name="storage_operations_report_label_date">Data de Geração:</string>
+
+    <string name="storage_operations_report_title">Relatório de Operações</string>
+
+    <string name="storage_operations_report_label_category">Categoria</string>
+    <string name="storage_operations_report_label_brand">Marca</string>
+    <string name="storage_operations_report_label_product">Produto</string>
+    <string name="storage_operations_report_table_column_label_date_prevision">Data de Previsão</string>
+    <string name="storage_operations_report_table_column_label_date_realization">Data de Realização</string>
+    <string name="storage_operations_report_table_column_label_operation_type">Tipo de Operação</string>
+    <string name="storage_operations_report_table_column_label_quantity">Quantidade</string>
+    <string name="storage_operations_report_label_operation_type_input">Entrada</string>
+    <string name="storage_operations_report_label_operation_type_scheduled_input">Entrada Agendada</string>
+    <string name="storage_operations_report_label_operation_type_sell">Venda</string>
+    <string name="storage_operations_report_label_operation_type_output">Baixa</string>
+</resources>

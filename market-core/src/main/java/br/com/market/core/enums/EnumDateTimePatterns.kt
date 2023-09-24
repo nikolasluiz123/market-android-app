@@ -24,5 +24,7 @@ enum class EnumDateTimePatterns(val pattern: String) {
     /**
      * Padrão de formato para datas e horas no formato "dd/MM/yyyy HH:mm".
      */
-    DATE_TIME("dd/MM/yyyy HH:mm")
+    DATE_TIME("dd/MM/yyyy HH:mm"),
+
+    DATE_TIME_FILE_NAME("dd_MM_yyyy_HHmm")
 }

@@ -62,6 +62,7 @@ dependencies {
     implementation project(path: ':market-models')
     implementation project(path: ':market-local-data-access')
     implementation project(path: ':market-service-data-access')
+    implementation project(path: ':market-pdf-generator')
 
     implementation platform('com.google.firebase:firebase-bom:32.2.3')
     implementation 'com.google.firebase:firebase-analytics-ktx'

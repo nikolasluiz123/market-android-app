@@ -1,20 +1,26 @@
 package br.com.market.storage.ui.screens.category
 
+import android.Manifest
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.paging.compose.collectAsLazyPagingItems
 import br.com.market.core.R
+import br.com.market.core.extensions.verifyCameraPermissionGranted
+import br.com.market.core.extensions.verifyGalleryPermissionGranted
+import br.com.market.core.extensions.verifyWriteExternalStoragePermissionGranted
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.MarketBottomAppBar
 import br.com.market.core.ui.components.MarketCircularBlockUIProgressIndicator
@@ -25,6 +31,7 @@ import br.com.market.core.ui.components.buttons.IconButtonLogout
 import br.com.market.core.ui.components.buttons.IconButtonSync
 import br.com.market.core.ui.components.buttons.fab.FloatingActionButtonAdd
 import br.com.market.core.ui.components.filter.SimpleFilter
+import br.com.market.core.utils.PermissionUtils
 import br.com.market.storage.ui.states.category.CategorySearchUIState
 import br.com.market.storage.ui.viewmodels.category.CategorySearchViewModel
 import java.util.*
@@ -69,6 +76,9 @@ fun CategorySearchScreen(
     val pagingData = state.categories.collectAsLazyPagingItems()
     var showLoadingBlockUI by remember { mutableStateOf(false) }
 
+    val context = LocalContext.current
+    val requestPermissionLauncher = PermissionUtils.requestMultiplePermissionsLauncher()
+
     Scaffold(
         topBar = {
             SimpleMarketTopAppBar(
@@ -104,6 +114,25 @@ fun CategorySearchScreen(
             )
         }
     ) { padding ->
+
+        LaunchedEffect(Unit) {
+            val permissions = mutableListOf<String>()
+
+            if (!context.verifyWriteExternalStoragePermissionGranted()) {
+                permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            }
+
+            if (!context.verifyCameraPermissionGranted()) {
+                permissions.add(Manifest.permission.CAMERA)
+            }
+
+            if (!context.verifyGalleryPermissionGranted()) {
+                permissions.add(PermissionUtils.getMediaImagesPermission())
+            }
+
+            requestPermissionLauncher.launch(permissions.toTypedArray())
+        }
+
         ConstraintLayout(modifier = Modifier.padding(padding)) {
             val (listRef, searchBarRef, searchDividerRef) = createRefs()
             var searchActive by remember { mutableStateOf(false) }

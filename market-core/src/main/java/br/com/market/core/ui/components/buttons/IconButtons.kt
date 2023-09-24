@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DropdownMenu
@@ -248,6 +249,16 @@ fun IconButtonAdvancedFiltersApply(onClick: () -> Unit = { }) {
         Icon(
             painter = painterResource(id = R.drawable.ic_advanced_filter_apply),
             contentDescription = "Filtros Avançados Aplicados"
+        )
+    }
+}
+
+@Composable
+fun IconButtonReport(onClick: () -> Unit = { }) {
+    IconButton(onClick = onClick) {
+        Icon(
+            imageVector = Icons.Default.List,
+            contentDescription = "Relatório"
         )
     }
 }
