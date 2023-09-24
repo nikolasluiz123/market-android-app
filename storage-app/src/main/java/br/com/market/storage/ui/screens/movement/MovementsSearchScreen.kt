@@ -131,7 +131,7 @@ fun MovementsSearchScreen(
 
             MarketCircularBlockUIProgressIndicator(
                 show = showLoadingBlockUI,
-                label = stringResource(R.string.label_sincronizing)
+                label = stringResource(string.label_generating_report)
             )
 
             SimpleFilter(

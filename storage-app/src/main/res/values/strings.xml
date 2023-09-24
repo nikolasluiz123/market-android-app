@@ -99,4 +99,5 @@
     <string name="product_lov_placeholder_filter">Buscar por Nome</string>
     <string name="category_screen_tab_brand_buscar_por">Buscar por Nome</string>
     <string name="movements_search_screen_label_quantity_header">Quantidade Total em Estoque</string>
+    <string name="label_generating_report">Gerando Relatório...</string>
 </resources>
