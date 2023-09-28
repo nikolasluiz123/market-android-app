@@ -55,9 +55,12 @@ abstract class BaseReportGenerator(val context: Context) {
             Paints.defaultLabelPaint
         )
 
+        val bitmapHeight = bitmap.height.toFloat()
+        bitmap.recycle()
+
         return Position(
             axisX = reportTitlePosition.axisX,
-            axisY = bitmap.height.toFloat()
+            axisY = bitmapHeight
         )
     }
 
