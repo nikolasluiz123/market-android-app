@@ -95,7 +95,14 @@ object FileUtils {
     }
 
     private fun getFileName(fullFileName: String): String {
-        return fullFileName.split("-")[0].replace(".pdf", "")
+        val nameWithoutPath = getFileNameWithoutPath(fullFileName)
+        return nameWithoutPath.split("-")[0].replace(".pdf", "")
+    }
+
+    private fun getFileNameWithoutPath(fullFileName: String) = if (fullFileName.contains("/")) {
+        fullFileName.substring(fullFileName.lastIndexOf("/") + 1)
+    } else {
+        fullFileName
     }
 
     private fun getReportsModuleDirectory(folder: EnumReportDirectory): File {
