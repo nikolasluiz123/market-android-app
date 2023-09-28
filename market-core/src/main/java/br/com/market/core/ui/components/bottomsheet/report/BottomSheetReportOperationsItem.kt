@@ -1,10 +1,10 @@
-package br.com.market.core.ui.components.bottomsheet.loadimage
+package br.com.market.core.ui.components.bottomsheet.report
 
 import br.com.market.core.ui.components.bottomsheet.IBottomSheetItem
 
 /**
- * Classe que represent um item no bottomsheet de carregamento de
- * imagens.
+ * Classe que representa um item no bottomsheet com de operações
+ * para realizar com relatórios PDF.
  *
  * @property option O valor do item usado em comparações para executar x ou y ação
  * @property labelResId Label exibido no item do bottomsheet
@@ -13,9 +13,9 @@ import br.com.market.core.ui.components.bottomsheet.IBottomSheetItem
  *
  * @author Nikolas Luiz Schmitt
  */
-class BottomSheetLoadImageItem(
-    override val option: EnumOptionsBottomSheetLoadImage,
+class BottomSheetReportOperationsItem(
+    override val option: EnumReportBottomSheetOptions,
     override val labelResId: Int,
     override val iconResId: Int,
     override val iconDescriptionResId: Int
-) : IBottomSheetItem<EnumOptionsBottomSheetLoadImage>
+) : IBottomSheetItem<EnumReportBottomSheetOptions>

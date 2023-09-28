@@ -44,6 +44,10 @@ fun String.parseToLocalDateTime(enumDateTimePatterns: EnumDateTimePatterns): Loc
     return LocalDateTime.parse(this, DateTimeFormatter.ofPattern(enumDateTimePatterns.pattern))
 }
 
+fun String.formatFileDateToDateTime(): String {
+    return parseToLocalDateTime(EnumDateTimePatterns.DATE_TIME_FILE_NAME).format(EnumDateTimePatterns.DATE_TIME)
+}
+
 /**
  * Formata um objeto LocalDate em uma string utilizando o padrão especificado.
  *

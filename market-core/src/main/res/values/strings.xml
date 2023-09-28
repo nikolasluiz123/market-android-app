@@ -58,6 +58,11 @@
     <string name="login_screen_email_invalid_validation_message">O e-mail é inválido.</string>
     <string name="label_navigate">Navegar</string>
     <string name="placeholder">Sem Imagem</string>
+    <string name="label_share_bottom_sheet_report_options">Compartilhar</string>
+    <string name="label_view_bottom_sheet_report_options">Visualizar</string>
+    <string name="label_delete_bottom_sheet_report_options">Deletar</string>
+    <string name="label_icon_view_file_bottom_sheet_report_description">Abrir o Relatório</string>
+    <string name="label_icon_deletar_bottom_sheet_report_description">Deletar o Relatório</string>
 
     <string-array name="movement_screen_advanced_filter_operation_type_labels">
         <item>Entrada</item>

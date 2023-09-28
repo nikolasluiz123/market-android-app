@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/market-core" />
             <option value="$PROJECT_DIR$/market-local-data-access" />
             <option value="$PROJECT_DIR$/market-models" />
+            <option value="$PROJECT_DIR$/market-pdf-generator" />
             <option value="$PROJECT_DIR$/market-service-data-access" />
             <option value="$PROJECT_DIR$/storage-app" />
           </set>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
-    <external-files-path
-        name="product_images"
-        path="Pictures" />
+   <external-path
+       name="shared_reports"
+       path="Documents/market/storage/reports" />
 </paths>

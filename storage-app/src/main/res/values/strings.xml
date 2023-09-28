@@ -100,4 +100,8 @@
     <string name="category_screen_tab_brand_buscar_por">Buscar por Nome</string>
     <string name="movements_search_screen_label_quantity_header">Quantidade Total em Estoque</string>
     <string name="label_generating_report">Gerando Relatório...</string>
+    <string name="dialog_reports_label_name">Nome</string>
+    <string name="dialog_reports_label_date">Data de Geração</string>
+    <string name="report_search_screen_label_title">Relatórios Gerados</string>
+    <string name="reports_screen_search_for">Buscar por Nome ou Data</string>
 </resources>

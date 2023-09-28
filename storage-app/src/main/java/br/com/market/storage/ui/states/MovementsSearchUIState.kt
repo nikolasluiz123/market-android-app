@@ -3,6 +3,7 @@ package br.com.market.storage.ui.states
 import androidx.paging.PagingData
 import br.com.market.core.ui.states.IValidationUIState
 import br.com.market.localdataaccess.tuples.StorageOperationHistoryTuple
+import br.com.market.market.pdf.generator.common.ReportFile
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -14,6 +15,7 @@ data class MovementsSearchUIState(
     var brandName: String? = null,
     var productQuantity: Int = 0,
     val operations: Flow<PagingData<StorageOperationHistoryTuple>> = emptyFlow(),
+    val generatedReports: List<ReportFile> = emptyList(),
     override val onValidate: () -> Boolean = { false }
 ) : IValidationUIState {
 

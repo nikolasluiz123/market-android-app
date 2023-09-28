@@ -6,8 +6,8 @@ package br.com.market.core.ui.components.bottomsheet
  *
  * @author Nikolas Luiz Schmitt
  */
-interface IBottomSheetItem {
-    val option: IEnumOptionsBottomSheet
+interface IBottomSheetItem<T: IEnumOptionsBottomSheet> {
+    val option: T
     val iconResId: Int
     val labelResId: Int
     val iconDescriptionResId: Int

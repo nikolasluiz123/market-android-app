@@ -25,7 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.paging.compose.collectAsLazyPagingItems
-import br.com.market.core.R
+import br.com.market.core.R.drawable.*
 import br.com.market.core.theme.GREY_800
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.MarketBottomAppBar
@@ -35,6 +35,7 @@ import br.com.market.core.ui.components.SimpleMarketTopAppBar
 import br.com.market.core.ui.components.buttons.IconButtonAdvancedFilters
 import br.com.market.core.ui.components.buttons.IconButtonAdvancedFiltersApply
 import br.com.market.core.ui.components.buttons.IconButtonReport
+import br.com.market.core.ui.components.buttons.IconButtonReports
 import br.com.market.core.ui.components.buttons.fab.MarketFloatingActionButtonMultiActions
 import br.com.market.core.ui.components.buttons.fab.SmallFabActions
 import br.com.market.core.ui.components.buttons.fab.SubActionFabItem
@@ -43,6 +44,7 @@ import br.com.market.core.ui.components.filter.SimpleFilter
 import br.com.market.enums.EnumOperationType
 import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
 import br.com.market.localdataaccess.tuples.StorageOperationHistoryTuple
+import br.com.market.market.pdf.generator.enums.EnumReportDirectory
 import br.com.market.storage.R.*
 import br.com.market.storage.ui.states.MovementsSearchUIState
 import br.com.market.storage.ui.viewmodels.movements.MovementsSearchViewModel
@@ -54,6 +56,7 @@ fun MovementsSearchScreen(
     onBackClick: () -> Unit,
     onMovementClick: (StorageOperationHistoryTuple) -> Unit,
     onAdvancedFiltersClick: (MovementSearchScreenFilters, (MovementSearchScreenFilters) -> Unit) -> Unit,
+    onNavigateToReportList: (directory: String) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -71,7 +74,8 @@ fun MovementsSearchScreen(
             }
         },
         hasFilterApplied = viewModel.hasAdvancedFilterApplied(),
-        onReportGenerateClick = viewModel::generateReport
+        onReportGenerateClick = viewModel::generateReport,
+        onNavigateToReportList = onNavigateToReportList
     )
 }
 
@@ -85,7 +89,8 @@ fun MovementsSearchScreen(
     onSimpleFilterChange: (String) -> Unit = { },
     onAdvancedFiltersClick: () -> Unit = { },
     hasFilterApplied: Boolean = false,
-    onReportGenerateClick: (onStart: () -> Unit, onFinish: () -> Unit) -> Unit = { _,_ -> }
+    onReportGenerateClick: (onStart: () -> Unit, onFinish: () -> Unit) -> Unit = { _, _ -> },
+    onNavigateToReportList: (directory: String) -> Unit = { }
 ) {
     val bottomBarState = rememberFabMultiActionsState()
     val pagingData = state.operations.collectAsLazyPagingItems()
@@ -106,15 +111,22 @@ fun MovementsSearchScreen(
                     IconButtonReport {
                         onReportGenerateClick(
                             { showLoadingBlockUI = true },
-                            { showLoadingBlockUI = false }
+                            {
+                                showLoadingBlockUI = false
+                                onNavigateToReportList(EnumReportDirectory.REPORT_DIRECTORY_STORAGE_OPERATIONS.path)
+                            }
                         )
+                    }
+
+                    IconButtonReports {
+                        onNavigateToReportList(EnumReportDirectory.REPORT_DIRECTORY_STORAGE_OPERATIONS.path)
                     }
                 }
             ) {
                 MarketFloatingActionButtonMultiActions(state = bottomBarState) {
                     Icon(
                         imageVector = Icons.Default.Add,
-                        contentDescription = stringResource(R.string.label_adicionar),
+                        contentDescription = stringResource(br.com.market.core.R.string.label_adicionar),
                         tint = Color.White
                     )
                 }
@@ -236,7 +248,7 @@ fun MovementsSearchScreen(
                 state = bottomBarState,
                 subActionsFab = listOf(
                     SubActionFabItem(
-                        icon = painterResource(id = R.drawable.ic_calendar_24dp),
+                        icon = painterResource(id = ic_calendar_24dp),
                         label = "Agendar Entrada",
                         onFabItemClicked = {
                             onAddMovementClick(
@@ -248,7 +260,7 @@ fun MovementsSearchScreen(
                         }
                     ),
                     SubActionFabItem(
-                        icon = painterResource(id = R.drawable.ic_input_storage_24dp),
+                        icon = painterResource(id = ic_input_storage_24dp),
                         label = "Entrada",
                         onFabItemClicked = {
                             onAddMovementClick(
@@ -260,7 +272,7 @@ fun MovementsSearchScreen(
                         }
                     ),
                     SubActionFabItem(
-                        icon = painterResource(id = R.drawable.ic_warning_24dp),
+                        icon = painterResource(id = ic_warning_24dp),
                         label = "Baixa",
                         onFabItemClicked = {
                             onAddMovementClick(

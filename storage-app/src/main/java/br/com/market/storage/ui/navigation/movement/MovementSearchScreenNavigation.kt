@@ -21,6 +21,7 @@ fun NavGraphBuilder.movementsSearchScreen(
     onAddMovementClick: (String, String, EnumOperationType, String?) -> Unit,
     onMovementClick: (StorageOperationHistoryTuple) -> Unit,
     onAdvancedFiltersClick: (MovementSearchScreenFilters, (MovementSearchScreenFilters) -> Unit) -> Unit,
+    onNavigateToReportList: (directory: String) -> Unit
 ) {
     composable(route = "$movementsSearchScreenRoute?$argumentCategoryId={$argumentCategoryId}&$argumentBrandId={$argumentBrandId}&$argumentProductId={$argumentProductId}") {
         val viewModel = hiltViewModel<MovementsSearchViewModel>()
@@ -31,6 +32,7 @@ fun NavGraphBuilder.movementsSearchScreen(
             onBackClick = onBackClick,
             onMovementClick = onMovementClick,
             onAdvancedFiltersClick = onAdvancedFiltersClick,
+            onNavigateToReportList = onNavigateToReportList
         )
     }
 }

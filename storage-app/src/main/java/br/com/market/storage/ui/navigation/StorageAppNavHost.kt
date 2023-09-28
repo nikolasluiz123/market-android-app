@@ -41,6 +41,8 @@ import br.com.market.storage.ui.navigation.movement.navigateToMovementSearchAdva
 import br.com.market.storage.ui.navigation.movement.navigateToMovementsSearchScreen
 import br.com.market.storage.ui.navigation.product.navigateToProductScreen
 import br.com.market.storage.ui.navigation.product.productScreen
+import br.com.market.storage.ui.navigation.report.navigateToReportSearchScreen
+import br.com.market.storage.ui.navigation.report.reportSearchScreen
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
@@ -158,7 +160,8 @@ fun StorageAppNavHost(
             onMovementClick = {
                 navController.navigateToMovementScreen(it.categoryId, it.brandId, it.operationType, it.productId, it.id)
             },
-            onAdvancedFiltersClick = navController::navigateToMovementSearchAdvancedFilterScreen
+            onAdvancedFiltersClick = navController::navigateToMovementSearchAdvancedFilterScreen,
+            onNavigateToReportList = navController::navigateToReportSearchScreen
         )
 
         movementScreen(
@@ -242,6 +245,10 @@ fun StorageAppNavHost(
                 navController.popBackStackWithResult(numberAdvancedFilterScreenNavResultCallbackKey, it)
             },
             onCancelClick = navController::popBackStack
+        )
+
+        reportSearchScreen(
+            onNavigateToBack = navController::popBackStack
         )
     }
 }
