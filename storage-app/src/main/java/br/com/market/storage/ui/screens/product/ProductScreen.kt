@@ -28,19 +28,22 @@ import br.com.market.core.extensions.requestGalleryPermission
 import br.com.market.core.extensions.verifyCameraPermissionGranted
 import br.com.market.core.extensions.verifyGalleryPermissionGranted
 import br.com.market.core.theme.MarketTheme
-import br.com.market.core.ui.components.MarketBottomAppBar
-import br.com.market.core.ui.components.OutlinedTextFieldValidation
-import br.com.market.core.ui.components.SimpleMarketTopAppBar
-import br.com.market.core.ui.components.bottomsheet.BottomSheetLoadImage
 import br.com.market.core.ui.components.bottomsheet.loadimage.EnumOptionsBottomSheetLoadImage
 import br.com.market.core.ui.components.buttons.*
-import br.com.market.core.ui.components.buttons.fab.FloatingActionButtonSave
-import br.com.market.core.ui.components.dialog.DialogMessage
 import br.com.market.core.utils.MediaUtils.openCameraLauncher
 import br.com.market.core.utils.MediaUtils.openGalleryLauncher
 import br.com.market.core.utils.PermissionUtils.requestPermissionLauncher
 import br.com.market.domain.ProductDomain
 import br.com.market.enums.EnumUnit
+import br.com.market.market.compose.components.MarketBottomAppBar
+import br.com.market.market.compose.components.OutlinedTextFieldValidation
+import br.com.market.market.compose.components.bottomsheet.BottomSheetLoadImage
+import br.com.market.market.compose.components.button.fab.FloatingActionButtonSave
+import br.com.market.market.compose.components.button.icons.IconButtonInactivate
+import br.com.market.market.compose.components.button.icons.IconButtonReactivate
+import br.com.market.market.compose.components.button.icons.IconButtonStorage
+import br.com.market.market.compose.components.dialog.DialogMessage
+import br.com.market.market.compose.components.topappbar.SimpleMarketTopAppBar
 import br.com.market.storage.R
 import br.com.market.storage.ui.component.ProductImageHorizontalGallery
 import br.com.market.storage.ui.states.product.ProductUIState
@@ -330,7 +333,7 @@ fun ProductScreen(
                             openBottomSheet = false
                         },
                         onItemClickListener = {
-                            when(it) {
+                            when (it) {
                                 EnumOptionsBottomSheetLoadImage.CAMERA -> {
                                     if (context.verifyCameraPermissionGranted()) {
                                         context.openCamera(openCamera) { uri ->

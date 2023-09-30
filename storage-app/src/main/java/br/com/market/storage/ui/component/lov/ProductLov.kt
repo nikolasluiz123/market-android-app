@@ -14,10 +14,10 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import br.com.market.core.theme.MarketTheme
-import br.com.market.core.ui.components.PagedVerticalListComponent
-import br.com.market.core.ui.components.SimpleMarketTopAppBar
-import br.com.market.core.ui.components.filter.SimpleFilter
 import br.com.market.localdataaccess.tuples.ProductImageTuple
+import br.com.market.market.compose.components.filter.SimpleFilter
+import br.com.market.market.compose.components.list.PagedVerticalListWithEmptyState
+import br.com.market.market.compose.components.topappbar.SimpleMarketTopAppBar
 import br.com.market.storage.R
 import br.com.market.storage.ui.screens.brand.ProductListItem
 import br.com.market.storage.ui.states.product.ProductLovUIState
@@ -115,7 +115,7 @@ private fun ProductList(
     onItemClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    PagedVerticalListComponent(modifier = modifier, pagingItems = pagingData) { productTuple ->
+    PagedVerticalListWithEmptyState(modifier = modifier, pagingItems = pagingData) { productTuple ->
         ProductListItem(
             name = productTuple.productName,
             price = productTuple.productPrice,

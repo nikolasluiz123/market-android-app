@@ -25,25 +25,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.paging.compose.collectAsLazyPagingItems
+import br.com.market.core.R
 import br.com.market.core.R.drawable.*
 import br.com.market.core.theme.GREY_800
 import br.com.market.core.theme.MarketTheme
-import br.com.market.core.ui.components.MarketBottomAppBar
-import br.com.market.core.ui.components.MarketCircularBlockUIProgressIndicator
-import br.com.market.core.ui.components.PagedVerticalListComponent
-import br.com.market.core.ui.components.SimpleMarketTopAppBar
-import br.com.market.core.ui.components.buttons.IconButtonAdvancedFilters
-import br.com.market.core.ui.components.buttons.IconButtonAdvancedFiltersApply
-import br.com.market.core.ui.components.buttons.IconButtonReport
-import br.com.market.core.ui.components.buttons.IconButtonReports
-import br.com.market.core.ui.components.buttons.fab.MarketFloatingActionButtonMultiActions
-import br.com.market.core.ui.components.buttons.fab.SmallFabActions
 import br.com.market.core.ui.components.buttons.fab.SubActionFabItem
-import br.com.market.core.ui.components.buttons.fab.rememberFabMultiActionsState
-import br.com.market.core.ui.components.filter.SimpleFilter
 import br.com.market.enums.EnumOperationType
 import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
 import br.com.market.localdataaccess.tuples.StorageOperationHistoryTuple
+import br.com.market.market.compose.components.MarketBottomAppBar
+import br.com.market.market.compose.components.button.fab.MarketFloatingActionButtonMultiActions
+import br.com.market.market.compose.components.button.fab.SmallFabActions
+import br.com.market.market.compose.components.button.fab.rememberFabMultiActionsState
+import br.com.market.market.compose.components.button.icons.IconButtonAdvancedFilters
+import br.com.market.market.compose.components.button.icons.IconButtonAdvancedFiltersApply
+import br.com.market.market.compose.components.button.icons.IconButtonReport
+import br.com.market.market.compose.components.button.icons.IconButtonReports
+import br.com.market.market.compose.components.filter.SimpleFilter
+import br.com.market.market.compose.components.list.PagedVerticalListWithEmptyState
+import br.com.market.market.compose.components.loading.MarketCircularBlockUIProgressIndicator
+import br.com.market.market.compose.components.topappbar.SimpleMarketTopAppBar
 import br.com.market.market.pdf.generator.enums.EnumReportDirectory
 import br.com.market.storage.R.*
 import br.com.market.storage.ui.states.MovementsSearchUIState
@@ -126,7 +127,7 @@ fun MovementsSearchScreen(
                 MarketFloatingActionButtonMultiActions(state = bottomBarState) {
                     Icon(
                         imageVector = Icons.Default.Add,
-                        contentDescription = stringResource(br.com.market.core.R.string.label_adicionar),
+                        contentDescription = stringResource(R.string.label_adicionar),
                         tint = Color.White
                     )
                 }
@@ -165,7 +166,7 @@ fun MovementsSearchScreen(
                     }
                 }
             ) {
-                PagedVerticalListComponent(pagingItems = pagingData) {
+                PagedVerticalListWithEmptyState(pagingItems = pagingData) {
                     MovementListItem(
                         productName = it.productName,
                         operationType = it.operationType,
@@ -213,7 +214,7 @@ fun MovementsSearchScreen(
                     )
                 }
 
-                PagedVerticalListComponent(
+                PagedVerticalListWithEmptyState(
                     pagingItems = pagingData,
                     modifier = Modifier
                         .constrainAs(listRef) {

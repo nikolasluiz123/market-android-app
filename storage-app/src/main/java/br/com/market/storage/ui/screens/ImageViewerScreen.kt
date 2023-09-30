@@ -11,18 +11,17 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import br.com.market.core.theme.*
-import br.com.market.core.ui.components.CoilImageViewer
-import br.com.market.core.ui.components.MarketBottomAppBar
-import br.com.market.core.ui.components.SimpleMarketTopAppBar
-import br.com.market.core.ui.components.bottomsheet.BottomSheetLoadImage
-import br.com.market.core.ui.components.buttons.fab.FloatingActionButtonSave
-import br.com.market.core.ui.components.buttons.IconButtonInactivate
 import br.com.market.domain.ProductImageDomain
+import br.com.market.market.compose.components.CoilImageViewer
+import br.com.market.market.compose.components.MarketBottomAppBar
+import br.com.market.market.compose.components.bottomsheet.BottomSheetLoadImage
+import br.com.market.market.compose.components.button.fab.FloatingActionButtonSave
+import br.com.market.market.compose.components.button.icons.IconButtonInactivate
+import br.com.market.market.compose.components.topappbar.SimpleMarketTopAppBar
 import br.com.market.storage.ui.states.ImageViewerUIState
 import br.com.market.storage.ui.viewmodels.ImageViewerViewModel
 

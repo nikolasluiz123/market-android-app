@@ -5,16 +5,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import br.com.market.core.ui.navigation.inputPasswordNavResultCallbackKey
-import br.com.market.core.ui.navigation.inputPasswordScreen
-import br.com.market.core.ui.navigation.inputTextScreen
-import br.com.market.core.ui.navigation.inputTextScreenNavResultCallbackKey
-import br.com.market.core.ui.navigation.navigateToInputNumber
-import br.com.market.core.ui.navigation.navigateToInputPassword
-import br.com.market.core.ui.navigation.navigateToInputText
-import br.com.market.core.ui.navigation.numberAdvancedFilterScreen
-import br.com.market.core.ui.navigation.numberAdvancedFilterScreenNavResultCallbackKey
-import br.com.market.core.ui.navigation.popBackStackWithResult
+import br.com.market.core.extensions.popBackStackWithResult
+import br.com.market.market.compose.components.navigation.inputNumber
+import br.com.market.market.compose.components.navigation.inputNumberNavResultCallbackKey
+import br.com.market.market.compose.components.navigation.inputPassword
+import br.com.market.market.compose.components.navigation.inputPasswordNavResultCallbackKey
+import br.com.market.market.compose.components.navigation.inputText
+import br.com.market.market.compose.components.navigation.inputTextNavResultCallbackKey
+import br.com.market.market.compose.components.navigation.navigateToInputNumber
+import br.com.market.market.compose.components.navigation.navigateToInputPassword
+import br.com.market.market.compose.components.navigation.navigateToInputText
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
@@ -57,23 +57,23 @@ fun CommerceAppNavHost(
             onNavigateToPasswordInput = navController::navigateToInputPassword
         )
 
-        inputTextScreen(
+        inputText(
             onBackClick = navController::popBackStack,
             onConfirmClick = {
-                navController.popBackStackWithResult(inputTextScreenNavResultCallbackKey, it)
+                navController.popBackStackWithResult(inputTextNavResultCallbackKey, it)
             },
             onCancelClick = navController::popBackStack
         )
 
-        numberAdvancedFilterScreen(
+        inputNumber(
             onBackClick = navController::popBackStack,
             onConfirmClick = {
-                navController.popBackStackWithResult(numberAdvancedFilterScreenNavResultCallbackKey, it)
+                navController.popBackStackWithResult(inputNumberNavResultCallbackKey, it)
             },
             onCancelClick = navController::popBackStack
         )
 
-        inputPasswordScreen(
+        inputPassword(
             onBackClick = navController::popBackStack,
             onConfirmClick = {
                 navController.popBackStackWithResult(inputPasswordNavResultCallbackKey, it)

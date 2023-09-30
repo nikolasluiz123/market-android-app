@@ -24,13 +24,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import br.com.market.core.R
 import br.com.market.core.theme.MarketTheme
-import br.com.market.core.ui.components.MarketLinearProgressIndicator
-import br.com.market.core.ui.components.OutlinedTextFieldPasswordValidation
-import br.com.market.core.ui.components.OutlinedTextFieldValidation
-import br.com.market.core.ui.components.SimpleMarketTopAppBar
-import br.com.market.core.ui.components.dialog.DialogMessage
 import br.com.market.domain.UserDomain
+import br.com.market.market.compose.components.OutlinedTextFieldPasswordValidation
+import br.com.market.market.compose.components.OutlinedTextFieldValidation
+import br.com.market.market.compose.components.dialog.DialogMessage
+import br.com.market.market.compose.components.loading.MarketLinearProgressIndicator
+import br.com.market.market.compose.components.topappbar.SimpleMarketTopAppBar
 import br.com.market.storage.ui.states.LoginUiState
 import br.com.market.storage.ui.viewmodels.LoginViewModel
 import kotlinx.coroutines.launch
@@ -123,7 +124,7 @@ fun LoginScreen(
                 val (emailRef, passwordRef, loginButtonRef, registerButtonRef) = createRefs()
 
                 DialogMessage(
-                    title =  stringResource(br.com.market.core.R.string.error_dialog_title),
+                    title = stringResource(R.string.error_dialog_title),
                     show = state.showDialogMessage,
                     onDismissRequest = { state.onToggleMessageDialog("") },
                     message = state.serverMessage
@@ -140,7 +141,7 @@ fun LoginScreen(
                     value = state.email,
                     onValueChange = state.onEmailChange,
                     error = state.emailErrorMessage,
-                    label = { Text(text = stringResource(br.com.market.core.R.string.login_screen_label_email)) },
+                    label = { Text(text = stringResource(R.string.login_screen_label_email)) },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Email,
                         imeAction = ImeAction.Next
@@ -158,7 +159,7 @@ fun LoginScreen(
                     value = state.password,
                     onValueChange = state.onPasswordChange,
                     error = state.passwordErrorMessage,
-                    label = { Text(text = stringResource(br.com.market.core.R.string.login_screen_label_password)) },
+                    label = { Text(text = stringResource(R.string.login_screen_label_password)) },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Done

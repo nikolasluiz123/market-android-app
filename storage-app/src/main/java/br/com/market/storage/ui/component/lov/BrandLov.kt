@@ -17,9 +17,9 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import br.com.market.core.theme.MarketTheme
-import br.com.market.core.ui.components.PagedVerticalListComponent
-import br.com.market.core.ui.components.SimpleMarketTopAppBar
 import br.com.market.domain.BrandDomain
+import br.com.market.market.compose.components.list.PagedVerticalListWithEmptyState
+import br.com.market.market.compose.components.topappbar.SimpleMarketTopAppBar
 import br.com.market.storage.R
 import br.com.market.storage.ui.screens.brand.BrandListItem
 import br.com.market.storage.ui.states.brand.BrandLovUIState
@@ -116,7 +116,7 @@ private fun BrandList(
     pagingData: LazyPagingItems<BrandDomain>,
     onItemClick: (String) -> Unit
 ) {
-    PagedVerticalListComponent(pagingItems = pagingData) { brandDomain ->
+    PagedVerticalListWithEmptyState(pagingItems = pagingData) { brandDomain ->
         BrandListItem(
             brandName = brandDomain.name,
             active = brandDomain.active,

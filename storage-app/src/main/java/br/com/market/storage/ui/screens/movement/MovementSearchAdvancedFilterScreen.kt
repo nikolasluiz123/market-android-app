@@ -28,19 +28,19 @@ import br.com.market.core.extensions.getEnumFilterValue
 import br.com.market.core.extensions.getLongFilterValue
 import br.com.market.core.extensions.getLovPairFilterValue
 import br.com.market.core.extensions.getStringFilterValue
-import br.com.market.core.filter.CommonAdvancedFilterItem
-import br.com.market.core.filter.arguments.DateAdvancedFilterArgs
-import br.com.market.core.filter.arguments.InputArgs
-import br.com.market.core.filter.arguments.InputNumberArgs
+import br.com.market.core.inputs.CommonAdvancedFilterItem
+import br.com.market.core.inputs.arguments.DateTimeRangeInputArgs
+import br.com.market.core.inputs.arguments.InputArgs
+import br.com.market.core.inputs.arguments.InputNumberArgs
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.theme.colorSecondary
-import br.com.market.core.ui.components.LazyVerticalListComponent
-import br.com.market.core.ui.components.filter.AdvancedFilterItem
-import br.com.market.core.ui.components.filter.SelectOneOption
-import br.com.market.core.ui.components.filter.SimpleFilter
 import br.com.market.core.ui.states.filter.AdvancedFilterUIState
 import br.com.market.enums.EnumOperationType
 import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
+import br.com.market.market.compose.components.SelectOneOption
+import br.com.market.market.compose.components.filter.AdvancedFilterItem
+import br.com.market.market.compose.components.filter.SimpleFilter
+import br.com.market.market.compose.components.list.LazyVerticalListWithEmptyState
 import br.com.market.storage.filter.enums.EnumMovementsSearchScreenFilters.DATE_PREVISION
 import br.com.market.storage.filter.enums.EnumMovementsSearchScreenFilters.DATE_REALIZATION
 import br.com.market.storage.filter.enums.EnumMovementsSearchScreenFilters.DESCRIPTION
@@ -55,7 +55,7 @@ import java.time.LocalDateTime
 fun MovementSearchAdvancedFilterScreen(
     viewModel: MovementSearchAdvancedFilterViewModel,
     onNavigateToTextFilter: (InputArgs, (Any) -> Unit) -> Unit,
-    onNavigateToDateRangeFilter: (DateAdvancedFilterArgs, (Any) -> Unit) -> Unit,
+    onNavigateToDateRangeFilter: (DateTimeRangeInputArgs, (Any) -> Unit) -> Unit,
     onNavigateToNumberFilter: (InputNumberArgs, (Number?) -> Unit) -> Unit,
     onNavigateToUserLovFilter: ((Any) -> Unit) -> Unit,
     onApplyFilters: (MovementSearchScreenFilters) -> Unit
@@ -78,7 +78,7 @@ fun MovementSearchAdvancedFilterScreen(
     state: AdvancedFilterUIState = AdvancedFilterUIState(),
     onSimpleFilterChange: (String) -> Unit = { },
     onNavigateToTextFilter: (InputArgs, (Any) -> Unit) -> Unit = { _, _ -> },
-    onNavigateToDateRangeFilter: (DateAdvancedFilterArgs, (Any) -> Unit) -> Unit = { _, _ -> },
+    onNavigateToDateRangeFilter: (DateTimeRangeInputArgs, (Any) -> Unit) -> Unit = { _, _ -> },
     onNavigateToNumberFilter: (InputNumberArgs, (Number?) -> Unit) -> Unit = { _, _ -> },
     onNavigateToUserLovFilter: ((Any) -> Unit) -> Unit = { },
     onApplyFilters: (MovementSearchScreenFilters) -> Unit = { },
@@ -101,7 +101,7 @@ fun MovementSearchAdvancedFilterScreen(
             onActiveChange = { searchActive = it },
             placeholderResId = R.string.advanced_filter_screen_search_for,
         ) {
-            LazyVerticalListComponent(items = state.filters) { item ->
+            LazyVerticalListWithEmptyState(items = state.filters) { item ->
                 MovementSearchAdvancedFilterItem(
                     item = item,
                     onNavigateToTextFilter = onNavigateToTextFilter,
@@ -139,7 +139,7 @@ fun MovementSearchAdvancedFilterScreen(
                     .padding(top = 8.dp)
             )
 
-            LazyVerticalListComponent(
+            LazyVerticalListWithEmptyState(
                 modifier = Modifier.constrainAs(listRef) {
                     linkTo(start = parent.start, end = parent.end, bias = 0F)
                     linkTo(top = searchDividerRef.bottom, bottom = buttonApplyRef.top, bottomMargin = 8.dp, bias = 0f)
@@ -240,7 +240,7 @@ private fun OpenSelectOneOptionFilter(
 fun MovementSearchAdvancedFilterItem(
     item: CommonAdvancedFilterItem,
     onNavigateToTextFilter: (InputArgs, (Any) -> Unit) -> Unit,
-    onNavigateToDateRangeFilter: (DateAdvancedFilterArgs, (Any) -> Unit) -> Unit,
+    onNavigateToDateRangeFilter: (DateTimeRangeInputArgs, (Any) -> Unit) -> Unit,
     onNavigateToNumberFilter: (InputNumberArgs, (Number?) -> Unit) -> Unit,
     onNavigateToUserLovFilter: ((Any) -> Unit) -> Unit,
     onOperationTypeClick: ((Any) -> Unit) -> Unit
@@ -262,7 +262,7 @@ fun MovementSearchAdvancedFilterItem(
                 DATE_PREVISION.name, DATE_REALIZATION.name -> {
                     @Suppress("UNCHECKED_CAST")
                     onNavigateToDateRangeFilter(
-                        DateAdvancedFilterArgs(
+                        DateTimeRangeInputArgs(
                             titleResId = item.labelResId,
                             value = item.value as Pair<LocalDateTime?, LocalDateTime?>?
                         ),

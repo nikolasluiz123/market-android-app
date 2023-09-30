@@ -16,11 +16,11 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.paging.compose.collectAsLazyPagingItems
 import br.com.market.core.theme.MarketTheme
-import br.com.market.core.ui.components.MarketBottomAppBar
-import br.com.market.core.ui.components.PagedVerticalListComponent
-import br.com.market.core.ui.components.buttons.IconButtonInactivate
-import br.com.market.core.ui.components.buttons.fab.FloatingActionButtonAdd
-import br.com.market.core.ui.components.filter.SimpleFilter
+import br.com.market.market.compose.components.MarketBottomAppBar
+import br.com.market.market.compose.components.button.fab.FloatingActionButtonAdd
+import br.com.market.market.compose.components.button.icons.IconButtonInactivate
+import br.com.market.market.compose.components.filter.SimpleFilter
+import br.com.market.market.compose.components.list.PagedVerticalListWithEmptyState
 import br.com.market.storage.R
 import br.com.market.storage.ui.screens.brand.BrandListItem
 import br.com.market.storage.ui.states.category.CategoryUIState
@@ -65,7 +65,7 @@ fun CategoryScreenTabBrand(
                 onActiveChange = { searchActive = it },
                 placeholderResId = R.string.category_screen_tab_brand_buscar_por
             ) {
-                PagedVerticalListComponent(pagingItems = pagingData) {
+                PagedVerticalListWithEmptyState(pagingItems = pagingData) {
                     BrandListItem(
                         brandName = it.name,
                         active = it.active,
@@ -88,7 +88,7 @@ fun CategoryScreenTabBrand(
                         .padding(top = 8.dp)
                 )
 
-                PagedVerticalListComponent(
+                PagedVerticalListWithEmptyState(
                     pagingItems = pagingData,
                     modifier = Modifier
                         .constrainAs(listRef) {

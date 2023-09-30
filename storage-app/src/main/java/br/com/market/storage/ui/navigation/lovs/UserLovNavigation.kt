@@ -4,7 +4,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import br.com.market.core.ui.navigation.navigateForResult
+import br.com.market.core.extensions.navigateForResult
 import br.com.market.storage.ui.component.lov.UserLov
 import br.com.market.storage.ui.viewmodels.user.UserLovViewModel
 

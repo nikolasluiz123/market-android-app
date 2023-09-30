@@ -1,7 +1,7 @@
 package br.com.market.core.extensions
 
-import br.com.market.core.filter.CommonAdvancedFilterItem
-import br.com.market.core.filter.values.FilterValue
+import br.com.market.core.inputs.CommonAdvancedFilterItem
+import br.com.market.core.inputs.values.FilterValue
 import java.time.LocalDateTime
 
 fun CommonAdvancedFilterItem.getStringFilterValue(): FilterValue<String?> {

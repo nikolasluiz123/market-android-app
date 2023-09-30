@@ -1,6 +1,6 @@
 package br.com.market.localdataaccess.filter
 
-import br.com.market.core.filter.values.FilterValue
+import br.com.market.core.inputs.values.FilterValue
 import br.com.market.enums.EnumOperationType
 import java.time.LocalDateTime
 

@@ -6,18 +6,21 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
-import br.com.market.core.ui.navigation.dateRangeAdvancedFilterScreen
-import br.com.market.core.ui.navigation.dateRangeAdvancedFilterScreenNavResultCallbackKey
-import br.com.market.core.ui.navigation.inputTextScreen
-import br.com.market.core.ui.navigation.inputTextScreenNavResultCallbackKey
-import br.com.market.core.ui.navigation.navigateToDateRangeAdvancedFilterScreen
-import br.com.market.core.ui.navigation.navigateToInputNumber
-import br.com.market.core.ui.navigation.navigateToInputText
-import br.com.market.core.ui.navigation.navigateToPDFViewer
-import br.com.market.core.ui.navigation.numberAdvancedFilterScreen
-import br.com.market.core.ui.navigation.numberAdvancedFilterScreenNavResultCallbackKey
-import br.com.market.core.ui.navigation.pdfViewerScreen
-import br.com.market.core.ui.navigation.popBackStackWithResult
+import br.com.market.core.extensions.popBackStackWithResult
+import br.com.market.market.compose.components.navigation.dateTimeRangeNavResultCallbackKey
+import br.com.market.market.compose.components.navigation.inputDateTimeRange
+import br.com.market.market.compose.components.navigation.inputNumber
+import br.com.market.market.compose.components.navigation.inputNumberNavResultCallbackKey
+import br.com.market.market.compose.components.navigation.inputText
+import br.com.market.market.compose.components.navigation.inputTextNavResultCallbackKey
+import br.com.market.market.compose.components.navigation.navigateToInputDateTimeRange
+import br.com.market.market.compose.components.navigation.navigateToInputNumber
+import br.com.market.market.compose.components.navigation.navigateToInputText
+import br.com.market.market.compose.components.screens.navigation.loadImageLinkGraph
+import br.com.market.market.compose.components.screens.navigation.loadImageLinkNavResultCallbackKey
+import br.com.market.market.compose.components.screens.navigation.navigateToLoadImageLinkScreen
+import br.com.market.market.compose.components.screens.navigation.navigateToPDFViewer
+import br.com.market.market.compose.components.screens.navigation.pdfViewer
 import br.com.market.storage.ui.navigation.brand.brandScreen
 import br.com.market.storage.ui.navigation.brand.navigateToBrandScreen
 import br.com.market.storage.ui.navigation.category.categoryScreen
@@ -212,7 +215,7 @@ fun StorageAppNavHost(
                 navController.navigateToInputText(args, callback)
             },
             onNavigateToDateRangeFilter = { args, callback ->
-                navController.navigateToDateRangeAdvancedFilterScreen(args, callback)
+                navController.navigateToInputDateTimeRange(args, callback)
             },
             onNavigateToNumberFilter = { args, callback ->
                 navController.navigateToInputNumber(args, callback)
@@ -225,26 +228,26 @@ fun StorageAppNavHost(
             }
         )
 
-        inputTextScreen(
+        inputText(
             onBackClick = navController::popBackStack,
             onConfirmClick = {
-                navController.popBackStackWithResult(inputTextScreenNavResultCallbackKey, it)
+                navController.popBackStackWithResult(inputTextNavResultCallbackKey, it)
             },
             onCancelClick = navController::popBackStack
         )
 
-        dateRangeAdvancedFilterScreen(
+        inputDateTimeRange(
             onBackClick = navController::popBackStack,
             onConfirmClick = { pair ->
-                navController.popBackStackWithResult(dateRangeAdvancedFilterScreenNavResultCallbackKey, pair)
+                navController.popBackStackWithResult(dateTimeRangeNavResultCallbackKey, pair)
             },
             onCancelClick = navController::popBackStack
         )
 
-        numberAdvancedFilterScreen(
+        inputNumber(
             onBackClick = navController::popBackStack,
             onConfirmClick = {
-                navController.popBackStackWithResult(numberAdvancedFilterScreenNavResultCallbackKey, it)
+                navController.popBackStackWithResult(inputNumberNavResultCallbackKey, it)
             },
             onCancelClick = navController::popBackStack
         )
@@ -254,7 +257,7 @@ fun StorageAppNavHost(
             onNavigateToPDFViewer = navController::navigateToPDFViewer
         )
 
-        pdfViewerScreen(
+        pdfViewer(
             onBackClick = navController::popBackStack
         )
     }

@@ -22,16 +22,16 @@ import br.com.market.core.extensions.verifyCameraPermissionGranted
 import br.com.market.core.extensions.verifyGalleryPermissionGranted
 import br.com.market.core.extensions.verifyWriteExternalStoragePermissionGranted
 import br.com.market.core.theme.MarketTheme
-import br.com.market.core.ui.components.MarketBottomAppBar
-import br.com.market.core.ui.components.MarketCircularBlockUIProgressIndicator
-import br.com.market.core.ui.components.PagedVerticalListComponent
-import br.com.market.core.ui.components.SimpleMarketTopAppBar
-import br.com.market.core.ui.components.buttons.IconButtonInactivate
-import br.com.market.core.ui.components.buttons.IconButtonLogout
-import br.com.market.core.ui.components.buttons.IconButtonSync
-import br.com.market.core.ui.components.buttons.fab.FloatingActionButtonAdd
-import br.com.market.core.ui.components.filter.SimpleFilter
 import br.com.market.core.utils.PermissionUtils
+import br.com.market.market.compose.components.MarketBottomAppBar
+import br.com.market.market.compose.components.button.fab.FloatingActionButtonAdd
+import br.com.market.market.compose.components.button.icons.IconButtonInactivate
+import br.com.market.market.compose.components.button.icons.IconButtonLogout
+import br.com.market.market.compose.components.button.icons.IconButtonSync
+import br.com.market.market.compose.components.filter.SimpleFilter
+import br.com.market.market.compose.components.list.PagedVerticalListWithEmptyState
+import br.com.market.market.compose.components.loading.MarketCircularBlockUIProgressIndicator
+import br.com.market.market.compose.components.topappbar.SimpleMarketTopAppBar
 import br.com.market.storage.ui.states.category.CategorySearchUIState
 import br.com.market.storage.ui.viewmodels.category.CategorySearchViewModel
 import java.util.*
@@ -154,7 +154,7 @@ fun CategorySearchScreen(
                 onActiveChange = { searchActive = it },
                 placeholderResId = br.com.market.storage.R.string.category_screen_tab_brand_buscar_por
             ) {
-                PagedVerticalListComponent(pagingItems = pagingData) {
+                PagedVerticalListWithEmptyState(pagingItems = pagingData) {
                     CategoryListItem(
                         categoryName = it.name,
                         active = it.active,
@@ -177,7 +177,7 @@ fun CategorySearchScreen(
                         .padding(top = 8.dp)
                 )
 
-                PagedVerticalListComponent(
+                PagedVerticalListWithEmptyState(
                     pagingItems = pagingData,
                     modifier = Modifier
                         .constrainAs(listRef) {

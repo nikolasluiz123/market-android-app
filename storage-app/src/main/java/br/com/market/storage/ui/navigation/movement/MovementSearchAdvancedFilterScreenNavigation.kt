@@ -4,11 +4,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import br.com.market.core.filter.arguments.DateAdvancedFilterArgs
-import br.com.market.core.filter.arguments.InputArgs
-import br.com.market.core.filter.arguments.InputNumberArgs
-import br.com.market.core.gson.LocalDateTimeAdapter
-import br.com.market.core.ui.navigation.navigateForResult
+import br.com.market.core.extensions.navigateForResult
+import br.com.market.core.inputs.arguments.DateTimeRangeInputArgs
+import br.com.market.core.inputs.arguments.InputArgs
+import br.com.market.core.inputs.arguments.InputNumberArgs
+import br.com.market.core.gson.adapter.LocalDateTimeAdapter
 import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
 import br.com.market.storage.ui.screens.movement.MovementSearchAdvancedFilterScreen
 import br.com.market.storage.ui.viewmodels.movements.MovementSearchAdvancedFilterViewModel
@@ -21,7 +21,7 @@ internal const val argumentMovementSearchAdvancedFilterJson = "argumentMovementS
 
 fun NavGraphBuilder.movementSearchAdvancedFiltersScreen(
     onNavigateToTextFilter: (InputArgs, (Any) -> Unit) -> Unit,
-    onNavigateToDateRangeFilter: (DateAdvancedFilterArgs, (Any) -> Unit) -> Unit,
+    onNavigateToDateRangeFilter: (DateTimeRangeInputArgs, (Any) -> Unit) -> Unit,
     onNavigateToNumberFilter: (InputNumberArgs, (Number?) -> Unit) -> Unit,
     onNavigateToUserLovFilter: ((Any) -> Unit) -> Unit,
     onApplyFilters: (MovementSearchScreenFilters) -> Unit

@@ -11,7 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import br.com.market.core.theme.MarketTheme
-import br.com.market.core.ui.components.LabeledText
+import br.com.market.market.compose.components.LabeledText
 import br.com.market.storage.R
 
 @Composable
@@ -26,7 +26,7 @@ fun UserLovListItem(name: String, onItemClick: () -> Unit = { }) {
     ) {
         val (nameRef) = createRefs()
 
-        LabeledText(
+        br.com.market.market.compose.components.LabeledText(
             modifier = Modifier.constrainAs(nameRef) {
                 linkTo(start = parent.start, end = parent.end, bias = 0f)
                 top.linkTo(parent.top)

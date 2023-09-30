@@ -17,10 +17,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import br.com.market.core.theme.MarketTheme
-import br.com.market.core.ui.components.CoilImageViewer
-import br.com.market.core.ui.components.LabeledText
-import br.com.market.core.ui.components.SimpleMarketTopAppBar
-import br.com.market.core.ui.components.buttons.IconButtonSync
+import br.com.market.market.compose.components.CoilImageViewer
+import br.com.market.market.compose.components.LabeledText
+import br.com.market.market.compose.components.button.icons.IconButtonSync
+import br.com.market.market.compose.components.topappbar.SimpleMarketTopAppBar
 import br.com.market.storage.R
 import br.com.market.storage.ui.states.AboutUIState
 import br.com.market.storage.ui.viewmodels.AboutViewModel

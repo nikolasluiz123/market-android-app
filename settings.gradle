@@ -13,10 +13,14 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "market-android-app"
-include ':storage-app'
+
 include ':market-core'
+include ':market-compose-components'
 include ':market-models'
+include ':market-business'
+include ':market-pdf-generator'
 include ':market-local-data-access'
 include ':market-service-data-access'
+
+include ':storage-app'
 include ':commerce-app'
-include ':market-pdf-generator'

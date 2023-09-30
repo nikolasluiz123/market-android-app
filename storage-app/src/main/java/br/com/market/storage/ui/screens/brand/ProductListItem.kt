@@ -16,8 +16,8 @@ import br.com.market.core.extensions.formatToCurrency
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.theme.colorCardActive
 import br.com.market.core.theme.colorCardInactive
-import br.com.market.core.ui.components.CoilImageViewer
-import br.com.market.core.ui.components.LabeledText
+import br.com.market.market.compose.components.CoilImageViewer
+import br.com.market.market.compose.components.LabeledText
 import br.com.market.enums.EnumUnit
 import br.com.market.storage.R
 import br.com.market.storage.extensions.formatQuantityIn
@@ -46,7 +46,7 @@ fun ProductListItem(
         createHorizontalChain(nameRef, imageRef)
         createHorizontalChain(priceRef, quantityRef, imageRef)
 
-        LabeledText(
+        br.com.market.market.compose.components.LabeledText(
             modifier = Modifier
                 .constrainAs(nameRef) {
                     linkTo(start = parent.start, end = imageRef.start, startMargin = 8.dp)
@@ -59,7 +59,7 @@ fun ProductListItem(
             value = name
         )
 
-        LabeledText(
+        br.com.market.market.compose.components.LabeledText(
             modifier = Modifier.constrainAs(priceRef) {
                 start.linkTo(nameRef.start)
                 top.linkTo(nameRef.bottom, margin = 8.dp)
@@ -71,7 +71,7 @@ fun ProductListItem(
             value = price.formatToCurrency()
         )
 
-        LabeledText(
+        br.com.market.market.compose.components.LabeledText(
             modifier = Modifier.constrainAs(quantityRef) {
                 start.linkTo(priceRef.end)
                 top.linkTo(priceRef.top)
@@ -83,7 +83,7 @@ fun ProductListItem(
             value = quantity.formatQuantityIn(quantityUnit)
         )
 
-        CoilImageViewer(
+        br.com.market.market.compose.components.CoilImageViewer(
             containerModifier = Modifier
                 .constrainAs(imageRef) {
                     end.linkTo(parent.end)

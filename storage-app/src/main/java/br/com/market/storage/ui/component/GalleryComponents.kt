@@ -2,8 +2,8 @@ package br.com.market.storage.ui.component
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import br.com.market.core.ui.components.image.HorizontalGallery
 import br.com.market.domain.ProductImageDomain
+import br.com.market.market.compose.components.gallery.HorizontalGallery
 
 @Composable
 fun ProductImageHorizontalGallery(

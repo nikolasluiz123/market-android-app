@@ -13,11 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.paging.compose.collectAsLazyPagingItems
-import br.com.market.core.ui.components.MarketBottomAppBar
-import br.com.market.core.ui.components.PagedVerticalListComponent
-import br.com.market.core.ui.components.buttons.IconButtonStorage
-import br.com.market.core.ui.components.buttons.fab.FloatingActionButtonAdd
-import br.com.market.core.ui.components.filter.SimpleFilter
+import br.com.market.market.compose.components.MarketBottomAppBar
+import br.com.market.market.compose.components.button.fab.FloatingActionButtonAdd
+import br.com.market.market.compose.components.button.icons.IconButtonStorage
+import br.com.market.market.compose.components.filter.SimpleFilter
+import br.com.market.market.compose.components.list.PagedVerticalListWithEmptyState
 import br.com.market.storage.R
 import br.com.market.storage.ui.states.brand.BrandUIState
 
@@ -64,7 +64,7 @@ fun BrandScreenTabProduct(
                 onActiveChange = { searchActive = it },
                 placeholderResId = R.string.brand_screen_tab_product_buscar_por
             ) {
-                PagedVerticalListComponent(pagingItems = pagingData) {
+                PagedVerticalListWithEmptyState(pagingItems = pagingData) {
                     ProductListItem(
                         name = it.productName,
                         price = it.productPrice,
@@ -91,7 +91,7 @@ fun BrandScreenTabProduct(
                         .padding(top = 8.dp)
                 )
 
-                PagedVerticalListComponent(
+                PagedVerticalListWithEmptyState(
                     pagingItems = pagingData,
                     modifier = Modifier
                         .constrainAs(listRef) {

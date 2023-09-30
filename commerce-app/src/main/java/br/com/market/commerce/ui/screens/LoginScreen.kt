@@ -29,12 +29,12 @@ import br.com.market.commerce.ui.state.LoginUiState
 import br.com.market.commerce.ui.viewmodel.LoginViewModel
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.theme.colorPrimary
-import br.com.market.core.ui.components.MarketLinearProgressIndicator
-import br.com.market.core.ui.components.OutlinedTextFieldPasswordValidation
-import br.com.market.core.ui.components.OutlinedTextFieldValidation
-import br.com.market.core.ui.components.SimpleMarketTopAppBar
-import br.com.market.core.ui.components.dialog.DialogMessage
 import br.com.market.domain.UserDomain
+import br.com.market.market.compose.components.OutlinedTextFieldPasswordValidation
+import br.com.market.market.compose.components.OutlinedTextFieldValidation
+import br.com.market.market.compose.components.dialog.DialogMessage
+import br.com.market.market.compose.components.loading.MarketLinearProgressIndicator
+import br.com.market.market.compose.components.topappbar.SimpleMarketTopAppBar
 
 @Composable
 fun LoginScreen(

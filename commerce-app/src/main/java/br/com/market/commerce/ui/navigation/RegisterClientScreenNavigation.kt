@@ -7,9 +7,9 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import br.com.market.commerce.ui.screens.RegisterClientScreen
 import br.com.market.commerce.ui.viewmodel.RegisterClientViewModel
-import br.com.market.core.filter.arguments.InputArgs
-import br.com.market.core.filter.arguments.InputNumberArgs
-import br.com.market.core.filter.arguments.InputPasswordArgs
+import br.com.market.core.inputs.arguments.InputArgs
+import br.com.market.core.inputs.arguments.InputNumberArgs
+import br.com.market.core.inputs.arguments.InputPasswordArgs
 
 internal const val registerClientScreenRoute = "registerClientScreenRoute"
 

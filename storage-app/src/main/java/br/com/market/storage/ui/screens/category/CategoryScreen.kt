@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.core.theme.MarketTheme
-import br.com.market.core.ui.components.SimpleMarketTopAppBar
+import br.com.market.market.compose.components.topappbar.SimpleMarketTopAppBar
 import br.com.market.storage.R
 import br.com.market.storage.ui.states.category.CategoryUIState
 import br.com.market.storage.ui.viewmodels.category.CategoryViewModel

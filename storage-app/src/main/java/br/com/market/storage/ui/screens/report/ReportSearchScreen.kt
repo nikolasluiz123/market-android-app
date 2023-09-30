@@ -26,14 +26,14 @@ import br.com.market.core.enums.EnumDateTimePatterns
 import br.com.market.core.enums.EnumFileExtension
 import br.com.market.core.extensions.format
 import br.com.market.core.theme.MarketTheme
-import br.com.market.core.ui.components.LabeledText
-import br.com.market.core.ui.components.LazyVerticalListComponent
-import br.com.market.core.ui.components.SimpleMarketTopAppBar
-import br.com.market.core.ui.components.bottomsheet.BottomSheetReportOperations
 import br.com.market.core.ui.components.bottomsheet.report.EnumReportBottomSheetOptions
-import br.com.market.core.ui.components.dialog.DialogMessage
-import br.com.market.core.ui.components.filter.SimpleFilter
 import br.com.market.core.utils.FileUtils
+import br.com.market.market.compose.components.LabeledText
+import br.com.market.market.compose.components.bottomsheet.BottomSheetReportOperations
+import br.com.market.market.compose.components.dialog.DialogMessage
+import br.com.market.market.compose.components.filter.SimpleFilter
+import br.com.market.market.compose.components.list.LazyVerticalListWithEmptyState
+import br.com.market.market.compose.components.topappbar.SimpleMarketTopAppBar
 import br.com.market.market.pdf.generator.common.ReportFile
 import br.com.market.storage.R
 import br.com.market.storage.ui.states.report.ReportSearchUIState
@@ -111,7 +111,7 @@ fun ReportSearchScreen(
                 onActiveChange = { searchActive = it },
                 placeholderResId = R.string.reports_screen_search_for
             ) {
-                LazyVerticalListComponent(items = state.reports) {
+                LazyVerticalListWithEmptyState(items = state.reports) {
                     ReportListItem(item = it) { report ->
                         onReportClick(report)
                         openBottomSheet = true
@@ -130,7 +130,7 @@ fun ReportSearchScreen(
                         }
                 )
 
-                LazyVerticalListComponent(
+                LazyVerticalListWithEmptyState(
                     modifier = Modifier
                         .constrainAs(listRef) {
                             linkTo(start = parent.start, end = parent.end, bias = 0F)

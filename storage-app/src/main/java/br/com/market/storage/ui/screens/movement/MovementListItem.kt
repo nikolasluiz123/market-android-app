@@ -22,8 +22,8 @@ import br.com.market.core.theme.GREEN_500
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.theme.ORANGE_500
 import br.com.market.core.theme.RED_500
-import br.com.market.core.ui.components.InfoChip
-import br.com.market.core.ui.components.LabeledText
+import br.com.market.market.compose.components.InfoChip
+import br.com.market.market.compose.components.LabeledText
 import br.com.market.enums.EnumOperationType
 import br.com.market.enums.EnumUnit
 import br.com.market.storage.R
@@ -55,7 +55,7 @@ fun MovementListItem(
         ) = createRefs()
         createHorizontalChain(nameRef, chipOperationTypeRef)
 
-        LabeledText(
+        br.com.market.market.compose.components.LabeledText(
             modifier = Modifier
                 .constrainAs(nameRef) {
                     start.linkTo(parent.start)
@@ -71,7 +71,7 @@ fun MovementListItem(
 
         when (operationType) {
             EnumOperationType.Input -> {
-                InfoChip(
+                br.com.market.market.compose.components.InfoChip(
                     label = stringResource(R.string.movement_list_item_label_chip_input),
                     icon = {
                         Icon(
@@ -96,7 +96,7 @@ fun MovementListItem(
             }
 
             EnumOperationType.Sell -> {
-                InfoChip(
+                br.com.market.market.compose.components.InfoChip(
                     label = stringResource(R.string.movement_list_item_label_chip_sell),
                     icon = {
                         Icon(
@@ -121,7 +121,7 @@ fun MovementListItem(
             }
 
             EnumOperationType.Output -> {
-                InfoChip(
+                br.com.market.market.compose.components.InfoChip(
                     label = stringResource(R.string.movement_list_item_label_chip_output),
                     icon = {
                         Icon(
@@ -147,7 +147,7 @@ fun MovementListItem(
             }
 
             EnumOperationType.ScheduledInput -> {
-                InfoChip(
+                br.com.market.market.compose.components.InfoChip(
                     label = stringResource(R.string.movement_list_item_label_chip_scheduled_input),
                     icon = {
                         Icon(
@@ -177,7 +177,7 @@ fun MovementListItem(
             datePrevision != null && dateRealization != null -> {
                 createHorizontalChain(previsionRef, realizationRef, quantityRef)
 
-                LabeledText(
+                br.com.market.market.compose.components.LabeledText(
                     modifier = Modifier
                         .constrainAs(previsionRef) {
                             start.linkTo(nameRef.start)
@@ -191,7 +191,7 @@ fun MovementListItem(
                     value = datePrevision.format(EnumDateTimePatterns.DATE_TIME)
                 )
 
-                LabeledText(
+                br.com.market.market.compose.components.LabeledText(
                     modifier = Modifier
                         .constrainAs(realizationRef) {
                             start.linkTo(previsionRef.end)
@@ -205,7 +205,7 @@ fun MovementListItem(
                     value = dateRealization.format(EnumDateTimePatterns.DATE_TIME)
                 )
 
-                LabeledText(
+                br.com.market.market.compose.components.LabeledText(
                     modifier = Modifier
                         .constrainAs(quantityRef) {
                             linkTo(start = realizationRef.end, end = chipOperationTypeRef.end, bias = 0f)
@@ -224,7 +224,7 @@ fun MovementListItem(
             datePrevision != null -> {
                 createHorizontalChain(previsionRef, quantityRef)
 
-                LabeledText(
+                br.com.market.market.compose.components.LabeledText(
                     modifier = Modifier
                         .constrainAs(previsionRef) {
                             start.linkTo(nameRef.start)
@@ -238,7 +238,7 @@ fun MovementListItem(
                     value = datePrevision.format(EnumDateTimePatterns.DATE_TIME)
                 )
 
-                LabeledText(
+                br.com.market.market.compose.components.LabeledText(
                     modifier = Modifier
                         .constrainAs(quantityRef) {
                             linkTo(start = previsionRef.end, end = chipOperationTypeRef.end, bias = 0f)
@@ -257,7 +257,7 @@ fun MovementListItem(
             dateRealization != null -> {
                 createHorizontalChain(realizationRef, quantityRef)
 
-                LabeledText(
+                br.com.market.market.compose.components.LabeledText(
                     modifier = Modifier
                         .constrainAs(realizationRef) {
                             start.linkTo(nameRef.start)
@@ -271,7 +271,7 @@ fun MovementListItem(
                     value = dateRealization.format(EnumDateTimePatterns.DATE_TIME)
                 )
 
-                LabeledText(
+                br.com.market.market.compose.components.LabeledText(
                     modifier = Modifier
                         .constrainAs(quantityRef) {
                             linkTo(start = realizationRef.end, end = chipOperationTypeRef.end, bias = 0f)
@@ -288,7 +288,7 @@ fun MovementListItem(
         }
 
         if (operationType == EnumOperationType.Output) {
-            LabeledText(
+            br.com.market.market.compose.components.LabeledText(
                 modifier = Modifier
                     .constrainAs(responsibleRef) {
                         linkTo(start = parent.start, end = parent.end)
@@ -304,7 +304,7 @@ fun MovementListItem(
                 value = responsibleName!!
             )
 
-            LabeledText(
+            br.com.market.market.compose.components.LabeledText(
                 modifier = Modifier
                     .constrainAs(descriptionRef) {
                         linkTo(start = responsibleRef.start, end = responsibleRef.end)

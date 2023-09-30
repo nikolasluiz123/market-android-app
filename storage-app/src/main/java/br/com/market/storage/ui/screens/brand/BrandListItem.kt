@@ -15,7 +15,7 @@ import androidx.constraintlayout.compose.Dimension
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.theme.colorCardActive
 import br.com.market.core.theme.colorCardInactive
-import br.com.market.core.ui.components.LabeledText
+import br.com.market.market.compose.components.LabeledText
 import br.com.market.storage.R
 
 @Composable
@@ -31,7 +31,7 @@ fun BrandListItem(brandName: String, active: Boolean, onItemClick: () -> Unit = 
     ) {
         val (nameRef) = createRefs()
 
-        LabeledText(
+        br.com.market.market.compose.components.LabeledText(
             modifier = Modifier
                 .constrainAs(nameRef) {
                     linkTo(start = parent.start, end = parent.end)
