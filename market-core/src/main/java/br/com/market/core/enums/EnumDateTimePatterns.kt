@@ -26,5 +26,5 @@ enum class EnumDateTimePatterns(val pattern: String) {
      */
     DATE_TIME("dd/MM/yyyy HH:mm"),
 
-    DATE_TIME_FILE_NAME("dd_MM_yyyy_HHmm")
+    DATE_TIME_FILE_NAME("dd_MM_yyyy_HHmmss")
 }

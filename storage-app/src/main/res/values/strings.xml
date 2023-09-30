@@ -104,4 +104,6 @@
     <string name="dialog_reports_label_date">Data de Geração</string>
     <string name="report_search_screen_label_title">Relatórios Gerados</string>
     <string name="reports_screen_search_for">Buscar por Nome ou Data</string>
+    <string name="report_search_screen_share_report_title">Compartilhar Relatório</string>
+    <string name="report_search_screen_delete_report_message">O relatório será excluido permanentemente.</string>
 </resources>

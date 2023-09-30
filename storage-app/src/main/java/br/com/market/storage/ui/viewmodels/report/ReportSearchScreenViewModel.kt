@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import br.com.market.core.extensions.navParamToString
 import br.com.market.core.extensions.searchWordsInText
 import br.com.market.market.pdf.generator.common.ReportFile
-import br.com.market.market.pdf.generator.utils.FileUtils
+import br.com.market.market.pdf.generator.utils.ReportFileUtils
 import br.com.market.storage.ui.navigation.report.argumentDirectory
 import br.com.market.storage.ui.states.report.ReportSearchUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +30,7 @@ class ReportSearchScreenViewModel @Inject constructor(
         directory?.navParamToString()?.let {
             _uiState.update { currentState ->
                 currentState.copy(
-                    reports = FileUtils.getReportsFromFolder(context, it)
+                    reports = ReportFileUtils.getReportsFromDirectory(context, it)
                 )
             }
         }

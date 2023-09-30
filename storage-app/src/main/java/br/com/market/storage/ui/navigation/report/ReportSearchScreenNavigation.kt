@@ -13,13 +13,15 @@ internal const val argumentDirectory = "argumentDirectory"
 
 fun NavGraphBuilder.reportSearchScreen(
     onNavigateToBack: () -> Unit,
+    onNavigateToPDFViewer: (uri: String) -> Unit
 ) {
     composable(route = "$reportSearchScreenRoute?$argumentDirectory={$argumentDirectory}") {
         val viewModel = hiltViewModel<ReportSearchScreenViewModel>()
 
         ReportSearchScreen(
             viewModel = viewModel,
-            onBackClick = onNavigateToBack
+            onBackClick = onNavigateToBack,
+            onNavigateToPDFViewer = onNavigateToPDFViewer
         )
     }
 }

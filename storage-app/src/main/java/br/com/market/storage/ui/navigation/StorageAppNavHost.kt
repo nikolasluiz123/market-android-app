@@ -13,8 +13,10 @@ import br.com.market.core.ui.navigation.inputTextScreenNavResultCallbackKey
 import br.com.market.core.ui.navigation.navigateToDateRangeAdvancedFilterScreen
 import br.com.market.core.ui.navigation.navigateToInputNumber
 import br.com.market.core.ui.navigation.navigateToInputText
+import br.com.market.core.ui.navigation.navigateToPDFViewer
 import br.com.market.core.ui.navigation.numberAdvancedFilterScreen
 import br.com.market.core.ui.navigation.numberAdvancedFilterScreenNavResultCallbackKey
+import br.com.market.core.ui.navigation.pdfViewerScreen
 import br.com.market.core.ui.navigation.popBackStackWithResult
 import br.com.market.storage.ui.navigation.brand.brandScreen
 import br.com.market.storage.ui.navigation.brand.navigateToBrandScreen
@@ -248,7 +250,12 @@ fun StorageAppNavHost(
         )
 
         reportSearchScreen(
-            onNavigateToBack = navController::popBackStack
+            onNavigateToBack = navController::popBackStack,
+            onNavigateToPDFViewer = navController::navigateToPDFViewer
+        )
+
+        pdfViewerScreen(
+            onBackClick = navController::popBackStack
         )
     }
 }

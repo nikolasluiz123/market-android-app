@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.core.enums.EnumDateTimePatterns
+import br.com.market.core.enums.EnumFileExtension
 import br.com.market.core.extensions.format
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.LabeledText
@@ -30,9 +31,10 @@ import br.com.market.core.ui.components.LazyVerticalListComponent
 import br.com.market.core.ui.components.SimpleMarketTopAppBar
 import br.com.market.core.ui.components.bottomsheet.BottomSheetReportOperations
 import br.com.market.core.ui.components.bottomsheet.report.EnumReportBottomSheetOptions
+import br.com.market.core.ui.components.dialog.DialogMessage
 import br.com.market.core.ui.components.filter.SimpleFilter
+import br.com.market.core.utils.FileUtils
 import br.com.market.market.pdf.generator.common.ReportFile
-import br.com.market.market.pdf.generator.utils.FileUtils
 import br.com.market.storage.R
 import br.com.market.storage.ui.states.report.ReportSearchUIState
 import br.com.market.storage.ui.viewmodels.report.ReportSearchScreenViewModel
@@ -41,7 +43,8 @@ import java.time.LocalDateTime
 @Composable
 fun ReportSearchScreen(
     viewModel: ReportSearchScreenViewModel,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onNavigateToPDFViewer: (uri: String) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -49,7 +52,8 @@ fun ReportSearchScreen(
         state = state,
         onBackClick = onBackClick,
         onSimpleFilterChange = viewModel::simpleFilter,
-        onReportClick = viewModel::saveReportClicked
+        onReportClick = viewModel::saveReportClicked,
+        onNavigateToPDFViewer = onNavigateToPDFViewer
     )
 }
 
@@ -59,7 +63,8 @@ fun ReportSearchScreen(
     state: ReportSearchUIState = ReportSearchUIState(),
     onBackClick: () -> Unit = { },
     onSimpleFilterChange: (filter: String) -> Unit = { },
-    onReportClick: (report: ReportFile) -> Unit = { }
+    onReportClick: (report: ReportFile) -> Unit = { },
+    onNavigateToPDFViewer: (uri: String) -> Unit = { }
 ) {
     val context = LocalContext.current
 
@@ -80,6 +85,19 @@ fun ReportSearchScreen(
             val (listRef, searchBarRef, searchDividerRef) = createRefs()
             var searchActive by remember { mutableStateOf(false) }
             var openBottomSheet by rememberSaveable { mutableStateOf(false) }
+            var showDialogDeleteFile by remember { mutableStateOf(false) }
+
+            DialogMessage(
+                title = stringResource(R.string.warning_dialog_title),
+                show = showDialogDeleteFile,
+                onDismissRequest = { showDialogDeleteFile = false },
+                message = stringResource(R.string.report_search_screen_delete_report_message),
+                onDialogOkClick = {
+                    FileUtils.deleteFile(state.reportClicked?.path!!)
+                    showDialogDeleteFile = false
+                    onSimpleFilterChange("")
+                }
+            )
 
             SimpleFilter(
                 modifier = Modifier
@@ -135,15 +153,22 @@ fun ReportSearchScreen(
                         openBottomSheet = false
                     },
                     onItemClickListener = {
-                        when(it) {
+                        when (it) {
                             EnumReportBottomSheetOptions.SHARE -> {
-                                FileUtils.shareFile(context, state.reportClicked?.path!!)
+                                FileUtils.shareFile(
+                                    context,
+                                    state.reportClicked?.path!!,
+                                    EnumFileExtension.PDF_FILE,
+                                    context.getString(R.string.report_search_screen_share_report_title)
+                                )
                             }
+
                             EnumReportBottomSheetOptions.VIEW -> {
-
+                                onNavigateToPDFViewer(state.reportClicked?.path!!)
                             }
-                            EnumReportBottomSheetOptions.DELETE -> {
 
+                            EnumReportBottomSheetOptions.DELETE -> {
+                                showDialogDeleteFile = true
                             }
                         }
                     }
@@ -152,8 +177,6 @@ fun ReportSearchScreen(
         }
     }
 }
-
-
 
 
 @Composable

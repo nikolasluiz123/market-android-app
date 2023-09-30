@@ -66,7 +66,7 @@ fun <T: IEnumOptionsBottomSheet> BottomSheet(
             }
         }
 
-        Spacer(modifier = Modifier.size(16.dp))
+        Spacer(modifier = Modifier.size(64.dp))
     }
 }
 

@@ -16,7 +16,6 @@ import br.com.market.market.pdf.generator.extensions.drawTextInPosition
 import br.com.market.market.pdf.generator.extensions.formatQuantityIn
 import br.com.market.market.pdf.generator.extensions.splitText
 import br.com.market.market.pdf.generator.repository.StorageOperationsReportRepository
-import br.com.market.market.pdf.generator.utils.FileUtils
 import br.com.market.market.pdf.generator.utils.Margins.MARGIN_16
 import br.com.market.market.pdf.generator.utils.Margins.MARGIN_24
 import br.com.market.market.pdf.generator.utils.Margins.MARGIN_30
@@ -24,6 +23,7 @@ import br.com.market.market.pdf.generator.utils.Margins.MARGIN_60
 import br.com.market.market.pdf.generator.utils.Margins.MARGIN_8
 import br.com.market.market.pdf.generator.utils.Paints
 import br.com.market.market.pdf.generator.utils.Position
+import br.com.market.market.pdf.generator.utils.ReportFileUtils
 import br.com.market.report.data.BrandReportData
 import br.com.market.report.data.CategoryReportData
 import br.com.market.report.data.ProductReportData
@@ -47,7 +47,6 @@ class StorageOperationsReportGenerator @Inject constructor(
 
         try {
             val commonInformation = repository.getCommonInformation()
-
 
             repository.getCategories().forEachIndexed { index, category ->
                 repository.getBrands(category.categoryId).forEach { brand ->
@@ -83,7 +82,7 @@ class StorageOperationsReportGenerator @Inject constructor(
 
             }
             val actualDateFile = LocalDateTime.now().format(EnumDateTimePatterns.DATE_TIME_FILE_NAME)
-            FileUtils.savePDF(
+            ReportFileUtils.savePDF(
                 EnumReportDirectory.REPORT_DIRECTORY_STORAGE_OPERATIONS,
                 "relatorio_operacoes-$actualDateFile.pdf",
                 document
