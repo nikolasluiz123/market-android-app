@@ -4,6 +4,7 @@ import android.content.Context
 import br.com.market.models.Product
 import br.com.market.models.ProductImage
 import br.com.market.sdo.ProductBodySDO
+import br.com.market.sdo.ProductClientSDO
 import br.com.market.sdo.ProductImageSDO
 import br.com.market.sdo.ProductSDO
 import br.com.market.servicedataaccess.responses.extensions.getPersistenceResponseBody
@@ -181,6 +182,14 @@ class ProductWebClient @Inject constructor(
                 }
 
                 ReadResponse(values = images, code = response.code, success = response.success, error = response.error)
+            }
+        )
+    }
+
+    suspend fun findProductsForSell(limit: Int, offset: Int): ReadResponse<ProductClientSDO> {
+        return readServiceErrorHandlingBlock(
+            codeBlock = {
+                service.findProducts(getToken(), limit, offset).getReadResponseBody()
             }
         )
     }

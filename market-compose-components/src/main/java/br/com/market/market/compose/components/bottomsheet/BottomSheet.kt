@@ -18,8 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import br.com.market.core.theme.BLUE_50
-import br.com.market.core.theme.GREY_800
 import br.com.market.core.ui.components.bottomsheet.IBottomSheetItem
 import br.com.market.core.ui.components.bottomsheet.IEnumOptionsBottomSheet
 
@@ -45,7 +43,7 @@ fun <T: IEnumOptionsBottomSheet> BottomSheet(
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = bottomSheetState,
-        containerColor = BLUE_50
+        containerColor = MaterialTheme.colorScheme.secondary
     ) {
         LazyColumn {
             items(items) {
@@ -54,16 +52,17 @@ fun <T: IEnumOptionsBottomSheet> BottomSheet(
                         Text(
                             text = stringResource(id = it.labelResId),
                             style = MaterialTheme.typography.labelLarge,
-                            color = GREY_800
+                            color = MaterialTheme.colorScheme.onSecondary
                         )
                     },
                     leadingContent = {
                         Icon(
                             painter = painterResource(id = it.iconResId),
-                            contentDescription = stringResource(id = it.iconDescriptionResId)
+                            contentDescription = stringResource(id = it.iconDescriptionResId),
+                            tint = MaterialTheme.colorScheme.onSecondary
                         )
                     },
-                    colors = ListItemDefaults.colors(containerColor = BLUE_50),
+                    colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.secondary),
                     modifier = Modifier.clickable {
                         onItemClickListener(it.option)
                     }
@@ -71,6 +70,6 @@ fun <T: IEnumOptionsBottomSheet> BottomSheet(
             }
         }
 
-        Spacer(modifier = Modifier.size(64.dp))
+        Spacer(modifier = Modifier.size(48.dp))
     }
 }

@@ -18,6 +18,7 @@ import br.com.market.localdataaccess.dao.ProductDAO
 import br.com.market.localdataaccess.dao.ProductImageDAO
 import br.com.market.localdataaccess.dao.StorageOperationsHistoryDAO
 import br.com.market.localdataaccess.dao.UserDAO
+import br.com.market.localdataaccess.dao.remotekeys.ProductRemoteKeysDAO
 import br.com.market.localdataaccess.dao.report.StorageOperationsReportDAO
 import br.com.market.models.*
 
@@ -30,12 +31,12 @@ import br.com.market.models.*
  * @author Nikolas Luiz Schmitt
  */
 @Database(
-    version = 23,
+    version = 24,
     entities = [
         Address::class, Brand::class, Card::class, CartItem::class, Category::class, CategoryBrand::class, Client::class, Company::class,
         DeliveryMan::class, DeliveryManQueue::class, Product::class, ProductImage::class, ProductRating::class, PurchaseCart::class,
         StorageOperationHistory::class, ThemeDefinitions::class, User::class, Vehicle::class, VehicleCapacity::class, Device::class,
-        Market::class
+        Market::class, ProductRemoteKeys::class
     ],
     exportSchema = true,
     autoMigrations = [
@@ -79,6 +80,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun clientDAO(): ClientDAO
 
     abstract fun storageReportDAO(): StorageOperationsReportDAO
+
+    abstract fun productRemoteKeysDAO(): ProductRemoteKeysDAO
 }
 
 @DeleteColumn(tableName = "theme_definitions", "synchronized")

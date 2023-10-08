@@ -36,4 +36,6 @@ abstract class ProductImageDAO : AbstractBaseDAO() {
     @Query("select * from products_images where synchronized = 0")
     abstract suspend fun findProductImagesNotSynchronized(): List<ProductImage>
 
+    @Query("delete from products_images")
+    abstract suspend fun clearAll()
 }

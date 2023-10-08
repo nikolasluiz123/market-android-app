@@ -1,10 +1,10 @@
 package br.com.market.market.compose.components.button.fab
 
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import br.com.market.core.theme.BLUE_500
 
 /**
  * FAB padrão do aplicativo.
@@ -18,7 +18,7 @@ import br.com.market.core.theme.BLUE_500
 @Composable
 fun MarketFloatingActionButton(
     modifier: Modifier = Modifier,
-    containerColor: Color = BLUE_500,
+    containerColor: Color = MaterialTheme.colorScheme.primary,
     onClick: () -> Unit = { },
     content: @Composable () -> Unit
 ) {

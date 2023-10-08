@@ -1,5 +1,6 @@
 package br.com.market.storage.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,7 +11,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -92,57 +92,53 @@ fun ImageViewerScreen(
                 .padding(padding)
                 .fillMaxSize()
         ) {
-            val (cardRef, imageRef) = createRefs()
-
-            Card(
-                elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
-                shape = RectangleShape,
-                colors = CardDefaults.cardColors(containerColor = colorSecondary),
-                modifier = Modifier
+            val (headerRef, imageRef) = createRefs()
+            ConstraintLayout(
+                Modifier
                     .fillMaxWidth()
-                    .constrainAs(cardRef) {
-                        linkTo(start = parent.start, end = parent.end, bias = 0F)
+                    .background(color = MaterialTheme.colorScheme.secondary)
+                    .constrainAs(headerRef) {
+                        linkTo(start = parent.start, end = parent.end, bias = 0f)
                         top.linkTo(parent.top)
                     }
             ) {
-                ConstraintLayout(Modifier.fillMaxWidth()) {
-                    val (labelSwitchButtonRef, switchButtonRef) = createRefs()
+                val (labelSwitchButtonRef, switchButtonRef) = createRefs()
 
-                    Text(
-                        text = "Imagem Principal do Produto",
-                        style = MaterialTheme.typography.titleSmall,
-                        modifier = Modifier.constrainAs(labelSwitchButtonRef) {
-                            start.linkTo(parent.start, margin = 56.dp)
-                            top.linkTo(switchButtonRef.top)
-                            bottom.linkTo(switchButtonRef.bottom)
-                        }
-                    )
+                Text(
+                    text = "Imagem Principal do Produto",
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier.constrainAs(labelSwitchButtonRef) {
+                        start.linkTo(parent.start, margin = 56.dp)
+                        top.linkTo(switchButtonRef.top)
+                        bottom.linkTo(switchButtonRef.bottom)
+                    },
+                    color = MaterialTheme.colorScheme.onSecondary
+                )
 
-                    val principalImage = state.productImageDomain?.principal ?: false
-                    var isPrincipalImage by remember(principalImage) {
-                        mutableStateOf(principalImage)
-                    }
-
-                    Switch(
-                        checked = isPrincipalImage,
-                        onCheckedChange = {
-                            isPrincipalImage = it
-                            state.productImageDomain?.principal = it
-                        },
-                        colors = SwitchDefaults.colors(
-                            uncheckedBorderColor = GREY_500,
-                            uncheckedThumbColor = Color.White,
-                            uncheckedTrackColor = GREY_300,
-                            checkedBorderColor = colorPrimary,
-                            checkedThumbColor = colorSecondary,
-                            checkedTrackColor = GREY_300
-                        ),
-                        modifier = Modifier.constrainAs(switchButtonRef) {
-                            end.linkTo(parent.end, margin = 8.dp)
-                            top.linkTo(parent.top)
-                        }
-                    )
+                val principalImage = state.productImageDomain?.principal ?: false
+                var isPrincipalImage by remember(principalImage) {
+                    mutableStateOf(principalImage)
                 }
+
+                Switch(
+                    checked = isPrincipalImage,
+                    onCheckedChange = {
+                        isPrincipalImage = it
+                        state.productImageDomain?.principal = it
+                    },
+                    colors = SwitchDefaults.colors(
+                        uncheckedBorderColor = Color.Transparent,
+                        uncheckedThumbColor = MaterialTheme.colorScheme.secondary,
+                        uncheckedTrackColor = MaterialTheme.colorScheme.background,
+                        checkedBorderColor = Color.Transparent,
+                        checkedThumbColor = MaterialTheme.colorScheme.primary,
+                        checkedTrackColor = MaterialTheme.colorScheme.background
+                    ),
+                    modifier = Modifier.constrainAs(switchButtonRef) {
+                        end.linkTo(parent.end, margin = 8.dp)
+                        top.linkTo(parent.top)
+                    }
+                )
             }
 
             var openBottomSheet by rememberSaveable { mutableStateOf(false) }
@@ -150,7 +146,7 @@ fun ImageViewerScreen(
             CoilImageViewer(
                 containerModifier = Modifier.constrainAs(imageRef) {
                     linkTo(start = parent.start, end = parent.end, bias = 0F)
-                    top.linkTo(cardRef.bottom, margin = 8.dp)
+                    top.linkTo(headerRef.bottom, margin = 8.dp)
                 },
                 imageModifier = Modifier
                     .fillMaxWidth()

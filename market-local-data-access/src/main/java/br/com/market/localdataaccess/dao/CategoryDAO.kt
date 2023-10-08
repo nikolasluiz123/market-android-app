@@ -122,4 +122,7 @@ abstract class CategoryDAO : AbstractBaseDAO() {
      */
     @Query("select * from categories where synchronized = 0")
     abstract suspend fun findCategoriesNotSynchronized(): List<Category>
+
+    @Query("delete from categories")
+    abstract suspend fun clearAll()
 }

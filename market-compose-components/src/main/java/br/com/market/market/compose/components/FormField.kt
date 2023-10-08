@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.core.R
-import br.com.market.core.theme.GREY_800
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.theme.RED_600
 import br.com.market.core.ui.states.Field
@@ -60,7 +59,7 @@ fun FormField(
                 },
                 text = stringResource(id = labelResId),
                 style = MaterialTheme.typography.titleSmall,
-                color = GREY_800
+                color = MaterialTheme.colorScheme.onSecondary
             )
 
             if (additionalAction != null) {

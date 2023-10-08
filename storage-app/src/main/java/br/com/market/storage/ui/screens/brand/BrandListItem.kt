@@ -1,6 +1,5 @@
 package br.com.market.storage.ui.screens.brand
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,8 +12,6 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.core.theme.MarketTheme
-import br.com.market.core.theme.colorCardActive
-import br.com.market.core.theme.colorCardInactive
 import br.com.market.market.compose.components.LabeledText
 import br.com.market.storage.R
 
@@ -24,14 +21,13 @@ fun BrandListItem(brandName: String, active: Boolean, onItemClick: () -> Unit = 
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .background(color = if (active) colorCardActive else colorCardInactive)
             .clickable {
                 onItemClick()
             }
     ) {
         val (nameRef) = createRefs()
 
-        br.com.market.market.compose.components.LabeledText(
+        LabeledText(
             modifier = Modifier
                 .constrainAs(nameRef) {
                     linkTo(start = parent.start, end = parent.end)

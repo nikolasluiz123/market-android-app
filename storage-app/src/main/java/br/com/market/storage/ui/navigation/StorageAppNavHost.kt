@@ -82,7 +82,7 @@ fun StorageAppNavHost(
         splashScreen(
             onNavigateToLogin = {
                 navController.navigateToLoginScreen(navOptions {
-                    popUpTo(loginScreenRoute) {
+                    popUpTo(splashScreenRoute) {
                         inclusive = true
                     }
                 })

@@ -2,28 +2,6 @@ package br.com.market.core.theme
 
 import androidx.compose.ui.graphics.Color
 
-val colorPrimary: Color
-    get() = BLUE_800
-
-val colorSecondary: Color
-    get() = BLUE_600
-
-val colorTertiary: Color
-    get() = BLUE_300
-
-val colorCardActive: Color
-    get() = Color.White
-
-val colorCardInactive: Color
-    get() = GREY_100
-
-val colorTextActive: Color
-    get() = GREY_800
-
-val colorTextInactive: Color
-    get() = GREY_500
-
-
 val GREY_50 = Color(0xFFFAFAFA)
 val GREY_100 = Color(0xFFF5F5F5)
 val GREY_200 = Color(0xFFEEEEEE)

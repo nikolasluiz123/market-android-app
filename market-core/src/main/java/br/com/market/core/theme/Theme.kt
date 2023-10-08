@@ -10,31 +10,51 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.core.view.WindowCompat
 
-private val DarkColorScheme = darkColorScheme(
-    primary = colorPrimary,
-    secondary = colorSecondary,
-    tertiary = colorTertiary
+private val darkColorScheme = darkColorScheme(
+    primary = GREY_900,
+    primaryContainer = GREY_900,
+    onPrimary = GREY_50,
+    onPrimaryContainer = Color.White,
+    secondary = GREY_800,
+    secondaryContainer = GREY_800,
+    onSecondary = Color.White,
+    onSecondaryContainer = Color.White,
+    tertiary = GREY_400,
+    tertiaryContainer = GREY_400,
+    onTertiary = Color.White,
+    onTertiaryContainer = Color.White,
+    background = GREY_600,
+    onBackground = Color.White,
+    outline = Color.White,
+    outlineVariant = Color.White,
+    onSurface = Color.White,
+    surface = GREY_600
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = colorPrimary,
-    secondary = colorSecondary,
-    tertiary = colorTertiary
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
+private val lightColorScheme = lightColorScheme(
+    primary = BLUE_800,
+    primaryContainer = BLUE_800,
     onPrimary = Color.White,
+    onPrimaryContainer = Color.White,
+    secondary = BLUE_600,
+    secondaryContainer = BLUE_600,
     onSecondary = Color.White,
+    onSecondaryContainer = Color.White,
+    tertiary = BLUE_400,
+    tertiaryContainer = BLUE_400,
     onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    onTertiaryContainer = Color.White,
+    background = GREY_100,
+    onBackground = GREY_900,
+    outline = GREY_600,
+    outlineVariant = GREY_600,
+    onSurface = GREY_800,
+    surface = GREY_600
 )
 
 @Composable
@@ -48,15 +68,14 @@ fun MarketTheme(
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+        darkTheme -> darkColorScheme
+        else -> lightColorScheme
     }
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
             window.statusBarColor = colorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }
 

@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
  * @receiver
  */
 @Composable
-private fun <T> LazyVerticalGridList(
+fun <T> LazyVerticalGridList(
     modifier: Modifier = Modifier,
     items: List<T>,
     numberColumns: Int = 2,

@@ -1,4 +1,4 @@
-package br.com.market.market.pdf.generator.extensions
+package br.com.market.market.common.extensions
 
 import br.com.market.core.extensions.format
 import br.com.market.enums.EnumUnit

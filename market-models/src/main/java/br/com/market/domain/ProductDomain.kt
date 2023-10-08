@@ -14,5 +14,6 @@ data class ProductDomain(
     var price: Double? = null,
     var quantity: Double? = null,
     var quantityUnit: EnumUnit? = null,
-    var images: MutableList<ProductImageDomain>
+    var images: MutableList<ProductImageDomain> = mutableListOf(),
+    var remoteId: Long? = null,
 ): MarketRestrictionDomain()

@@ -1,5 +1,6 @@
 package br.com.market.localdataaccess.dao
 
+import androidx.paging.PagingSource
 import androidx.room.*
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
@@ -99,4 +100,26 @@ abstract class ProductDAO : AbstractBaseDAO() {
 
     @Query("select * from products where synchronized = 0")
     abstract suspend fun findProductsNotSynchronized(): List<Product>
+
+    @Query(
+        """
+           select 
+            p.id as productId,
+            p.name as productName,
+            p.price as productPrice,
+            p.quantity as productQuantity,
+            p.quantity_unit as productQuantityUnit,
+            p.category_brand_id as categoryBrandId,
+            p.active as productActive,
+            pi.bytes as imageBytes,
+            pi.imageUrl as imageUrl
+            from products p
+            inner join products_images pi on pi.id = (select id from products_images where product_id = p.id and principal and active)
+            inner join categories_brands cb on p.category_brand_id = cb.id
+            order by p.name
+        """)
+    abstract fun findProductsToSell(): PagingSource<Int, ProductImageTuple>
+
+    @Query("delete from products")
+    abstract suspend fun clearAll()
 }

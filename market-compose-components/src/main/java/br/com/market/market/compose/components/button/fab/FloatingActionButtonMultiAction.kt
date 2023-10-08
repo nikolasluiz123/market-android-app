@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
@@ -47,7 +46,6 @@ import br.com.market.core.ui.components.buttons.fab.SubActionFabItem
 fun MarketFloatingActionButtonMultiActions(
     state: FabMultiActionState,
     modifier: Modifier = Modifier,
-    containerColor: Color = BLUE_500,
     onClick: () -> Unit = { },
     content: @Composable () -> Unit
 ) {
@@ -65,9 +63,8 @@ fun MarketFloatingActionButtonMultiActions(
         }
     )
 
-    FloatingActionButton(
+    MarketFloatingActionButton(
         modifier = modifier,
-        containerColor = containerColor,
         onClick = {
             state.stateChange()
             onClick()

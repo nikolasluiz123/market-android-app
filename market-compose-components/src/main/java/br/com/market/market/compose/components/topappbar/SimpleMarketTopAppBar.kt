@@ -7,7 +7,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 
 /**
  * Top App Bar com uma passagem facilitada de título e
@@ -38,9 +37,9 @@ fun SimpleMarketTopAppBar(
     menuItems: @Composable () -> Unit = { },
     colors: TopAppBarColors = TopAppBarDefaults.mediumTopAppBarColors(
         containerColor = MaterialTheme.colorScheme.secondary,
-        titleContentColor = Color.White,
-        actionIconContentColor = Color.White,
-        navigationIconContentColor = Color.White
+        titleContentColor = MaterialTheme.colorScheme.onSecondary,
+        actionIconContentColor = MaterialTheme.colorScheme.onSecondary,
+        navigationIconContentColor = MaterialTheme.colorScheme.onSecondary
     ),
     showNavigationIcon: Boolean = true,
     showMenuWithLogout: Boolean = true,

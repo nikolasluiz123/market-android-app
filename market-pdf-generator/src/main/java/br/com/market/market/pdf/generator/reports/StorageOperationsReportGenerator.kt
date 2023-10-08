@@ -7,13 +7,13 @@ import android.graphics.pdf.PdfDocument.Page
 import br.com.market.core.enums.EnumDateTimePatterns
 import br.com.market.core.extensions.format
 import br.com.market.enums.EnumOperationType
+import br.com.market.market.common.extensions.formatQuantityIn
 import br.com.market.market.pdf.generator.R
 import br.com.market.market.pdf.generator.enums.EnumPageSize
 import br.com.market.market.pdf.generator.enums.EnumReportDirectory
 import br.com.market.market.pdf.generator.extensions.drawLineInPosition
 import br.com.market.market.pdf.generator.extensions.drawTableCellValue
 import br.com.market.market.pdf.generator.extensions.drawTextInPosition
-import br.com.market.market.pdf.generator.extensions.formatQuantityIn
 import br.com.market.market.pdf.generator.extensions.splitText
 import br.com.market.market.pdf.generator.repository.StorageOperationsReportRepository
 import br.com.market.market.pdf.generator.utils.Margins.MARGIN_16

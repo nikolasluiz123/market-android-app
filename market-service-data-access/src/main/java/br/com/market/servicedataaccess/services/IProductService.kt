@@ -1,6 +1,7 @@
 package br.com.market.servicedataaccess.services
 
 import br.com.market.sdo.ProductBodySDO
+import br.com.market.sdo.ProductClientSDO
 import br.com.market.sdo.ProductImageSDO
 import br.com.market.sdo.ProductSDO
 import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
@@ -42,4 +43,11 @@ interface IProductService {
         @Query("limit") limit: Int? = null,
         @Query("offset") offset: Int? = null
     ): Response<ReadResponse<ProductImageSDO>>
+
+    @GET("product/client")
+    suspend fun findProducts(
+        @Header("Authorization") token: String,
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int
+    ): Response<ReadResponse<ProductClientSDO>>
 }

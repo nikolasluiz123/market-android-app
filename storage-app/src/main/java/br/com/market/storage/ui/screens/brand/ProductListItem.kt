@@ -1,6 +1,5 @@
 package br.com.market.storage.ui.screens.brand
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,13 +13,11 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.core.extensions.formatToCurrency
 import br.com.market.core.theme.MarketTheme
-import br.com.market.core.theme.colorCardActive
-import br.com.market.core.theme.colorCardInactive
+import br.com.market.enums.EnumUnit
+import br.com.market.market.common.extensions.formatQuantityIn
 import br.com.market.market.compose.components.CoilImageViewer
 import br.com.market.market.compose.components.LabeledText
-import br.com.market.enums.EnumUnit
 import br.com.market.storage.R
-import br.com.market.storage.extensions.formatQuantityIn
 
 @Composable
 fun ProductListItem(
@@ -36,7 +33,6 @@ fun ProductListItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .background(color = if (active) colorCardActive else colorCardInactive)
             .clickable {
                 onItemClick()
             }
@@ -46,7 +42,7 @@ fun ProductListItem(
         createHorizontalChain(nameRef, imageRef)
         createHorizontalChain(priceRef, quantityRef, imageRef)
 
-        br.com.market.market.compose.components.LabeledText(
+        LabeledText(
             modifier = Modifier
                 .constrainAs(nameRef) {
                     linkTo(start = parent.start, end = imageRef.start, startMargin = 8.dp)
@@ -59,7 +55,7 @@ fun ProductListItem(
             value = name
         )
 
-        br.com.market.market.compose.components.LabeledText(
+        LabeledText(
             modifier = Modifier.constrainAs(priceRef) {
                 start.linkTo(nameRef.start)
                 top.linkTo(nameRef.bottom, margin = 8.dp)
@@ -71,7 +67,7 @@ fun ProductListItem(
             value = price.formatToCurrency()
         )
 
-        br.com.market.market.compose.components.LabeledText(
+        LabeledText(
             modifier = Modifier.constrainAs(quantityRef) {
                 start.linkTo(priceRef.end)
                 top.linkTo(priceRef.top)
@@ -83,7 +79,7 @@ fun ProductListItem(
             value = quantity.formatQuantityIn(quantityUnit)
         )
 
-        br.com.market.market.compose.components.CoilImageViewer(
+        CoilImageViewer(
             containerModifier = Modifier
                 .constrainAs(imageRef) {
                     end.linkTo(parent.end)

@@ -9,11 +9,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import br.com.market.core.R
 import br.com.market.core.theme.GREY_500
-import br.com.market.core.theme.GREY_800
 
 @Composable
 fun IconButtonStorage(
-    iconColor: Color = GREY_800,
     disabledIconColor: Color = GREY_500,
     enabled: Boolean = true,
     onClick: () -> Unit = { }
@@ -21,7 +19,7 @@ fun IconButtonStorage(
     IconButton(
         enabled = enabled,
         onClick = onClick,
-        colors = IconButtonDefaults.iconButtonColors(contentColor = iconColor, disabledContentColor = disabledIconColor)
+        colors = IconButtonDefaults.iconButtonColors(disabledContentColor = disabledIconColor)
     ) {
         Icon(
             painter = painterResource(id = R.drawable.ic_storage_32dp),

@@ -1,11 +1,12 @@
 package br.com.market.market.compose.components.input
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -28,10 +29,9 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.core.R
 import br.com.market.core.theme.MarketTheme
-import br.com.market.core.theme.colorSecondary
 import br.com.market.core.ui.states.input.InputTextUIState
-import br.com.market.market.compose.components.input.viewmodel.InputTextViewModel
 import br.com.market.market.compose.components.button.icons.IconButtonClear
+import br.com.market.market.compose.components.input.viewmodel.InputTextViewModel
 import br.com.market.market.compose.components.topappbar.SimpleMarketTopAppBar
 
 @Composable
@@ -105,7 +105,13 @@ fun InputText(
                     focusedContainerColor = Color.Transparent,
                     disabledContainerColor = Color.Transparent,
                     errorContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent
+                    unfocusedContainerColor = Color.Transparent,
+                    cursorColor = MaterialTheme.colorScheme.outline,
+                    unfocusedLabelColor = MaterialTheme.colorScheme.onBackground,
+                    focusedLabelColor = MaterialTheme.colorScheme.onBackground,
+                    focusedTrailingIconColor = MaterialTheme.colorScheme.onPrimary,
+                    unfocusedTrailingIconColor = MaterialTheme.colorScheme.onPrimary,
+                    focusedIndicatorColor = MaterialTheme.colorScheme.onBackground,
                 ),
                 keyboardOptions = state.keyboardOptions,
                 visualTransformation = state.visualTransformation,
@@ -137,7 +143,7 @@ fun InputText(
                     )
                 }
 
-                OutlinedButton(
+                Button(
                     modifier = Modifier.constrainAs(buttonConfirmRef) {
                         top.linkTo(parent.top)
                         start.linkTo(buttonCancelRef.end, margin = 8.dp)
@@ -145,10 +151,11 @@ fun InputText(
                     onClick = {
                         onConfirmClick(getValue(state))
                     },
-                    colors = ButtonDefaults.outlinedButtonColors(containerColor = colorSecondary),
-                    border = null
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer
+                    )
                 ) {
-                    Text(stringResource(R.string.text_advanced_filter_screen_label_confirm), color = Color.White)
+                    Text(text = stringResource(R.string.text_advanced_filter_screen_label_confirm))
                 }
 
                 OutlinedButton(
@@ -157,10 +164,11 @@ fun InputText(
                         start.linkTo(parent.start, margin = 8.dp)
                     },
                     onClick = onCancelClick,
-                    colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.Transparent),
-                    border = BorderStroke(1.dp, colorSecondary)
                 ) {
-                    Text(stringResource(R.string.text_advanced_filter_screen_label_cancel), color = colorSecondary)
+                    Text(
+                        text = stringResource(R.string.text_advanced_filter_screen_label_cancel),
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
                 }
             }
         }

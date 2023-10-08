@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.navOptions
 import br.com.market.core.extensions.popBackStackWithResult
 import br.com.market.market.compose.components.navigation.inputNumber
 import br.com.market.market.compose.components.navigation.inputNumberNavResultCallbackKey
@@ -40,13 +41,36 @@ fun CommerceAppNavHost(
     ) {
 
         splashScreen(
-            onNavigateToScreen = navController::navigateToLoginScreen
+            onNavigateToLogin = {
+                navController.navigateToLoginScreen(
+                    navOptions {
+                        popUpTo(splashScreenRoute) {
+                            inclusive = true
+                        }
+                    }
+                )
+            },
+            onNavigateToMainScreen = {
+                navController.navigateToProductsScreen(
+                    navOptions {
+                        popUpTo(splashScreenRoute) {
+                            inclusive = true
+                        }
+                    }
+                )
+            }
         )
 
         loginScreen(
             onRegisterClick = navController::navigateToRegisterClientScreen,
             onAuthenticateSuccess = {
-                // navegar para a tela principal.
+                navController.navigateToProductsScreen(
+                    navOptions {
+                        popUpTo(loginScreenRoute) {
+                            inclusive = true
+                        }
+                    }
+                )
             }
         )
 
@@ -55,6 +79,10 @@ fun CommerceAppNavHost(
             onNavigateToTextInput = navController::navigateToInputText,
             onNavigateToNumberInput = navController::navigateToInputNumber,
             onNavigateToPasswordInput = navController::navigateToInputPassword
+        )
+
+        productsScreen(
+            onBackClick = navController::popBackStack
         )
 
         inputText(

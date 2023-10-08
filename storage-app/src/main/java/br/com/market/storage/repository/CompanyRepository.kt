@@ -28,15 +28,15 @@ class CompanyRepository @Inject constructor(
                 val company = Company(
                     id = id,
                     name = name,
-                    themeDefinitionsId = themeDefinitionsDTO.id
+                    themeDefinitionsId = themeDefinitions.id
                 )
 
                 val themeDefinitions = ThemeDefinitions(
-                    id = themeDefinitionsDTO.id,
-                    colorPrimary = themeDefinitionsDTO.colorPrimary,
-                    colorSecondary = themeDefinitionsDTO.colorSecondary,
-                    colorTertiary = themeDefinitionsDTO.colorTertiary,
-                    imageLogo = themeDefinitionsDTO.imageLogo
+                    id = themeDefinitions.id,
+                    colorPrimary = themeDefinitions.colorPrimary,
+                    colorSecondary = themeDefinitions.colorSecondary,
+                    colorTertiary = themeDefinitions.colorTertiary,
+                    imageLogo = themeDefinitions.imageLogo
                 )
 
                 companyDAO.saveTheme(themeDefinitions)

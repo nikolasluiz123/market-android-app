@@ -1,14 +1,15 @@
 package br.com.market.market.compose.components.input
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -24,7 +25,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -38,14 +38,13 @@ import br.com.market.core.enums.EnumDateTimePatterns
 import br.com.market.core.extensions.parseToLocalDate
 import br.com.market.core.extensions.parseToLocalTime
 import br.com.market.core.theme.MarketTheme
-import br.com.market.core.theme.colorSecondary
 import br.com.market.core.ui.states.filter.DateRangeAdvancedFilterUIState
-import br.com.market.market.compose.components.input.viewmodel.InputDateTimeRangeViewModel
 import br.com.market.market.compose.components.OutlinedTextFieldValidation
 import br.com.market.market.compose.components.button.icons.IconButtonCalendar
 import br.com.market.market.compose.components.button.icons.IconButtonClear
 import br.com.market.market.compose.components.button.icons.IconButtonTime
 import br.com.market.market.compose.components.dialog.TimePickerDialog
+import br.com.market.market.compose.components.input.viewmodel.InputDateTimeRangeViewModel
 import br.com.market.market.compose.components.topappbar.SimpleMarketTopAppBar
 import java.time.Instant
 import java.time.LocalDate
@@ -333,7 +332,7 @@ fun InputDateTimeRange(
                 }
             }
 
-            OutlinedButton(
+            Button(
                 modifier = Modifier.constrainAs(buttonConfirmRef) {
                     end.linkTo(parent.end, margin = 8.dp)
                     bottom.linkTo(parent.bottom, margin = 8.dp)
@@ -345,10 +344,11 @@ fun InputDateTimeRange(
 
                     onConfirmClick(pair)
                 },
-                colors = ButtonDefaults.outlinedButtonColors(containerColor = colorSecondary),
-                border = null
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer
+                )
             ) {
-                Text(stringResource(R.string.text_advanced_filter_screen_label_confirm), color = Color.White)
+                Text(text = stringResource(R.string.text_advanced_filter_screen_label_confirm))
             }
 
             OutlinedButton(
@@ -357,10 +357,11 @@ fun InputDateTimeRange(
                     bottom.linkTo(parent.bottom, margin = 8.dp)
                 },
                 onClick = onCancelClick,
-                colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.Transparent),
-                border = BorderStroke(1.dp, colorSecondary)
             ) {
-                Text(stringResource(R.string.text_advanced_filter_screen_label_cancel), color = colorSecondary)
+                Text(
+                    text = stringResource(R.string.text_advanced_filter_screen_label_cancel),
+                    color = MaterialTheme.colorScheme.onBackground
+                )
             }
         }
     }

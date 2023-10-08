@@ -15,6 +15,7 @@ dependencyResolutionManagement {
 rootProject.name = "market-android-app"
 
 include ':market-core'
+include ':market-common'
 include ':market-compose-components'
 include ':market-models'
 include ':market-pdf-generator'

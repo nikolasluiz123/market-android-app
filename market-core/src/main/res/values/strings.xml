@@ -8,7 +8,7 @@
     <string name="label_limpar_pesquisa">Limpar Pesquisa</string>
     <string name="label_save">Salvar</string>
     <string name="top_app_bar_text_field_hint">O que você procura?</string>
-    <string name="text_empty_state_default">Não há Registros Cadastrados</string>
+    <string name="text_empty_state_default">Não foram encontrados registros</string>
     <string name="label_image">Imagem</string>
     <string name="description_icon_hide_password">Hide password</string>
     <string name="label_adicionar">Adicionar</string>

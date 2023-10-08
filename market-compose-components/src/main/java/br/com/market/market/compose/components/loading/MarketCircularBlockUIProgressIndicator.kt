@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ConstraintLayout
-import br.com.market.core.theme.BLUE_900
 
 /**
  * Indicador de progesso circular.
@@ -41,7 +40,7 @@ fun MarketCircularBlockUIProgressIndicator(
 
                 val (loadingRef, textRef) = createRefs()
                 CircularProgressIndicator(
-                    color = BLUE_900,
+                    color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.constrainAs(loadingRef) {
                         start.linkTo(parent.start)
                         top.linkTo(parent.top)
@@ -57,7 +56,7 @@ fun MarketCircularBlockUIProgressIndicator(
                         end.linkTo(loadingRef.end)
                     },
                     style = MaterialTheme.typography.titleMedium,
-                    color = BLUE_900
+                    color = MaterialTheme.colorScheme.primary
                 )
 
             }

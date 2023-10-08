@@ -42,4 +42,7 @@
     <string name="register_client_email_registred_validation_message">E-mail já cadastrado.</string>
     <string name="register_client_cpf_registred_validation_message">CPF já cadastrado.</string>
     <string name="register_client_screen_message_success_save">Cliente Salvo com Sucesso.</string>
+    <string name="product_list_item_label_name">Nome</string>
+    <string name="product_list_item_label_price">Preço</string>
+    <string name="product_list_item_label_quantity">Quantidade</string>
 </resources>

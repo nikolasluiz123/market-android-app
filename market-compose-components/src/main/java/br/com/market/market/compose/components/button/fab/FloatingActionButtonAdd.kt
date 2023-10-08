@@ -6,7 +6,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.market.core.R
@@ -30,8 +29,7 @@ fun FloatingActionButtonAdd(
     ) {
         Icon(
             imageVector = Icons.Default.Add,
-            contentDescription = stringResource(R.string.label_adicionar),
-            tint = Color.White
+            contentDescription = stringResource(R.string.label_adicionar)
         )
     }
 }

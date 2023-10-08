@@ -13,6 +13,7 @@ import br.com.market.localdataaccess.dao.ProductDAO
 import br.com.market.localdataaccess.dao.ProductImageDAO
 import br.com.market.localdataaccess.dao.StorageOperationsHistoryDAO
 import br.com.market.localdataaccess.dao.UserDAO
+import br.com.market.localdataaccess.dao.remotekeys.ProductRemoteKeysDAO
 import br.com.market.localdataaccess.dao.report.StorageOperationsReportDAO
 import br.com.market.localdataaccess.database.AppDatabase
 import dagger.Module
@@ -86,6 +87,10 @@ class DatabaseModule {
     @Provides
     @Singleton
     fun provideStorageReportDAO(appDatabase: AppDatabase): StorageOperationsReportDAO = appDatabase.storageReportDAO()
+
+    @Provides
+    @Singleton
+    fun provideProductRemoteKeysDAO(appDatabase: AppDatabase): ProductRemoteKeysDAO = appDatabase.productRemoteKeysDAO()
 
     /**
      * função para criar o DataBase uma única vez.

@@ -25,7 +25,6 @@ import br.com.market.core.theme.MarketTheme
 import br.com.market.core.utils.PermissionUtils
 import br.com.market.market.compose.components.MarketBottomAppBar
 import br.com.market.market.compose.components.button.fab.FloatingActionButtonAdd
-import br.com.market.market.compose.components.button.icons.IconButtonInactivate
 import br.com.market.market.compose.components.button.icons.IconButtonLogout
 import br.com.market.market.compose.components.button.icons.IconButtonSync
 import br.com.market.market.compose.components.filter.SimpleFilter
@@ -102,12 +101,6 @@ fun CategorySearchScreen(
         },
         bottomBar = {
             MarketBottomAppBar(
-                actions = {
-                    IconButtonInactivate(
-                        onClick = onDeleteCategoryClick,
-                        enabled = pagingData.itemCount > 0
-                    )
-                },
                 floatingActionButton = {
                     FloatingActionButtonAdd(onClick = onAddCategoryClick)
                 }

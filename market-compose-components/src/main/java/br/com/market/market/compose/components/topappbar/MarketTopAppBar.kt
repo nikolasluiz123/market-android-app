@@ -8,7 +8,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.market.core.theme.MarketTheme
 import br.com.market.market.compose.components.button.icons.IconButtonArrowBack
@@ -39,9 +38,9 @@ fun MarketTopAppBar(
     menuItems: @Composable () -> Unit = { },
     colors: TopAppBarColors = TopAppBarDefaults.mediumTopAppBarColors(
         containerColor = MaterialTheme.colorScheme.secondary,
-        titleContentColor = Color.White,
-        actionIconContentColor = Color.White,
-        navigationIconContentColor = Color.White
+        titleContentColor = MaterialTheme.colorScheme.onSecondary,
+        actionIconContentColor = MaterialTheme.colorScheme.onSecondary,
+        navigationIconContentColor = MaterialTheme.colorScheme.onSecondary
     ),
     showNavigationIcon: Boolean = true,
     showMenuWithLogout: Boolean = true,

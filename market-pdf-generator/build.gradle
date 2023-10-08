@@ -33,6 +33,7 @@ android {
 
 dependencies {
     implementation project(path: ':market-core')
+    implementation project(path: ':market-common')
     implementation project(path: ':market-models')
     implementation project(path: ':market-local-data-access')
 

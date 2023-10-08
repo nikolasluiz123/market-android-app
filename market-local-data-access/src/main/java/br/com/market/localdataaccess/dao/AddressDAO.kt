@@ -12,6 +12,9 @@ abstract class AddressDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun save(address: Address)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract suspend fun saveAll(address: List<Address>)
+
     @Query("select * from addresses where id = :id")
     abstract suspend fun findById(id: String): Address
 }

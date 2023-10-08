@@ -1,6 +1,5 @@
 package br.com.market.storage.ui.screens.movement
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -33,7 +32,6 @@ import br.com.market.core.inputs.arguments.DateTimeRangeInputArgs
 import br.com.market.core.inputs.arguments.InputArgs
 import br.com.market.core.inputs.arguments.InputNumberArgs
 import br.com.market.core.theme.MarketTheme
-import br.com.market.core.theme.colorSecondary
 import br.com.market.core.ui.states.filter.AdvancedFilterUIState
 import br.com.market.enums.EnumOperationType
 import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
@@ -193,7 +191,6 @@ fun MovementSearchAdvancedFilterScreen(
 
                     onApplyFilters(filter)
                 },
-                colors = ButtonDefaults.outlinedButtonColors(containerColor = colorSecondary),
                 border = null
             ) {
                 Text(stringResource(R.string.label_apply_advanced_filter), color = Color.White)
@@ -208,9 +205,8 @@ fun MovementSearchAdvancedFilterScreen(
                     onApplyFilters(MovementSearchScreenFilters())
                 },
                 colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.Transparent),
-                border = BorderStroke(1.dp, colorSecondary)
             ) {
-                Text(stringResource(R.string.label_clear), color = colorSecondary)
+                Text(stringResource(R.string.label_clear))
             }
         }
     }

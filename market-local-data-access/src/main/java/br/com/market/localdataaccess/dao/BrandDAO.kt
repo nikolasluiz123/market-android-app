@@ -198,4 +198,16 @@ abstract class BrandDAO : AbstractBaseDAO() {
      */
     @Query("select * from categories_brands where synchronized = 0")
     abstract suspend fun findCategoryBrandsNotSynchronized(): List<CategoryBrand>
+
+    @Query("delete from brands")
+    abstract suspend fun clearAllBrands()
+
+    @Query("delete from categories_brands")
+    abstract suspend fun clearAllCategoryBrands()
+
+    @Transaction
+    open suspend fun clearAll() {
+        clearAllCategoryBrands()
+        clearAllCategoryBrands()
+    }
 }

@@ -18,7 +18,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,7 +26,6 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.paging.compose.collectAsLazyPagingItems
 import br.com.market.core.R
 import br.com.market.core.R.drawable.*
-import br.com.market.core.theme.GREY_800
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.buttons.fab.SubActionFabItem
 import br.com.market.enums.EnumOperationType
@@ -127,8 +125,7 @@ fun MovementsSearchScreen(
                 MarketFloatingActionButtonMultiActions(state = bottomBarState) {
                     Icon(
                         imageVector = Icons.Default.Add,
-                        contentDescription = stringResource(R.string.label_adicionar),
-                        tint = Color.White
+                        contentDescription = stringResource(R.string.label_adicionar)
                     )
                 }
             }
@@ -308,8 +305,7 @@ private fun Header(
                 top.linkTo(parent.top)
             },
             text = stringResource(string.movements_search_screen_label_quantity_header),
-            style = MaterialTheme.typography.titleSmall,
-            color = GREY_800,
+            style = MaterialTheme.typography.titleSmall
         )
 
         Text(
@@ -318,8 +314,7 @@ private fun Header(
                 top.linkTo(parent.top)
             },
             text = state.productQuantity.toString(),
-            style = MaterialTheme.typography.titleSmall,
-            color = GREY_800,
+            style = MaterialTheme.typography.titleSmall
         )
     }
 }

@@ -4,12 +4,15 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
@@ -91,7 +94,7 @@ fun CategoryScreen(
                 .padding(padding)
                 .fillMaxSize()
         ) {
-            val (tabRowRef, horizontalPagerRef) = createRefs()
+            val (tabRowRef, horizontalPagerRef, tabDividerRef) = createRefs()
             val tabTitles = listOf(
                 stringResource(R.string.category_screen_label_tab_category),
                 stringResource(R.string.category_screen_label_tab_brand)
@@ -100,13 +103,26 @@ fun CategoryScreen(
             val coroutineScope = rememberCoroutineScope()
             var tabIndex by remember { mutableIntStateOf(0) }
 
+            Divider(
+                modifier = Modifier.constrainAs(tabDividerRef) {
+                    linkTo(start = parent.start, end = parent.end, bias = 0f)
+                    top.linkTo(parent.top)
+                }.fillMaxWidth(),
+                color = MaterialTheme.colorScheme.onSecondary
+            )
+
             TabRow(
                 modifier = Modifier.constrainAs(tabRowRef) {
                     start.linkTo(parent.start)
-                    top.linkTo(parent.top)
+                    top.linkTo(tabDividerRef.bottom)
                     end.linkTo(parent.end)
                 },
-                selectedTabIndex = tabIndex
+                selectedTabIndex = tabIndex,
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.onSecondary,
+                divider = {
+                    Divider(color = MaterialTheme.colorScheme.onSecondary)
+                }
             ) {
                 tabTitles.forEachIndexed { index, title ->
                     Tab(
