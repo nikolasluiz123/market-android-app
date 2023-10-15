@@ -6,6 +6,7 @@ import br.com.market.core.pagination.PagingConfigUtils
 import br.com.market.domain.BrandDomain
 import br.com.market.localdataaccess.dao.BrandDAO
 import br.com.market.localdataaccess.dao.MarketDAO
+import br.com.market.market.common.repository.BaseRepository
 import br.com.market.models.Brand
 import br.com.market.models.CategoryBrand
 import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
@@ -14,6 +15,7 @@ import br.com.market.servicedataaccess.webclients.BrandWebClient
 import br.com.market.storage.pagination.BrandPagingSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import java.net.HttpURLConnection
 import javax.inject.Inject
 
 /**
@@ -166,25 +168,25 @@ class BrandRepository @Inject constructor(
      * @author Nikolas Luiz Schmitt
      */
     private suspend fun updateBrandsOfLocalDB(): MarketServiceResponse {
-        val marketId = marketDAO.findFirst().first()?.id!!
+//        val marketId = marketDAO.findFirst().first()?.id!!
+//
+//        var response = importPagingData(
+//            onWebServiceFind = { limit, offset ->
+//                webClient.findBrands(marketId = marketId, limit = limit, offset = offset)
+//            },
+//            onPersistData = brandDAO::saveBrands
+//        )
+//
+//        if (response.success) {
+//            response = importPagingData(
+//                onWebServiceFind = { limit, offset ->
+//                    webClient.findCategoryBrands(marketId = marketId, limit = limit, offset = offset)
+//                },
+//                onPersistData = brandDAO::saveCategoryBrands
+//            )
+//        }
 
-        var response = importPagingData(
-            onWebServiceFind = { limit, offset ->
-                webClient.findBrands(marketId = marketId, limit = limit, offset = offset)
-            },
-            onPersistData = brandDAO::saveBrands
-        )
-
-        if (response.success) {
-            response = importPagingData(
-                onWebServiceFind = { limit, offset ->
-                    webClient.findCategoryBrands(marketId = marketId, limit = limit, offset = offset)
-                },
-                onPersistData = brandDAO::saveCategoryBrands
-            )
-        }
-
-        return response
+        return MarketServiceResponse(code = HttpURLConnection.HTTP_OK, success = true)
     }
 
 }

@@ -1,8 +1,10 @@
 package br.com.market.localdataaccess.dao
 
+import androidx.paging.PagingSource
 import androidx.room.*
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
+import br.com.market.core.filter.BaseSearchFilter
 import br.com.market.domain.CategoryDomain
 import br.com.market.models.Category
 import java.util.*
@@ -58,6 +60,38 @@ abstract class CategoryDAO : AbstractBaseDAO() {
 
     @RawQuery(observedEntities = [Category::class])
     abstract suspend fun executeQueryFindCategories(query: SupportSQLiteQuery): List<CategoryDomain>
+
+    fun findCategoriesLov(filter: BaseSearchFilter): PagingSource<Int, CategoryDomain> {
+        val params = mutableListOf<Any>()
+
+        val select = StringJoiner("\r\n")
+        select.add(" select c.* ")
+
+        val from = StringJoiner("\r\n")
+        from.add(" from categories c ")
+
+        val where = StringJoiner("\r\n")
+        where.add(" where c.active ")
+
+        if (!filter.simpleFilter.isNullOrBlank()) {
+            where.add(" and c.name like ? ")
+            params.add("%${filter.simpleFilter}%")
+        }
+
+        val orderBy = StringJoiner("\r\n")
+        orderBy.add(" order by c.name ")
+
+        val sql = StringJoiner("\r\n")
+        sql.add(select.toString())
+        sql.add(from.toString())
+        sql.add(where.toString())
+        sql.add(orderBy.toString())
+
+        return executeQueryFindCategoriesLov(SimpleSQLiteQuery(sql.toString(), params.toTypedArray()))
+    }
+
+    @RawQuery(observedEntities = [Category::class])
+    abstract fun executeQueryFindCategoriesLov(query: SupportSQLiteQuery): PagingSource<Int, CategoryDomain>
 
     /**
      * Função para salvar uma categoria

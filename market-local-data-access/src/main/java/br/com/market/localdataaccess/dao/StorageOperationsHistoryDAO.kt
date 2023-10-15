@@ -9,7 +9,7 @@ import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import br.com.market.enums.EnumOperationType
 import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
-import br.com.market.localdataaccess.tuples.StorageOperationHistoryTuple
+import br.com.market.domain.StorageOperationHistoryReadDomain
 import br.com.market.models.Product
 import br.com.market.models.StorageOperationHistory
 import br.com.market.models.User
@@ -38,7 +38,7 @@ abstract class StorageOperationsHistoryDAO : AbstractBaseDAO() {
         productId: String? = null,
         simpleFilter: String? = null,
         advancedFilter: MovementSearchScreenFilters
-    ): List<StorageOperationHistoryTuple> {
+    ): List<StorageOperationHistoryReadDomain> {
         val params = mutableListOf<Any>()
 
         val select = StringJoiner("\r\n")
@@ -185,7 +185,7 @@ abstract class StorageOperationsHistoryDAO : AbstractBaseDAO() {
     }
 
     @RawQuery(observedEntities = [StorageOperationHistory::class, Product::class, User::class])
-    abstract suspend fun executeQueryFindStorageOperationsHistory(query: SupportSQLiteQuery): List<StorageOperationHistoryTuple>
+    abstract suspend fun executeQueryFindStorageOperationsHistory(query: SupportSQLiteQuery): List<StorageOperationHistoryReadDomain>
 
     @Query("update storage_operations_history set active = 0, synchronized = :sync where id = :id")
     abstract suspend fun inactivate(id: String, sync: Boolean)

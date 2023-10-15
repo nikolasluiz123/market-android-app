@@ -18,9 +18,18 @@ import br.com.market.localdataaccess.dao.ProductDAO
 import br.com.market.localdataaccess.dao.ProductImageDAO
 import br.com.market.localdataaccess.dao.StorageOperationsHistoryDAO
 import br.com.market.localdataaccess.dao.UserDAO
+import br.com.market.localdataaccess.dao.remotekeys.BrandRemoteKeysDAO
+import br.com.market.localdataaccess.dao.remotekeys.CategoryRemoteKeysDAO
+import br.com.market.localdataaccess.dao.remotekeys.MarketRemoteKeysDAO
 import br.com.market.localdataaccess.dao.remotekeys.ProductRemoteKeysDAO
+import br.com.market.localdataaccess.dao.remotekeys.UserRemoteKeysDAO
 import br.com.market.localdataaccess.dao.report.StorageOperationsReportDAO
 import br.com.market.models.*
+import br.com.market.models.keys.BrandRemoteKeys
+import br.com.market.models.keys.CategoryRemoteKeys
+import br.com.market.models.keys.MarketRemoteKeys
+import br.com.market.models.keys.ProductRemoteKeys
+import br.com.market.models.keys.UserRemoteKeys
 
 /**
  * Classe que representa a base de dados local do dispositivo.
@@ -31,17 +40,20 @@ import br.com.market.models.*
  * @author Nikolas Luiz Schmitt
  */
 @Database(
-    version = 24,
+    version = 25,
     entities = [
         Address::class, Brand::class, Card::class, CartItem::class, Category::class, CategoryBrand::class, Client::class, Company::class,
         DeliveryMan::class, DeliveryManQueue::class, Product::class, ProductImage::class, ProductRating::class, PurchaseCart::class,
         StorageOperationHistory::class, ThemeDefinitions::class, User::class, Vehicle::class, VehicleCapacity::class, Device::class,
-        Market::class, ProductRemoteKeys::class
+        Market::class, CategoryRemoteKeys::class, BrandRemoteKeys::class, ProductRemoteKeys::class, MarketRemoteKeys::class,
+        UserRemoteKeys::class
     ],
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 21, to = 22, spec = AutoMigrationSpec21To22::class),
-        AutoMigration(from = 22, to = 23, spec = AutoMigrationSpec22To23::class)
+        AutoMigration(from = 22, to = 23, spec = AutoMigrationSpec22To23::class),
+        AutoMigration(from = 23, to = 24),
+        AutoMigration(from = 24, to = 25)
     ]
 )
 @TypeConverters(RoomTypeConverters::class)
@@ -82,6 +94,15 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun storageReportDAO(): StorageOperationsReportDAO
 
     abstract fun productRemoteKeysDAO(): ProductRemoteKeysDAO
+
+    abstract fun categoryRemoteKeysDAO(): CategoryRemoteKeysDAO
+
+    abstract fun brandRemoteKeysDAO(): BrandRemoteKeysDAO
+
+    abstract fun marketRemoteKeysDAO(): MarketRemoteKeysDAO
+
+    abstract fun userRemoteKeysDAO(): UserRemoteKeysDAO
+
 }
 
 @DeleteColumn(tableName = "theme_definitions", "synchronized")

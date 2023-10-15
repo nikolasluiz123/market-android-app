@@ -30,7 +30,6 @@ import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.buttons.fab.SubActionFabItem
 import br.com.market.enums.EnumOperationType
 import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
-import br.com.market.localdataaccess.tuples.StorageOperationHistoryTuple
 import br.com.market.market.compose.components.MarketBottomAppBar
 import br.com.market.market.compose.components.button.fab.MarketFloatingActionButtonMultiActions
 import br.com.market.market.compose.components.button.fab.SmallFabActions
@@ -47,13 +46,14 @@ import br.com.market.market.pdf.generator.enums.EnumReportDirectory
 import br.com.market.storage.R.*
 import br.com.market.storage.ui.states.MovementsSearchUIState
 import br.com.market.storage.ui.viewmodels.movements.MovementsSearchViewModel
+import br.com.market.domain.StorageOperationHistoryReadDomain
 
 @Composable
 fun MovementsSearchScreen(
     viewModel: MovementsSearchViewModel,
     onAddMovementClick: (String, String, EnumOperationType, String?) -> Unit,
     onBackClick: () -> Unit,
-    onMovementClick: (StorageOperationHistoryTuple) -> Unit,
+    onMovementClick: (StorageOperationHistoryReadDomain) -> Unit,
     onAdvancedFiltersClick: (MovementSearchScreenFilters, (MovementSearchScreenFilters) -> Unit) -> Unit,
     onNavigateToReportList: (directory: String) -> Unit
 ) {
@@ -84,7 +84,7 @@ fun MovementsSearchScreen(
     state: MovementsSearchUIState = MovementsSearchUIState(),
     onAddMovementClick: (String, String, EnumOperationType, String?) -> Unit = { _, _, _, _ -> },
     onBackClick: () -> Unit = { },
-    onMovementClick: (StorageOperationHistoryTuple) -> Unit = { },
+    onMovementClick: (StorageOperationHistoryReadDomain) -> Unit = { },
     onSimpleFilterChange: (String) -> Unit = { },
     onAdvancedFiltersClick: () -> Unit = { },
     hasFilterApplied: Boolean = false,
@@ -217,7 +217,7 @@ fun MovementsSearchScreen(
                         .constrainAs(listRef) {
                             linkTo(start = parent.start, end = parent.end, bias = 0F)
 
-                            val constraintTop = if (state.productName.isNullOrBlank()) searchDividerRef.top else headerRef.bottom
+                            val constraintTop = if (state.productName.isNullOrBlank()) searchDividerRef.bottom else headerRef.bottom
                             linkTo(top = constraintTop, bottom = parent.bottom, bias = 0F)
                         }
                         .padding(bottom = 74.dp)

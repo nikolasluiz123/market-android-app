@@ -32,8 +32,8 @@ abstract class CompanyDAO: AbstractBaseDAO() {
 
     @Transaction
     open suspend fun clearAll() {
-        clearAllThemes()
         clearAllCompanies()
+        clearAllThemes()
     }
 
     @Query("delete from companies")

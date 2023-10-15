@@ -1,7 +1,7 @@
 package br.com.market.servicedataaccess.services
 
 import br.com.market.sdo.BrandBodySDO
-import br.com.market.sdo.BrandSDO
+import br.com.market.sdo.BrandReadSDO
 import br.com.market.sdo.CategoryBrandSDO
 import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
@@ -25,20 +25,21 @@ interface IBrandService {
     @POST("brand/sync")
     suspend fun sync(@Header("Authorization") token: String, @Body brandBodySDOs: List<BrandBodySDO>): Response<MarketServiceResponse>
 
-    @GET("brand")
-    suspend fun findBrandSDOs(
+    @GET("brand/lov")
+    suspend fun getListLovBrandReadDTO(
         @Header("Authorization") token: String,
+        @Query("simpleFilter") simpleFilter: String?,
         @Query("marketId") marketId: Long,
-        @Query("limit") limit: Int? = null,
-        @Query("offset") offset: Int? = null
-    ): Response<ReadResponse<BrandSDO>>
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int
+    ): Response<ReadResponse<BrandReadSDO>>
 
-    @GET("brand/categoryBrand")
-    suspend fun findCategoryBrandSDOs(
-        @Header("Authorization") token: String,
-        @Query("marketId") marketId: Long,
-        @Query("limit") limit: Int? = null,
-        @Query("offset") offset: Int? = null
-    ): Response<ReadResponse<CategoryBrandSDO>>
+//    @GET("brand/categoryBrand")
+//    suspend fun findCategoryBrandSDOs(
+//        @Header("Authorization") token: String,
+//        @Query("marketId") marketId: Long,
+//        @Query("limit") limit: Int? = null,
+//        @Query("offset") offset: Int? = null
+//    ): Response<ReadResponse<CategoryBrandSDO>>
 
 }

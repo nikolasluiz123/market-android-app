@@ -2,6 +2,7 @@ package br.com.market.servicedataaccess.webclients
 
 import android.content.Context
 import br.com.market.models.Category
+import br.com.market.sdo.CategoryReadSDO
 import br.com.market.sdo.CategorySDO
 import br.com.market.servicedataaccess.responses.extensions.getPersistenceResponseBody
 import br.com.market.servicedataaccess.responses.extensions.getReadResponseBody
@@ -99,28 +100,7 @@ class CategoryWebClient @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun findCategorySDOs(marketId: Long, limit: Int? = null, offset: Int? = null): ReadResponse<Category> {
-        return readServiceErrorHandlingBlock(
-            codeBlock = {
-                val response = service.findCategorySDOs(
-                    token = getToken(),
-                    marketId = marketId,
-                    limit = limit,
-                    offset = offset
-                ).getReadResponseBody()
-
-                val categories = response.values.map {
-                    Category(
-                        id = it.localId,
-                        name = it.name,
-                        synchronized = true,
-                        active = it.active,
-                        marketId = it.marketId
-                    )
-                }
-
-                ReadResponse(values = categories, code = response.code, success = response.success, error = response.error)
-            }
-        )
+    suspend fun getListCategoryReadSDO(simpleFilter: String?, marketId: Long, limit: Int, offset: Int): ReadResponse<CategoryReadSDO> {
+        return service.getListCategoryReadSDO(getToken(), simpleFilter, marketId, limit, offset).getReadResponseBody()
     }
 }

@@ -7,6 +7,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import br.com.market.core.extensions.navigateForResult
 import br.com.market.market.compose.components.screens.LoadImageLinkScreen
+import br.com.market.market.compose.components.screens.viewmodel.LoadImageLinkViewModel
 
 internal const val loadImageLinkScreenRoute = "loadImageLink"
 const val loadImageLinkNavResultCallbackKey = "loadImageLinkCallbackKey"
@@ -22,7 +23,7 @@ fun NavGraphBuilder.loadImageLinkGraph(
     onSaveClick: (ByteArray) -> Unit
 ) {
     composable(route = loadImageLinkScreenRoute) {
-        val loadImageLinkViewModel = hiltViewModel<br.com.market.market.compose.components.screens.viewmodel.LoadImageLinkViewModel>()
+        val loadImageLinkViewModel = hiltViewModel<LoadImageLinkViewModel>()
 
         LoadImageLinkScreen(
             viewModel = loadImageLinkViewModel,

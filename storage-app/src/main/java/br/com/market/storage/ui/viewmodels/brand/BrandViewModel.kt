@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import br.com.market.core.extensions.navParamToString
-import br.com.market.localdataaccess.tuples.ProductImageTuple
+import br.com.market.domain.ProductImageReadDomain
 import br.com.market.storage.R
 import br.com.market.storage.repository.CategoryRepository
 import br.com.market.storage.repository.ProductRepository
@@ -112,7 +112,7 @@ class BrandViewModel @Inject constructor(
         }
     }
 
-    private fun getProducts(simpleFilterText: String? = null): Flow<PagingData<ProductImageTuple>> {
+    private fun getProducts(simpleFilterText: String? = null): Flow<PagingData<ProductImageReadDomain>> {
         val categoryId = categoryId?.navParamToString()
         val brandId = brandId?.navParamToString()
 

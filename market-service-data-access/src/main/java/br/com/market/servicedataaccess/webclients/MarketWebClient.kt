@@ -1,6 +1,7 @@
 package br.com.market.servicedataaccess.webclients
 
 import android.content.Context
+import br.com.market.sdo.MarketReadSDO
 import br.com.market.sdo.MarketSDO
 import br.com.market.servicedataaccess.responses.extensions.getReadResponseBody
 import br.com.market.servicedataaccess.responses.types.ReadResponse
@@ -26,5 +27,9 @@ class MarketWebClient @Inject constructor(
                 )
             }
         )
+    }
+
+    suspend fun getListLovMarketReadSDO(simpleFilter: String?, limit: Int, offset: Int): ReadResponse<MarketReadSDO> {
+        return service.getListLovMarketReadDTO(getToken(), simpleFilter, limit, offset).getReadResponseBody()
     }
 }

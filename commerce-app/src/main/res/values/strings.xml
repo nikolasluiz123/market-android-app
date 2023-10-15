@@ -45,4 +45,5 @@
     <string name="product_list_item_label_name">Nome</string>
     <string name="product_list_item_label_price">Preço</string>
     <string name="product_list_item_label_quantity">Quantidade</string>
+    <string name="products_screen_label_shearch_for">Buscar por Nome</string>
 </resources>

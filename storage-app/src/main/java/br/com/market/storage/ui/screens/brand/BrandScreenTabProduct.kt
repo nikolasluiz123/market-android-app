@@ -71,9 +71,9 @@ fun BrandScreenTabProduct(
                         quantity = it.productQuantity,
                         quantityUnit = it.productQuantityUnit,
                         image = it.imageBytes ?: it.imageUrl!!,
-                        active = it.productActive,
+                        active = it.active,
                         onItemClick = {
-                            onProductClick(it.productId)
+                            onProductClick(it.id!!)
                         }
                     )
                     Divider(modifier = Modifier.fillMaxWidth())
@@ -106,9 +106,9 @@ fun BrandScreenTabProduct(
                         quantity = it.productQuantity,
                         quantityUnit = it.productQuantityUnit,
                         image = it.imageBytes ?: it.imageUrl!!,
-                        active = it.productActive,
+                        active = it.active,
                         onItemClick = {
-                            onProductClick(it.productId)
+                            onProductClick(it.id!!)
                         }
                     )
                     Divider(modifier = Modifier.fillMaxWidth())

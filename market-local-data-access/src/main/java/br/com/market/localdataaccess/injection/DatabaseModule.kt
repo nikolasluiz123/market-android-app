@@ -13,7 +13,11 @@ import br.com.market.localdataaccess.dao.ProductDAO
 import br.com.market.localdataaccess.dao.ProductImageDAO
 import br.com.market.localdataaccess.dao.StorageOperationsHistoryDAO
 import br.com.market.localdataaccess.dao.UserDAO
+import br.com.market.localdataaccess.dao.remotekeys.BrandRemoteKeysDAO
+import br.com.market.localdataaccess.dao.remotekeys.CategoryRemoteKeysDAO
+import br.com.market.localdataaccess.dao.remotekeys.MarketRemoteKeysDAO
 import br.com.market.localdataaccess.dao.remotekeys.ProductRemoteKeysDAO
+import br.com.market.localdataaccess.dao.remotekeys.UserRemoteKeysDAO
 import br.com.market.localdataaccess.dao.report.StorageOperationsReportDAO
 import br.com.market.localdataaccess.database.AppDatabase
 import dagger.Module
@@ -91,6 +95,22 @@ class DatabaseModule {
     @Provides
     @Singleton
     fun provideProductRemoteKeysDAO(appDatabase: AppDatabase): ProductRemoteKeysDAO = appDatabase.productRemoteKeysDAO()
+
+    @Provides
+    @Singleton
+    fun provideCategoryRemoteKeysDAO(appDatabase: AppDatabase): CategoryRemoteKeysDAO = appDatabase.categoryRemoteKeysDAO()
+
+    @Provides
+    @Singleton
+    fun provideBrandRemoteKeysDAO(appDatabase: AppDatabase): BrandRemoteKeysDAO = appDatabase.brandRemoteKeysDAO()
+
+    @Provides
+    @Singleton
+    fun provideMarketRemoteKeysDAO(appDatabase: AppDatabase): MarketRemoteKeysDAO = appDatabase.marketRemoteKeysDAO()
+
+    @Provides
+    @Singleton
+    fun provideUserRemoteKeysDAO(appDatabase: AppDatabase): UserRemoteKeysDAO = appDatabase.userRemoteKeysDAO()
 
     /**
      * função para criar o DataBase uma única vez.

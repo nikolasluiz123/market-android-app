@@ -4,6 +4,7 @@ import android.content.Context
 import br.com.market.models.Brand
 import br.com.market.models.CategoryBrand
 import br.com.market.sdo.BrandBodySDO
+import br.com.market.sdo.BrandReadSDO
 import br.com.market.sdo.BrandSDO
 import br.com.market.sdo.CategoryBrandSDO
 import br.com.market.servicedataaccess.responses.extensions.getPersistenceResponseBody
@@ -134,58 +135,72 @@ class BrandWebClient @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun findBrands(marketId: Long, limit: Int? = null, offset: Int? = null): ReadResponse<Brand> {
-        return readServiceErrorHandlingBlock(
-            codeBlock = {
-                val response = service.findBrandSDOs(
-                    token = getToken(),
-                    marketId = marketId,
-                    limit = limit,
-                    offset = offset
-                ).getReadResponseBody()
-
-                val brands = response.values.map {
-                    Brand(
-                        id = it.localId,
-                        name = it.name,
-                        synchronized = true,
-                        active = it.active,
-                        marketId = it.marketId
-                    )
-                }
-
-                ReadResponse(values = brands, code = response.code, success = response.success, error = response.error)
-            }
-        )
-    }
+//    suspend fun findBrands(marketId: Long, limit: Int? = null, offset: Int? = null): ReadResponse<Brand> {
+//        return readServiceErrorHandlingBlock(
+//            codeBlock = {
+//                val response = service.findBrandSDOs(
+//                    token = getToken(),
+//                    marketId = marketId,
+//                    limit = limit,
+//                    offset = offset
+//                ).getReadResponseBody()
+//
+//                val brands = response.values.map {
+//                    Brand(
+//                        id = it.localId,
+//                        name = it.name,
+//                        synchronized = true,
+//                        active = it.active,
+//                        marketId = it.marketId
+//                    )
+//                }
+//
+//                ReadResponse(values = brands, code = response.code, success = response.success, error = response.error)
+//            }
+//        )
+//    }
 
     /**
      * Função que busca todos as categoria marca da base remota
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun findCategoryBrands(marketId: Long, limit: Int? = null, offset: Int? = null): ReadResponse<CategoryBrand> {
+//    suspend fun findCategoryBrands(marketId: Long, limit: Int? = null, offset: Int? = null): ReadResponse<CategoryBrand> {
+//        return readServiceErrorHandlingBlock(
+//            codeBlock = {
+//                val response = service.findCategoryBrandSDOs(
+//                    token = getToken(),
+//                    marketId = marketId,
+//                    limit = limit,
+//                    offset = offset
+//                ).getReadResponseBody()
+//
+//                val brands = response.values.map {
+//                    CategoryBrand(
+//                        id = it.localId,
+//                        categoryId = it.localCategoryId,
+//                        brandId = it.localBrandId,
+//                        synchronized = true,
+//                        active = it.active,
+//                        marketId = it.marketId
+//                    )
+//                }
+//
+//                ReadResponse(values = brands, code = response.code, success = response.success, error = response.error)
+//            }
+//        )
+//    }
+
+    suspend fun getListBrandReadSDO(simpleFilter: String?, marketId: Long, limit: Int, offset: Int): ReadResponse<BrandReadSDO> {
         return readServiceErrorHandlingBlock(
             codeBlock = {
-                val response = service.findCategoryBrandSDOs(
+                service.getListLovBrandReadDTO(
                     token = getToken(),
+                    simpleFilter = simpleFilter,
                     marketId = marketId,
                     limit = limit,
                     offset = offset
                 ).getReadResponseBody()
-
-                val brands = response.values.map {
-                    CategoryBrand(
-                        id = it.localId,
-                        categoryId = it.localCategoryId,
-                        brandId = it.localBrandId,
-                        synchronized = true,
-                        active = it.active,
-                        marketId = it.marketId
-                    )
-                }
-
-                ReadResponse(values = brands, code = response.code, success = response.success, error = response.error)
             }
         )
     }

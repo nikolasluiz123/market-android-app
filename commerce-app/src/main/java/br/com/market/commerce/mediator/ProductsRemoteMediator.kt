@@ -5,6 +5,7 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
+import br.com.market.domain.ProductImageReadDomain
 import br.com.market.localdataaccess.dao.AddressDAO
 import br.com.market.localdataaccess.dao.BrandDAO
 import br.com.market.localdataaccess.dao.CategoryDAO
@@ -14,7 +15,6 @@ import br.com.market.localdataaccess.dao.ProductDAO
 import br.com.market.localdataaccess.dao.ProductImageDAO
 import br.com.market.localdataaccess.dao.remotekeys.ProductRemoteKeysDAO
 import br.com.market.localdataaccess.database.AppDatabase
-import br.com.market.localdataaccess.tuples.ProductImageTuple
 import br.com.market.models.Address
 import br.com.market.models.Brand
 import br.com.market.models.Category
@@ -23,16 +23,15 @@ import br.com.market.models.Company
 import br.com.market.models.Market
 import br.com.market.models.Product
 import br.com.market.models.ProductImage
-import br.com.market.models.ProductRemoteKeys
 import br.com.market.models.ThemeDefinitions
+import br.com.market.models.keys.ProductRemoteKeys
 import br.com.market.sdo.ProductClientSDO
 import br.com.market.servicedataaccess.responses.types.ReadResponse
 import br.com.market.servicedataaccess.webclients.ProductWebClient
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
 @OptIn(ExperimentalPagingApi::class)
-class ProductsRemoteMediator @Inject constructor(
+class ProductsRemoteMediator(
     private val database: AppDatabase,
     private val webClient: ProductWebClient,
     private val categoryDAO: CategoryDAO,
@@ -42,11 +41,12 @@ class ProductsRemoteMediator @Inject constructor(
     private val productDAO: ProductDAO,
     private val imageDAO: ProductImageDAO,
     private val remoteKeysDAO: ProductRemoteKeysDAO,
-    private val addressDAO: AddressDAO
-) : RemoteMediator<Int, ProductImageTuple>() {
+    private val addressDAO: AddressDAO,
+    private val simpleFilter: String?
+) : RemoteMediator<Int, ProductImageReadDomain>() {
 
     override suspend fun initialize(): InitializeAction {
-        val cacheTimeout = TimeUnit.MILLISECONDS.convert(1, TimeUnit.HOURS)
+        val cacheTimeout = TimeUnit.MILLISECONDS.convert(5, TimeUnit.MINUTES)
 
         return if (System.currentTimeMillis() - (remoteKeysDAO.getCreationTime() ?: 0) < cacheTimeout) {
             InitializeAction.SKIP_INITIAL_REFRESH
@@ -55,7 +55,7 @@ class ProductsRemoteMediator @Inject constructor(
         }
     }
 
-    override suspend fun load(loadType: LoadType, state: PagingState<Int, ProductImageTuple>): MediatorResult {
+    override suspend fun load(loadType: LoadType, state: PagingState<Int, ProductImageReadDomain>): MediatorResult {
         return try {
             val page: Int = when (loadType) {
                 LoadType.REFRESH -> {
@@ -78,7 +78,7 @@ class ProductsRemoteMediator @Inject constructor(
 
             val limit = state.config.pageSize
             val offset = page * limit
-            val response = webClient.findProductsForSell(limit, offset)
+            val response = webClient.findProductsForSell(simpleFilter, limit, offset)
             val endOfPaginationReached = response.values.isEmpty()
 
             if (response.success) {
@@ -90,6 +90,7 @@ class ProductsRemoteMediator @Inject constructor(
                         brandDAO.clearAll()
                         categoryDAO.clearAll()
                         marketDAO.clearAll()
+                        addressDAO.clearAll()
                         companyDAO.clearAll()
                     }
 
@@ -137,27 +138,27 @@ class ProductsRemoteMediator @Inject constructor(
         }
     }
 
-    private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, ProductImageTuple>): ProductRemoteKeys? {
+    private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, ProductImageReadDomain>): ProductRemoteKeys? {
         return state.anchorPosition?.let { position ->
-            state.closestItemToPosition(position)?.productId?.let { id ->
+            state.closestItemToPosition(position)?.id?.let { id ->
                 remoteKeysDAO.getRemoteKeyByID(id)
             }
         }
     }
 
-    private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, ProductImageTuple>): ProductRemoteKeys? {
+    private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, ProductImageReadDomain>): ProductRemoteKeys? {
         return state.pages.firstOrNull {
             it.data.isNotEmpty()
         }?.data?.firstOrNull()?.let { product ->
-            remoteKeysDAO.getRemoteKeyByID(product.productId)
+            remoteKeysDAO.getRemoteKeyByID(product.id!!)
         }
     }
 
-    private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, ProductImageTuple>): ProductRemoteKeys? {
+    private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, ProductImageReadDomain>): ProductRemoteKeys? {
         return state.pages.lastOrNull {
             it.data.isNotEmpty()
         }?.data?.lastOrNull()?.let { product ->
-            remoteKeysDAO.getRemoteKeyByID(product.productId)
+            remoteKeysDAO.getRemoteKeyByID(product.id!!)
         }
     }
 

@@ -27,4 +27,11 @@ object PagingConfigUtils {
         enablePlaceholders = false,
         initialLoadSize = INITIAL_LOAD_SIZE
     )
+
+    fun customConfig(pageSize: Int) = PagingConfig(
+        pageSize = pageSize,
+        prefetchDistance = pageSize * 2,
+        enablePlaceholders = false,
+        initialLoadSize = pageSize
+    )
 }

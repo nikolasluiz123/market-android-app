@@ -43,7 +43,7 @@ fun <T: IEnumOptionsBottomSheet> BottomSheet(
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = bottomSheetState,
-        containerColor = MaterialTheme.colorScheme.secondary
+        containerColor = MaterialTheme.colorScheme.background
     ) {
         LazyColumn {
             items(items) {
@@ -52,17 +52,17 @@ fun <T: IEnumOptionsBottomSheet> BottomSheet(
                         Text(
                             text = stringResource(id = it.labelResId),
                             style = MaterialTheme.typography.labelLarge,
-                            color = MaterialTheme.colorScheme.onSecondary
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     },
                     leadingContent = {
                         Icon(
                             painter = painterResource(id = it.iconResId),
                             contentDescription = stringResource(id = it.iconDescriptionResId),
-                            tint = MaterialTheme.colorScheme.onSecondary
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
                     },
-                    colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.secondary),
+                    colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.background),
                     modifier = Modifier.clickable {
                         onItemClickListener(it.option)
                     }

@@ -1,8 +1,10 @@
 package br.com.market.localdataaccess.dao
 
+import androidx.paging.PagingSource
 import androidx.room.*
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
+import br.com.market.core.filter.BaseSearchFilter
 import br.com.market.domain.BrandDomain
 import br.com.market.models.Brand
 import br.com.market.models.CategoryBrand
@@ -65,8 +67,40 @@ abstract class BrandDAO : AbstractBaseDAO() {
         return executeQueryFindBrands(SimpleSQLiteQuery(sql.toString(), params.toTypedArray()))
     }
 
+    fun findBrandsLov(filter: BaseSearchFilter): PagingSource<Int, BrandDomain> {
+        val params = mutableListOf<Any>()
+
+        val select = StringJoiner("\r\n")
+        select.add(" select b.* ")
+
+        val from = StringJoiner("\r\n")
+        from.add(" from brands b ")
+
+        val where = StringJoiner("\r\n")
+        where.add(" where b.active ")
+
+        if (!filter.simpleFilter.isNullOrBlank()) {
+            where.add(" and p.name like ? ")
+            params.add("%${filter.simpleFilter}%")
+        }
+
+        val orderBy = StringJoiner("\r\n")
+        orderBy.add(" order by b.name ")
+
+        val sql = StringJoiner("\r\n")
+        sql.add(select.toString())
+        sql.add(from.toString())
+        sql.add(where.toString())
+        sql.add(orderBy.toString())
+
+        return executeQueryFindBrandsLov(SimpleSQLiteQuery(sql.toString(), params.toTypedArray()))
+    }
+
     @RawQuery(observedEntities = [Brand::class])
     abstract suspend fun executeQueryFindBrands(query: SupportSQLiteQuery): List<BrandDomain>
+
+    @RawQuery(observedEntities = [Brand::class])
+    abstract fun executeQueryFindBrandsLov(query: SupportSQLiteQuery): PagingSource<Int, BrandDomain>
 
     /**
      * Função para salvar uma marca
@@ -208,6 +242,6 @@ abstract class BrandDAO : AbstractBaseDAO() {
     @Transaction
     open suspend fun clearAll() {
         clearAllCategoryBrands()
-        clearAllCategoryBrands()
+        clearAllBrands()
     }
 }

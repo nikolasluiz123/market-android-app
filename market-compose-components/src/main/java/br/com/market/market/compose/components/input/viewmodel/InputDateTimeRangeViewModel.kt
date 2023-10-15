@@ -7,7 +7,7 @@ import br.com.market.core.extensions.fromJsonNavParamToArgs
 import br.com.market.core.inputs.arguments.DateTimeRangeInputArgs
 import br.com.market.core.gson.adapter.LocalDateTimeAdapter
 import br.com.market.core.ui.states.filter.DateRangeAdvancedFilterUIState
-import br.com.market.market.compose.components.navigation.dateRangeAdvancedFilterArguments
+import br.com.market.market.compose.components.input.navigation.dateRangeAdvancedFilterArguments
 import com.google.gson.GsonBuilder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

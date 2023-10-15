@@ -7,7 +7,8 @@ import br.com.market.domain.StorageOperationHistoryDomain
 import br.com.market.localdataaccess.dao.MarketDAO
 import br.com.market.localdataaccess.dao.StorageOperationsHistoryDAO
 import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
-import br.com.market.localdataaccess.tuples.StorageOperationHistoryTuple
+import br.com.market.market.common.repository.BaseRepository
+import br.com.market.domain.StorageOperationHistoryReadDomain
 import br.com.market.models.StorageOperationHistory
 import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
@@ -29,7 +30,7 @@ class StorageOperationsHistoryRepository @Inject constructor(
         brandId: String,
         simpleFilter: String?,
         advancedFilter: MovementSearchScreenFilters
-    ): Flow<PagingData<StorageOperationHistoryTuple>> {
+    ): Flow<PagingData<StorageOperationHistoryReadDomain>> {
         return Pager(
             config = PagingConfigUtils.defaultPagingConfig(),
             pagingSourceFactory = {

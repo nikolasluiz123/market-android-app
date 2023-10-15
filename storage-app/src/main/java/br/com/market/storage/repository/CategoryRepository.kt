@@ -6,6 +6,7 @@ import br.com.market.core.pagination.PagingConfigUtils
 import br.com.market.domain.CategoryDomain
 import br.com.market.localdataaccess.dao.CategoryDAO
 import br.com.market.localdataaccess.dao.MarketDAO
+import br.com.market.market.common.repository.BaseRepository
 import br.com.market.models.Category
 import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
@@ -13,6 +14,7 @@ import br.com.market.servicedataaccess.webclients.CategoryWebClient
 import br.com.market.storage.pagination.CategoryPagingSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import java.net.HttpURLConnection
 import javax.inject.Inject
 
 /**
@@ -148,13 +150,15 @@ class CategoryRepository @Inject constructor(
      * @author Nikolas Luiz Schmitt
      */
     private suspend fun updateCategoriesOfLocalDB(): MarketServiceResponse {
-        val marketId = marketDAO.findFirst().first()?.id!!
+//        val marketId = marketDAO.findFirst().first()?.id!!
 
-        return importPagingData(
-            onWebServiceFind = { limit, offset ->
-                webClient.findCategorySDOs(marketId = marketId, limit = limit, offset = offset)
-            },
-            onPersistData = dao::save
-        )
+//        return importPagingData(
+//            onWebServiceFind = { limit, offset ->
+//                webClient.findCategorySDOs(marketId = marketId, limit = limit, offset = offset)
+//            },
+//            onPersistData = dao::save
+//        )
+
+        return MarketServiceResponse(code = HttpURLConnection.HTTP_OK, success = true)
     }
 }

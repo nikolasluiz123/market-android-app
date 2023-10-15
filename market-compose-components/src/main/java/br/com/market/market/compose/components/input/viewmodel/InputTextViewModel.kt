@@ -7,7 +7,7 @@ import br.com.market.core.extensions.fromJsonNavParamToArgs
 import br.com.market.core.inputs.arguments.InputArgs
 import br.com.market.core.gson.adapter.InterfaceAdapter
 import br.com.market.core.ui.states.input.InputTextUIState
-import br.com.market.market.compose.components.navigation.inputTextArguments
+import br.com.market.market.compose.components.input.navigation.inputTextArguments
 import com.google.gson.GsonBuilder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

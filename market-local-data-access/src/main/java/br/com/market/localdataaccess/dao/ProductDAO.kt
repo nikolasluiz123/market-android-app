@@ -4,7 +4,7 @@ import androidx.paging.PagingSource
 import androidx.room.*
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
-import br.com.market.localdataaccess.tuples.ProductImageTuple
+import br.com.market.domain.ProductImageReadDomain
 import br.com.market.models.Product
 import br.com.market.models.StorageOperationHistory
 import br.com.market.models.User
@@ -28,7 +28,7 @@ abstract class ProductDAO : AbstractBaseDAO() {
         limit: Int,
         offset: Int,
         simpleFilter: String?
-    ): List<ProductImageTuple> {
+    ): List<ProductImageReadDomain> {
         val params = mutableListOf<Any>()
 
         val select = StringJoiner("\r\n")
@@ -84,7 +84,7 @@ abstract class ProductDAO : AbstractBaseDAO() {
     }
 
     @RawQuery(observedEntities = [StorageOperationHistory::class, Product::class, User::class])
-    abstract suspend fun executeQueryFindProducts(query: SupportSQLiteQuery): List<ProductImageTuple>
+    abstract suspend fun executeQueryFindProducts(query: SupportSQLiteQuery): List<ProductImageReadDomain>
 
     @Transaction
     open suspend fun toggleActiveProductAndImages(productId: String, sync: Boolean) {
@@ -101,24 +101,57 @@ abstract class ProductDAO : AbstractBaseDAO() {
     @Query("select * from products where synchronized = 0")
     abstract suspend fun findProductsNotSynchronized(): List<Product>
 
-    @Query(
-        """
-           select 
-            p.id as productId,
-            p.name as productName,
-            p.price as productPrice,
-            p.quantity as productQuantity,
-            p.quantity_unit as productQuantityUnit,
-            p.category_brand_id as categoryBrandId,
-            p.active as productActive,
-            pi.bytes as imageBytes,
-            pi.imageUrl as imageUrl
-            from products p
-            inner join products_images pi on pi.id = (select id from products_images where product_id = p.id and principal and active)
-            inner join categories_brands cb on p.category_brand_id = cb.id
-            order by p.name
-        """)
-    abstract fun findProductsToSell(): PagingSource<Int, ProductImageTuple>
+    fun findProductsToSell(simpleFilter: String?): PagingSource<Int, ProductImageReadDomain> {
+        val params = mutableListOf<Any>()
+
+        val select = StringJoiner("\r\n")
+        with(select) {
+            add(" select p.id as id, ")
+            add("        p.name as productName, ")
+            add("        p.price as productPrice, ")
+            add("        p.quantity as productQuantity, ")
+            add("        p.quantity_unit as productQuantityUnit, ")
+            add("        p.category_brand_id as categoryBrandId, ")
+            add("        p.active as active, ")
+            add("        pi.bytes as imageBytes, ")
+            add("        pi.imageUrl as imageUrl ")
+        }
+
+        val from = StringJoiner("\r\n")
+        with(from) {
+            add(" from products p ")
+            add(" inner join products_images pi on pi.id = (select id from products_images where product_id = p.id and principal and active) ")
+            add(" inner join categories_brands cb on p.category_brand_id = cb.id ")
+        }
+
+        val where = StringJoiner("\r\n")
+        with(where) {
+            add(" where 1=1 ")
+
+            if (!simpleFilter.isNullOrBlank()) {
+                add(" and p.name like ? ")
+                params.add("%${simpleFilter}%")
+            }
+        }
+
+        val orderBy = StringJoiner("\r\n")
+        with(orderBy) {
+            add(" order by p.name ")
+        }
+
+        val sql = StringJoiner("\r\n")
+        with(sql) {
+            add(select.toString())
+            add(from.toString())
+            add(where.toString())
+            add(orderBy.toString())
+        }
+
+        return executeQueryFindProductsToSell(SimpleSQLiteQuery(sql.toString(), params.toTypedArray()))
+    }
+
+    @RawQuery(observedEntities = [StorageOperationHistory::class, Product::class, User::class])
+    abstract fun executeQueryFindProductsToSell(query: SupportSQLiteQuery): PagingSource<Int, ProductImageReadDomain>
 
     @Query("delete from products")
     abstract suspend fun clearAll()

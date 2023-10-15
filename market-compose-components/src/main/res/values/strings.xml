@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="brand_lov_label_title">Marcas</string>
+    <string name="brand_lov_placeholder">Buscar por Nome</string>
+    <string name="brand_lov_label_name">Nome</string>
+    <string name="category_lov_label_title">Categorias</string>
+    <string name="category_lov_placeholder">Buscar por Nome</string>
+    <string name="category_lov_label_name">Nome</string>
+    <string name="market_lov_label_address">Endereço</string>
+    <string name="market_lov_label_name">Nome</string>
+    <string name="market_lov_placeholder">Buscar por Nome ou Endereço</string>
+    <string name="market_lov_label_title">Mercados</string>
+    <string name="lov_products_title">Produtos</string>
+    <string name="product_lov_placeholder_filter">Buscar por Nome</string>
+    <string name="product_lov_list_item_label_name">Nome</string>
+    <string name="product_lov_list_item_label_price">Preço</string>
+    <string name="product_lov_list_item_label_quantity">Quantidade</string>
+    <string name="user_lov_title">Usuários</string>
+    <string name="user_lov_placeholder_filter">Buscar por Nome</string>
+    <string name="user_lov_list_item_label_name">Nome</string>
+
+</resources>

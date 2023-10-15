@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import br.com.market.core.extensions.fromJsonNavParamToArgs
 import br.com.market.core.inputs.arguments.InputPasswordArgs
 import br.com.market.core.ui.states.input.InputPasswordUIState
-import br.com.market.market.compose.components.navigation.inputPasswordArguments
+import br.com.market.market.compose.components.input.navigation.inputPasswordArguments
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

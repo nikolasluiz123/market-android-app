@@ -17,4 +17,7 @@ abstract class AddressDAO {
 
     @Query("select * from addresses where id = :id")
     abstract suspend fun findById(id: String): Address
+
+    @Query("delete from addresses")
+    abstract suspend fun clearAll()
 }

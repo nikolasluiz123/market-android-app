@@ -56,7 +56,6 @@
     <string name="product_screen_product_price_required_validation_message">O preço é obrigatório</string>
     <string name="product_screen_product_quantity_required_validation_message">A quantidade é obrigatória</string>
     <string name="product_screen_product_quantity_unity_required_validation_message">A medida é obrigatória</string>
-    <string name="lov_products_title">Produtos</string>
     <string name="movement_screen_label_product">Produto</string>
     <string name="movement_screen_label_date">Data</string>
     <string name="movement_screen_label_time">Hora</string>
@@ -76,8 +75,6 @@
     <string name="movements_search_screen_label_filter_date_realization">Data de Realização</string>
     <string name="movements_search_screen_label_filter_date_prevision">Data de Previsão</string>
     <string name="movements_search_screen_label_filter_quantity">Quantidade</string>
-    <string name="user_lov_title">Usuários</string>
-    <string name="user_lov_placeholder_filter">Buscar por Nome</string>
     <string name="user_lov_list_item_label_name">Nome</string>
     <string name="movement_list_item_label_name">Nome</string>
     <string name="movement_list_item_label_chip_input">Entrada</string>
@@ -93,10 +90,7 @@
     <string name="product_list_item_label_price">Preço</string>
     <string name="product_list_item_label_quantity">Quantidade</string>
     <string name="category_search_title">Categorias</string>
-    <string name="brand_lov_label_title">Marcas</string>
-    <string name="brand_lov_placeholder">Buscar por Nome</string>
     <string name="brand_screen_tab_product_buscar_por">Buscar por Nome</string>
-    <string name="product_lov_placeholder_filter">Buscar por Nome</string>
     <string name="category_screen_tab_brand_buscar_por">Buscar por Nome</string>
     <string name="movements_search_screen_label_quantity_header">Quantidade Total em Estoque</string>
     <string name="label_generating_report">Gerando Relatório...</string>

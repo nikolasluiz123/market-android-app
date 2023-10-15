@@ -36,7 +36,7 @@ fun SplashScreen(onAfterDelay: () -> Unit = { }) {
             shape = CircleShape,
             elevation = CardDefaults.cardElevation(8.dp),
             modifier = Modifier.size(150.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onBackground)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimary)
         ) {
             Box(
                 contentAlignment = Alignment.Center,

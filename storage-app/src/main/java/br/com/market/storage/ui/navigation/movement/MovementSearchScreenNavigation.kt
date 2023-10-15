@@ -7,7 +7,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import br.com.market.enums.EnumOperationType
 import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
-import br.com.market.localdataaccess.tuples.StorageOperationHistoryTuple
+import br.com.market.domain.StorageOperationHistoryReadDomain
 import br.com.market.storage.ui.navigation.brand.argumentBrandId
 import br.com.market.storage.ui.navigation.category.argumentCategoryId
 import br.com.market.storage.ui.navigation.product.argumentProductId
@@ -19,7 +19,7 @@ internal const val movementsSearchScreenRoute = "movementsSearch"
 fun NavGraphBuilder.movementsSearchScreen(
     onBackClick: () -> Unit,
     onAddMovementClick: (String, String, EnumOperationType, String?) -> Unit,
-    onMovementClick: (StorageOperationHistoryTuple) -> Unit,
+    onMovementClick: (StorageOperationHistoryReadDomain) -> Unit,
     onAdvancedFiltersClick: (MovementSearchScreenFilters, (MovementSearchScreenFilters) -> Unit) -> Unit,
     onNavigateToReportList: (directory: String) -> Unit
 ) {

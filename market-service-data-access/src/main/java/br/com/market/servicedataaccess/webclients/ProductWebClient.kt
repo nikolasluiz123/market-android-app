@@ -186,10 +186,10 @@ class ProductWebClient @Inject constructor(
         )
     }
 
-    suspend fun findProductsForSell(limit: Int, offset: Int): ReadResponse<ProductClientSDO> {
+    suspend fun findProductsForSell(simpleFilter: String?, limit: Int, offset: Int): ReadResponse<ProductClientSDO> {
         return readServiceErrorHandlingBlock(
             codeBlock = {
-                service.findProducts(getToken(), limit, offset).getReadResponseBody()
+                service.findProducts(getToken(), simpleFilter, limit, offset).getReadResponseBody()
             }
         )
     }

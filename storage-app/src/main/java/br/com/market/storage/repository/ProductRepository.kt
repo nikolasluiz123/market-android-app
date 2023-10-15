@@ -9,7 +9,8 @@ import br.com.market.localdataaccess.dao.BrandDAO
 import br.com.market.localdataaccess.dao.MarketDAO
 import br.com.market.localdataaccess.dao.ProductDAO
 import br.com.market.localdataaccess.dao.ProductImageDAO
-import br.com.market.localdataaccess.tuples.ProductImageTuple
+import br.com.market.market.common.repository.BaseRepository
+import br.com.market.domain.ProductImageReadDomain
 import br.com.market.models.Product
 import br.com.market.models.ProductImage
 import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
@@ -28,7 +29,7 @@ class ProductRepository @Inject constructor(
     private val webClient: ProductWebClient
 ): BaseRepository() {
 
-    fun findProducts(categoryId: String, brandId: String, simpleFilter: String?): Flow<PagingData<ProductImageTuple>> {
+    fun findProducts(categoryId: String, brandId: String, simpleFilter: String?): Flow<PagingData<ProductImageReadDomain>> {
         return Pager(
             config = PagingConfigUtils.defaultPagingConfig(),
             pagingSourceFactory = {

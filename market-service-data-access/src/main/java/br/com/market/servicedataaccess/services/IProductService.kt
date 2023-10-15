@@ -47,6 +47,7 @@ interface IProductService {
     @GET("product/client")
     suspend fun findProducts(
         @Header("Authorization") token: String,
+        @Query("simpleFilter") simpleFilter: String?,
         @Query("limit") limit: Int,
         @Query("offset") offset: Int
     ): Response<ReadResponse<ProductClientSDO>>
