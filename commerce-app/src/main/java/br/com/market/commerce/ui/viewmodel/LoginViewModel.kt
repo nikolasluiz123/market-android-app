@@ -107,8 +107,8 @@ class LoginViewModel @Inject constructor(
 
             if (response.success) {
                 context.dataStore.edit { preferences ->
-                    preferences[PreferencesKey.TOKEN] = response.token!!
-                    preferences[PreferencesKey.USER] = response.userLocalId!!
+                    preferences[PreferencesKey.TOKEN] = response.result?.token!!
+                    preferences[PreferencesKey.USER] = response.result?.userLocalId!!
                 }
             }
 
