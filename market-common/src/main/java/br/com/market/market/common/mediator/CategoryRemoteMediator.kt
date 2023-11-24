@@ -4,14 +4,18 @@ import br.com.market.domain.CategoryDomain
 import br.com.market.localdataaccess.dao.AddressDAO
 import br.com.market.localdataaccess.dao.CategoryDAO
 import br.com.market.localdataaccess.dao.CompanyDAO
+import br.com.market.localdataaccess.dao.DeviceDAO
 import br.com.market.localdataaccess.dao.MarketDAO
+import br.com.market.localdataaccess.dao.UserDAO
 import br.com.market.localdataaccess.dao.remotekeys.CategoryRemoteKeysDAO
 import br.com.market.localdataaccess.database.AppDatabase
 import br.com.market.models.Address
 import br.com.market.models.Category
 import br.com.market.models.Company
+import br.com.market.models.Device
 import br.com.market.models.Market
 import br.com.market.models.ThemeDefinitions
+import br.com.market.models.User
 import br.com.market.models.keys.CategoryRemoteKeys
 import br.com.market.sdo.CategoryReadSDO
 import br.com.market.servicedataaccess.responses.types.ReadResponse
@@ -24,6 +28,8 @@ class CategoryRemoteMediator(
     private val addressDAO: AddressDAO,
     private val companyDAO: CompanyDAO,
     private val categoryDAO: CategoryDAO,
+    private val deviceDAO: DeviceDAO,
+    private val userDAO: UserDAO,
     private val categoryWebClient: CategoryWebClient,
     private val marketId: Long,
     private val simpleFilter: String?
@@ -36,6 +42,8 @@ class CategoryRemoteMediator(
     override suspend fun onLoadDataRefreshType() {
         remoteKeysDAO.clearRemoteKeys()
         categoryDAO.clearAll()
+        deviceDAO.clearAll()
+        userDAO.clearAll()
         marketDAO.clearAll()
         addressDAO.clearAll()
         companyDAO.clearAll()
@@ -55,6 +63,12 @@ class CategoryRemoteMediator(
 
         val markets = getMarketsFrom(response)
         marketDAO.saveAll(markets)
+
+        val devices = getDevicesFrom(response)
+        deviceDAO.saveDevices(devices)
+
+        val users = getUsersFrom(response)
+        userDAO.saveUsers(users)
 
         val categories = getCategoriesFrom(response)
         categoryDAO.save(categories)
@@ -91,6 +105,27 @@ class CategoryRemoteMediator(
                 id = it.company.id,
                 name = it.company.name,
                 themeDefinitionsId = it.company.themeDefinitions.id
+            )
+        }
+
+    private fun getUsersFrom(response: ReadResponse<CategoryReadSDO>): List<User> =
+        response.values.map {
+            User(
+                id = it.user.localId,
+                name = it.user.name,
+                email = it.user.email,
+                password = it.user.password,
+                token = it.user.token,
+                marketId = it.user.marketId
+            )
+        }
+
+    private fun getDevicesFrom(response: ReadResponse<CategoryReadSDO>): List<Device> =
+        response.values.map {
+            Device(
+                id = it.device.id!!,
+                marketId = it.device.marketId,
+                name = it.device.name
             )
         }
 

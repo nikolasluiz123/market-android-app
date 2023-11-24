@@ -104,7 +104,7 @@ class UserRepository @Inject constructor(
                 addressDAO.save(address)
                 marketDAO.save(market)
                 deviceDAO.save(device)
-                userDAO.save(user)
+                userDAO.saveUsers(user)
             }
         }
 
@@ -119,7 +119,7 @@ class UserRepository @Inject constructor(
         val responseFindAllProducts = webClient.findAllUsers(marketDAO.findFirst().first()?.id!!)
 
         if (responseFindAllProducts.success) {
-            userDAO.save(responseFindAllProducts.values)
+            userDAO.saveUsers(responseFindAllProducts.values)
         }
 
         return responseFindAllProducts.toBaseResponse()

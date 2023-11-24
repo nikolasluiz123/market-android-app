@@ -8,7 +8,9 @@ import br.com.market.domain.CategoryDomain
 import br.com.market.localdataaccess.dao.AddressDAO
 import br.com.market.localdataaccess.dao.CategoryDAO
 import br.com.market.localdataaccess.dao.CompanyDAO
+import br.com.market.localdataaccess.dao.DeviceDAO
 import br.com.market.localdataaccess.dao.MarketDAO
+import br.com.market.localdataaccess.dao.UserDAO
 import br.com.market.localdataaccess.dao.remotekeys.CategoryRemoteKeysDAO
 import br.com.market.localdataaccess.database.AppDatabase
 import br.com.market.market.common.mediator.CategoryRemoteMediator
@@ -38,7 +40,9 @@ class CategoryRepository @Inject constructor(
     private val addressDAO: AddressDAO,
     private val companyDAO: CompanyDAO,
     private val categoryDAO: CategoryDAO,
-    private val categoryWebClient: CategoryWebClient
+    private val categoryWebClient: CategoryWebClient,
+    private val deviceDAO: DeviceDAO,
+    private val userDAO: UserDAO,
 ): BaseRepository(), IPagedRemoteSearchRepository<BaseSearchFilter, CategoryDomain> {
 
     @OptIn(ExperimentalPagingApi::class)
@@ -48,8 +52,8 @@ class CategoryRepository @Inject constructor(
             pagingSourceFactory = { categoryDAO.findCategories(filters) },
             remoteMediator = CategoryRemoteMediator(
                 appDatabase, categoryRemoteKeysDAO, marketDAO, addressDAO,
-                companyDAO, categoryDAO, categoryWebClient, filters.marketId!!,
-                filters.simpleFilter
+                companyDAO, categoryDAO, deviceDAO, userDAO, categoryWebClient,
+                filters.marketId!!, filters.simpleFilter
             )
         )
     }

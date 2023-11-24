@@ -16,10 +16,10 @@ import java.util.StringJoiner
 abstract class UserDAO : AbstractBaseDAO() {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun save(user: User)
+    abstract suspend fun saveUsers(user: User)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun save(users: List<User>)
+    abstract suspend fun saveUsers(users: List<User>)
 
     @Query("select * from users where email = :email")
     abstract suspend fun findUserByEmail(email: String): User?
@@ -59,4 +59,7 @@ abstract class UserDAO : AbstractBaseDAO() {
 
     @RawQuery(observedEntities = [Brand::class])
     abstract suspend fun executeQueryFindUser(query: SupportSQLiteQuery): List<UserDomain>
+
+    @Query("delete from users")
+    abstract suspend fun clearAll()
 }

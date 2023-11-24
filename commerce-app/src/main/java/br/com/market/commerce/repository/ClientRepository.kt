@@ -64,7 +64,7 @@ class ClientRepository @Inject constructor(
             address.synchronized = objectSynchronized
             client.synchronized = objectSynchronized
 
-            userDAO.save(user)
+            userDAO.saveUsers(user)
             addressDAO.save(address)
             clientDAO.save(client)
         }

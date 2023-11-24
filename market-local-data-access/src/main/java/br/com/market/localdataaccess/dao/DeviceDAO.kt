@@ -13,7 +13,13 @@ abstract class DeviceDAO : AbstractBaseDAO() {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun save(device: Device)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract suspend fun saveDevices(devices: List<Device>)
+
     @Query("select * from devices limit 1")
     abstract fun findFirst(): Flow<Device?>
+
+    @Query("delete from devices")
+    abstract suspend fun clearAll()
 
 }

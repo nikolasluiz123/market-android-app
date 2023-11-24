@@ -9,5 +9,7 @@ data class CategoryReadSDO(
     var id: Long?,
     var name: String,
     var market: MarketSDO,
-    var company: CompanySDO
+    var company: CompanySDO,
+    var device: DeviceSDO,
+    var user: UserSDO
 ) : MarketRestrictionSDO()
