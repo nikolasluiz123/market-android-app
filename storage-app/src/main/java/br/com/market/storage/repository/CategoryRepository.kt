@@ -17,11 +17,9 @@ import br.com.market.market.common.mediator.CategoryRemoteMediator
 import br.com.market.market.common.repository.BaseRepository
 import br.com.market.market.common.repository.IPagedRemoteSearchRepository
 import br.com.market.models.Category
-import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
 import br.com.market.servicedataaccess.webclients.CategoryWebClient
 import kotlinx.coroutines.flow.first
-import java.net.HttpURLConnection
 import javax.inject.Inject
 
 /**
@@ -127,51 +125,5 @@ class CategoryRepository @Inject constructor(
         categoryDAO.toggleActive(category)
 
         return response
-    }
-
-    /**
-     * Função para sincronizar os dados locais e remotos.
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-    suspend fun sync(): MarketServiceResponse {
-        val response = sendCategoriesToRemoteDB()
-        return if (response.success) updateCategoriesOfLocalDB() else response
-    }
-
-    /**
-     * Função para enviar as categorias para o banco remoto
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-    private suspend fun sendCategoriesToRemoteDB(): MarketServiceResponse {
-        val categoriesNotSynchronized = categoryDAO.findCategoriesNotSynchronized()
-        val response = categoryWebClient.sync(categoriesNotSynchronized)
-
-        if (response.success) {
-            val categoriesSynchronized = categoriesNotSynchronized.map { it.copy(synchronized = true) }
-            categoryDAO.save(categoriesSynchronized)
-        }
-
-        return response
-    }
-
-    /**
-     * Função para buscar as categorias da base remota e cadastrar ou alterar
-     * elas na base local
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-    private suspend fun updateCategoriesOfLocalDB(): MarketServiceResponse {
-//        val marketId = marketDAO.findFirst().first()?.id!!
-
-//        return importPagingData(
-//            onWebServiceFind = { limit, offset ->
-//                webClient.findCategorySDOs(marketId = marketId, limit = limit, offset = offset)
-//            },
-//            onPersistData = categoryDAO::save
-//        )
-
-        return MarketServiceResponse(code = HttpURLConnection.HTTP_OK, success = true)
     }
 }
