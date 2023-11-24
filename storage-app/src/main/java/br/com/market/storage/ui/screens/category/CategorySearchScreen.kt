@@ -26,7 +26,6 @@ import br.com.market.core.utils.PermissionUtils
 import br.com.market.market.compose.components.MarketBottomAppBar
 import br.com.market.market.compose.components.button.fab.FloatingActionButtonAdd
 import br.com.market.market.compose.components.button.icons.IconButtonLogout
-import br.com.market.market.compose.components.button.icons.IconButtonSync
 import br.com.market.market.compose.components.filter.SimpleFilter
 import br.com.market.market.compose.components.list.PagedVerticalListWithEmptyState
 import br.com.market.market.compose.components.loading.MarketCircularBlockUIProgressIndicator
@@ -48,15 +47,12 @@ fun CategorySearchScreen(
         state = state,
         onAddCategoryClick = onAddCategoryClick,
         onCategoryClick = onCategoryClick,
-        onSyncClick = { onFinish ->
-            viewModel.sync(onFinish)
-        },
         onLogoutClick = {
             viewModel.logout()
             onAfterLogout()
         },
         onAboutClick = onAboutClick,
-        onSimpleFilterChange = viewModel::updateList
+        onSimpleFilterChange = viewModel::onSimpleFilterChange
     )
 }
 
@@ -64,10 +60,8 @@ fun CategorySearchScreen(
 @Composable
 fun CategorySearchScreen(
     state: CategorySearchUIState,
-    onDeleteCategoryClick: () -> Unit = { },
     onAddCategoryClick: () -> Unit = { },
     onCategoryClick: (String) -> Unit = { },
-    onSyncClick: (onFinish: () -> Unit) -> Unit = { },
     onLogoutClick: () -> Unit = { },
     onAboutClick: () -> Unit = { },
     onSimpleFilterChange: (String) -> Unit = { }
@@ -86,12 +80,6 @@ fun CategorySearchScreen(
                 showMenuWithLogout = false,
                 showMenu = true,
                 actions = {
-                    IconButtonSync {
-                        showLoadingBlockUI = true
-                        onSyncClick {
-                            showLoadingBlockUI = false
-                        }
-                    }
                     IconButtonLogout(onLogoutClick)
                 },
                 menuItems = {

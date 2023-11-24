@@ -37,7 +37,8 @@ class UserWebClient @Inject constructor(
             codeBlock = {
                 val authenticationRequestSDO = AuthenticationRequestSDO(
                     email = userDomain.email,
-                    password = userDomain.password
+                    password = userDomain.password,
+                    tempDeviceId = userDomain.tempDeviceId
                 )
 
                 service.authenticate(authenticationRequestSDO).getAuthenticationResponseBody()

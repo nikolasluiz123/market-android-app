@@ -25,7 +25,7 @@ abstract class CategoryDAO : AbstractBaseDAO() {
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun findCategories(simpleFilterText: String?, limit: Int, offset: Int): List<CategoryDomain> {
+    fun findCategories(filter: BaseSearchFilter): PagingSource<Int, CategoryDomain> {
         val params = mutableListOf<Any>()
 
         val select = StringJoiner("\r\n")
@@ -37,17 +37,13 @@ abstract class CategoryDAO : AbstractBaseDAO() {
         val where = StringJoiner("\r\n")
         where.add(" where c.active ")
 
-        if (simpleFilterText != null) {
-            where.add(" and c.name like '%' || ? || '%'")
-            params.add(simpleFilterText)
+        if (!filter.simpleFilter.isNullOrBlank()) {
+            where.add(" and c.name like ? ")
+            params.add("%${filter.simpleFilter}%")
         }
 
         val orderBy = StringJoiner("\r\n")
         orderBy.add(" order by c.name ")
-        orderBy.add(" limit ? offset ? ")
-
-        params.add(limit)
-        params.add(offset)
 
         val sql = StringJoiner("\r\n")
         sql.add(select.toString())
@@ -59,7 +55,7 @@ abstract class CategoryDAO : AbstractBaseDAO() {
     }
 
     @RawQuery(observedEntities = [Category::class])
-    abstract suspend fun executeQueryFindCategories(query: SupportSQLiteQuery): List<CategoryDomain>
+    abstract fun executeQueryFindCategories(query: SupportSQLiteQuery): PagingSource<Int, CategoryDomain>
 
     fun findCategoriesLov(filter: BaseSearchFilter): PagingSource<Int, CategoryDomain> {
         val params = mutableListOf<Any>()

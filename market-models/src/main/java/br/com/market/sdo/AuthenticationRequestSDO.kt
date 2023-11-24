@@ -10,5 +10,6 @@ package br.com.market.sdo
  */
 data class AuthenticationRequestSDO(
     var email: String = "",
-    var password: String = ""
+    var password: String = "",
+    var tempDeviceId: String = ""
 )

@@ -30,7 +30,6 @@ internal const val splashScreenRoute = "splashScreen"
 fun NavGraphBuilder.splashScreen(
     onNavigateToLogin: () -> Unit,
     onNavigateToCategories: () -> Unit,
-    onNavigateToAbout: () -> Unit
 ) {
     composable(route = splashScreenRoute) {
         val coroutineScope = rememberCoroutineScope()
@@ -46,9 +45,9 @@ fun NavGraphBuilder.splashScreen(
                     dataStore.edit {
                         it[PreferencesKey.TEMP_DEVICE_ID] = UUID.randomUUID().toString()
                     }
+                }
 
-                    onNavigateToAbout()
-                } else if (token.isNullOrBlank()) {
+                if (token.isNullOrBlank()) {
                     onNavigateToLogin()
                 } else if (viewModel.deviceRegistered()) {
                     onNavigateToCategories()

@@ -101,6 +101,7 @@ dependencies {
     implementation "androidx.core:core-ktx:$kotlin_core_version"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$kotlin_lifecycle_version"
 
-    // Dependência adicionada para solucionar um problema de duplicidade de classes
-//    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
+    implementation("androidx.room:room-runtime:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+    ksp "androidx.room:room-compiler:$room_version"
 }

@@ -108,7 +108,7 @@ private fun ProductList(pagingItems: LazyPagingItems<ProductImageReadDomain>, mo
             quantity = it.productQuantity,
             quantityUnit = it.productQuantityUnit,
             image = it.imageBytes!!,
-            active = it.productActive,
+            active = it.active,
         )
         Divider(modifier = Modifier.fillMaxWidth())
     }

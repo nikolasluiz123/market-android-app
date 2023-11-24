@@ -19,5 +19,6 @@ data class UserDomain(
     override var synchronized: Boolean = false,
     var name: String = "",
     var email: String = "",
-    var password: String = ""
+    var password: String = "",
+    var tempDeviceId: String = ""
 ): MarketRestrictionDomain()

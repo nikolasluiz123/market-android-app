@@ -93,13 +93,6 @@ fun StorageAppNavHost(
                         inclusive = true
                     }
                 })
-            },
-            onNavigateToAbout = {
-                navController.navigateToAboutScreen(showBack = false, navOptions {
-                    popUpTo(splashScreenRoute) {
-                        inclusive = true
-                    }
-                })
             }
         )
 

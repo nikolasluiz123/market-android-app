@@ -20,7 +20,7 @@ interface ICategoryService {
     @POST("category/sync")
     suspend fun sync(@Header("Authorization") token: String, @Body categoriesSDOs: List<CategorySDO>): Response<MarketServiceResponse>
 
-    @GET("category/lov")
+    @GET("category")
     suspend fun getListCategoryReadSDO(
         @Header("Authorization") token: String,
         @Query("simpleFilter") simpleFilter: String?,

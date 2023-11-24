@@ -5,18 +5,21 @@ import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import br.com.market.core.filter.BaseSearchFilter
 import br.com.market.core.preferences.PreferencesKey
 import br.com.market.core.preferences.dataStore
-import br.com.market.storage.repository.BrandRepository
+import br.com.market.domain.CategoryDomain
+import br.com.market.market.common.viewmodel.ISearchViewModel
 import br.com.market.storage.repository.CategoryRepository
-import br.com.market.storage.repository.ProductRepository
-import br.com.market.storage.repository.StorageOperationsHistoryRepository
-import br.com.market.storage.repository.UserRepository
+import br.com.market.storage.repository.MarketRepository
 import br.com.market.storage.ui.states.category.CategorySearchUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,30 +29,24 @@ import javax.inject.Inject
 class CategorySearchViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val categoryRepository: CategoryRepository,
-    private val brandRepository: BrandRepository,
-    private val productRepository: ProductRepository,
-    private val userRepository: UserRepository,
-    private val storageOperationsHistoryRepository: StorageOperationsHistoryRepository
-) : ViewModel() {
+    private val marketRepository: MarketRepository
+) : ViewModel(), ISearchViewModel<CategoryDomain, BaseSearchFilter> {
 
     private val _uiState: MutableStateFlow<CategorySearchUIState> = MutableStateFlow(CategorySearchUIState())
     val uiState get() = _uiState.asStateFlow()
 
-    init {
-        _uiState.update {
-            it.copy(categories = categoryRepository.findCategories())
-        }
-    }
+    private lateinit var filter: BaseSearchFilter
 
-    fun sync(onFinish: () -> Unit) {
+    init {
         viewModelScope.launch {
-            userRepository.sync()
-            categoryRepository.sync()
-            brandRepository.sync()
-            productRepository.sync()
-            storageOperationsHistoryRepository.sync()
+            val marketId = marketRepository.findFirst().first()?.id!!
+            filter = BaseSearchFilter(marketId = marketId)
         }.invokeOnCompletion {
-            onFinish()
+            _uiState.update {
+                it.copy(
+                    categories = getDataFlow(filter)
+                )
+            }
         }
     }
 
@@ -62,9 +59,15 @@ class CategorySearchViewModel @Inject constructor(
         }
     }
 
-    fun updateList(simpleFilterText: String? = null) {
-        _uiState.update { currentState ->
-            currentState.copy(categories = categoryRepository.findCategories(simpleFilterText))
-        }
+    override fun onSimpleFilterChange(value: String?) {
+        filter.simpleFilter = value
+
+        _uiState.value = _uiState.value.copy(
+            categories = getDataFlow(filter)
+        )
+    }
+
+    override fun getDataFlow(filter: BaseSearchFilter): Flow<PagingData<CategoryDomain>> {
+        return categoryRepository.getConfiguredPager(filter).flow
     }
 }

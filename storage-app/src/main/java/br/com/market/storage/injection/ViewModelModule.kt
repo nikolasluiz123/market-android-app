@@ -1,14 +1,14 @@
 package br.com.market.storage.injection
 
+import br.com.market.localdataaccess.dao.AddressDAO
 import br.com.market.localdataaccess.dao.BrandDAO
-import br.com.market.localdataaccess.dao.CategoryDAO
+import br.com.market.localdataaccess.dao.CompanyDAO
+import br.com.market.localdataaccess.dao.DeviceDAO
 import br.com.market.localdataaccess.dao.MarketDAO
 import br.com.market.localdataaccess.dao.UserDAO
 import br.com.market.servicedataaccess.webclients.BrandWebClient
-import br.com.market.servicedataaccess.webclients.CategoryWebClient
 import br.com.market.servicedataaccess.webclients.UserWebClient
 import br.com.market.storage.repository.BrandRepository
-import br.com.market.storage.repository.CategoryRepository
 import br.com.market.storage.repository.UserRepository
 import dagger.Module
 import dagger.Provides
@@ -52,17 +52,11 @@ class ViewModelModule {
     @ViewModelScoped
     fun provideUserRepository(
         userDAO: UserDAO,
+        companyDAO: CompanyDAO,
+        deviceDAO: DeviceDAO,
         marketDAO: MarketDAO,
-        userWebClient: UserWebClient
-    ): UserRepository = UserRepository(userDAO, marketDAO, userWebClient)
+        addressDAO: AddressDAO,
+        webClient: UserWebClient
+    ): UserRepository = UserRepository(userDAO, companyDAO, deviceDAO, marketDAO, addressDAO, webClient)
 
-    @Provides
-    @ViewModelScoped
-    fun provideCategoryRepository(
-        categoryDAO: CategoryDAO,
-        marketDAO: MarketDAO,
-        categoryWebClient: CategoryWebClient
-    ): CategoryRepository {
-        return CategoryRepository(categoryDAO, marketDAO, categoryWebClient)
-    }
 }

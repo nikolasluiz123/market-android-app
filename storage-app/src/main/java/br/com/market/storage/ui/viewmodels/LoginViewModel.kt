@@ -15,6 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
@@ -89,12 +90,15 @@ class LoginViewModel @Inject constructor(
     }
 
     suspend fun authenticate(userDomain: UserDomain): AuthenticationResponse {
+        val deviceId = context.dataStore.data.first().toPreferences()[PreferencesKey.TEMP_DEVICE_ID]
+        userDomain.tempDeviceId = deviceId!!
+
         val response = userRepository.authenticate(userDomain)
 
         if (response.success) {
             context.dataStore.edit { preferences ->
-                preferences[PreferencesKey.TOKEN] = response.token!!
-                preferences[PreferencesKey.USER] = response.userLocalId!!
+                preferences[PreferencesKey.TOKEN] = response.result?.token!!
+                preferences[PreferencesKey.USER] = response.result?.userLocalId!!
             }
         }
 

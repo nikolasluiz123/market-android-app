@@ -1,18 +1,23 @@
 package br.com.market.storage.repository
 
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
-import androidx.paging.PagingData
+import br.com.market.core.filter.BaseSearchFilter
 import br.com.market.core.pagination.PagingConfigUtils
 import br.com.market.domain.CategoryDomain
+import br.com.market.localdataaccess.dao.AddressDAO
 import br.com.market.localdataaccess.dao.CategoryDAO
+import br.com.market.localdataaccess.dao.CompanyDAO
 import br.com.market.localdataaccess.dao.MarketDAO
+import br.com.market.localdataaccess.dao.remotekeys.CategoryRemoteKeysDAO
+import br.com.market.localdataaccess.database.AppDatabase
+import br.com.market.market.common.mediator.CategoryRemoteMediator
 import br.com.market.market.common.repository.BaseRepository
+import br.com.market.market.common.repository.IPagedRemoteSearchRepository
 import br.com.market.models.Category
 import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
 import br.com.market.servicedataaccess.webclients.CategoryWebClient
-import br.com.market.storage.pagination.CategoryPagingSource
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import java.net.HttpURLConnection
 import javax.inject.Inject
@@ -22,27 +27,31 @@ import javax.inject.Inject
  * referentes a Categoria.
  *
  * @property webClient WebClient para acesso dos End Points referentes a Marca.
- * @property dao DAO responsável pelo acesso ao dados locais referentes a Marca.
+ * @property categoryDAO DAO responsável pelo acesso ao dados locais referentes a Marca.
  *
  * @author Nikolas Luiz Schmitt
  */
 class CategoryRepository @Inject constructor(
-    private val dao: CategoryDAO,
+    private val appDatabase: AppDatabase,
+    private val categoryRemoteKeysDAO: CategoryRemoteKeysDAO,
     private val marketDAO: MarketDAO,
-    private val webClient: CategoryWebClient
-): BaseRepository() {
+    private val addressDAO: AddressDAO,
+    private val companyDAO: CompanyDAO,
+    private val categoryDAO: CategoryDAO,
+    private val categoryWebClient: CategoryWebClient
+): BaseRepository(), IPagedRemoteSearchRepository<BaseSearchFilter, CategoryDomain> {
 
-    /**
-     * Função para obter um fluxo de dados paginados que possa ser
-     * fornecido a tela de listagem de categorias
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-    fun findCategories(simpleFilterText: String? = null): Flow<PagingData<CategoryDomain>> {
+    @OptIn(ExperimentalPagingApi::class)
+    override fun getConfiguredPager(filters: BaseSearchFilter): Pager<Int, CategoryDomain> {
         return Pager(
-            config = PagingConfigUtils.defaultPagingConfig(),
-            pagingSourceFactory = { CategoryPagingSource(dao, simpleFilterText) }
-        ).flow
+            config = PagingConfigUtils.customConfig(20),
+            pagingSourceFactory = { categoryDAO.findCategories(filters) },
+            remoteMediator = CategoryRemoteMediator(
+                appDatabase, categoryRemoteKeysDAO, marketDAO, addressDAO,
+                companyDAO, categoryDAO, categoryWebClient, filters.marketId!!,
+                filters.simpleFilter
+            )
+        )
     }
 
     /**
@@ -62,17 +71,17 @@ class CategoryRepository @Inject constructor(
      */
     suspend fun save(domain: CategoryDomain): PersistenceResponse {
         val category = if (domain.id != null) {
-            dao.findById(domain.id!!).copy(name = domain.name)
+            categoryDAO.findById(domain.id!!).copy(name = domain.name)
         } else {
             Category(name = domain.name, marketId = marketDAO.findFirst().first()?.id!!)
         }
 
         domain.id = category.id
 
-        val response = webClient.save(category = category)
+        val response = categoryWebClient.save(category = category)
 
         category.synchronized = response.getObjectSynchronized()
-        dao.save(category = category)
+        categoryDAO.save(category = category)
 
         return  response
     }
@@ -85,7 +94,7 @@ class CategoryRepository @Inject constructor(
      * @author Nikolas Luiz Schmitt
      */
     suspend fun findById(categoryId: String): CategoryDomain {
-        val category = dao.findById(categoryId)
+        val category = categoryDAO.findById(categoryId)
         return CategoryDomain(id = category.id, name = category.name!!, active = category.active)
     }
 
@@ -105,13 +114,13 @@ class CategoryRepository @Inject constructor(
      * @author Nikolas Luiz Schmitt
      */
     suspend fun toggleActive(categoryId: String): PersistenceResponse {
-        val category = dao.findById(categoryId)
+        val category = categoryDAO.findById(categoryId)
 
-        val response = webClient.toggleActive(category)
+        val response = categoryWebClient.toggleActive(category)
 
         category.synchronized = response.getObjectSynchronized()
 
-        dao.toggleActive(category)
+        categoryDAO.toggleActive(category)
 
         return response
     }
@@ -132,12 +141,12 @@ class CategoryRepository @Inject constructor(
      * @author Nikolas Luiz Schmitt
      */
     private suspend fun sendCategoriesToRemoteDB(): MarketServiceResponse {
-        val categoriesNotSynchronized = dao.findCategoriesNotSynchronized()
-        val response = webClient.sync(categoriesNotSynchronized)
+        val categoriesNotSynchronized = categoryDAO.findCategoriesNotSynchronized()
+        val response = categoryWebClient.sync(categoriesNotSynchronized)
 
         if (response.success) {
             val categoriesSynchronized = categoriesNotSynchronized.map { it.copy(synchronized = true) }
-            dao.save(categoriesSynchronized)
+            categoryDAO.save(categoriesSynchronized)
         }
 
         return response
@@ -156,7 +165,7 @@ class CategoryRepository @Inject constructor(
 //            onWebServiceFind = { limit, offset ->
 //                webClient.findCategorySDOs(marketId = marketId, limit = limit, offset = offset)
 //            },
-//            onPersistData = dao::save
+//            onPersistData = categoryDAO::save
 //        )
 
         return MarketServiceResponse(code = HttpURLConnection.HTTP_OK, success = true)
