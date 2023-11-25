@@ -13,15 +13,13 @@ internal const val argumentShowBack = "showBack"
 
 fun NavGraphBuilder.aboutScreen(
     onNavigateToBack: () -> Unit,
-    onFinishSync: () -> Unit
 ) {
     composable(route = "$aboutScreenRoute?$argumentShowBack={$argumentShowBack}") {
         val aboutViewModel = hiltViewModel<AboutViewModel>()
 
         AboutScreen(
             viewModel = aboutViewModel,
-            onBackClick = onNavigateToBack,
-            onFinishSync = onFinishSync
+            onBackClick = onNavigateToBack
         )
     }
 }

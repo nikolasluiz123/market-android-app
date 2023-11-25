@@ -97,14 +97,7 @@ fun StorageAppNavHost(
         )
 
         aboutScreen(
-            onNavigateToBack = navController::popBackStack,
-            onFinishSync = {
-                navController.navigateToLoginScreen(navOptions {
-                    popUpTo(loginScreenRoute) {
-                        inclusive = true
-                    }
-                })
-            }
+            onNavigateToBack = navController::popBackStack
         )
 
         loginScreen(

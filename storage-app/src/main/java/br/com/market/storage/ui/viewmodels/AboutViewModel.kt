@@ -10,7 +10,6 @@ import br.com.market.core.preferences.dataStore
 import br.com.market.storage.repository.CompanyRepository
 import br.com.market.storage.repository.DeviceRepository
 import br.com.market.storage.repository.MarketRepository
-import br.com.market.storage.repository.UserRepository
 import br.com.market.storage.ui.navigation.argumentShowBack
 import br.com.market.storage.ui.states.AboutUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +29,6 @@ class AboutViewModel @Inject constructor(
     private val deviceRepository: DeviceRepository,
     private val companyRepository: CompanyRepository,
     private val marketRepository: MarketRepository,
-    private val userRepository: UserRepository
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<AboutUIState> = MutableStateFlow(AboutUIState())
@@ -89,16 +87,5 @@ class AboutViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    fun sync(onFinishSync: () -> Unit) {
-        viewModelScope.launch {
-            val deviceId = context.dataStore.data.first()[PreferencesKey.TEMP_DEVICE_ID] ?: deviceRepository.findFirst().first()?.id!!
-
-            companyRepository.sync(deviceId)
-            marketRepository.sync(deviceId)
-            deviceRepository.sync(deviceId)
-            userRepository.sync()
-        }.invokeOnCompletion { onFinishSync() }
     }
 }

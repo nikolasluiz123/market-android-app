@@ -19,7 +19,6 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import br.com.market.core.theme.MarketTheme
 import br.com.market.market.compose.components.CoilImageViewer
 import br.com.market.market.compose.components.LabeledText
-import br.com.market.market.compose.components.button.icons.IconButtonSync
 import br.com.market.market.compose.components.topappbar.SimpleMarketTopAppBar
 import br.com.market.storage.R
 import br.com.market.storage.ui.states.AboutUIState
@@ -30,13 +29,11 @@ import java.util.UUID
 fun AboutScreen(
     viewModel: AboutViewModel,
     onBackClick: () -> Unit,
-    onFinishSync: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
     AboutScreen(
         state = state,
-        onBackClick = onBackClick,
-        onSyncClick = { viewModel.sync(onFinishSync) }
+        onBackClick = onBackClick
     )
 }
 
@@ -45,17 +42,13 @@ fun AboutScreen(
 fun AboutScreen(
     state: AboutUIState = AboutUIState(),
     onBackClick: () -> Unit = { },
-    onSyncClick: () -> Unit = { }
 ) {
     Scaffold(
         topBar = {
             SimpleMarketTopAppBar(
                 title = stringResource(R.string.about_screen_top_bar_title),
                 onBackClick = onBackClick,
-                showMenuWithLogout = false,
-                actions = {
-                    IconButtonSync(onClick = onSyncClick)
-                }
+                showMenuWithLogout = false
             )
         }
     ) { padding ->
