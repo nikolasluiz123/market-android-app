@@ -36,14 +36,6 @@ fun <T : Any> PagedVerticalListWithEmptyState(
     pagingItems: LazyPagingItems<T>,
     verticalArrangementSpace: Dp = 0.dp,
     contentPadding: Dp = 0.dp,
-    refreshLoadStateError: @Composable (() -> Unit?)? = null,
-    refreshLoadStateLoading: @Composable (() -> Unit?)? = null,
-    appendLoadStateError: @Composable (() -> Unit?)? = null,
-    appendLoadStateLoading: @Composable (() -> Unit?)? = null,
-    appendLoadStateNotLoading: @Composable (() -> Unit?)? = null,
-    prependLoadStateError: @Composable (() -> Unit?)? = null,
-    prependLoadStateLoading: @Composable (() -> Unit?)? = null,
-    prependLoadStateNotLoading: @Composable (() -> Unit?)? = null,
     emptyStateText: String = stringResource(br.com.market.core.R.string.text_empty_state_default),
     itemList: @Composable (T) -> Unit
 ) {
@@ -62,15 +54,7 @@ fun <T : Any> PagedVerticalListWithEmptyState(
                     },
                 pagingItems = pagingItems,
                 verticalArrangementSpace = verticalArrangementSpace,
-                contentPadding = contentPadding,
-                refreshLoadStateError = refreshLoadStateError,
-                refreshLoadStateLoading = refreshLoadStateLoading,
-                appendLoadStateError = appendLoadStateError,
-                appendLoadStateLoading = appendLoadStateLoading,
-                appendLoadStateNotLoading = appendLoadStateNotLoading,
-                prependLoadStateError = prependLoadStateError,
-                prependLoadStateLoading = prependLoadStateLoading,
-                prependLoadStateNotLoading = prependLoadStateNotLoading
+                contentPadding = contentPadding
             ) {
                 itemList(it)
             }

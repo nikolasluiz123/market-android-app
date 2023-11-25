@@ -68,6 +68,6 @@ class CategorySearchViewModel @Inject constructor(
     }
 
     override fun getDataFlow(filter: BaseSearchFilter): Flow<PagingData<CategoryDomain>> {
-        return categoryRepository.getConfiguredPager(filter).flow
+        return categoryRepository.getConfiguredPager(context, filter).flow
     }
 }

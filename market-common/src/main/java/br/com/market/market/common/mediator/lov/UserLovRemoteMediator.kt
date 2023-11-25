@@ -1,5 +1,6 @@
 package br.com.market.market.common.mediator.lov
 
+import android.content.Context
 import br.com.market.domain.UserDomain
 import br.com.market.localdataaccess.dao.remotekeys.UserRemoteKeysDAO
 import br.com.market.localdataaccess.database.AppDatabase
@@ -10,8 +11,9 @@ import br.com.market.servicedataaccess.responses.types.ReadResponse
 
 class UserLovRemoteMediator(
     database: AppDatabase,
+    private val context: Context,
     remoteKeysDAO: UserRemoteKeysDAO
-): BaseRemoteMediator<UserDomain, UserRemoteKeys, UserSDO>(database) {
+): BaseRemoteMediator<UserDomain, UserRemoteKeys, UserSDO>(context, database) {
     override suspend fun getDataOfService(limit: Int, offset: Int): ReadResponse<UserSDO> {
         TODO("Not yet implemented")
     }

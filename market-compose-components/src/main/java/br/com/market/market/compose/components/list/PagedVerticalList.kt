@@ -1,22 +1,30 @@
 package br.com.market.market.compose.components.list
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
+import br.com.market.core.theme.RED_600
 
 @Composable
 fun <T : Any> PagedVerticalList(
@@ -24,14 +32,6 @@ fun <T : Any> PagedVerticalList(
     pagingItems: LazyPagingItems<T>,
     verticalArrangementSpace: Dp = 0.dp,
     contentPadding: Dp = 0.dp,
-    refreshLoadStateError: @Composable (() -> Unit?)? = null,
-    refreshLoadStateLoading: @Composable (() -> Unit?)? = null,
-    appendLoadStateError: @Composable (() -> Unit?)? = null,
-    appendLoadStateLoading: @Composable (() -> Unit?)? = null,
-    appendLoadStateNotLoading: @Composable (() -> Unit?)? = null,
-    prependLoadStateError: @Composable (() -> Unit?)? = null,
-    prependLoadStateLoading: @Composable (() -> Unit?)? = null,
-    prependLoadStateNotLoading: @Composable (() -> Unit?)? = null,
     itemList: @Composable (T) -> Unit
 ) {
     LazyColumn(
@@ -39,16 +39,55 @@ fun <T : Any> PagedVerticalList(
         verticalArrangement = Arrangement.spacedBy(verticalArrangementSpace),
         contentPadding = PaddingValues(contentPadding)
     ) {
-        when (pagingItems.loadState.refresh) {
+
+        when (val refreshState = pagingItems.loadState.refresh) {
             is LoadState.Error -> {
                 item {
-                    if (refreshLoadStateError != null) {
-                        refreshLoadStateError()
-                    } else {
-                        Box(modifier = Modifier.fillParentMaxSize()) {
-                            Text(text = "Ocorreu um Erro", Modifier.clickable {
-                                pagingItems.refresh()
-                            })
+                    ConstraintLayout(
+                        modifier = Modifier
+                            .fillParentMaxSize()
+                            .padding(8.dp)
+                    ) {
+                        val (iconRef, textRef, btnRetryRef) = createRefs()
+                        createHorizontalChain(iconRef, textRef)
+
+                        Icon(
+                            modifier = Modifier.constrainAs(iconRef) {
+                                start.linkTo(parent.start)
+                                linkTo(top = textRef.top, bottom = textRef.bottom)
+
+                                horizontalChainWeight = 0.2f
+                                width = Dimension.fillToConstraints
+                            },
+                            imageVector = Icons.Default.Warning,
+                            contentDescription = "Erro",
+                            tint = RED_600
+                        )
+
+                        Text(
+                            modifier = Modifier.constrainAs(textRef) {
+                                linkTo(top = parent.top, bottom = parent.bottom, bias = 0f)
+
+                                horizontalChainWeight = 0.8f
+                                width = Dimension.fillToConstraints
+                            },
+                            text = refreshState.error.message ?: "",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onBackground,
+                        )
+
+                        OutlinedButton(
+                            modifier = Modifier.constrainAs(btnRetryRef) {
+                                end.linkTo(parent.end)
+                                linkTo(top = textRef.bottom, bottom = parent.bottom, bias = 0f)
+                            },
+                            onClick = pagingItems::refresh
+                        ) {
+                            Text(
+                                text = "Recarregar",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onBackground,
+                            )
                         }
                     }
                 }
@@ -56,12 +95,8 @@ fun <T : Any> PagedVerticalList(
 
             is LoadState.Loading -> {
                 item {
-                    if (refreshLoadStateLoading != null) {
-                        refreshLoadStateLoading()
-                    } else {
-                        Box(modifier = Modifier.fillParentMaxSize()) {
-                            CircularProgressIndicator(Modifier.align(Alignment.Center))
-                        }
+                    Box(modifier = Modifier.fillParentMaxSize()) {
+                        CircularProgressIndicator(Modifier.align(Alignment.Center))
                     }
                 }
             }
@@ -82,59 +117,35 @@ fun <T : Any> PagedVerticalList(
 
         when (pagingItems.loadState.append) {
             is LoadState.Error -> {
-                item {
-                    if (appendLoadStateError != null) {
-                        appendLoadStateError()
-                    }
-                }
+                // Não precisa ser feito nada quando não estiver carregando
             }
 
             is LoadState.Loading -> {
                 item {
-                    if (appendLoadStateLoading != null) {
-                        appendLoadStateLoading()
-                    } else {
-                        Box(Modifier.fillMaxWidth()) {
-                            CircularProgressIndicator(Modifier.align(Alignment.Center))
-                        }
+                    Box(Modifier.fillMaxWidth()) {
+                        CircularProgressIndicator(Modifier.align(Alignment.Center))
                     }
                 }
             }
 
             is LoadState.NotLoading -> {
-                item {
-                    if (appendLoadStateNotLoading != null) {
-                        appendLoadStateNotLoading()
-                    }
-                }
+                // Não precisa ser feito nada quando não estiver carregando
             }
         }
 
         when (pagingItems.loadState.prepend) {
             is LoadState.Error -> {
-                item {
-                    if (prependLoadStateError != null) {
-                        prependLoadStateError()
-                    }
-                }
+                // Ainda não pensei em como exibir um erro nesse momento
             }
 
             is LoadState.NotLoading -> {
-                item {
-                    if (prependLoadStateLoading != null) {
-                        prependLoadStateLoading()
-                    }
-                }
+                // Não precisa ser feito nada quando não estiver carregando
             }
 
             is LoadState.Loading -> {
                 item {
-                    if (prependLoadStateNotLoading != null) {
-                        prependLoadStateNotLoading()
-                    } else {
-                        Box(Modifier.fillMaxWidth()) {
-                            CircularProgressIndicator(Modifier.align(Alignment.Center))
-                        }
+                    Box(Modifier.fillMaxWidth()) {
+                        CircularProgressIndicator(Modifier.align(Alignment.Center))
                     }
                 }
             }

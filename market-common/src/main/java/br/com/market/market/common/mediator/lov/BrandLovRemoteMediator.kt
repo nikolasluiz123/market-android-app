@@ -1,5 +1,6 @@
 package br.com.market.market.common.mediator.lov
 
+import android.content.Context
 import br.com.market.domain.BrandDomain
 import br.com.market.localdataaccess.dao.AddressDAO
 import br.com.market.localdataaccess.dao.BrandDAO
@@ -23,6 +24,7 @@ import br.com.market.servicedataaccess.webclients.BrandWebClient
 
 class BrandLovRemoteMediator(
     database: AppDatabase,
+    private val context: Context,
     private val remoteKeysDAO: BrandRemoteKeysDAO,
     private val marketDAO: MarketDAO,
     private val addressDAO: AddressDAO,
@@ -32,7 +34,7 @@ class BrandLovRemoteMediator(
     private val brandWebClient: BrandWebClient,
     private val marketId: Long,
     private val simpleFilter: String?
-) : BaseRemoteMediator<BrandDomain, BrandRemoteKeys, BrandReadSDO>(database) {
+) : BaseRemoteMediator<BrandDomain, BrandRemoteKeys, BrandReadSDO>(context, database) {
 
     override suspend fun getDataOfService(limit: Int, offset: Int): ReadResponse<BrandReadSDO> {
         return brandWebClient.getListBrandReadSDO(simpleFilter = simpleFilter, marketId = marketId, limit = limit, offset = offset)

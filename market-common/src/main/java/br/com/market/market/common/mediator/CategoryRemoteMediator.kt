@@ -1,5 +1,6 @@
 package br.com.market.market.common.mediator
 
+import android.content.Context
 import br.com.market.domain.CategoryDomain
 import br.com.market.localdataaccess.dao.AddressDAO
 import br.com.market.localdataaccess.dao.CategoryDAO
@@ -23,6 +24,7 @@ import br.com.market.servicedataaccess.webclients.CategoryWebClient
 
 class CategoryRemoteMediator(
     database: AppDatabase,
+    private val context: Context,
     private val remoteKeysDAO: CategoryRemoteKeysDAO,
     private val marketDAO: MarketDAO,
     private val addressDAO: AddressDAO,
@@ -33,7 +35,7 @@ class CategoryRemoteMediator(
     private val categoryWebClient: CategoryWebClient,
     private val marketId: Long,
     private val simpleFilter: String?
-): BaseRemoteMediator<CategoryDomain, CategoryRemoteKeys, CategoryReadSDO>(database) {
+): BaseRemoteMediator<CategoryDomain, CategoryRemoteKeys, CategoryReadSDO>(context, database) {
 
     override suspend fun getDataOfService(limit: Int, offset: Int): ReadResponse<CategoryReadSDO> {
         return categoryWebClient.getListCategoryReadSDO(simpleFilter, marketId, limit, offset)

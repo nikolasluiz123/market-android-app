@@ -1,5 +1,6 @@
 package br.com.market.market.common.mediator
 
+import android.content.Context
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -7,13 +8,17 @@ import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import br.com.market.domain.base.BaseDomain
 import br.com.market.localdataaccess.database.AppDatabase
+import br.com.market.market.common.R
 import br.com.market.models.base.BaseRemoteKeyModel
 import br.com.market.sdo.base.BaseSDO
 import br.com.market.servicedataaccess.responses.types.ReadResponse
+import java.net.ConnectException
+import java.net.SocketTimeoutException
 import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalPagingApi::class)
 abstract class BaseRemoteMediator<DOMAIN : BaseDomain, KEY : BaseRemoteKeyModel, SDO : BaseSDO>(
+    private val context: Context,
     private val database: AppDatabase
 ) : RemoteMediator<Int, DOMAIN>() {
 
@@ -91,9 +96,21 @@ abstract class BaseRemoteMediator<DOMAIN : BaseDomain, KEY : BaseRemoteKeyModel,
             }
 
             MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
+        } catch (e: ConnectException) {
+            val ex = Exception(context.getString(R.string.message_connect_exception), e)
+            ex.printStackTrace()
+            
+            MediatorResult.Error(ex)
+        } catch (e: SocketTimeoutException) {
+            val ex = Exception(context.getString(R.string.message_socket_timeout_exception), e)
+            ex.printStackTrace()
+
+            MediatorResult.Error(ex)
         } catch (e: Exception) {
-            e.printStackTrace()
-            MediatorResult.Error(e)
+            val ex = Exception(context.getString(R.string.message_load_data_exception), e)
+            ex.printStackTrace()
+
+            MediatorResult.Error(ex)
         }
     }
 

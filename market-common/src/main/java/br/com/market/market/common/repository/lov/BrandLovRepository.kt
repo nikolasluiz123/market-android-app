@@ -1,5 +1,6 @@
 package br.com.market.market.common.repository.lov
 
+import android.content.Context
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import br.com.market.core.filter.BaseSearchFilter
@@ -30,12 +31,12 @@ class BrandLovRepository @Inject constructor(
 ) : BaseRepository(), IPagedRemoteSearchRepository<BaseSearchFilter, BrandDomain> {
 
     @OptIn(ExperimentalPagingApi::class)
-    override fun getConfiguredPager(filters: BaseSearchFilter): Pager<Int, BrandDomain> {
+    override fun getConfiguredPager(context: Context, filters: BaseSearchFilter): Pager<Int, BrandDomain> {
         return Pager(
             config = PagingConfigUtils.customConfig(20),
             pagingSourceFactory = { brandDAO.findBrandsLov(filters) },
             remoteMediator = BrandLovRemoteMediator(
-                appDatabase, brandRemoteKeysDAO, marketDAO, addressDAO,
+                appDatabase, context, brandRemoteKeysDAO, marketDAO, addressDAO,
                 companyDAO, categoryDAO, brandDAO, brandWebClient, filters.marketId!!,
                 filters.simpleFilter
             )
