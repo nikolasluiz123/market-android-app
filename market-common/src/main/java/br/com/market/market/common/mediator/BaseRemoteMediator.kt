@@ -30,7 +30,7 @@ abstract class BaseRemoteMediator<DOMAIN : BaseDomain, KEY : BaseRemoteKeyModel,
     abstract suspend fun getRemoteKeyByID(id: String): KEY?
     
     open fun getCacheTimeout(): Pair<Long, TimeUnit> {
-        return Pair(5L, TimeUnit.MINUTES)
+        return Pair(1L, TimeUnit.MINUTES)
     }
 
     override suspend fun initialize(): InitializeAction {

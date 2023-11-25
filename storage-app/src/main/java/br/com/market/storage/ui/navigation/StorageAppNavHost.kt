@@ -103,7 +103,7 @@ fun StorageAppNavHost(
         loginScreen(
             onNavigateToCategoryScreen = {
                 navController.navigateToCategorySearchScreen(navOptions {
-                    popUpTo(splashScreenRoute) {
+                    popUpTo(loginScreenRoute) {
                         inclusive = true
                     }
                 })
