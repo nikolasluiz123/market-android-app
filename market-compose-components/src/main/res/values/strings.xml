@@ -18,5 +18,6 @@
     <string name="user_lov_title">Usuários</string>
     <string name="user_lov_placeholder_filter">Buscar por Nome</string>
     <string name="user_lov_list_item_label_name">Nome</string>
+    <string name="load_image_link_screen_title">Carregar Imagem</string>
 
 </resources>

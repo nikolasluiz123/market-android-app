@@ -79,11 +79,18 @@ open class BaseWebClient(private val context: Context) {
             codeBlock()
         } catch (e: Exception) {
             when (e) {
-                is SocketTimeoutException, is ConnectException -> {
+                is ConnectException -> {
                     PersistenceResponse(
                         code = HttpURLConnection.HTTP_UNAVAILABLE,
                         success = false,
-                        error = context.getString(R.string.connection_server_error_message)
+                        error = context.getString(R.string.message_connect_exception)
+                    )
+                }
+                is SocketTimeoutException -> {
+                    PersistenceResponse(
+                        code = HttpURLConnection.HTTP_UNAVAILABLE,
+                        success = false,
+                        error = context.getString(R.string.message_socket_timeout_exception)
                     )
                 }
                 else -> customExceptions(e)
@@ -134,10 +141,18 @@ open class BaseWebClient(private val context: Context) {
             codeBlock()
         } catch (e: Exception) {
             when (e) {
-                is SocketTimeoutException, is ConnectException -> {
+                is ConnectException -> {
                     AuthenticationResponse(
                         code = HttpURLConnection.HTTP_UNAVAILABLE,
-                        error = context.getString(R.string.connection_server_error_message)
+                        success = false,
+                        error = context.getString(R.string.message_connect_exception)
+                    )
+                }
+                is SocketTimeoutException -> {
+                    AuthenticationResponse(
+                        code = HttpURLConnection.HTTP_UNAVAILABLE,
+                        success = false,
+                        error = context.getString(R.string.message_socket_timeout_exception)
                     )
                 }
                 else -> customExceptions(e)
@@ -189,11 +204,18 @@ open class BaseWebClient(private val context: Context) {
             codeBlock()
         } catch (e: Exception) {
             when (e) {
-                is SocketTimeoutException, is ConnectException -> {
+                is ConnectException -> {
                     ReadResponse(
                         code = HttpURLConnection.HTTP_UNAVAILABLE,
                         success = false,
-                        error = context.getString(R.string.connection_server_error_message)
+                        error = context.getString(R.string.message_connect_exception)
+                    )
+                }
+                is SocketTimeoutException -> {
+                    ReadResponse(
+                        code = HttpURLConnection.HTTP_UNAVAILABLE,
+                        success = false,
+                        error = context.getString(R.string.message_socket_timeout_exception)
                     )
                 }
                 else -> customExceptions(e)
@@ -217,11 +239,18 @@ open class BaseWebClient(private val context: Context) {
             codeBlock()
         } catch (e: Exception) {
             when (e) {
-                is SocketTimeoutException, is ConnectException -> {
+                is ConnectException -> {
                     SingleValueResponse(
                         code = HttpURLConnection.HTTP_UNAVAILABLE,
                         success = false,
-                        error = context.getString(R.string.connection_server_error_message)
+                        error = context.getString(R.string.message_connect_exception)
+                    )
+                }
+                is SocketTimeoutException -> {
+                    SingleValueResponse(
+                        code = HttpURLConnection.HTTP_UNAVAILABLE,
+                        success = false,
+                        error = context.getString(R.string.message_socket_timeout_exception)
                     )
                 }
                 else -> customExceptions(e)
@@ -273,11 +302,18 @@ open class BaseWebClient(private val context: Context) {
             codeBlock()
         } catch (e: Exception) {
             when (e) {
-                is SocketTimeoutException, is ConnectException -> {
+                is ConnectException -> {
                     MarketServiceResponse(
                         code = HttpURLConnection.HTTP_UNAVAILABLE,
                         success = false,
-                        error = context.getString(R.string.connection_server_error_message)
+                        error = context.getString(R.string.message_connect_exception)
+                    )
+                }
+                is SocketTimeoutException -> {
+                    MarketServiceResponse(
+                        code = HttpURLConnection.HTTP_UNAVAILABLE,
+                        success = false,
+                        error = context.getString(R.string.message_socket_timeout_exception)
                     )
                 }
                 else -> customExceptions(e)

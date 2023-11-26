@@ -36,12 +36,16 @@ class LoginViewModel @Inject constructor(
             currentState.copy(
                 email = Field(onChange = { _uiState.value = _uiState.value.copy(email = _uiState.value.email.copy(value = it)) }),
                 password = Field(onChange = { _uiState.value = _uiState.value.copy(password = _uiState.value.password.copy(value = it)) }),
-                onToggleMessageDialog = { errorMessage ->
+                onShowDialog = { type, message, onConfirm, onCancel ->
                     _uiState.value = _uiState.value.copy(
-                        showDialogMessage = !_uiState.value.showDialogMessage,
-                        serverMessage = errorMessage
+                        dialogType = type,
+                        showDialog = true,
+                        dialogMessage = message,
+                        onConfirm = onConfirm,
+                        onCancel = onCancel
                     )
                 },
+                onHideDialog = { _uiState.value = _uiState.value.copy(showDialog = false) },
                 onToggleLoading = { _uiState.value = _uiState.value.copy(showLoading = !_uiState.value.showLoading) },
                 onValidate = {
                     var isValid = true

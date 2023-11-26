@@ -1,8 +1,8 @@
 package br.com.market.storage.ui.screens.category
 
+import android.content.Context
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
@@ -17,18 +17,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import br.com.market.core.enums.EnumDialogType
+import br.com.market.core.inputs.arguments.InputArgs
+import br.com.market.core.interfaces.ISaveCallback
+import br.com.market.core.interfaces.ITextInputNavigationCallback
+import br.com.market.core.theme.GREY_900
 import br.com.market.core.theme.MarketTheme
-import br.com.market.domain.CategoryDomain
+import br.com.market.market.compose.components.FormField
 import br.com.market.market.compose.components.MarketBottomAppBar
-import br.com.market.market.compose.components.OutlinedTextFieldValidation
 import br.com.market.market.compose.components.button.fab.FloatingActionButtonSave
 import br.com.market.market.compose.components.button.icons.IconButtonInactivate
 import br.com.market.market.compose.components.button.icons.IconButtonReactivate
@@ -42,8 +46,9 @@ fun CategoryScreenTabCategory(
     state: CategoryUIState = CategoryUIState(),
     onUpdateEditMode: (Boolean) -> Unit = { },
     onToggleActive: () -> Unit = { },
-    onSaveCategoryClick: (Boolean) -> Unit = { },
-    isEdit: Boolean = false
+    onSaveCategoryClick: ISaveCallback? = null,
+    isEdit: Boolean = false,
+    textInputCallback: ITextInputNavigationCallback? = null
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -56,6 +61,8 @@ fun CategoryScreenTabCategory(
         mutableStateOf(state.categoryDomain?.active ?: true)
     }
 
+    val context = LocalContext.current
+
     Scaffold(
         bottomBar = {
             MarketBottomAppBar(
@@ -64,12 +71,19 @@ fun CategoryScreenTabCategory(
                         IconButtonInactivate(
                             enabled = isEditMode,
                             onClick = {
-                                onToggleActive()
-                                isActive = false
+                                state.onShowDialog?.onShow(
+                                    type = EnumDialogType.CONFIRMATION,
+                                    message = context.getString(R.string.category_screen_tab_category_inactivate_question),
+                                    onConfirm = {
+                                        onToggleActive()
+                                        isActive = false
 
-                                scope.launch {
-                                    snackbarHostState.showSnackbar("Categoria Inativada com Sucesso")
-                                }
+                                        scope.launch {
+                                            snackbarHostState.showSnackbar(context.getString(R.string.category_screen_tab_category_inactivated_success))
+                                        }
+                                    },
+                                    onCancel = { }
+                                )
                             }
                         )
                     } else {
@@ -80,7 +94,7 @@ fun CategoryScreenTabCategory(
                                 isActive = true
 
                                 scope.launch {
-                                    snackbarHostState.showSnackbar("Categoria Reativada com Sucesso")
+                                    snackbarHostState.showSnackbar(context.getString(R.string.category_screen_tab_category_reactivated_success))
                                 }
                             }
                         )
@@ -89,7 +103,7 @@ fun CategoryScreenTabCategory(
                 floatingActionButton = {
                     FloatingActionButtonSave(
                         onClick = {
-                            isEditMode = saveCategory(state, isActive, isEditMode, onSaveCategoryClick, scope, snackbarHostState)
+                            isEditMode = saveCategory(state, isActive, onSaveCategoryClick, scope, snackbarHostState, context)
                             onUpdateEditMode(isEditMode)
                         }
                     )
@@ -98,7 +112,7 @@ fun CategoryScreenTabCategory(
         },
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState) {
-                Snackbar(modifier = Modifier.padding(8.dp)) {
+                Snackbar(modifier = Modifier.padding(8.dp), containerColor = GREY_900, contentColor = Color.White) {
                     Text(text = it.visuals.message)
                 }
             }
@@ -108,35 +122,32 @@ fun CategoryScreenTabCategory(
             Modifier
                 .padding(it)
                 .fillMaxSize()
-                .padding(16.dp)
         ) {
-            val inputNameRef = createRef()
+            val (inputNameRef) = createRefs()
 
-            OutlinedTextFieldValidation(
+            FormField(
                 modifier = Modifier.constrainAs(inputNameRef) {
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
+                    linkTo(start = parent.start, end = parent.end, bias = 0f)
                     top.linkTo(parent.top)
 
                     width = Dimension.fillToConstraints
                 },
-                value = state.categoryName,
-                onValueChange = state.onCategoryNameChange,
-                error = state.categoryNameErrorMessage,
-                label = { Text(text = stringResource(R.string.category_screen_tab_category_label_name)) },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Done,
-                    capitalization = KeyboardCapitalization.Words
-                ),
-                enabled = isActive,
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        isEditMode = saveCategory(state, isActive, isEditMode, onSaveCategoryClick, scope, snackbarHostState)
-                        onUpdateEditMode(isEditMode)
-                        defaultKeyboardAction(ImeAction.Done)
-                    }
-                )
+                labelResId = R.string.category_screen_tab_category_label_name,
+                field = state.nameField,
+                onNavigateClick = {
+                    textInputCallback?.onNavigate(
+                        args = InputArgs(
+                            titleResId = R.string.category_screen_tab_category_title_input_name,
+                            value = state.nameField.value,
+                            maxLength = 255,
+                            keyboardOptions = KeyboardOptions(
+                                capitalization = KeyboardCapitalization.Words,
+                                imeAction = ImeAction.Done
+                            )
+                        ),
+                        callback = { value -> state.nameField.onChange(value ?: "") }
+                    )
+                }
             )
         }
     }
@@ -155,24 +166,31 @@ fun TabCategoryScreenPreview() {
 private fun saveCategory(
     state: CategoryUIState,
     isActive: Boolean,
-    isEditMode: Boolean,
-    onSaveCategoryClick: (Boolean) -> Unit,
+    onSaveCategoryClick: ISaveCallback?,
     scope: CoroutineScope,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
+    context: Context
 ): Boolean {
     if (state.onValidate() && isActive) {
+        state.onToggleLoading()
 
-        state.categoryDomain = if (isEditMode) {
-            state.categoryDomain?.copy(name = state.categoryName)
-        } else {
-            CategoryDomain(name = state.categoryName)
-        }
-
-        onSaveCategoryClick(isEditMode)
-
-        scope.launch {
-            snackbarHostState.showSnackbar("Categoria Salva com Sucesso")
-        }
+        onSaveCategoryClick?.onSave(
+            onSuccess = {
+                state.onToggleLoading()
+                scope.launch {
+                    snackbarHostState.showSnackbar(context.getString(R.string.category_screen_tab_category_success_save_message))
+                }
+            },
+            onError = { message ->
+                state.onToggleLoading()
+                state.onShowDialog?.onShow(
+                    type = EnumDialogType.ERROR,
+                    message = message,
+                    onConfirm = {},
+                    onCancel = {}
+                )
+            }
+        )
     }
 
     return state.categoryDomain != null

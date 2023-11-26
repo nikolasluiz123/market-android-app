@@ -127,7 +127,8 @@ fun StorageAppNavHost(
         categoryScreen(
             onBackClick = navController::popBackStack,
             onFabAddBrandClick = navController::navigateToBrandScreen,
-            onBrandItemClick = navController::navigateToBrandScreen
+            onBrandItemClick = navController::navigateToBrandScreen,
+            textInputCallback = navController::navigateToInputText
         )
 
         brandScreen(

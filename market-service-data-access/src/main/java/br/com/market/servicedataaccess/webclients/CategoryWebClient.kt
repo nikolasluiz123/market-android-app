@@ -6,10 +6,10 @@ import br.com.market.sdo.CategoryReadSDO
 import br.com.market.sdo.CategorySDO
 import br.com.market.servicedataaccess.responses.extensions.getPersistenceResponseBody
 import br.com.market.servicedataaccess.responses.extensions.getReadResponseBody
-import br.com.market.servicedataaccess.responses.extensions.getResponseBody
-import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
+import br.com.market.servicedataaccess.responses.extensions.getSingleValueResponseBody
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
 import br.com.market.servicedataaccess.responses.types.ReadResponse
+import br.com.market.servicedataaccess.responses.types.SingleValueResponse
 import br.com.market.servicedataaccess.services.ICategoryService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -57,40 +57,10 @@ class CategoryWebClient @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun toggleActive(category: Category): PersistenceResponse {
+    suspend fun toggleActive(id: String): PersistenceResponse {
         return persistenceServiceErrorHandlingBlock(
             codeBlock = {
-                val categorySDO = CategorySDO(
-                    localId = category.id,
-                    active = category.active
-                )
-
-                service.toggleActive(getToken(), categorySDO).getPersistenceResponseBody()
-            }
-        )
-    }
-
-    /**
-     * Função para enviar o que está presenta apenas na base local do dispositivo
-     * para a base remota.
-     *
-     * @param categories Categorias que deseja enviar
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-    suspend fun sync(categories: List<Category>): MarketServiceResponse {
-        return serviceErrorHandlingBlock(
-            codeBlock = {
-                val categorySDOs = categories.map {
-                    CategorySDO(
-                        localId = it.id,
-                        name = it.name,
-                        active = it.active,
-                        marketId = it.marketId
-                    )
-                }
-
-                service.sync(getToken(), categorySDOs).getResponseBody()
+                service.toggleActive(getToken(), id).getPersistenceResponseBody()
             }
         )
     }
@@ -102,5 +72,9 @@ class CategoryWebClient @Inject constructor(
      */
     suspend fun getListCategoryReadSDO(simpleFilter: String?, marketId: Long, limit: Int, offset: Int): ReadResponse<CategoryReadSDO> {
         return service.getListCategoryReadSDO(getToken(), simpleFilter, marketId, limit, offset).getReadResponseBody()
+    }
+
+    suspend fun findCategoryByLocalId(id: String): SingleValueResponse<CategorySDO> {
+        return service.findCategoryByLocalId(getToken(), id).getSingleValueResponseBody()
     }
 }

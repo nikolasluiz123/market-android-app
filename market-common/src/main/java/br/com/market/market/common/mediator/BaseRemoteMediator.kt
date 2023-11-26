@@ -97,12 +97,12 @@ abstract class BaseRemoteMediator<DOMAIN : BaseDomain, KEY : BaseRemoteKeyModel,
 
             MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
         } catch (e: ConnectException) {
-            val ex = Exception(context.getString(R.string.message_connect_exception), e)
+            val ex = Exception(context.getString(br.com.market.core.R.string.message_connect_exception), e)
             ex.printStackTrace()
             
             MediatorResult.Error(ex)
         } catch (e: SocketTimeoutException) {
-            val ex = Exception(context.getString(R.string.message_socket_timeout_exception), e)
+            val ex = Exception(context.getString(br.com.market.core.R.string.message_socket_timeout_exception), e)
             ex.printStackTrace()
 
             MediatorResult.Error(ex)

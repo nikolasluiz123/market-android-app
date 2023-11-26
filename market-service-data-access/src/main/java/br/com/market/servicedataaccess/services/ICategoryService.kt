@@ -2,9 +2,9 @@ package br.com.market.servicedataaccess.services
 
 import br.com.market.sdo.CategoryReadSDO
 import br.com.market.sdo.CategorySDO
-import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
 import br.com.market.servicedataaccess.responses.types.ReadResponse
+import br.com.market.servicedataaccess.responses.types.SingleValueResponse
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -14,11 +14,8 @@ interface ICategoryService {
     @POST("category")
     suspend fun save(@Header("Authorization") token: String, @Body categorySDO: CategorySDO): Response<PersistenceResponse>
 
-    @POST("category/toggleActive")
-    suspend fun toggleActive(@Header("Authorization") token: String, @Body categorySDO: CategorySDO): Response<PersistenceResponse>
-
-    @POST("category/sync")
-    suspend fun sync(@Header("Authorization") token: String, @Body categoriesSDOs: List<CategorySDO>): Response<MarketServiceResponse>
+    @POST("category/toggleActive/{id}")
+    suspend fun toggleActive(@Header("Authorization") token: String, @Path("id") id: String): Response<PersistenceResponse>
 
     @GET("category")
     suspend fun getListCategoryReadSDO(
@@ -29,4 +26,6 @@ interface ICategoryService {
         @Query("offset") offset: Int
     ): Response<ReadResponse<CategoryReadSDO>>
 
+    @GET("category/{id}")
+    suspend fun findCategoryByLocalId(@Header("Authorization") token: String, @Path("id") id: String): Response<SingleValueResponse<CategorySDO>>
 }

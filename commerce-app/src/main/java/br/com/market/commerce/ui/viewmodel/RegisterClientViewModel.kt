@@ -104,11 +104,17 @@ class RegisterClientViewModel @Inject constructor(
 
                     isValid
                 },
-                onToggleMessageDialog = { errorMessage ->
+                onShowDialog = { type, message, onConfirm, onCancel ->
                     _uiState.value = _uiState.value.copy(
-                        showDialogMessage = !_uiState.value.showDialogMessage,
-                        serverMessage = errorMessage
+                        showDialog = true,
+                        dialogMessage = message,
+                        dialogType = type,
+                        onConfirm = onConfirm,
+                        onCancel = onCancel
                     )
+                },
+                onHideDialog = {
+                    _uiState.value = _uiState.value.copy(showDialog = false)
                 },
                 onToggleLoading = { _uiState.value = _uiState.value.copy(showLoading = !_uiState.value.showLoading) }
             )

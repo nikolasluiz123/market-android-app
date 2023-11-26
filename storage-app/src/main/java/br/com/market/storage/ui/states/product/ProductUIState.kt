@@ -2,6 +2,9 @@ package br.com.market.storage.ui.states.product
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import br.com.market.core.enums.EnumDialogType
+import br.com.market.core.interfaces.IShowDialog
+import br.com.market.core.ui.states.IDialogUIState
 import br.com.market.core.ui.states.IValidationUIState
 import br.com.market.domain.BrandDomain
 import br.com.market.domain.ProductDomain
@@ -30,11 +33,12 @@ data class ProductUIState(
 
     var images: SnapshotStateList<ProductImageDomain> = mutableStateListOf(),
 
-    val onShowDialog: (String, String) -> Unit = { _, _ -> },
-    val onHideDialog: () -> Unit = { },
-    val showDialog: Boolean = false,
-    val dialogTitle: String = "",
-    val dialogMessage: String = "",
-
-    override val onValidate: () -> Boolean = { false }
-): IValidationUIState
+    override val onValidate: () -> Boolean = { false },
+    override val dialogType: EnumDialogType = EnumDialogType.ERROR,
+    override val dialogMessage: String = "",
+    override val showDialog: Boolean = false,
+    override val onHideDialog: () -> Unit = { },
+    override val onShowDialog: IShowDialog? = null,
+    override val onConfirm: () -> Unit = { },
+    override val onCancel: () -> Unit = { }
+): IValidationUIState, IDialogUIState

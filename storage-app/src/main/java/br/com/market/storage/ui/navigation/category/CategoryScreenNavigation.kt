@@ -5,6 +5,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import br.com.market.core.interfaces.ITextInputNavigationCallback
 import br.com.market.storage.ui.screens.category.CategoryScreen
 import br.com.market.storage.ui.viewmodels.category.CategoryViewModel
 
@@ -15,7 +16,8 @@ internal const val argumentCategoryId = "categoryId"
 fun NavGraphBuilder.categoryScreen(
     onBackClick: () -> Unit,
     onFabAddBrandClick: (String) -> Unit,
-    onBrandItemClick: (String, String) -> Unit
+    onBrandItemClick: (String, String) -> Unit,
+    textInputCallback: ITextInputNavigationCallback
 ) {
     composable(route = "$categoryScreenRoute?$argumentCategoryId={$argumentCategoryId}") {
         val categoryViewModel = hiltViewModel<CategoryViewModel>()
@@ -24,7 +26,8 @@ fun NavGraphBuilder.categoryScreen(
             viewModel = categoryViewModel,
             onBackClick = onBackClick,
             onFabAddBrandClick = onFabAddBrandClick,
-            onBrandItemClick = onBrandItemClick
+            onBrandItemClick = onBrandItemClick,
+            textInputCallback = textInputCallback
         )
     }
 }

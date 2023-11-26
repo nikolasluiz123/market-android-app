@@ -27,6 +27,21 @@ class ReportSearchScreenViewModel @Inject constructor(
     private val directory: String? = savedStateHandle[argumentDirectory]
 
     init {
+        _uiState.update {
+            it.copy(
+                onShowDialog = { type, message, onConfirm, onCancel ->
+                    _uiState.value = _uiState.value.copy(
+                        dialogType = type,
+                        showDialog = true,
+                        dialogMessage = message,
+                        onConfirm = onConfirm,
+                        onCancel = onCancel
+                    )
+                },
+                onHideDialog = { _uiState.value = _uiState.value.copy(showDialog = false) }
+            )
+        }
+
         directory?.navParamToString()?.let {
             _uiState.update { currentState ->
                 currentState.copy(

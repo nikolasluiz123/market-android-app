@@ -23,11 +23,11 @@ import androidx.constraintlayout.compose.Dimension
 import br.com.market.core.R
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.states.LoadImageLinkUIState
-import br.com.market.market.compose.components.screens.viewmodel.LoadImageLinkViewModel
 import br.com.market.market.compose.components.CoilImageViewer
 import br.com.market.market.compose.components.MarketBottomAppBar
 import br.com.market.market.compose.components.OutlinedTextFieldValidation
 import br.com.market.market.compose.components.button.fab.FloatingActionButtonSave
+import br.com.market.market.compose.components.screens.viewmodel.LoadImageLinkViewModel
 import br.com.market.market.compose.components.topappbar.SimpleMarketTopAppBar
 import kotlinx.coroutines.launch
 
@@ -62,8 +62,8 @@ fun LoadImageLinkScreen(
     Scaffold(
         topBar = {
             SimpleMarketTopAppBar(
-                title = "Carregar Imagem",
-                subtitle = "Novo Produto",
+                title = stringResource(br.com.market.market.compose.components.R.string.load_image_link_screen_title),
+                subtitle = "Novo Produto", // Precisa deixar isso dinâmico pegando o nome do produto ou exibindo novo produto.
                 onBackClick = onNavigationIconClick,
                 showMenuWithLogout = false
             )

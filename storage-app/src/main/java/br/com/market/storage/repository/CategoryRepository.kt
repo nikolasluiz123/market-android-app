@@ -18,9 +18,12 @@ import br.com.market.market.common.mediator.CategoryRemoteMediator
 import br.com.market.market.common.repository.BaseRepository
 import br.com.market.market.common.repository.IPagedRemoteSearchRepository
 import br.com.market.models.Category
+import br.com.market.sdo.CategorySDO
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
+import br.com.market.servicedataaccess.responses.types.SingleValueResponse
 import br.com.market.servicedataaccess.webclients.CategoryWebClient
 import kotlinx.coroutines.flow.first
+import java.net.HttpURLConnection
 import javax.inject.Inject
 
 /**
@@ -42,7 +45,7 @@ class CategoryRepository @Inject constructor(
     private val categoryWebClient: CategoryWebClient,
     private val deviceDAO: DeviceDAO,
     private val userDAO: UserDAO,
-): BaseRepository(), IPagedRemoteSearchRepository<BaseSearchFilter, CategoryDomain> {
+) : BaseRepository(), IPagedRemoteSearchRepository<BaseSearchFilter, CategoryDomain> {
 
     @OptIn(ExperimentalPagingApi::class)
     override fun getConfiguredPager(context: Context, filters: BaseSearchFilter): Pager<Int, CategoryDomain> {
@@ -70,23 +73,51 @@ class CategoryRepository @Inject constructor(
      *
      * @param domain Classe de domínio com as informações que deseja salvar
      *
-     * @author Nikolas Luiz Schmitt
+     *
      */
     suspend fun save(domain: CategoryDomain): PersistenceResponse {
-        val category = if (domain.id != null) {
-            categoryDAO.findById(domain.id!!).copy(name = domain.name)
+        return if (domain.id != null) {
+            editCategory(domain)
         } else {
-            Category(name = domain.name, marketId = marketDAO.findFirst().first()?.id!!)
+            createCategory(domain)
         }
+    }
 
-        domain.id = category.id
+    private suspend fun editCategory(domain: CategoryDomain): PersistenceResponse {
+        val findResponse = categoryWebClient.findCategoryByLocalId(domain.id!!)
 
-        val response = categoryWebClient.save(category = category)
+        return if (findResponse.success) {
+            val category = getCategoryWithUpdatedInfo(findResponse, domain)
+            saveCategory(category)
+        } else {
+            PersistenceResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, error = findResponse.error)
+        }
+    }
 
-        category.synchronized = response.getObjectSynchronized()
-        categoryDAO.save(category = category)
+    private suspend fun getCategoryWithUpdatedInfo(findResponse: SingleValueResponse<CategorySDO>, domain: CategoryDomain): Category {
+        return findResponse.value!!.copy(name = domain.name).run {
+            Category(
+                id = localId,
+                name = domain.name,
+                marketId = marketDAO.findFirst().first()?.id!!
+            )
+        }
+    }
 
-        return  response
+    private suspend fun saveCategory(category: Category): PersistenceResponse {
+        val persistenceResponse = categoryWebClient.save(category = category)
+
+        return if (persistenceResponse.success) {
+            categoryDAO.save(category = category)
+            PersistenceResponse(code = HttpURLConnection.HTTP_OK, success = true)
+        } else {
+            PersistenceResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, error = persistenceResponse.error)
+        }
+    }
+
+    private suspend fun createCategory(domain: CategoryDomain): PersistenceResponse {
+        val category = Category(name = domain.name, marketId = marketDAO.findFirst().first()?.id!!)
+        return saveCategory(category)
     }
 
     /**
@@ -116,14 +147,12 @@ class CategoryRepository @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun toggleActive(categoryId: String): PersistenceResponse {
-        val category = categoryDAO.findById(categoryId)
+    suspend fun toggleActive(categoryId: String, active: Boolean): PersistenceResponse {
+        val response = categoryWebClient.toggleActive(categoryId)
 
-        val response = categoryWebClient.toggleActive(category)
-
-        category.synchronized = response.getObjectSynchronized()
-
-        categoryDAO.toggleActive(category)
+        if (response.success) {
+            categoryDAO.updateActive(categoryId = categoryId, active = !active, sync = true)
+        }
 
         return response
     }

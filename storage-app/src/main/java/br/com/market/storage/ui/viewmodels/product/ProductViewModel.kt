@@ -5,6 +5,7 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import br.com.market.core.enums.EnumDialogType
 import br.com.market.core.extensions.format
 import br.com.market.core.extensions.navParamToString
 import br.com.market.domain.ProductImageDomain
@@ -45,8 +46,14 @@ class ProductViewModel @Inject constructor(
                 onProductNameChange = { _uiState.value = _uiState.value.copy(productName = it) },
                 onProductPriceChange = { _uiState.value = _uiState.value.copy(productPrice = it) },
                 onProductQuantityChange = { _uiState.value = _uiState.value.copy(productQuantity = it) },
-                onShowDialog = { title, message ->
-                    _uiState.value = _uiState.value.copy(dialogTitle = title, dialogMessage = message, showDialog = true)
+                onShowDialog = { type, message, onConfirm, onCancel ->
+                    _uiState.value = _uiState.value.copy(
+                        dialogType = type,
+                        dialogMessage = message,
+                        showDialog = true,
+                        onConfirm = onConfirm,
+                        onCancel = onCancel
+                    )
                 },
                 onHideDialog = { _uiState.value = _uiState.value.copy(showDialog = false) },
                 onValidate = {
@@ -54,7 +61,12 @@ class ProductViewModel @Inject constructor(
 
                     if (_uiState.value.images.size == 0) {
                         isValid = false
-                        _uiState.value.onShowDialog("Atenção", "O produto deve conter ao menos uma foto.")
+                        _uiState.value.onShowDialog?.onShow(
+                            type = EnumDialogType.ERROR,
+                            message = context.getString(R.string.product_screen_required_photo_validation_message),
+                            onConfirm = {},
+                            onCancel = {}
+                        )
                     }
 
                     if (_uiState.value.productName.isBlank()) {

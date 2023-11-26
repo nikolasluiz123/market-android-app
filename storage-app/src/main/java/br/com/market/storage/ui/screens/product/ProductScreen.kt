@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import br.com.market.core.enums.EnumDialogType
 import br.com.market.core.extensions.launchImageOnly
 import br.com.market.core.extensions.openCamera
 import br.com.market.core.extensions.parseToDouble
@@ -42,7 +43,7 @@ import br.com.market.market.compose.components.button.fab.FloatingActionButtonSa
 import br.com.market.market.compose.components.button.icons.IconButtonInactivate
 import br.com.market.market.compose.components.button.icons.IconButtonReactivate
 import br.com.market.market.compose.components.button.icons.IconButtonStorage
-import br.com.market.market.compose.components.dialog.DialogMessage
+import br.com.market.market.compose.components.dialog.MarketDialog
 import br.com.market.market.compose.components.topappbar.SimpleMarketTopAppBar
 import br.com.market.storage.R
 import br.com.market.storage.ui.component.ProductImageHorizontalGallery
@@ -186,7 +187,12 @@ fun ProductScreen(
                 },
                 onDeleteButtonClick = { byteArray, id ->
                     if (state.images.size == 1 && id != null) {
-                        state.onShowDialog("Alerta", "O produto deve conter ao menos uma imagem")
+                        state.onShowDialog?.onShow(
+                            type = EnumDialogType.ERROR,
+                            message = context.getString(R.string.product_screen_required_photo_validation_message),
+                            onConfirm = {},
+                            onCancel = {}
+                        )
                         return@ProductImageHorizontalGallery
                     }
 
@@ -304,8 +310,8 @@ fun ProductScreen(
                 }
             }
 
-            DialogMessage(
-                title = state.dialogTitle,
+            MarketDialog(
+                type = state.dialogType,
                 show = state.showDialog,
                 onDismissRequest = { state.onHideDialog() },
                 message = state.dialogMessage
@@ -359,7 +365,12 @@ fun ProductScreen(
                         }
                     )
                 } else {
-                    state.onShowDialog("Atenção", "São permitidas apenas 3 fotos por produto.")
+                    state.onShowDialog?.onShow(
+                        type = EnumDialogType.ERROR,
+                        message = stringResource(R.string.product_screen_qtd_photo_validation_message),
+                        onConfirm = {},
+                        onCancel = {}
+                    )
                 }
             }
         }

@@ -2,6 +2,7 @@ package br.com.market.storage.ui.screens.category
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,6 +11,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -26,13 +28,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import br.com.market.core.interfaces.ISaveCallback
+import br.com.market.core.interfaces.ITextInputNavigationCallback
 import br.com.market.core.theme.MarketTheme
+import br.com.market.market.compose.components.dialog.MarketDialog
 import br.com.market.market.compose.components.topappbar.SimpleMarketTopAppBar
 import br.com.market.storage.R
 import br.com.market.storage.ui.states.category.CategoryUIState
@@ -44,7 +50,8 @@ fun CategoryScreen(
     viewModel: CategoryViewModel,
     onBackClick: () -> Unit,
     onFabAddBrandClick: (String) -> Unit,
-    onBrandItemClick: (String, String) -> Unit
+    onBrandItemClick: (String, String) -> Unit,
+    textInputCallback: ITextInputNavigationCallback
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -53,13 +60,12 @@ fun CategoryScreen(
         onToggleActive = {
             viewModel.toggleActive()
         },
-        onSaveCategoryClick = {
-            viewModel.saveCategory()
-        },
+        onSaveCategoryClick = viewModel::saveCategory,
         onBackClick = onBackClick,
         onFabAddBrandClick = onFabAddBrandClick,
         onBrandItemClick = onBrandItemClick,
-        onSimpleFilterChange = viewModel::updateList
+        onSimpleFilterChange = viewModel::updateList,
+        textInputCallback = textInputCallback
     )
 }
 
@@ -68,11 +74,12 @@ fun CategoryScreen(
 fun CategoryScreen(
     state: CategoryUIState,
     onToggleActive: () -> Unit = { },
-    onSaveCategoryClick: (Boolean) -> Unit = { },
+    onSaveCategoryClick: ISaveCallback? = null,
     onBackClick: () -> Unit = { },
     onFabAddBrandClick: (String) -> Unit = { },
     onBrandItemClick: (String, String) -> Unit = { _: String, _: String -> },
-    onSimpleFilterChange: (String) -> Unit = { }
+    onSimpleFilterChange: (String) -> Unit = { },
+    textInputCallback: ITextInputNavigationCallback? = null
 ) {
     var isEditMode by remember(state.categoryDomain) {
         mutableStateOf(state.categoryDomain != null)
@@ -102,6 +109,21 @@ fun CategoryScreen(
             val pagerState = rememberPagerState { 2 }
             val coroutineScope = rememberCoroutineScope()
             var tabIndex by remember { mutableIntStateOf(0) }
+
+            if (state.showLoading) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    CircularProgressIndicator(Modifier.align(Alignment.Center))
+                }
+            }
+
+            MarketDialog(
+                type = state.dialogType,
+                show = state.showDialog,
+                onDismissRequest = { state.onHideDialog() },
+                message = state.dialogMessage,
+                onConfirm = state.onConfirm,
+                onCancel = state.onCancel
+            )
 
             Divider(
                 modifier = Modifier.constrainAs(tabDividerRef) {
@@ -179,7 +201,8 @@ fun CategoryScreen(
                             onUpdateEditMode = { isEditMode = it },
                             onToggleActive = onToggleActive,
                             onSaveCategoryClick = onSaveCategoryClick,
-                            isEdit = isEditMode
+                            isEdit = isEditMode,
+                            textInputCallback = textInputCallback
                         )
                     }
 

@@ -5,6 +5,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.market.core.extensions.navParamToString
+import br.com.market.core.ui.states.Field
+import br.com.market.domain.CategoryDomain
 import br.com.market.storage.R
 import br.com.market.storage.repository.BrandRepository
 import br.com.market.storage.repository.CategoryRepository
@@ -20,7 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
-    @ApplicationContext context: Context,
+    @ApplicationContext private val context: Context,
     private val categoryRepository: CategoryRepository,
     private val brandRepository: BrandRepository,
     savedStateHandle: SavedStateHandle
@@ -34,23 +36,22 @@ class CategoryViewModel @Inject constructor(
     init {
         _uiState.update { currentState ->
             currentState.copy(
-                onCategoryNameChange = {
-                    _uiState.value = _uiState.value.copy(categoryName = it)
+                nameField = Field(onChange = { _uiState.value = _uiState.value.copy(nameField = _uiState.value.nameField.copy(value = it)) }),
+                onShowDialog = { type, message, onConfirm, onCancel ->
+                    _uiState.value = _uiState.value.copy(
+                        dialogType = type,
+                        showDialog = true,
+                        dialogMessage = message,
+                        onConfirm = onConfirm,
+                        onCancel = onCancel
+                    )
                 },
+                onHideDialog = { _uiState.value = _uiState.value.copy(showDialog = false) },
+                onToggleLoading = { _uiState.value = _uiState.value.copy(showLoading = !_uiState.value.showLoading) },
                 onValidate = {
                     var isValid = true
 
-                    if (_uiState.value.categoryName.isBlank()) {
-                        isValid = false
-
-                        _uiState.value = _uiState.value.copy(
-                            categoryNameErrorMessage = context.getString(R.string.category_screen_category_name_required_validation_message)
-                        )
-                    } else {
-                        _uiState.value = _uiState.value.copy(
-                            categoryNameErrorMessage = ""
-                        )
-                    }
+                    validateName { isValid = it }
 
                     isValid
                 }
@@ -66,7 +67,7 @@ class CategoryViewModel @Inject constructor(
                 _uiState.update { currentState ->
                     currentState.copy(
                         categoryDomain = categoryDomain,
-                        categoryName = categoryDomain.name,
+                        nameField = _uiState.value.nameField.copy(value = categoryDomain.name),
                         brands = brands
                     )
                 }
@@ -74,23 +75,53 @@ class CategoryViewModel @Inject constructor(
         }
     }
 
-    fun saveCategory() {
-        _uiState.value.categoryDomain?.let { categoryDomain ->
-            viewModelScope.launch {
-                categoryRepository.save(categoryDomain)
+    private fun validateName(onValidChange: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            when {
+                _uiState.value.nameField.valueIsEmpty() -> {
+                    onValidChange(false)
 
-                _uiState.update { currentState ->
-                    val domain = currentState.categoryDomain
-                    currentState.copy(categoryDomain = domain?.copy(active = domain.active))
+                    _uiState.value = _uiState.value.copy(
+                        nameField = _uiState.value.nameField.copy(errorMessage = context.getString(R.string.category_screen_category_name_required_validation_message))
+                    )
+                }
+                else -> {
+                    _uiState.value = _uiState.value.copy(
+                        nameField = _uiState.value.nameField.copy(errorMessage = "")
+                    )
                 }
             }
         }
     }
 
+    fun saveCategory(onSuccess: () -> Unit, onError: (message: String) -> Unit) {
+       _uiState.value.categoryDomain = if (_uiState.value.categoryDomain == null) {
+            CategoryDomain(name = _uiState.value.nameField.value)
+        } else {
+           _uiState.value.categoryDomain!!.copy(name = _uiState.value.nameField.value)
+        }
+
+        viewModelScope.launch {
+            val response = categoryRepository.save(_uiState.value.categoryDomain!!)
+
+            if (response.success) {
+                _uiState.update { currentState ->
+                    val domain = currentState.categoryDomain
+                    currentState.copy(categoryDomain = domain?.copy(active = domain.active))
+                }
+
+                onSuccess()
+            } else {
+                _uiState.value.categoryDomain = null
+                onError(response.error ?: "")
+            }
+        }
+    }
+
     fun toggleActive() {
-        _uiState.value.categoryDomain?.id?.let { id ->
+        _uiState.value.categoryDomain?.let { domain ->
             viewModelScope.launch {
-                categoryRepository.toggleActive(id)
+                categoryRepository.toggleActive(domain.id!!, domain.active)
             }
         }
     }

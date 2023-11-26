@@ -25,11 +25,12 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.core.R
+import br.com.market.core.enums.EnumDialogType
 import br.com.market.core.theme.MarketTheme
 import br.com.market.domain.UserDomain
 import br.com.market.market.compose.components.OutlinedTextFieldPasswordValidation
 import br.com.market.market.compose.components.OutlinedTextFieldValidation
-import br.com.market.market.compose.components.dialog.DialogMessage
+import br.com.market.market.compose.components.dialog.MarketDialog
 import br.com.market.market.compose.components.loading.MarketLinearProgressIndicator
 import br.com.market.market.compose.components.topappbar.SimpleMarketTopAppBar
 import br.com.market.storage.ui.states.LoginUiState
@@ -63,7 +64,12 @@ fun LoginScreen(
                 if (response.success) {
                     onAuthenticateSuccess()
                 } else {
-                    state.onToggleMessageDialog(response.error ?: "")
+                    state.onShowDialog?.onShow(
+                        type = EnumDialogType.ERROR,
+                        message = response.error ?: "",
+                        onConfirm = {},
+                        onCancel = {}
+                    )
                 }
                 state.onToggleLoading()
             }
@@ -90,9 +96,9 @@ fun LoginScreen(
     Scaffold(
         topBar = {
             SimpleMarketTopAppBar(
-                title = "Bem-Vindo",
+                title = stringResource(br.com.market.storage.R.string.login_screen_title),
                 menuItems = {
-                    DropdownMenuItem(text = { Text("Sobre") }, onClick = onAboutClick)
+                    DropdownMenuItem(text = { Text(stringResource(id = R.string.label_about)) }, onClick = onAboutClick)
                 }
             )
         }
@@ -123,11 +129,11 @@ fun LoginScreen(
             ConstraintLayout(Modifier.fillMaxWidth()) {
                 val (emailRef, passwordRef, loginButtonRef, registerButtonRef) = createRefs()
 
-                DialogMessage(
-                    title = stringResource(R.string.error_dialog_title),
-                    show = state.showDialogMessage,
-                    onDismissRequest = { state.onToggleMessageDialog("") },
-                    message = state.serverMessage
+                MarketDialog(
+                    type = state.dialogType,
+                    show = state.showDialog,
+                    onDismissRequest = { state.onHideDialog() },
+                    message = state.dialogMessage
                 )
 
                 OutlinedTextFieldValidation(

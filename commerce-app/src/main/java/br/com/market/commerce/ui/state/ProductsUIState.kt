@@ -1,17 +1,23 @@
 package br.com.market.commerce.ui.state
 
 import androidx.paging.PagingData
+import br.com.market.core.enums.EnumDialogType
+import br.com.market.core.interfaces.IShowDialog
+import br.com.market.core.ui.states.IDialogUIState
 import br.com.market.core.ui.states.ILoadingUIState
-import br.com.market.core.ui.states.IServerErrorHandlerUIState
 import br.com.market.domain.ProductImageReadDomain
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
 data class ProductsUIState(
     var products: Flow<PagingData<ProductImageReadDomain>> = emptyFlow(),
-    override val serverMessage: String = "",
-    override val showDialogMessage: Boolean = false,
-    override val onToggleMessageDialog: (String) -> Unit = { },
+    override val dialogMessage: String = "",
+    override val showDialog: Boolean = false,
     override val showLoading: Boolean = false,
-    override val onToggleLoading: () -> Unit = { }
-) : ILoadingUIState, IServerErrorHandlerUIState
+    override val onToggleLoading: () -> Unit = { },
+    override val dialogType: EnumDialogType = EnumDialogType.ERROR,
+    override val onHideDialog: () -> Unit = { },
+    override val onShowDialog: IShowDialog? = null,
+    override val onConfirm: () -> Unit = { },
+    override val onCancel: () -> Unit = { }
+) : ILoadingUIState, IDialogUIState

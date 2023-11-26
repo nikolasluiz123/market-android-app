@@ -13,7 +13,7 @@
     <string name="description_icon_hide_password">Hide password</string>
     <string name="label_adicionar">Adicionar</string>
     <string name="description_icon_show_password">Show password</string>
-    <string name="dialog_button_ok_label">OK</string>
+    <string name="label_ok">OK</string>
     <string name="authenticate_user_socket_timeout_error_message">Ocorreu um erro inesperado durante a autenticação, é possível que o serviço esteja sobrecarregado ou indisponível no momento. Para mais informações contate o suporte.</string>
     <string name="register_user_socket_timeout_error_message">Ocorreu um erro inesperado durante o cadastro do usário, é possível que o serviço esteja sobrecarregado ou indisponível no momento. Para mais informações contate o suporte.</string>
     <string name="label_inactivate">Inativar</string>
@@ -63,6 +63,13 @@
     <string name="label_delete_bottom_sheet_report_options">Deletar</string>
     <string name="label_icon_view_file_bottom_sheet_report_description">Abrir o Relatório</string>
     <string name="label_icon_deletar_bottom_sheet_report_description">Deletar o Relatório</string>
+
+    <string name="message_connect_exception">Não foi possível se conectar com o servidor, verifique sua conexão com a internet.</string>
+    <string name="message_socket_timeout_exception">Não foi possível se conectar com o servidor, pode ser que ele esteja fora do ar ou sobrecarregado. Se o problema persistir, contate o suporte para mais informações.</string>
+
+    <string name="warning_dialog_title">Aviso</string>
+    <string name="label_confirm">Confirmar</string>
+    <string name="label_cancel">Calcelar</string>
 
     <string-array name="movement_screen_advanced_filter_operation_type_labels">
         <item>Entrada</item>

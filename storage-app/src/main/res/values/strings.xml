@@ -8,7 +8,7 @@
     <string name="card_brand_item_label_product">Produto</string>
     <string name="card_brand_item_label_qtd">Quantidade</string>
     <string name="dialog_button_cancel_label">Cancelar</string>
-    <string name="dialog_button_confirm_label">Confirmar</string>
+    <string name="label_confirm">Confirmar</string>
     <string name="brand_dialog_title">Criando uma Marca</string>
     <string name="brand_dialog_label_name">Nome</string>
     <string name="brand_dialog_label_qtd">Quantidade</string>
@@ -31,7 +31,6 @@
     <string name="save_product_no_connection_error_message">Você está sem conexão com a internet, o produto foi salvo apenas localmente. Quando puder se conectar, sincronize os dados.</string>
     <string name="form_product_screen_top_app_bar_title_register">Cadastrando um Produto</string>
     <string name="form_product_screen_top_app_bar_title_update">Alterando um Produto</string>
-    <string name="warning_dialog_title">Aviso</string>
     <string name="label_sinc">Sincronizar</string>
     <string name="product_saved_message">Produto Salvo com Sucesso.</string>
     <string name="save_brand_success_message">Marca Salva com Sucesso.</string>
@@ -100,4 +99,12 @@
     <string name="reports_screen_search_for">Buscar por Nome ou Data</string>
     <string name="report_search_screen_share_report_title">Compartilhar Relatório</string>
     <string name="report_search_screen_delete_report_message">O relatório será excluido permanentemente.</string>
+    <string name="category_screen_tab_category_success_save_message">Categoria Salva com Sucesso</string>
+    <string name="category_screen_tab_category_inactivated_success">Categoria Inativada com Sucesso</string>
+    <string name="category_screen_tab_category_reactivated_success">Categoria Reativada com Sucesso</string>
+    <string name="category_screen_tab_category_title_input_name">Digite o Nome</string>
+    <string name="product_screen_qtd_photo_validation_message">São permitidas apenas 3 fotos por produto.</string>
+    <string name="product_screen_required_photo_validation_message">O produto deve conter ao menos uma imagem</string>
+    <string name="login_screen_title">Bem-Vindo</string>
+    <string name="category_screen_tab_category_inactivate_question">Confirma a inativação da categoria?</string>
 </resources>

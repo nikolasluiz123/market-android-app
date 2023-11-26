@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.core.enums.EnumDateTimePatterns
+import br.com.market.core.enums.EnumDialogType
 import br.com.market.core.enums.EnumFileExtension
 import br.com.market.core.extensions.format
 import br.com.market.core.theme.MarketTheme
@@ -30,7 +31,7 @@ import br.com.market.core.ui.components.bottomsheet.report.EnumReportBottomSheet
 import br.com.market.core.utils.FileUtils
 import br.com.market.market.compose.components.LabeledText
 import br.com.market.market.compose.components.bottomsheet.BottomSheetReportOperations
-import br.com.market.market.compose.components.dialog.DialogMessage
+import br.com.market.market.compose.components.dialog.MarketDialog
 import br.com.market.market.compose.components.filter.SimpleFilter
 import br.com.market.market.compose.components.list.LazyVerticalListWithEmptyState
 import br.com.market.market.compose.components.topappbar.SimpleMarketTopAppBar
@@ -85,18 +86,14 @@ fun ReportSearchScreen(
             val (listRef, searchBarRef, searchDividerRef) = createRefs()
             var searchActive by remember { mutableStateOf(false) }
             var openBottomSheet by rememberSaveable { mutableStateOf(false) }
-            var showDialogDeleteFile by remember { mutableStateOf(false) }
 
-            DialogMessage(
-                title = stringResource(R.string.warning_dialog_title),
-                show = showDialogDeleteFile,
-                onDismissRequest = { showDialogDeleteFile = false },
-                message = stringResource(R.string.report_search_screen_delete_report_message),
-                onDialogOkClick = {
-                    FileUtils.deleteFile(state.reportClicked?.path!!)
-                    showDialogDeleteFile = false
-                    onSimpleFilterChange("")
-                }
+            MarketDialog(
+                type = EnumDialogType.CONFIRMATION,
+                show = state.showDialog,
+                onDismissRequest = { state.onHideDialog() },
+                message = state.dialogMessage,
+                onConfirm = state.onConfirm,
+                onCancel = state.onCancel
             )
 
             SimpleFilter(
@@ -168,7 +165,16 @@ fun ReportSearchScreen(
                             }
 
                             EnumReportBottomSheetOptions.DELETE -> {
-                                showDialogDeleteFile = true
+                                state.onShowDialog?.onShow(
+                                    type = EnumDialogType.CONFIRMATION,
+                                    message = context.getString(R.string.report_search_screen_delete_report_message),
+                                    onConfirm = {
+                                        FileUtils.deleteFile(state.reportClicked?.path!!)
+                                        onSimpleFilterChange("")
+                                        state.onHideDialog()
+                                    },
+                                    onCancel = { state.onHideDialog() }
+                                )
                             }
                         }
                     }

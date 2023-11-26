@@ -35,6 +35,7 @@ import br.com.market.commerce.ui.state.RegisterClientUiState
 import br.com.market.commerce.ui.viewmodel.RegisterClientViewModel
 import br.com.market.commerce.util.CEPUtil
 import br.com.market.commerce.util.CPFUtil
+import br.com.market.core.enums.EnumDialogType
 import br.com.market.core.inputs.arguments.InputArgs
 import br.com.market.core.inputs.arguments.InputNumberArgs
 import br.com.market.core.inputs.arguments.InputPasswordArgs
@@ -46,7 +47,7 @@ import br.com.market.market.compose.components.FormField
 import br.com.market.market.compose.components.MarketBottomAppBar
 import br.com.market.market.compose.components.button.fab.FloatingActionButtonSave
 import br.com.market.market.compose.components.button.icons.IconButtonVisibility
-import br.com.market.market.compose.components.dialog.DialogMessage
+import br.com.market.market.compose.components.dialog.MarketDialog
 import br.com.market.market.compose.components.loading.MarketLinearProgressIndicator
 import br.com.market.market.compose.components.topappbar.SimpleMarketTopAppBar
 import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
@@ -110,7 +111,12 @@ fun RegisterClientScreen(
                                             snackbarHostState.showSnackbar(context.getString(R.string.register_client_screen_message_success_save))
                                         }
                                     } else {
-                                        state.onToggleMessageDialog(response.error!!)
+                                        state.onShowDialog?.onShow(
+                                            type = EnumDialogType.ERROR,
+                                            message = response.error ?: "",
+                                            onConfirm = {},
+                                            onCancel = {}
+                                        )
                                     }
                                 }
                             }
@@ -160,11 +166,11 @@ fun RegisterClientScreen(
                     publicPlaceRef, numberRef, complementRef
                 ) = createRefs()
 
-                DialogMessage(
-                    title = stringResource(br.com.market.core.R.string.error_dialog_title),
-                    show = state.showDialogMessage,
-                    onDismissRequest = { state.onToggleMessageDialog("") },
-                    message = state.serverMessage
+                MarketDialog(
+                    type = state.dialogType,
+                    show = state.showDialog,
+                    onDismissRequest = { state.onHideDialog() },
+                    message = state.dialogMessage
                 )
 
                 FormField(
@@ -298,7 +304,12 @@ fun RegisterClientScreen(
                             state.cep.onChange(CEPUtil.format(it))
                             onSearchAddressInformationByCep { response ->
                                 if (!response.success) {
-                                    state.onToggleMessageDialog(response.error!!)
+                                    state.onShowDialog?.onShow(
+                                        type = EnumDialogType.ERROR,
+                                        message = response.error ?: "",
+                                        onConfirm = {},
+                                        onCancel = {}
+                                    )
                                 }
 
                                 state.onToggleLoading()
