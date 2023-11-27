@@ -6,13 +6,10 @@ import androidx.paging.Pager
 import br.com.market.core.filter.BaseSearchFilter
 import br.com.market.core.pagination.PagingConfigUtils
 import br.com.market.domain.CategoryDomain
-import br.com.market.localdataaccess.dao.AddressDAO
 import br.com.market.localdataaccess.dao.CategoryDAO
-import br.com.market.localdataaccess.dao.CompanyDAO
-import br.com.market.localdataaccess.dao.MarketDAO
 import br.com.market.localdataaccess.dao.remotekeys.CategoryRemoteKeysDAO
 import br.com.market.localdataaccess.database.AppDatabase
-import br.com.market.market.common.mediator.lov.CategoryLovRemoteMediator
+import br.com.market.market.common.mediator.CategoryRemoteMediator
 import br.com.market.market.common.repository.BaseRepository
 import br.com.market.market.common.repository.IPagedRemoteSearchRepository
 import br.com.market.servicedataaccess.webclients.CategoryWebClient
@@ -21,9 +18,6 @@ import javax.inject.Inject
 class CategoryLovRepository @Inject constructor(
     private val appDatabase: AppDatabase,
     private val categoryRemoteKeysDAO: CategoryRemoteKeysDAO,
-    private val marketDAO: MarketDAO,
-    private val addressDAO: AddressDAO,
-    private val companyDAO: CompanyDAO,
     private val categoryDAO: CategoryDAO,
     private val categoryWebClient: CategoryWebClient
 ) : BaseRepository(), IPagedRemoteSearchRepository<BaseSearchFilter, CategoryDomain> {
@@ -33,10 +27,14 @@ class CategoryLovRepository @Inject constructor(
         return Pager(
             config = PagingConfigUtils.customConfig(20),
             pagingSourceFactory = { categoryDAO.findCategoriesLov(filters) },
-            remoteMediator = CategoryLovRemoteMediator(
-                appDatabase, context, categoryRemoteKeysDAO, marketDAO, addressDAO,
-                companyDAO, categoryDAO, categoryWebClient, filters.marketId!!,
-                filters.simpleFilter
+            remoteMediator = CategoryRemoteMediator(
+                database = appDatabase,
+                context = context,
+                remoteKeysDAO = categoryRemoteKeysDAO,
+                categoryDAO = categoryDAO,
+                categoryWebClient = categoryWebClient,
+                marketId = filters.marketId!!,
+                simpleFilter = filters.simpleFilter
             )
         )
     }

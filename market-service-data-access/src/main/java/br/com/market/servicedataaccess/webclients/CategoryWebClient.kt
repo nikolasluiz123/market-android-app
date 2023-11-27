@@ -2,7 +2,6 @@ package br.com.market.servicedataaccess.webclients
 
 import android.content.Context
 import br.com.market.models.Category
-import br.com.market.sdo.CategoryReadSDO
 import br.com.market.sdo.CategorySDO
 import br.com.market.servicedataaccess.responses.extensions.getPersistenceResponseBody
 import br.com.market.servicedataaccess.responses.extensions.getReadResponseBody
@@ -70,8 +69,8 @@ class CategoryWebClient @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun getListCategoryReadSDO(simpleFilter: String?, marketId: Long, limit: Int, offset: Int): ReadResponse<CategoryReadSDO> {
-        return service.getListCategoryReadSDO(getToken(), simpleFilter, marketId, limit, offset).getReadResponseBody()
+    suspend fun getListCategory(simpleFilter: String?, marketId: Long, limit: Int, offset: Int): ReadResponse<CategorySDO> {
+        return service.getListCategory(getToken(), simpleFilter, marketId, limit, offset).getReadResponseBody()
     }
 
     suspend fun findCategoryByLocalId(id: String): SingleValueResponse<CategorySDO> {

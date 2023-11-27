@@ -6,12 +6,8 @@ import androidx.paging.Pager
 import br.com.market.core.filter.BaseSearchFilter
 import br.com.market.core.pagination.PagingConfigUtils
 import br.com.market.domain.CategoryDomain
-import br.com.market.localdataaccess.dao.AddressDAO
 import br.com.market.localdataaccess.dao.CategoryDAO
-import br.com.market.localdataaccess.dao.CompanyDAO
-import br.com.market.localdataaccess.dao.DeviceDAO
 import br.com.market.localdataaccess.dao.MarketDAO
-import br.com.market.localdataaccess.dao.UserDAO
 import br.com.market.localdataaccess.dao.remotekeys.CategoryRemoteKeysDAO
 import br.com.market.localdataaccess.database.AppDatabase
 import br.com.market.market.common.mediator.CategoryRemoteMediator
@@ -39,12 +35,8 @@ class CategoryRepository @Inject constructor(
     private val appDatabase: AppDatabase,
     private val categoryRemoteKeysDAO: CategoryRemoteKeysDAO,
     private val marketDAO: MarketDAO,
-    private val addressDAO: AddressDAO,
-    private val companyDAO: CompanyDAO,
     private val categoryDAO: CategoryDAO,
     private val categoryWebClient: CategoryWebClient,
-    private val deviceDAO: DeviceDAO,
-    private val userDAO: UserDAO,
 ) : BaseRepository(), IPagedRemoteSearchRepository<BaseSearchFilter, CategoryDomain> {
 
     @OptIn(ExperimentalPagingApi::class)
@@ -53,9 +45,13 @@ class CategoryRepository @Inject constructor(
             config = PagingConfigUtils.customConfig(20),
             pagingSourceFactory = { categoryDAO.findCategories(filters) },
             remoteMediator = CategoryRemoteMediator(
-                appDatabase, context, categoryRemoteKeysDAO, marketDAO, addressDAO,
-                companyDAO, categoryDAO, deviceDAO, userDAO, categoryWebClient,
-                filters.marketId!!, filters.simpleFilter
+                database = appDatabase,
+                context = context,
+                remoteKeysDAO = categoryRemoteKeysDAO,
+                categoryDAO = categoryDAO,
+                categoryWebClient = categoryWebClient,
+                marketId = filters.marketId!!,
+                simpleFilter = filters.simpleFilter
             )
         )
     }

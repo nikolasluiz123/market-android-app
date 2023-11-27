@@ -1,6 +1,5 @@
 package br.com.market.servicedataaccess.services
 
-import br.com.market.sdo.CategoryReadSDO
 import br.com.market.sdo.CategorySDO
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
 import br.com.market.servicedataaccess.responses.types.ReadResponse
@@ -18,13 +17,13 @@ interface ICategoryService {
     suspend fun toggleActive(@Header("Authorization") token: String, @Path("id") id: String): Response<PersistenceResponse>
 
     @GET("category")
-    suspend fun getListCategoryReadSDO(
+    suspend fun getListCategory(
         @Header("Authorization") token: String,
         @Query("simpleFilter") simpleFilter: String?,
         @Query("marketId") marketId: Long,
         @Query("limit") limit: Int,
         @Query("offset") offset: Int
-    ): Response<ReadResponse<CategoryReadSDO>>
+    ): Response<ReadResponse<CategorySDO>>
 
     @GET("category/{id}")
     suspend fun findCategoryByLocalId(@Header("Authorization") token: String, @Path("id") id: String): Response<SingleValueResponse<CategorySDO>>
