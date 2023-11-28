@@ -12,8 +12,6 @@ import br.com.market.market.common.R
 import br.com.market.models.base.BaseRemoteKeyModel
 import br.com.market.sdo.base.BaseSDO
 import br.com.market.servicedataaccess.responses.types.ReadResponse
-import java.net.ConnectException
-import java.net.SocketTimeoutException
 import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalPagingApi::class)
@@ -93,19 +91,12 @@ abstract class BaseRemoteMediator<DOMAIN : BaseDomain, KEY : BaseRemoteKeyModel,
 
                     onSaveDataCache(response, remoteKeys)
                 }
+
+                MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
+            } else {
+                MediatorResult.Error(Exception(response.error))
             }
 
-            MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
-        } catch (e: ConnectException) {
-            val ex = Exception(context.getString(br.com.market.core.R.string.message_connect_exception), e)
-            ex.printStackTrace()
-            
-            MediatorResult.Error(ex)
-        } catch (e: SocketTimeoutException) {
-            val ex = Exception(context.getString(br.com.market.core.R.string.message_socket_timeout_exception), e)
-            ex.printStackTrace()
-
-            MediatorResult.Error(ex)
         } catch (e: Exception) {
             val ex = Exception(context.getString(R.string.message_load_data_exception), e)
             ex.printStackTrace()

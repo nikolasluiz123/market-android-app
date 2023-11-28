@@ -14,10 +14,12 @@ import br.com.market.storage.ui.navigation.category.argumentCategoryId
 import br.com.market.storage.ui.states.category.CategoryUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -58,19 +60,33 @@ class CategoryViewModel @Inject constructor(
             )
         }
 
+        loadCategory {
+            _uiState.value = _uiState.value.copy(internalErrorMessage = it)
+        }
+    }
+
+    private fun loadCategory(onError: (String) -> Unit) {
         categoryId?.navParamToString()?.let { categoryId ->
-
             viewModelScope.launch {
-                val categoryDomain = categoryRepository.findById(categoryId)
-                val brands = brandRepository.findBrands(categoryId)
+                _uiState.value.onToggleLoading()
 
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        categoryDomain = categoryDomain,
-                        nameField = _uiState.value.nameField.copy(value = categoryDomain.name),
-                        brands = brands
-                    )
+                val response = categoryRepository.findById(categoryId)
+
+                if (response.success) {
+                    val brands = brandRepository.findBrands(categoryId)
+
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            categoryDomain = response.value,
+                            nameField = _uiState.value.nameField.copy(value = response.value?.name!!),
+                            brands = brands
+                        )
+                    }
+                } else {
+                    withContext(Main) { onError(response.error ?: "") }
                 }
+
+                _uiState.value.onToggleLoading()
             }
         }
     }

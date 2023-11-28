@@ -25,10 +25,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import br.com.market.core.callbacks.ISaveCallback
+import br.com.market.core.callbacks.ITextInputNavigationCallback
 import br.com.market.core.enums.EnumDialogType
 import br.com.market.core.inputs.arguments.InputArgs
-import br.com.market.core.interfaces.ISaveCallback
-import br.com.market.core.interfaces.ITextInputNavigationCallback
 import br.com.market.core.theme.GREY_900
 import br.com.market.core.theme.MarketTheme
 import br.com.market.market.compose.components.FormField

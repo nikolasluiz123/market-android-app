@@ -2,8 +2,8 @@ package br.com.market.storage.ui.states.product
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import br.com.market.core.callbacks.IShowDialogCallback
 import br.com.market.core.enums.EnumDialogType
-import br.com.market.core.interfaces.IShowDialog
 import br.com.market.core.ui.states.IDialogUIState
 import br.com.market.core.ui.states.IValidationUIState
 import br.com.market.domain.BrandDomain
@@ -38,7 +38,8 @@ data class ProductUIState(
     override val dialogMessage: String = "",
     override val showDialog: Boolean = false,
     override val onHideDialog: () -> Unit = { },
-    override val onShowDialog: IShowDialog? = null,
+    override val onShowDialog: IShowDialogCallback? = null,
     override val onConfirm: () -> Unit = { },
-    override val onCancel: () -> Unit = { }
+    override val onCancel: () -> Unit = { },
+    override var internalErrorMessage: String = ""
 ): IValidationUIState, IDialogUIState

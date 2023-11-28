@@ -8,20 +8,22 @@ import androidx.paging.PagingData
 import br.com.market.core.extensions.navParamToString
 import br.com.market.domain.ProductImageReadDomain
 import br.com.market.storage.R
+import br.com.market.storage.repository.BrandRepository
 import br.com.market.storage.repository.CategoryRepository
 import br.com.market.storage.repository.ProductRepository
-import br.com.market.storage.repository.BrandRepository
 import br.com.market.storage.ui.navigation.brand.argumentBrandId
 import br.com.market.storage.ui.navigation.category.argumentCategoryId
 import br.com.market.storage.ui.states.brand.BrandUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -66,20 +68,24 @@ class BrandViewModel @Inject constructor(
             )
         }
 
-        loadCategoryDomain()
+        loadCategory {  }
         loadBrandDomain()
         loadCategoryBrandActive()
     }
 
-    private fun loadCategoryDomain() {
-        categoryId?.navParamToString()?.let { id ->
+    private fun loadCategory(onError: (String) -> Unit) {
+        categoryId?.navParamToString()?.let { categoryId ->
             viewModelScope.launch {
-                val categoryDomain = categoryRepository.findById(id)
+                val response = categoryRepository.findById(categoryId)
 
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        categoryDomain = categoryDomain
-                    )
+                if (response.success) {
+                    _uiState.update { currentState ->
+                        currentState.copy(categoryDomain = response.value)
+                    }
+                } else {
+                    withContext(Main) {
+                        onError(response.error ?: "")
+                    }
                 }
             }
         }

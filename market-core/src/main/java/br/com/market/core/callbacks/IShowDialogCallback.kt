@@ -1,7 +1,7 @@
-package br.com.market.core.interfaces
+package br.com.market.core.callbacks
 
 import br.com.market.core.enums.EnumDialogType
 
-fun interface IShowDialog {
+fun interface IShowDialogCallback {
     fun onShow(type: EnumDialogType, message: String, onConfirm: () -> Unit, onCancel: () -> Unit)
 }

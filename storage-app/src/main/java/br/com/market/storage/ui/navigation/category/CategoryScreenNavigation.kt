@@ -5,7 +5,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import br.com.market.core.interfaces.ITextInputNavigationCallback
+import br.com.market.core.callbacks.ITextInputNavigationCallback
 import br.com.market.storage.ui.screens.category.CategoryScreen
 import br.com.market.storage.ui.viewmodels.category.CategoryViewModel
 

@@ -1,4 +1,4 @@
-package br.com.market.core.interfaces
+package br.com.market.core.callbacks
 
 import br.com.market.core.inputs.arguments.InputArgs
 

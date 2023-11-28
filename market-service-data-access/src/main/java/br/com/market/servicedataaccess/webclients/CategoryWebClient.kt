@@ -70,10 +70,18 @@ class CategoryWebClient @Inject constructor(
      * @author Nikolas Luiz Schmitt
      */
     suspend fun getListCategory(simpleFilter: String?, marketId: Long, limit: Int, offset: Int): ReadResponse<CategorySDO> {
-        return service.getListCategory(getToken(), simpleFilter, marketId, limit, offset).getReadResponseBody()
+        return readServiceErrorHandlingBlock(
+            codeBlock = {
+                service.getListCategory(getToken(), simpleFilter, marketId, limit, offset).getReadResponseBody()
+            }
+        )
     }
 
     suspend fun findCategoryByLocalId(id: String): SingleValueResponse<CategorySDO> {
-        return service.findCategoryByLocalId(getToken(), id).getSingleValueResponseBody()
+        return singleValueServiceErrorHandlingBlock(
+            codeBlock = {
+                service.findCategoryByLocalId(getToken(), id).getSingleValueResponseBody()
+            }
+        )
     }
 }

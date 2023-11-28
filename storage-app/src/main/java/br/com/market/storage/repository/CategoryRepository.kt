@@ -123,9 +123,30 @@ class CategoryRepository @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun findById(categoryId: String): CategoryDomain {
-        val category = categoryDAO.findById(categoryId)
-        return CategoryDomain(id = category.id, name = category.name!!, active = category.active)
+    suspend fun findById(categoryId: String): SingleValueResponse<CategoryDomain> {
+        val response = categoryWebClient.findCategoryByLocalId(categoryId)
+
+        if (response.success) {
+            val category = response.value!!.run {
+                Category(
+                    id = localId,
+                    name = name,
+                    synchronized = true,
+                    active = active,
+                    marketId = marketId
+                )
+            }
+
+            categoryDAO.save(category)
+
+            return SingleValueResponse(
+                code = response.code,
+                value = CategoryDomain(id = category.id, name = category.name!!, active = category.active),
+                success = true
+            )
+        }
+
+        return SingleValueResponse(code = response.code, error = response.error)
     }
 
     /**

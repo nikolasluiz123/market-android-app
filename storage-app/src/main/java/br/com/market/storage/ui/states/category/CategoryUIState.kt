@@ -1,8 +1,8 @@
 package br.com.market.storage.ui.states.category
 
 import androidx.paging.PagingData
+import br.com.market.core.callbacks.IShowDialogCallback
 import br.com.market.core.enums.EnumDialogType
-import br.com.market.core.interfaces.IShowDialog
 import br.com.market.core.ui.states.Field
 import br.com.market.core.ui.states.IDialogUIState
 import br.com.market.core.ui.states.ILoadingUIState
@@ -16,6 +16,7 @@ data class CategoryUIState(
     var categoryDomain: CategoryDomain? = null,
     val nameField: Field = Field(),
     var brands: Flow<PagingData<BrandDomain>> = emptyFlow(),
+    override var internalErrorMessage: String = "",
     override val onValidate: () -> Boolean = { false },
     override val dialogType: EnumDialogType = EnumDialogType.ERROR,
     override val dialogMessage: String = "",
@@ -23,7 +24,7 @@ data class CategoryUIState(
     override val showLoading: Boolean = false,
     override val onHideDialog: () -> Unit = { },
     override val onToggleLoading: () -> Unit = { },
-    override val onShowDialog: IShowDialog? = null,
+    override val onShowDialog: IShowDialogCallback? = null,
     override val onConfirm: () -> Unit = { },
     override val onCancel: () -> Unit = { }
 ) : IValidationUIState, IDialogUIState, ILoadingUIState

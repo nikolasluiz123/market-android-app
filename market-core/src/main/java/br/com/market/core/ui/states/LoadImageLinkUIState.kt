@@ -1,7 +1,7 @@
 package br.com.market.core.ui.states
 
+import br.com.market.core.callbacks.IShowDialogCallback
 import br.com.market.core.enums.EnumDialogType
-import br.com.market.core.interfaces.IShowDialog
 
 data class LoadImageLinkUIState(
     val link: String = "",
@@ -13,8 +13,9 @@ data class LoadImageLinkUIState(
     override val onToggleLoading: () -> Unit = { },
     override val onValidate: () -> Boolean = { false },
     override val dialogType: EnumDialogType = EnumDialogType.ERROR,
-    override val onShowDialog: IShowDialog? = null,
+    override val onShowDialog: IShowDialogCallback? = null,
     override val onHideDialog: () -> Unit = { },
     override val onConfirm: () -> Unit = { },
-    override val onCancel: () -> Unit = { }
+    override val onCancel: () -> Unit = { },
+    override var internalErrorMessage: String = ""
 ) : IValidationUIState, ILoadingUIState, IDialogUIState
