@@ -63,7 +63,7 @@ fun CategoryScreen(
         onBackClick = onBackClick,
         onFabAddBrandClick = onFabAddBrandClick,
         onBrandItemClick = onBrandItemClick,
-        onSimpleFilterChange = viewModel::updateList,
+        onSimpleFilterChange = viewModel::onSimpleFilterChange,
         textInputCallback = textInputCallback
     )
 }

@@ -1,7 +1,7 @@
 package br.com.market.commerce.ui.state
 
-import br.com.market.core.enums.EnumDialogType
 import br.com.market.core.callbacks.IShowDialogCallback
+import br.com.market.core.enums.EnumDialogType
 import br.com.market.core.ui.states.Field
 import br.com.market.core.ui.states.IDialogUIState
 import br.com.market.core.ui.states.ILoadingUIState
@@ -27,5 +27,6 @@ data class RegisterClientUiState(
     override val onValidate: () -> Boolean = { false },
     override val onShowDialog: IShowDialogCallback? = null,
     override val onConfirm: () -> Unit = { },
-    override val onCancel: () -> Unit = { }
+    override val onCancel: () -> Unit = { },
+    override var internalErrorMessage: String = ""
 ) : IValidationUIState, ILoadingUIState, IDialogUIState

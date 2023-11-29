@@ -3,14 +3,11 @@ package br.com.market.servicedataaccess.webclients
 import android.content.Context
 import br.com.market.models.Brand
 import br.com.market.models.CategoryBrand
-import br.com.market.sdo.BrandBodySDO
-import br.com.market.sdo.BrandReadSDO
+import br.com.market.sdo.BrandAndReferencesSDO
 import br.com.market.sdo.BrandSDO
 import br.com.market.sdo.CategoryBrandSDO
 import br.com.market.servicedataaccess.responses.extensions.getPersistenceResponseBody
 import br.com.market.servicedataaccess.responses.extensions.getReadResponseBody
-import br.com.market.servicedataaccess.responses.extensions.getResponseBody
-import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
 import br.com.market.servicedataaccess.responses.types.ReadResponse
 import br.com.market.servicedataaccess.services.IBrandService
@@ -56,7 +53,7 @@ class BrandWebClient @Inject constructor(
                     marketId = categoryBrand.marketId
                 )
 
-                service.save(getToken(), BrandBodySDO(brandSDO, categoryBrandSDO)).getPersistenceResponseBody()
+                service.save(getToken(), BrandAndReferencesSDO(brandSDO, categoryBrandSDO)).getPersistenceResponseBody()
             }
         )
     }
@@ -84,120 +81,14 @@ class BrandWebClient @Inject constructor(
         )
     }
 
-    /**
-     * Função para enviar o que está presenta apenas na base local do dispositivo
-     * para a base remota.
-     *
-     * @param brands Marcas que deseja enviar
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-    suspend fun sync(brands: List<Brand>, categoryBrands: List<CategoryBrand>): MarketServiceResponse {
-        return serviceErrorHandlingBlock(
-            codeBlock = {
-                val brandSDOs = brands.map {
-                    BrandSDO(
-                        localId = it.id,
-                        name = it.name,
-                        active = it.active,
-                        marketId = it.marketId
-                    )
-                }
-
-                val categoryBrandSDOs = categoryBrands.map {
-                    CategoryBrandSDO(
-                        localId = it.id,
-                        localCategoryId = it.categoryId!!,
-                        localBrandId = it.brandId!!,
-                        active = it.active,
-                        marketId = it.marketId
-                    )
-                }
-
-                val syncList = mutableListOf<BrandBodySDO>()
-
-                for (brandSDO in brandSDOs) {
-                    for (categoryBrandSDO in categoryBrandSDOs) {
-                        if (categoryBrandSDO.localBrandId == brandSDO.localId) {
-                            syncList.add(BrandBodySDO(brandSDO, categoryBrandSDO))
-                            break
-                        }
-                    }
-                }
-
-                service.sync(getToken(), syncList).getResponseBody()
-            }
-        )
-    }
-
-    /**
-     * Função que busca todos as marcas da base remota
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-//    suspend fun findBrands(marketId: Long, limit: Int? = null, offset: Int? = null): ReadResponse<Brand> {
-//        return readServiceErrorHandlingBlock(
-//            codeBlock = {
-//                val response = service.findBrandSDOs(
-//                    token = getToken(),
-//                    marketId = marketId,
-//                    limit = limit,
-//                    offset = offset
-//                ).getReadResponseBody()
-//
-//                val brands = response.values.map {
-//                    Brand(
-//                        id = it.localId,
-//                        name = it.name,
-//                        synchronized = true,
-//                        active = it.active,
-//                        marketId = it.marketId
-//                    )
-//                }
-//
-//                ReadResponse(values = brands, code = response.code, success = response.success, error = response.error)
-//            }
-//        )
-//    }
-
-    /**
-     * Função que busca todos as categoria marca da base remota
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-//    suspend fun findCategoryBrands(marketId: Long, limit: Int? = null, offset: Int? = null): ReadResponse<CategoryBrand> {
-//        return readServiceErrorHandlingBlock(
-//            codeBlock = {
-//                val response = service.findCategoryBrandSDOs(
-//                    token = getToken(),
-//                    marketId = marketId,
-//                    limit = limit,
-//                    offset = offset
-//                ).getReadResponseBody()
-//
-//                val brands = response.values.map {
-//                    CategoryBrand(
-//                        id = it.localId,
-//                        categoryId = it.localCategoryId,
-//                        brandId = it.localBrandId,
-//                        synchronized = true,
-//                        active = it.active,
-//                        marketId = it.marketId
-//                    )
-//                }
-//
-//                ReadResponse(values = brands, code = response.code, success = response.success, error = response.error)
-//            }
-//        )
-//    }
-
-    suspend fun getListBrandReadSDO(simpleFilter: String?, marketId: Long, limit: Int, offset: Int): ReadResponse<BrandReadSDO> {
+    suspend fun getListBrand(simpleFilter: String?, marketId: Long, categoryLocalId: String?, limit: Int, offset: Int): ReadResponse<BrandAndReferencesSDO> {
         return readServiceErrorHandlingBlock(
             codeBlock = {
-                service.getListLovBrandReadDTO(
+                service.getListBrand(
                     token = getToken(),
                     simpleFilter = simpleFilter,
                     marketId = marketId,
+                    categoryLocalId = categoryLocalId,
                     limit = limit,
                     offset = offset
                 ).getReadResponseBody()

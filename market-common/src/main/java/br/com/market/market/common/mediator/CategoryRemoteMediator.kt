@@ -2,6 +2,7 @@ package br.com.market.market.common.mediator
 
 import android.content.Context
 import br.com.market.domain.CategoryDomain
+import br.com.market.localdataaccess.dao.BrandDAO
 import br.com.market.localdataaccess.dao.CategoryDAO
 import br.com.market.localdataaccess.dao.remotekeys.CategoryRemoteKeysDAO
 import br.com.market.localdataaccess.database.AppDatabase
@@ -16,6 +17,7 @@ class CategoryRemoteMediator(
     context: Context,
     private val remoteKeysDAO: CategoryRemoteKeysDAO,
     private val categoryDAO: CategoryDAO,
+    private val brandDAO: BrandDAO,
     private val categoryWebClient: CategoryWebClient,
     private val marketId: Long,
     private val simpleFilter: String?
@@ -27,6 +29,7 @@ class CategoryRemoteMediator(
 
     override suspend fun onLoadDataRefreshType() {
         remoteKeysDAO.clearRemoteKeys()
+        brandDAO.clearAll()
         categoryDAO.clearAll()
     }
 

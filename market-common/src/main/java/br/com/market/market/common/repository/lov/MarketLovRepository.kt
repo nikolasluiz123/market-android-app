@@ -3,7 +3,7 @@ package br.com.market.market.common.repository.lov
 import android.content.Context
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
-import br.com.market.core.filter.BaseSearchFilter
+import br.com.market.core.filter.base.BaseSearchFilter
 import br.com.market.core.pagination.PagingConfigUtils
 import br.com.market.domain.MarketLovDomain
 import br.com.market.localdataaccess.dao.AddressDAO

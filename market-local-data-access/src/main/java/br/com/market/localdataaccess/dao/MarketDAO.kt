@@ -8,7 +8,7 @@ import androidx.room.Query
 import androidx.room.RawQuery
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
-import br.com.market.core.filter.BaseSearchFilter
+import br.com.market.core.filter.base.BaseSearchFilter
 import br.com.market.domain.MarketLovDomain
 import br.com.market.models.Brand
 import br.com.market.models.Market

@@ -1,4 +1,4 @@
-package br.com.market.storage.repository
+package br.com.market.market.common.repository
 
 import br.com.market.localdataaccess.dao.AddressDAO
 import br.com.market.localdataaccess.dao.MarketDAO

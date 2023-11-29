@@ -1,21 +1,23 @@
 package br.com.market.storage.repository
 
+import android.content.Context
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
-import androidx.paging.PagingData
+import br.com.market.core.filter.BrandFilter
 import br.com.market.core.pagination.PagingConfigUtils
 import br.com.market.domain.BrandDomain
 import br.com.market.localdataaccess.dao.BrandDAO
 import br.com.market.localdataaccess.dao.MarketDAO
+import br.com.market.localdataaccess.dao.remotekeys.BrandRemoteKeysDAO
+import br.com.market.localdataaccess.database.AppDatabase
+import br.com.market.market.common.mediator.BrandRemoteMediator
 import br.com.market.market.common.repository.BaseRepository
+import br.com.market.market.common.repository.IPagedRemoteSearchRepository
 import br.com.market.models.Brand
 import br.com.market.models.CategoryBrand
-import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
 import br.com.market.servicedataaccess.webclients.BrandWebClient
-import br.com.market.storage.pagination.BrandPagingSource
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import java.net.HttpURLConnection
 import javax.inject.Inject
 
 /**
@@ -28,20 +30,29 @@ import javax.inject.Inject
  * @author Nikolas Luiz Schmitt
  */
 class BrandRepository @Inject constructor(
+    private val appDatabase: AppDatabase,
+    private val brandRemoteKeysDAO: BrandRemoteKeysDAO,
     private val brandDAO: BrandDAO,
     private val marketDAO: MarketDAO,
     private val webClient: BrandWebClient
-) : BaseRepository() {
+) : BaseRepository(), IPagedRemoteSearchRepository<BrandFilter, BrandDomain> {
 
-    /**
-     * Função para obter um fluxo de dados paginados que possa ser
-     * fornecido a tela de listagem de marcas
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-    fun findBrands(categoryId: String? = null, brandName: String? = null): Flow<PagingData<BrandDomain>> {
-        return Pager(config = PagingConfigUtils.defaultPagingConfig(),
-            pagingSourceFactory = { BrandPagingSource(brandDAO, categoryId, brandName) }).flow
+    @OptIn(ExperimentalPagingApi::class)
+    override fun getConfiguredPager(context: Context, filters: BrandFilter): Pager<Int, BrandDomain> {
+        return Pager(
+            config = PagingConfigUtils.customConfig(20),
+            pagingSourceFactory = { brandDAO.findBrands(filters) },
+            remoteMediator = BrandRemoteMediator(
+                database = appDatabase,
+                context = context,
+                remoteKeysDAO = brandRemoteKeysDAO,
+                marketId = filters.marketId!!,
+                simpleFilter = filters.simpleFilter,
+                brandDAO = brandDAO,
+                brandWebClient = webClient,
+                categoryId = filters.categoryId
+            )
+        )
     }
 
     /**
@@ -131,62 +142,6 @@ class BrandRepository @Inject constructor(
         brandDAO.toggleActive(categoryBrand)
 
         return response
-    }
-
-    /**
-     * Função para sincronizar os dados locais e remotos.
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-    suspend fun sync(): MarketServiceResponse {
-        val response = sendBrandsToRemoteDB()
-        return if (response.success) updateBrandsOfLocalDB() else response
-    }
-
-    /**
-     * Função para enviar as marcas para o banco remoto
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-    private suspend fun sendBrandsToRemoteDB(): MarketServiceResponse {
-        val brandsNotSynchronized = brandDAO.findBrandsNotSynchronized()
-        val categoryBrandsNotSynchronized = brandDAO.findCategoryBrandsNotSynchronized()
-        val response = webClient.sync(brandsNotSynchronized, categoryBrandsNotSynchronized)
-
-        if (response.success) {
-            val brandsSynchronized = brandsNotSynchronized.map { it.copy(synchronized = true) }
-            brandDAO.saveBrandsAndReferences(brandsSynchronized, categoryBrandsNotSynchronized)
-        }
-
-        return response
-    }
-
-    /**
-     * Função para buscar as marcas da base remota e cadastrar ou alterar
-     * elas na base local
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-    private suspend fun updateBrandsOfLocalDB(): MarketServiceResponse {
-//        val marketId = marketDAO.findFirst().first()?.id!!
-//
-//        var response = importPagingData(
-//            onWebServiceFind = { limit, offset ->
-//                webClient.findBrands(marketId = marketId, limit = limit, offset = offset)
-//            },
-//            onPersistData = brandDAO::saveBrands
-//        )
-//
-//        if (response.success) {
-//            response = importPagingData(
-//                onWebServiceFind = { limit, offset ->
-//                    webClient.findCategoryBrands(marketId = marketId, limit = limit, offset = offset)
-//                },
-//                onPersistData = brandDAO::saveCategoryBrands
-//            )
-//        }
-
-        return MarketServiceResponse(code = HttpURLConnection.HTTP_OK, success = true)
     }
 
 }

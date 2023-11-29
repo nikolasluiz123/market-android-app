@@ -4,7 +4,7 @@ import androidx.paging.PagingSource
 import androidx.room.*
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
-import br.com.market.core.filter.BaseSearchFilter
+import br.com.market.core.filter.base.BaseSearchFilter
 import br.com.market.domain.CategoryDomain
 import br.com.market.models.Category
 import java.util.*

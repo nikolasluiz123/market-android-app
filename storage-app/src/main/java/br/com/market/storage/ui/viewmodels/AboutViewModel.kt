@@ -9,7 +9,7 @@ import br.com.market.core.preferences.PreferencesKey
 import br.com.market.core.preferences.dataStore
 import br.com.market.storage.repository.CompanyRepository
 import br.com.market.storage.repository.DeviceRepository
-import br.com.market.storage.repository.MarketRepository
+import br.com.market.market.common.repository.MarketRepository
 import br.com.market.storage.ui.navigation.argumentShowBack
 import br.com.market.storage.ui.states.AboutUIState
 import dagger.hilt.android.lifecycle.HiltViewModel

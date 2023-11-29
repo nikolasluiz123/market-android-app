@@ -6,6 +6,8 @@ import br.com.market.localdataaccess.dao.CompanyDAO
 import br.com.market.localdataaccess.dao.DeviceDAO
 import br.com.market.localdataaccess.dao.MarketDAO
 import br.com.market.localdataaccess.dao.UserDAO
+import br.com.market.localdataaccess.dao.remotekeys.BrandRemoteKeysDAO
+import br.com.market.localdataaccess.database.AppDatabase
 import br.com.market.servicedataaccess.webclients.BrandWebClient
 import br.com.market.servicedataaccess.webclients.UserWebClient
 import br.com.market.storage.repository.BrandRepository
@@ -36,10 +38,12 @@ class ViewModelModule {
     @Provides
     @ViewModelScoped
     fun provideBrandRepository(
-        brandWebClient: BrandWebClient,
+        appDatabase: AppDatabase,
+        brandRemoteKeysDAO: BrandRemoteKeysDAO,
         brandDAO: BrandDAO,
-        marketDAO: MarketDAO
-    ): BrandRepository = BrandRepository(brandDAO, marketDAO, brandWebClient)
+        marketDAO: MarketDAO,
+        webClient: BrandWebClient
+    ): BrandRepository = BrandRepository(appDatabase, brandRemoteKeysDAO, brandDAO, marketDAO, webClient)
 
     /**
      * Função para instanciar um UserRepository.

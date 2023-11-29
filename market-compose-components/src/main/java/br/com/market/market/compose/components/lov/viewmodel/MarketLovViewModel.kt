@@ -1,12 +1,11 @@
 package br.com.market.market.compose.components.lov.viewmodel
 
 import android.content.Context
-import androidx.lifecycle.ViewModel
 import androidx.paging.PagingData
-import br.com.market.core.filter.BaseSearchFilter
+import br.com.market.core.filter.base.BaseSearchFilter
 import br.com.market.domain.MarketLovDomain
 import br.com.market.market.common.repository.lov.MarketLovRepository
-import br.com.market.market.common.viewmodel.ISearchViewModel
+import br.com.market.market.common.viewmodel.BaseSearchViewModel
 import br.com.market.market.compose.components.lov.state.MarketLovUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -20,7 +19,7 @@ import javax.inject.Inject
 class MarketLovViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val repository: MarketLovRepository
-) : ViewModel(), ISearchViewModel<MarketLovDomain, BaseSearchFilter> {
+) : BaseSearchViewModel<MarketLovDomain, BaseSearchFilter>() {
 
     private val _uiState: MutableStateFlow<MarketLovUIState> = MutableStateFlow(MarketLovUIState())
     val uiState get() = _uiState.asStateFlow()

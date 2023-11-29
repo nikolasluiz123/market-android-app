@@ -1,8 +1,8 @@
 package br.com.market.commerce.ui.state
 
 import androidx.paging.PagingData
-import br.com.market.core.enums.EnumDialogType
 import br.com.market.core.callbacks.IShowDialogCallback
+import br.com.market.core.enums.EnumDialogType
 import br.com.market.core.ui.states.IDialogUIState
 import br.com.market.core.ui.states.ILoadingUIState
 import br.com.market.domain.ProductImageReadDomain
@@ -19,5 +19,6 @@ data class ProductsUIState(
     override val onHideDialog: () -> Unit = { },
     override val onShowDialog: IShowDialogCallback? = null,
     override val onConfirm: () -> Unit = { },
-    override val onCancel: () -> Unit = { }
+    override val onCancel: () -> Unit = { },
+    override var internalErrorMessage: String = ""
 ) : ILoadingUIState, IDialogUIState

@@ -2,11 +2,15 @@ package br.com.market.storage.ui.viewmodels.category
 
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import br.com.market.core.extensions.navParamToString
+import br.com.market.core.filter.BrandFilter
 import br.com.market.core.ui.states.Field
+import br.com.market.domain.BrandDomain
 import br.com.market.domain.CategoryDomain
+import br.com.market.market.common.repository.MarketRepository
+import br.com.market.market.common.viewmodel.BaseSearchViewModel
 import br.com.market.storage.R
 import br.com.market.storage.repository.BrandRepository
 import br.com.market.storage.repository.CategoryRepository
@@ -15,8 +19,10 @@ import br.com.market.storage.ui.states.category.CategoryUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -27,8 +33,9 @@ class CategoryViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val categoryRepository: CategoryRepository,
     private val brandRepository: BrandRepository,
+    private val marketRepository: MarketRepository,
     savedStateHandle: SavedStateHandle
-) : ViewModel() {
+) : BaseSearchViewModel<BrandDomain, BrandFilter>() {
 
     private val _uiState: MutableStateFlow<CategoryUIState> = MutableStateFlow(CategoryUIState())
     val uiState get() = _uiState.asStateFlow()
@@ -73,13 +80,14 @@ class CategoryViewModel @Inject constructor(
                 val response = categoryRepository.findById(categoryId)
 
                 if (response.success) {
-                    val brands = brandRepository.findBrands(categoryId)
+                    val marketId = marketRepository.findFirst().first()?.id!!
+                    filter = BrandFilter(marketId = marketId, categoryId = categoryId)
 
                     _uiState.update { currentState ->
                         currentState.copy(
                             categoryDomain = response.value,
                             nameField = _uiState.value.nameField.copy(value = response.value?.name!!),
-                            brands = brands
+                            brands = getDataFlow(filter)
                         )
                     }
                 } else {
@@ -142,9 +150,15 @@ class CategoryViewModel @Inject constructor(
         }
     }
 
-    fun updateList(simpleFilterText: String? = null) {
-        _uiState.update { currentState ->
-            currentState.copy(brands = brandRepository.findBrands(currentState.categoryDomain?.id!!, simpleFilterText))
-        }
+    override fun onSimpleFilterChange(value: String?) {
+        filter.simpleFilter = value
+
+        _uiState.value = _uiState.value.copy(
+            brands = getDataFlow(filter)
+        )
+    }
+
+    override fun getDataFlow(filter: BrandFilter): Flow<PagingData<BrandDomain>> {
+        return brandRepository.getConfiguredPager(context, filter).flow
     }
 }

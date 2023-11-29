@@ -3,9 +3,10 @@ package br.com.market.market.common.repository.lov
 import android.content.Context
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
-import br.com.market.core.filter.BaseSearchFilter
+import br.com.market.core.filter.base.BaseSearchFilter
 import br.com.market.core.pagination.PagingConfigUtils
 import br.com.market.domain.CategoryDomain
+import br.com.market.localdataaccess.dao.BrandDAO
 import br.com.market.localdataaccess.dao.CategoryDAO
 import br.com.market.localdataaccess.dao.remotekeys.CategoryRemoteKeysDAO
 import br.com.market.localdataaccess.database.AppDatabase
@@ -19,6 +20,7 @@ class CategoryLovRepository @Inject constructor(
     private val appDatabase: AppDatabase,
     private val categoryRemoteKeysDAO: CategoryRemoteKeysDAO,
     private val categoryDAO: CategoryDAO,
+    private val brandDAO: BrandDAO,
     private val categoryWebClient: CategoryWebClient
 ) : BaseRepository(), IPagedRemoteSearchRepository<BaseSearchFilter, CategoryDomain> {
 
@@ -32,6 +34,7 @@ class CategoryLovRepository @Inject constructor(
                 context = context,
                 remoteKeysDAO = categoryRemoteKeysDAO,
                 categoryDAO = categoryDAO,
+                brandDAO = brandDAO,
                 categoryWebClient = categoryWebClient,
                 marketId = filters.marketId!!,
                 simpleFilter = filters.simpleFilter

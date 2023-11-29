@@ -4,7 +4,8 @@ import androidx.paging.PagingSource
 import androidx.room.*
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
-import br.com.market.core.filter.BaseSearchFilter
+import br.com.market.core.filter.BrandFilter
+import br.com.market.core.filter.base.BaseSearchFilter
 import br.com.market.domain.BrandDomain
 import br.com.market.models.Brand
 import br.com.market.models.CategoryBrand
@@ -26,7 +27,7 @@ abstract class BrandDAO : AbstractBaseDAO() {
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun findBrands(limit: Int, offset: Int, categoryId: String? = null, brandName: String? = null): List<BrandDomain> {
+    fun findBrands(filter: BrandFilter): PagingSource<Int, BrandDomain> {
         val params = mutableListOf<Any>()
 
         val select = StringJoiner("\r\n")
@@ -38,25 +39,20 @@ abstract class BrandDAO : AbstractBaseDAO() {
         val where = StringJoiner("\r\n")
         where.add(" where b.active ")
 
-        if (categoryId != null) {
+        if (filter.categoryId != null) {
             from.add(" inner join categories_brands cb on b.id = cb.brand_id and cb.active ")
             where.add(" and cb.category_id = ? ")
 
-            params.add(categoryId)
+            params.add(filter.categoryId!!)
         }
 
-        if (brandName != null) {
-            where.add(" and b.name like '%' || ? || '%'")
-
-            params.add(brandName)
+        if (!filter.simpleFilter.isNullOrBlank()) {
+            where.add(" and b.name like ? ")
+            params.add("%${filter.simpleFilter}%")
         }
 
         val orderBy = StringJoiner("\r\n")
         orderBy.add(" order by b.name ")
-        orderBy.add(" limit ? offset ? ")
-
-        params.add(limit)
-        params.add(offset)
 
         val sql = StringJoiner("\r\n")
         sql.add(select.toString())
@@ -97,7 +93,7 @@ abstract class BrandDAO : AbstractBaseDAO() {
     }
 
     @RawQuery(observedEntities = [Brand::class])
-    abstract suspend fun executeQueryFindBrands(query: SupportSQLiteQuery): List<BrandDomain>
+    abstract fun executeQueryFindBrands(query: SupportSQLiteQuery): PagingSource<Int, BrandDomain>
 
     @RawQuery(observedEntities = [Brand::class])
     abstract fun executeQueryFindBrandsLov(query: SupportSQLiteQuery): PagingSource<Int, BrandDomain>

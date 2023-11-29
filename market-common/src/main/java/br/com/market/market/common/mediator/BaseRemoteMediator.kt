@@ -15,7 +15,7 @@ import br.com.market.servicedataaccess.responses.types.ReadResponse
 import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalPagingApi::class)
-abstract class BaseRemoteMediator<DOMAIN : BaseDomain, KEY : BaseRemoteKeyModel, SDO : BaseSDO>(
+abstract class BaseRemoteMediator<DOMAIN : BaseDomain, KEY : BaseRemoteKeyModel, SDO : Any>(
     private val context: Context,
     private val database: AppDatabase
 ) : RemoteMediator<Int, DOMAIN>() {
@@ -29,9 +29,17 @@ abstract class BaseRemoteMediator<DOMAIN : BaseDomain, KEY : BaseRemoteKeyModel,
     abstract fun getRemoteKeysFromServiceData(ids: List<String>, prevKey: Int?, nextKey: Int?, currentPage: Int): List<KEY>
 
     abstract suspend fun getCreationTime(): Long?
-    
+
     abstract suspend fun getRemoteKeyByID(id: String): KEY?
-    
+
+    open fun getEntityLocalId(sdo: SDO): String {
+        if (sdo is BaseSDO) {
+            return sdo.localId
+        }
+
+        throw NotImplementedError("O método getEntityLocalId deve ser sobrescrito na classe ${this.javaClass.simpleName} pois o SDO não estende BaseSDO.")
+    }
+
     open fun getCacheTimeout(): Pair<Long, TimeUnit> {
         return Pair(1L, TimeUnit.MINUTES)
     }
@@ -83,7 +91,7 @@ abstract class BaseRemoteMediator<DOMAIN : BaseDomain, KEY : BaseRemoteKeyModel,
                     val nextKey = if (endOfPaginationReached) null else page + 1
 
                     val remoteKeys = getRemoteKeysFromServiceData(
-                        ids = response.values.map { it.localId },
+                        ids = response.values.map { getEntityLocalId(it) },
                         prevKey = prevKey,
                         nextKey = nextKey,
                         currentPage = page
