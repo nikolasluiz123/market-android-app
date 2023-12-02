@@ -34,7 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import br.com.market.core.callbacks.ISaveCallback
+import br.com.market.core.callbacks.IServiceOperationCallback
 import br.com.market.core.callbacks.ITextInputNavigationCallback
 import br.com.market.core.enums.EnumDialogType
 import br.com.market.core.theme.MarketTheme
@@ -58,7 +58,7 @@ fun CategoryScreen(
 
     CategoryScreen(
         state = state,
-        onToggleActive = viewModel::toggleActive,
+        toggleActive = viewModel::toggleActive,
         onSaveCategoryClick = viewModel::saveCategory,
         onBackClick = onBackClick,
         onFabAddBrandClick = onFabAddBrandClick,
@@ -72,8 +72,8 @@ fun CategoryScreen(
 @Composable
 fun CategoryScreen(
     state: CategoryUIState,
-    onToggleActive: () -> Unit = { },
-    onSaveCategoryClick: ISaveCallback? = null,
+    toggleActive: IServiceOperationCallback? = null,
+    onSaveCategoryClick: IServiceOperationCallback? = null,
     onBackClick: () -> Unit = { },
     onFabAddBrandClick: (String) -> Unit = { },
     onBrandItemClick: (String, String) -> Unit = { _: String, _: String -> },
@@ -205,7 +205,7 @@ fun CategoryScreen(
                         CategoryScreenTabCategory(
                             state = state,
                             onUpdateEditMode = { isEditMode = it },
-                            onToggleActive = onToggleActive,
+                            toggleActive = toggleActive,
                             onSaveCategoryClick = onSaveCategoryClick,
                             isEdit = isEditMode,
                             textInputCallback = textInputCallback

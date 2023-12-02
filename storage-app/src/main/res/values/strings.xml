@@ -107,4 +107,9 @@
     <string name="product_screen_required_photo_validation_message">O produto deve conter ao menos uma imagem</string>
     <string name="login_screen_title">Bem-Vindo</string>
     <string name="category_screen_tab_category_inactivate_question">Confirma a inativação da categoria?</string>
+    <string name="brand_screen_tab_brand_title_input_name">Digite o Nome</string>
+    <string name="brand_screen_tab_brand_save_success_message">Marca Salva com Sucesso</string>
+    <string name="brand_screen_tab_brand_reactivate_success_message">Marca Reativada com Sucesso</string>
+    <string name="brand_screen_tab_brand_inactivate_success_message">Marca Inativada com Sucesso</string>
+    <string name="category_screen_tab_category_reactivated_question">Confirma a reativação da Categoria?</string>
 </resources>

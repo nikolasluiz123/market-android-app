@@ -142,10 +142,14 @@ class CategoryViewModel @Inject constructor(
         }
     }
 
-    fun toggleActive() {
+    fun toggleActive(onSuccess: () -> Unit, onError: (message: String) -> Unit) {
         _uiState.value.categoryDomain?.let { domain ->
             viewModelScope.launch {
-                categoryRepository.toggleActive(domain.id!!, domain.active)
+                val response = categoryRepository.toggleActive(domain.id!!)
+
+                withContext(Main) {
+                    if (response.success) onSuccess() else onError(response.error ?: "")
+                }
             }
         }
     }

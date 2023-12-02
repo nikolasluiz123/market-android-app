@@ -8,8 +8,10 @@ import br.com.market.sdo.BrandSDO
 import br.com.market.sdo.CategoryBrandSDO
 import br.com.market.servicedataaccess.responses.extensions.getPersistenceResponseBody
 import br.com.market.servicedataaccess.responses.extensions.getReadResponseBody
+import br.com.market.servicedataaccess.responses.extensions.getSingleValueResponseBody
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
 import br.com.market.servicedataaccess.responses.types.ReadResponse
+import br.com.market.servicedataaccess.responses.types.SingleValueResponse
 import br.com.market.servicedataaccess.services.IBrandService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -92,6 +94,14 @@ class BrandWebClient @Inject constructor(
                     limit = limit,
                     offset = offset
                 ).getReadResponseBody()
+            }
+        )
+    }
+
+    suspend fun findBrandByLocalId(categoryId: String, brandId: String): SingleValueResponse<BrandAndReferencesSDO> {
+        return singleValueServiceErrorHandlingBlock(
+            codeBlock = {
+                service.findBrandByLocalId(getToken(), categoryId, brandId).getSingleValueResponseBody()
             }
         )
     }

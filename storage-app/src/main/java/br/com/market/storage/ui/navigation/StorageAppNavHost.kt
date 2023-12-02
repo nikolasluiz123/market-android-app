@@ -136,7 +136,8 @@ fun StorageAppNavHost(
             onNavToBrandLov = navController::navigateToBrandLov,
             onFabAddProductClick = navController::navigateToProductScreen,
             onProductClick = navController::navigateToProductScreen,
-            onStorageButtonClick = navController::navigateToMovementsSearchScreen
+            onStorageButtonClick = navController::navigateToMovementsSearchScreen,
+            textInputCallback = navController::navigateToInputText
         )
 
         productScreen(

@@ -5,11 +5,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -17,22 +15,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import br.com.market.core.callbacks.ISaveCallback
+import br.com.market.core.callbacks.IServiceOperationCallback
 import br.com.market.core.callbacks.ITextInputNavigationCallback
 import br.com.market.core.enums.EnumDialogType
 import br.com.market.core.inputs.arguments.InputArgs
-import br.com.market.core.theme.GREY_900
 import br.com.market.core.theme.MarketTheme
 import br.com.market.market.compose.components.FormField
 import br.com.market.market.compose.components.MarketBottomAppBar
+import br.com.market.market.compose.components.MarketSnackBar
 import br.com.market.market.compose.components.button.fab.FloatingActionButtonSave
 import br.com.market.market.compose.components.button.icons.IconButtonInactivate
 import br.com.market.market.compose.components.button.icons.IconButtonReactivate
@@ -45,8 +41,8 @@ import kotlinx.coroutines.launch
 fun CategoryScreenTabCategory(
     state: CategoryUIState = CategoryUIState(),
     onUpdateEditMode: (Boolean) -> Unit = { },
-    onToggleActive: () -> Unit = { },
-    onSaveCategoryClick: ISaveCallback? = null,
+    toggleActive: IServiceOperationCallback? = null,
+    onSaveCategoryClick: IServiceOperationCallback? = null,
     isEdit: Boolean = false,
     textInputCallback: ITextInputNavigationCallback? = null
 ) {
@@ -75,12 +71,22 @@ fun CategoryScreenTabCategory(
                                     type = EnumDialogType.CONFIRMATION,
                                     message = context.getString(R.string.category_screen_tab_category_inactivate_question),
                                     onConfirm = {
-                                        onToggleActive()
-                                        isActive = false
+                                        state.onToggleLoading()
+                                        toggleActive?.onExecute(
+                                            onSuccess = {
+                                                isActive = false
 
-                                        scope.launch {
-                                            snackbarHostState.showSnackbar(context.getString(R.string.category_screen_tab_category_inactivated_success))
-                                        }
+                                                scope.launch {
+                                                    snackbarHostState.showSnackbar(context.getString(R.string.category_screen_tab_category_inactivated_success))
+                                                }
+                                                state.onToggleLoading()
+                                            },
+                                            onError = {
+                                                state.onHideDialog()
+                                                state.onToggleLoading()
+                                                state.onShowDialog.onShow(type = EnumDialogType.ERROR, message = it, onConfirm = {}, onCancel = {})
+                                            }
+                                        )
                                     },
                                     onCancel = { }
                                 )
@@ -90,12 +96,29 @@ fun CategoryScreenTabCategory(
                         IconButtonReactivate(
                             enabled = isEditMode,
                             onClick = {
-                                onToggleActive()
-                                isActive = true
+                                state.onShowDialog?.onShow(
+                                    type = EnumDialogType.CONFIRMATION,
+                                    message = context.getString(R.string.category_screen_tab_category_reactivated_question),
+                                    onConfirm = {
+                                        state.onToggleLoading()
+                                        toggleActive?.onExecute(
+                                            onSuccess = {
+                                                isActive = true
 
-                                scope.launch {
-                                    snackbarHostState.showSnackbar(context.getString(R.string.category_screen_tab_category_reactivated_success))
-                                }
+                                                scope.launch {
+                                                    snackbarHostState.showSnackbar(context.getString(R.string.category_screen_tab_category_reactivated_success))
+                                                }
+                                                state.onToggleLoading()
+                                            },
+                                            onError = {
+                                                state.onHideDialog()
+                                                state.onToggleLoading()
+                                                state.onShowDialog.onShow(type = EnumDialogType.ERROR, message = it, onConfirm = {}, onCancel = {})
+                                            }
+                                        )
+                                    },
+                                    onCancel = { }
+                                )
                             }
                         )
                     }
@@ -112,9 +135,7 @@ fun CategoryScreenTabCategory(
         },
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState) {
-                Snackbar(modifier = Modifier.padding(8.dp), containerColor = GREY_900, contentColor = Color.White) {
-                    Text(text = it.visuals.message)
-                }
+                MarketSnackBar(it)
             }
         }
     ) {
@@ -166,7 +187,7 @@ fun TabCategoryScreenPreview() {
 private fun saveCategory(
     state: CategoryUIState,
     isActive: Boolean,
-    onSaveCategoryClick: ISaveCallback?,
+    onSaveCategoryClick: IServiceOperationCallback?,
     scope: CoroutineScope,
     snackbarHostState: SnackbarHostState,
     context: Context
@@ -174,7 +195,7 @@ private fun saveCategory(
     if (state.onValidate() && isActive) {
         state.onToggleLoading()
 
-        onSaveCategoryClick?.onSave(
+        onSaveCategoryClick?.onExecute(
             onSuccess = {
                 state.onToggleLoading()
                 scope.launch {

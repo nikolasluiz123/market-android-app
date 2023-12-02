@@ -15,9 +15,12 @@ import br.com.market.market.common.repository.BaseRepository
 import br.com.market.market.common.repository.IPagedRemoteSearchRepository
 import br.com.market.models.Brand
 import br.com.market.models.CategoryBrand
+import br.com.market.sdo.BrandAndReferencesSDO
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
+import br.com.market.servicedataaccess.responses.types.SingleValueResponse
 import br.com.market.servicedataaccess.webclients.BrandWebClient
 import kotlinx.coroutines.flow.first
+import java.net.HttpURLConnection
 import javax.inject.Inject
 
 /**
@@ -71,31 +74,64 @@ class BrandRepository @Inject constructor(
      * @author Nikolas Luiz Schmitt
      */
     suspend fun save(categoryId: String, domain: BrandDomain): PersistenceResponse {
-        val market = marketDAO.findFirst().first()?.id!!
-
-        val brand = if (domain.id != null) {
-            brandDAO.findBrandById(domain.id!!).copy(name = domain.name)
+        return if (domain.id != null) {
+            editBrand(domain, categoryId)
         } else {
-            Brand(name = domain.name, marketId = market)
+            createBrand(domain, categoryId)
         }
+    }
 
-        val categoryBrand = brandDAO.findCategoryBrandBy(
-            brandId = brand.id, categoryId = categoryId
-        ) ?: CategoryBrand(
-            categoryId = categoryId, brandId = brand.id, marketId = market
-        )
+    private suspend fun editBrand(domain: BrandDomain, categoryId: String): PersistenceResponse {
+        val findResponse = webClient.findBrandByLocalId(categoryId, domain.id!!)
 
-        domain.id = brand.id
+        return if (findResponse.success) {
+            val brand = getBrandWithUpdatedInfo(findResponse, domain)
 
-        val response = webClient.save(brand = brand, categoryBrand = categoryBrand)
+            val categoryBrand = findResponse.value?.categoryBrand!!.run {
+                CategoryBrand(
+                    id = localId,
+                    categoryId = localCategoryId,
+                    brandId = localBrandId,
+                    marketId = marketId
+                )
+            }
 
-        val objectSynchronized = response.getObjectSynchronized()
-        brand.synchronized = objectSynchronized
-        categoryBrand.synchronized = objectSynchronized
+            saveBrand(brand, categoryBrand)
+        } else {
+            PersistenceResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, error = findResponse.error)
+        }
+    }
 
-        brandDAO.saveBrandAndReference(brand = brand, categoryBrand = categoryBrand)
+    private suspend fun createBrand(domain: BrandDomain, categoryId: String): PersistenceResponse {
+        val marketId = marketDAO.findFirst().first()?.id!!
 
-        return response
+        val brand = Brand(name = domain.name, marketId = marketId)
+        val categoryBrand = CategoryBrand(categoryId = categoryId, brandId = brand.id, marketId = marketId)
+
+        return saveBrand(brand, categoryBrand)
+    }
+
+    private suspend fun getBrandWithUpdatedInfo(findResponse: SingleValueResponse<BrandAndReferencesSDO>, domain: BrandDomain): Brand {
+        val sdo = findResponse.value!!
+
+        return sdo.copy(brand = sdo.brand.copy(name = domain.name)).run {
+            Brand(
+                id = brand.localId,
+                name = domain.name,
+                marketId = marketDAO.findFirst().first()?.id!!
+            )
+        }
+    }
+
+    private suspend fun saveBrand(brand: Brand, categoryBrand: CategoryBrand): PersistenceResponse {
+        val persistenceResponse = webClient.save(brand = brand, categoryBrand = categoryBrand)
+
+        return if (persistenceResponse.success) {
+            brandDAO.saveBrandAndReference(brand = brand, categoryBrand = categoryBrand)
+            PersistenceResponse(code = HttpURLConnection.HTTP_OK, success = true)
+        } else {
+            PersistenceResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, error = persistenceResponse.error)
+        }
     }
 
     /**
@@ -113,8 +149,8 @@ class BrandRepository @Inject constructor(
         )
     }
 
-    suspend fun findCategoryBrandActive(categoryId: String, brandId: String): Boolean {
-        return brandDAO.findCategoryBrandBy(brandId = brandId, categoryId = categoryId)?.active!!
+    suspend fun findBrandAndReferencesBy(categoryId: String, brandId: String): SingleValueResponse<BrandAndReferencesSDO> {
+        return webClient.findBrandByLocalId(categoryId, brandId)
     }
 
     /**

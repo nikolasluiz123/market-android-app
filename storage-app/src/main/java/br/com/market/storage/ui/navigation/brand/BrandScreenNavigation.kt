@@ -5,6 +5,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import br.com.market.core.callbacks.ITextInputNavigationCallback
 import br.com.market.storage.ui.navigation.category.argumentCategoryId
 import br.com.market.storage.ui.screens.brand.BrandScreen
 import br.com.market.storage.ui.viewmodels.brand.BrandViewModel
@@ -17,7 +18,8 @@ fun NavGraphBuilder.brandScreen(
     onNavToBrandLov: (String, (String) -> Unit) -> Unit,
     onFabAddProductClick: (String, String) -> Unit,
     onProductClick: (String, String, String) -> Unit,
-    onStorageButtonClick: (String, String) -> Unit
+    onStorageButtonClick: (String, String) -> Unit,
+    textInputCallback: ITextInputNavigationCallback
 ) {
     composable(route = "$brandScreenRoute?$argumentCategoryId={$argumentCategoryId}&$argumentBrandId={$argumentBrandId}") {
         val brandViewModel = hiltViewModel<BrandViewModel>()
@@ -28,7 +30,8 @@ fun NavGraphBuilder.brandScreen(
             onNavToBrandLov = onNavToBrandLov,
             onFabAddProductClick = onFabAddProductClick,
             onProductClick = onProductClick,
-            onStorageButtonClick = onStorageButtonClick
+            onStorageButtonClick = onStorageButtonClick,
+            textInputCallback = textInputCallback
         )
     }
 }

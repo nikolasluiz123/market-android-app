@@ -128,21 +128,17 @@ abstract class CategoryDAO : AbstractBaseDAO() {
      *
      * @author Nikolas Luiz Schmitt
      */
-    @Query("update categories set active = :active, synchronized = :sync where id = :categoryId ")
-    abstract suspend fun updateActive(categoryId: String, active: Boolean, sync: Boolean)
-
-    /**
-     * Função que facilita a mudança de ativo e inativo.
-     *
-     * @see updateActive
-     *
-     * @param category Categoria que deseja reativar ou inativar.
-     *
-     * @author Nikolas Luiz Schmitt
-     */
-    suspend fun toggleActive(category: Category) {
-        updateActive(category.id, !category.active, category.synchronized)
+    @Transaction
+    open suspend fun updateActive(categoryId: String) {
+        toggleCategoryActive(categoryId)
+        toggleBrandActive(categoryId)
     }
+
+    @Query("update categories set active = not active where id = :categoryId")
+    abstract suspend fun toggleCategoryActive(categoryId: String)
+
+    @Query("update categories_brands set active = not active where category_id = :categoryId")
+    abstract suspend fun toggleBrandActive(categoryId: String)
 
     /**
      * Função que busca todas as categorias que não foram sincronizadas

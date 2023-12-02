@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import br.com.market.core.callbacks.ITextInputNavigationCallback
 import br.com.market.core.theme.MarketTheme
 import br.com.market.market.compose.components.topappbar.SimpleMarketTopAppBar
 import br.com.market.storage.R
@@ -46,7 +47,8 @@ fun BrandScreen(
     onNavToBrandLov: (String, (String) -> Unit) -> Unit,
     onFabAddProductClick: (String, String) -> Unit,
     onProductClick: (String, String, String) -> Unit,
-    onStorageButtonClick: (String, String) -> Unit
+    onStorageButtonClick: (String, String) -> Unit,
+    textInputCallback: ITextInputNavigationCallback
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -67,7 +69,8 @@ fun BrandScreen(
         onFabAddProductClick = onFabAddProductClick,
         onProductClick = onProductClick,
         onStorageButtonClick = onStorageButtonClick,
-        onSimpleFilterChange = viewModel::updateList
+        onSimpleFilterChange = viewModel::updateList,
+        textInputCallback = textInputCallback
     )
 }
 
@@ -78,11 +81,12 @@ fun BrandScreen(
     onBackClick: () -> Unit = { },
     onToggleActive: () -> Unit = { },
     onSaveBrandClick: (Boolean) -> Unit = { },
-    onNavToBrandLov: (String) -> Unit = { },
+    onNavToBrandLov: (categoryId: String) -> Unit = { },
     onFabAddProductClick: (String, String) -> Unit = { _, _ -> },
     onProductClick: (String, String, String) -> Unit = { _, _, _ -> },
     onStorageButtonClick: (String, String) -> Unit = { _, _ -> },
-    onSimpleFilterChange: (String) -> Unit = { }
+    onSimpleFilterChange: (String) -> Unit = { },
+    textInputCallback: ITextInputNavigationCallback? = null
 ) {
     var isEditMode by remember(state.brandDomain) {
         mutableStateOf(state.brandDomain != null)
@@ -194,7 +198,8 @@ fun BrandScreen(
                             onToggleActive = onToggleActive,
                             onSaveBrandClick = onSaveBrandClick,
                             isEdit = isEditMode,
-                            onNavToBrandLov = onNavToBrandLov
+                            onNavToBrandLov = onNavToBrandLov,
+                            textInputCallback = textInputCallback
                         )
                     }
                     1 -> {

@@ -1,15 +1,13 @@
 package br.com.market.storage.ui.screens.brand
 
+import android.content.Context
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -17,18 +15,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import br.com.market.core.callbacks.ITextInputNavigationCallback
+import br.com.market.core.inputs.arguments.InputArgs
 import br.com.market.core.theme.MarketTheme
 import br.com.market.domain.BrandDomain
+import br.com.market.market.compose.components.FormField
 import br.com.market.market.compose.components.MarketBottomAppBar
-import br.com.market.market.compose.components.OutlinedTextFieldValidation
+import br.com.market.market.compose.components.MarketSnackBar
 import br.com.market.market.compose.components.button.fab.FloatingActionButtonSave
 import br.com.market.market.compose.components.button.icons.IconButtonInactivate
 import br.com.market.market.compose.components.button.icons.IconButtonReactivate
@@ -46,10 +45,12 @@ fun BrandScreenTaBrand(
     onToggleActive: () -> Unit = { },
     onSaveBrandClick: (Boolean) -> Unit = { },
     isEdit: Boolean = false,
-    onNavToBrandLov: (String) -> Unit
+    textInputCallback: ITextInputNavigationCallback? = null,
+    onNavToBrandLov: (categoryId: String) -> Unit = { }
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     var isEditMode by remember(isEdit) {
         mutableStateOf(isEdit)
@@ -71,7 +72,7 @@ fun BrandScreenTaBrand(
                                 isActive = false
 
                                 scope.launch {
-                                    snackbarHostState.showSnackbar("Marca Inativada com Sucesso")
+                                    snackbarHostState.showSnackbar(context.getString(R.string.brand_screen_tab_brand_inactivate_success_message))
                                 }
                             }
                         )
@@ -83,7 +84,7 @@ fun BrandScreenTaBrand(
                                 isActive = true
 
                                 scope.launch {
-                                    snackbarHostState.showSnackbar("Marca Reativada com Sucesso")
+                                    snackbarHostState.showSnackbar(context.getString(R.string.brand_screen_tab_brand_reactivate_success_message))
                                 }
                             }
                         )
@@ -92,7 +93,7 @@ fun BrandScreenTaBrand(
                 floatingActionButton = {
                     FloatingActionButtonSave(
                         onClick = {
-                            isEditMode = saveBrand(state, isActive, isEditMode, onSaveBrandClick, scope, snackbarHostState)
+                            isEditMode = saveBrand(state, isActive, isEditMode, onSaveBrandClick, scope, snackbarHostState, context)
                             onUpdateEditMode(isEditMode)
                         }
                     )
@@ -101,9 +102,7 @@ fun BrandScreenTaBrand(
         },
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState) {
-                Snackbar(modifier = Modifier.padding(8.dp)) {
-                    Text(text = it.visuals.message)
-                }
+                MarketSnackBar(it)
             }
         }
     ) {
@@ -111,36 +110,33 @@ fun BrandScreenTaBrand(
             Modifier
                 .padding(it)
                 .fillMaxSize()
-                .padding(16.dp)
         ) {
             val inputNameRef = createRef()
 
-            OutlinedTextFieldValidation(
+            FormField(
                 modifier = Modifier.constrainAs(inputNameRef) {
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
+                    linkTo(start = parent.start, end = parent.end, bias = 0f)
                     top.linkTo(parent.top)
 
                     width = Dimension.fillToConstraints
                 },
-                value = state.brandName,
-                onValueChange = state.onBrandNameChange,
-                error = state.brandNameErrorMessage,
-                label = { Text(text = stringResource(R.string.brand_screen_tab_brand_label_name)) },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Done,
-                    capitalization = KeyboardCapitalization.Words
-                ),
-                enabled = isActive,
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        isEditMode = saveBrand(state, isActive, isEditMode, onSaveBrandClick, scope, snackbarHostState)
-                        onUpdateEditMode(isEditMode)
-                        defaultKeyboardAction(ImeAction.Done)
-                    }
-                ),
-                trailingIcon = {
+                labelResId = R.string.brand_screen_tab_brand_label_name,
+                field = state.name,
+                onNavigateClick = {
+                    textInputCallback?.onNavigate(
+                        args = InputArgs(
+                            titleResId = R.string.brand_screen_tab_brand_title_input_name,
+                            value = state.name.value,
+                            maxLength = 255,
+                            keyboardOptions = KeyboardOptions(
+                                capitalization = KeyboardCapitalization.Words,
+                                imeAction = ImeAction.Done
+                            )
+                        ),
+                        callback = { value -> state.name.onChange(value ?: "") }
+                    )
+                },
+                additionalAction = {
                     IconButtonSearch {
                         onNavToBrandLov(state.categoryDomain?.id!!)
                     }
@@ -166,20 +162,21 @@ private fun saveBrand(
     isEditMode: Boolean,
     onSaveBrandClick: (Boolean) -> Unit,
     scope: CoroutineScope,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
+    context: Context
 ): Boolean {
     if (state.onValidate() && isActive) {
 
         state.brandDomain = if (isEditMode) {
-            state.brandDomain?.copy(name = state.brandName)
+            state.brandDomain?.copy(name = state.name.value)
         } else {
-            BrandDomain(name = state.brandName)
+            BrandDomain(name = state.name.value)
         }
 
         onSaveBrandClick(isEditMode)
 
         scope.launch {
-            snackbarHostState.showSnackbar("Marca Salva com Sucesso")
+            snackbarHostState.showSnackbar(context.getString(R.string.brand_screen_tab_brand_save_success_message))
         }
     }
 

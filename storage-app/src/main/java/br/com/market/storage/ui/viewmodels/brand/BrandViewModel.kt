@@ -6,7 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import br.com.market.core.extensions.navParamToString
+import br.com.market.core.ui.states.Field
+import br.com.market.domain.BrandDomain
 import br.com.market.domain.ProductImageReadDomain
+import br.com.market.sdo.BrandAndReferencesSDO
+import br.com.market.servicedataaccess.responses.types.SingleValueResponse
 import br.com.market.storage.R
 import br.com.market.storage.repository.BrandRepository
 import br.com.market.storage.repository.CategoryRepository
@@ -28,7 +32,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BrandViewModel @Inject constructor(
-    @ApplicationContext context: Context,
+    @ApplicationContext private val context: Context,
     savedStateHandle: SavedStateHandle,
     private val categoryRepository: CategoryRepository,
     private val brandRepository: BrandRepository,
@@ -45,76 +49,98 @@ class BrandViewModel @Inject constructor(
         _uiState.update { currentState ->
             currentState.copy(
                 products = getProducts(),
-                onBrandNameChange = {
-                    _uiState.value = _uiState.value.copy(brandName = it)
+                name = Field(onChange = { _uiState.value = _uiState.value.copy(name = _uiState.value.name.copy(value = it)) }),
+                onShowDialog = { type, message, onConfirm, onCancel ->
+                    _uiState.value = _uiState.value.copy(
+                        dialogType = type,
+                        showDialog = true,
+                        dialogMessage = message,
+                        onConfirm = onConfirm,
+                        onCancel = onCancel
+                    )
                 },
+                onHideDialog = { _uiState.value = _uiState.value.copy(showDialog = false) },
+                onToggleLoading = { _uiState.value = _uiState.value.copy(showLoading = !_uiState.value.showLoading) },
                 onValidate = {
                     var isValid = true
 
-                    if (_uiState.value.brandName.isBlank()) {
-                        isValid = false
-
-                        _uiState.value = _uiState.value.copy(
-                            brandNameErrorMessage = context.getString(R.string.category_screen_category_name_required_validation_message)
-                        )
-                    } else {
-                        _uiState.value = _uiState.value.copy(
-                            brandNameErrorMessage = ""
-                        )
-                    }
+                    validateName { isValid = it }
 
                     isValid
                 }
             )
         }
 
-        loadCategory {  }
-        loadBrandDomain()
-        loadCategoryBrandActive()
+        loadScreen { _uiState.value = _uiState.value.copy(internalErrorMessage = it) }
     }
 
-    private fun loadCategory(onError: (String) -> Unit) {
-        categoryId?.navParamToString()?.let { categoryId ->
-            viewModelScope.launch {
-                val response = categoryRepository.findById(categoryId)
+    private fun validateName(onValidChange: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            when {
+                _uiState.value.name.valueIsEmpty() -> {
+                    onValidChange(false)
 
-                if (response.success) {
-                    _uiState.update { currentState ->
-                        currentState.copy(categoryDomain = response.value)
-                    }
-                } else {
-                    withContext(Main) {
-                        onError(response.error ?: "")
-                    }
+                    _uiState.value = _uiState.value.copy(
+                        name = _uiState.value.name.copy(errorMessage = context.getString(R.string.category_screen_category_name_required_validation_message))
+                    )
                 }
-            }
-        }
-    }
-
-    private fun loadBrandDomain() {
-        brandId?.navParamToString()?.let { id ->
-            viewModelScope.launch {
-                val brandDomain = brandRepository.findById(id)
-
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        brandDomain = brandDomain,
-                        brandName = brandDomain.name
+                else -> {
+                    _uiState.value = _uiState.value.copy(
+                        name = _uiState.value.name.copy(errorMessage = "")
                     )
                 }
             }
         }
     }
 
-    private fun loadCategoryBrandActive() {
+    private fun loadScreen(onError: (String) -> Unit) {
         val categoryId = categoryId?.navParamToString()
         val brandId = brandId?.navParamToString()
 
-        if (!categoryId.isNullOrEmpty() && !brandId.isNullOrEmpty()) {
+        if (!categoryId.isNullOrEmpty()) {
             viewModelScope.launch {
-                val active = brandRepository.findCategoryBrandActive(categoryId = categoryId, brandId = brandId)
-                _uiState.update { currentState -> currentState.copy(active = active) }
+                val findCategoryResponse = categoryRepository.findById(categoryId)
+
+                if (findCategoryResponse.success) {
+                    _uiState.update { currentState -> currentState.copy(categoryDomain = findCategoryResponse.value) }
+
+                    if (!brandId.isNullOrEmpty()) {
+                        loadBrand(categoryId, brandId, onError)
+                    }
+                } else {
+                    withContext(Main) { onError(findCategoryResponse.error ?: "") }
+                }
             }
+        }
+    }
+
+    private suspend fun loadBrand(categoryId: String, brandId: String, onError: (String) -> Unit) {
+        val findBrandResponse = brandRepository.findBrandAndReferencesBy(categoryId, brandId)
+
+        if (findBrandResponse.success) {
+            val brandDomain = getBrandDomainFrom(findBrandResponse)
+
+            _uiState.update { currentState ->
+                currentState.copy(
+                    brandDomain = brandDomain,
+                    name = _uiState.value.name.copy(value = brandDomain.name),
+                    active = findBrandResponse.value!!.categoryBrand.active
+                )
+            }
+        } else {
+            withContext(Main) { onError(findBrandResponse.error ?: "") }
+        }
+    }
+
+    private fun getBrandDomainFrom(response: SingleValueResponse<BrandAndReferencesSDO>): BrandDomain {
+        return response.value!!.run {
+            BrandDomain(
+                id = brand.localId,
+                active = brand.active,
+                marketId = brand.marketId,
+                synchronized = true,
+                name = brand.name!!
+            )
         }
     }
 
@@ -130,6 +156,12 @@ class BrandViewModel @Inject constructor(
     }
 
     fun saveBrand() {
+        _uiState.value.brandDomain = if (_uiState.value.brandDomain == null) {
+            BrandDomain(name = _uiState.value.name.value)
+        } else {
+            _uiState.value.brandDomain!!.copy(name = _uiState.value.name.value)
+        }
+
         _uiState.value.brandDomain?.let { brandDomain ->
             viewModelScope.launch {
                 brandRepository.save(_uiState.value.categoryDomain?.id!!, brandDomain)
@@ -152,7 +184,7 @@ class BrandViewModel @Inject constructor(
             _uiState.update { currentState ->
                 currentState.copy(
                     brandDomain = brandDomain,
-                    brandName = brandDomain.name
+                    name = _uiState.value.name.copy(value = brandDomain.name)
                 )
             }
         }

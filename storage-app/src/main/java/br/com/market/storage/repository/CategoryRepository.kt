@@ -116,6 +116,8 @@ class CategoryRepository @Inject constructor(
 
     private suspend fun createCategory(domain: CategoryDomain): PersistenceResponse {
         val category = Category(name = domain.name, marketId = marketDAO.findFirst().first()?.id!!)
+        domain.id = category.id
+
         return saveCategory(category)
     }
 
@@ -167,11 +169,11 @@ class CategoryRepository @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun toggleActive(categoryId: String, active: Boolean): PersistenceResponse {
+    suspend fun toggleActive(categoryId: String): PersistenceResponse {
         val response = categoryWebClient.toggleActive(categoryId)
 
         if (response.success) {
-            categoryDAO.updateActive(categoryId = categoryId, active = !active, sync = true)
+            categoryDAO.updateActive(categoryId = categoryId)
         }
 
         return response
