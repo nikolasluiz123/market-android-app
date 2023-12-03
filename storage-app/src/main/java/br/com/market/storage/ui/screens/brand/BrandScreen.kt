@@ -34,6 +34,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.core.callbacks.ITextInputNavigationCallback
 import br.com.market.core.theme.MarketTheme
+import br.com.market.market.compose.components.dialog.MarketDialog
 import br.com.market.market.compose.components.topappbar.SimpleMarketTopAppBar
 import br.com.market.storage.R
 import br.com.market.storage.ui.states.brand.BrandUIState
@@ -120,6 +121,15 @@ fun BrandScreen(
             val pagerState = rememberPagerState { 2 }
             val coroutineScope = rememberCoroutineScope()
             var tabIndex by remember { mutableIntStateOf(0) }
+
+            MarketDialog(
+                type = state.dialogType,
+                show = state.showDialog,
+                onDismissRequest = { state.onHideDialog() },
+                message = state.dialogMessage,
+                onConfirm = state.onConfirm,
+                onCancel = state.onCancel
+            )
 
             Divider(
                 modifier = Modifier.constrainAs(tabDividerRef) {
