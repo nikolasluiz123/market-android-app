@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import br.com.market.core.enums.EnumDialogType
 import br.com.market.core.extensions.format
 import br.com.market.core.extensions.navParamToString
+import br.com.market.core.ui.states.Field
 import br.com.market.domain.ProductImageDomain
 import br.com.market.storage.R
 import br.com.market.storage.repository.BrandRepository
@@ -26,7 +27,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductViewModel @Inject constructor(
-    @ApplicationContext context: Context,
+    @ApplicationContext private val context: Context,
     savedStateHandle: SavedStateHandle,
     private val brandRepository: BrandRepository,
     private val productRepository: ProductRepository
@@ -43,9 +44,10 @@ class ProductViewModel @Inject constructor(
         _uiState.update { currentState ->
             currentState.copy(
                 categoryId = categoryId.navParamToString(),
-                onProductNameChange = { _uiState.value = _uiState.value.copy(productName = it) },
-                onProductPriceChange = { _uiState.value = _uiState.value.copy(productPrice = it) },
-                onProductQuantityChange = { _uiState.value = _uiState.value.copy(productQuantity = it) },
+                name = Field(onChange = { _uiState.value = _uiState.value.copy(name = _uiState.value.name.copy(value = it)) }),
+                price = Field(onChange = { _uiState.value = _uiState.value.copy(price = _uiState.value.price.copy(value = it)) }),
+                quantity = Field(onChange = { _uiState.value = _uiState.value.copy(quantity = _uiState.value.quantity.copy(value = it)) }),
+                quantityUnit = Field(onChange = { _uiState.value = _uiState.value.copy(quantityUnit = _uiState.value.quantityUnit.copy(value = it)) }),
                 onShowDialog = { type, message, onConfirm, onCancel ->
                     _uiState.value = _uiState.value.copy(
                         dialogType = type,
@@ -56,66 +58,15 @@ class ProductViewModel @Inject constructor(
                     )
                 },
                 onHideDialog = { _uiState.value = _uiState.value.copy(showDialog = false) },
+                onToggleLoading = { _uiState.value = _uiState.value.copy(showLoading = !_uiState.value.showLoading) },
                 onValidate = {
                     var isValid = true
 
-                    if (_uiState.value.images.size == 0) {
-                        isValid = false
-                        _uiState.value.onShowDialog?.onShow(
-                            type = EnumDialogType.ERROR,
-                            message = context.getString(R.string.product_screen_required_photo_validation_message),
-                            onConfirm = {},
-                            onCancel = {}
-                        )
-                    }
-
-                    if (_uiState.value.productName.isBlank()) {
-                        isValid = false
-
-                        _uiState.value = _uiState.value.copy(
-                            productNameErrorMessage = context.getString(R.string.product_screen_product_name_required_validation_message)
-                        )
-                    } else {
-                        _uiState.value = _uiState.value.copy(
-                            productNameErrorMessage = ""
-                        )
-                    }
-
-                    if (_uiState.value.productPrice.isBlank()) {
-                        isValid = false
-
-                        _uiState.value = _uiState.value.copy(
-                            productPriceErrorMessage = context.getString(R.string.product_screen_product_price_required_validation_message)
-                        )
-                    } else {
-                        _uiState.value = _uiState.value.copy(
-                            productPriceErrorMessage = ""
-                        )
-                    }
-
-                    if (_uiState.value.productQuantity.isBlank()) {
-                        isValid = false
-
-                        _uiState.value = _uiState.value.copy(
-                            productQuantityErrorMessage = context.getString(R.string.product_screen_product_quantity_required_validation_message)
-                        )
-                    } else {
-                        _uiState.value = _uiState.value.copy(
-                            productQuantityErrorMessage = ""
-                        )
-                    }
-
-                    if (_uiState.value.productQuantityUnit == null) {
-                        isValid = false
-
-                        _uiState.value = _uiState.value.copy(
-                            productQuantityUnitErrorMessage = context.getString(R.string.product_screen_product_quantity_unity_required_validation_message)
-                        )
-                    } else {
-                        _uiState.value = _uiState.value.copy(
-                            productQuantityUnitErrorMessage = ""
-                        )
-                    }
+                    validateImages { isValid = it }
+                    validateName { isValid = it }
+                    validatePrice { isValid = it }
+                    validateQuantity { isValid = it }
+                    validateQuantityUnit { isValid = it }
 
                     isValid
                 }
@@ -128,10 +79,10 @@ class ProductViewModel @Inject constructor(
                 _uiState.update { currentState ->
                     currentState.copy(
                         productDomain = productDomain,
-                        productName = productDomain.name!!,
-                        productPrice = productDomain.price!!.format(),
-                        productQuantity = productDomain.quantity!!.format(),
-                        productQuantityUnit = productDomain.quantityUnit!!,
+                        name = _uiState.value.name.copy(value = productDomain.name!!),
+                        price = _uiState.value.price.copy(value = productDomain.price!!.format()),
+                        quantity = _uiState.value.quantity.copy(value =  productDomain.quantity!!.format()),
+                        quantityUnit = _uiState.value.quantityUnit.copy(value = productDomain.quantityUnit!!.toString()),
                         images = productDomain.images.toMutableStateList()
                     )
                 }
@@ -146,7 +97,93 @@ class ProductViewModel @Inject constructor(
         }
     }
 
+    private fun validateImages(onValidChange: (Boolean) -> Unit) {
+        if (_uiState.value.images.size == 0) {
+            onValidChange(false)
+
+            _uiState.value.onShowDialog?.onShow(
+                type = EnumDialogType.ERROR,
+                message = context.getString(R.string.product_screen_required_photo_validation_message),
+                onConfirm = {},
+                onCancel = {}
+            )
+        }
+    }
+
+    private fun validateName(onValidChange: (Boolean) -> Unit) {
+        when {
+            _uiState.value.name.valueIsEmpty() -> {
+                onValidChange(false)
+
+                _uiState.value = _uiState.value.copy(
+                    name = _uiState.value.name.copy(errorMessage = context.getString(R.string.product_screen_product_name_required_validation_message))
+                )
+            }
+            else -> {
+                _uiState.value = _uiState.value.copy(
+                    name = _uiState.value.name.copy(errorMessage = "")
+                )
+            }
+        }
+    }
+
+    private fun validatePrice(onValidChange: (Boolean) -> Unit) {
+        when {
+            _uiState.value.price.valueIsEmpty() -> {
+                onValidChange(false)
+
+                _uiState.value = _uiState.value.copy(
+                    price = _uiState.value.price.copy(errorMessage = context.getString(R.string.product_screen_product_price_required_validation_message))
+                )
+            }
+            else -> {
+                _uiState.value = _uiState.value.copy(
+                    price = _uiState.value.price.copy(errorMessage = "")
+                )
+            }
+        }
+    }
+
+    private fun validateQuantity(onValidChange: (Boolean) -> Unit) {
+        when {
+            _uiState.value.quantity.valueIsEmpty() -> {
+                onValidChange(false)
+
+                _uiState.value = _uiState.value.copy(
+                    quantity = _uiState.value.quantity.copy(errorMessage = context.getString(R.string.product_screen_product_quantity_required_validation_message))
+                )
+            }
+            else -> {
+                _uiState.value = _uiState.value.copy(
+                    quantity = _uiState.value.quantity.copy(errorMessage = "")
+                )
+            }
+        }
+    }
+
+    private fun validateQuantityUnit(onValidChange: (Boolean) -> Unit) {
+        if (_uiState.value.quantityUnit.valueIsEmpty()) {
+            onValidChange(false)
+
+            _uiState.value = _uiState.value.copy(
+                quantityUnit = _uiState.value.quantityUnit.copy(errorMessage =  context.getString(R.string.product_screen_product_quantity_unity_required_validation_message))
+            )
+        } else {
+            _uiState.value = _uiState.value.copy(
+                quantityUnit = _uiState.value.quantityUnit.copy(errorMessage = "")
+            )
+        }
+    }
+
     fun saveProduct() {
+//        _uiState.value.productDomain = if(_uiState.value.productDomain == null) {
+//            ProductDomain(
+//
+//            )
+//        } else {
+//
+//        }
+
         _uiState.value.productDomain?.let { productDomain ->
             viewModelScope.launch {
                 productRepository.saveProduct(categoryId!!.navParamToString()!!, _uiState.value.brandDomain?.id!!, productDomain)

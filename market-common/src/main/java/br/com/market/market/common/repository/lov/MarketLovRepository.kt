@@ -33,7 +33,7 @@ class MarketLovRepository @Inject constructor(
             pagingSourceFactory = { marketDAO.findMarketsLov(filters) },
             remoteMediator = MarketLovRemoteMediator(
                 appDatabase, context, marketRemoteKeysDAO, marketDAO, addressDAO,
-                companyDAO, marketWebClient, filters.simpleFilter
+                companyDAO, marketWebClient, filters.quickFilter
             )
         )
     }

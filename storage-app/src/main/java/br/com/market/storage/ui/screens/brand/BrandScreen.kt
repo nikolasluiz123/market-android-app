@@ -19,6 +19,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -33,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.core.callbacks.ITextInputNavigationCallback
+import br.com.market.core.enums.EnumDialogType
 import br.com.market.core.theme.MarketTheme
 import br.com.market.market.compose.components.dialog.MarketDialog
 import br.com.market.market.compose.components.topappbar.SimpleMarketTopAppBar
@@ -70,7 +72,7 @@ fun BrandScreen(
         onFabAddProductClick = onFabAddProductClick,
         onProductClick = onProductClick,
         onStorageButtonClick = onStorageButtonClick,
-        onSimpleFilterChange = viewModel::updateList,
+        onSimpleFilterChange = viewModel::onSimpleFilterChange,
         textInputCallback = textInputCallback
     )
 }
@@ -89,6 +91,13 @@ fun BrandScreen(
     onSimpleFilterChange: (String) -> Unit = { },
     textInputCallback: ITextInputNavigationCallback? = null
 ) {
+    LaunchedEffect(state.internalErrorMessage) {
+        if (state.internalErrorMessage.isNotEmpty()) {
+            state.onShowDialog?.onShow(type = EnumDialogType.ERROR, message = state.internalErrorMessage, onConfirm = {}, onCancel = {})
+            state.internalErrorMessage = ""
+        }
+    }
+
     var isEditMode by remember(state.brandDomain) {
         mutableStateOf(state.brandDomain != null)
     }

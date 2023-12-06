@@ -35,7 +35,7 @@ class MarketLovViewModel @Inject constructor(
 
     override fun onSimpleFilterChange(value: String?) {
         _uiState.value = _uiState.value.copy(
-            brands = getDataFlow(BaseSearchFilter(simpleFilter = value))
+            brands = getDataFlow(BaseSearchFilter(quickFilter = value))
         )
     }
 

@@ -57,7 +57,7 @@ class CategorySearchViewModel @Inject constructor(
     }
 
     override fun onSimpleFilterChange(value: String?) {
-        filter.simpleFilter = value
+        filter.quickFilter = value
 
         _uiState.value = _uiState.value.copy(
             categories = getDataFlow(filter)

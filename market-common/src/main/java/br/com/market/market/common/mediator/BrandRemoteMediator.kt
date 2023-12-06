@@ -3,6 +3,8 @@ package br.com.market.market.common.mediator
 import android.content.Context
 import br.com.market.domain.BrandDomain
 import br.com.market.localdataaccess.dao.BrandDAO
+import br.com.market.localdataaccess.dao.ProductDAO
+import br.com.market.localdataaccess.dao.ProductImageDAO
 import br.com.market.localdataaccess.dao.remotekeys.BrandRemoteKeysDAO
 import br.com.market.localdataaccess.database.AppDatabase
 import br.com.market.models.Brand
@@ -17,6 +19,8 @@ class BrandRemoteMediator(
     context: Context,
     private val remoteKeysDAO: BrandRemoteKeysDAO,
     private val brandDAO: BrandDAO,
+    private val productDAO: ProductDAO,
+    private val productImageDAO: ProductImageDAO,
     private val brandWebClient: BrandWebClient,
     private val marketId: Long,
     private val categoryId: String?,
@@ -31,6 +35,8 @@ class BrandRemoteMediator(
 
     override suspend fun onLoadDataRefreshType() {
         remoteKeysDAO.clearRemoteKeys()
+        productImageDAO.clearAll()
+        productDAO.clearAll()
         brandDAO.clearAll()
     }
 

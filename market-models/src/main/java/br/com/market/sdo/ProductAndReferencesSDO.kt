@@ -1,6 +1,6 @@
 package br.com.market.sdo
 
-class ProductBodySDO(
+class ProductAndReferencesSDO(
     val product: ProductSDO,
     val productImages: List<ProductImageSDO>
 )

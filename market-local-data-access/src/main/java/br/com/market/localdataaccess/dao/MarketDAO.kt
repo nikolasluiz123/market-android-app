@@ -48,9 +48,9 @@ abstract class MarketDAO: AbstractBaseDAO() {
         val where = StringJoiner("\r\n")
         where.add(" where m.active ")
 
-        if (!filter.simpleFilter.isNullOrBlank()) {
+        if (!filter.quickFilter.isNullOrBlank()) {
             where.add(" and m.name like ? ")
-            params.add("%${filter.simpleFilter}%")
+            params.add("%${filter.quickFilter}%")
         }
 
         val orderBy = StringJoiner("\r\n")

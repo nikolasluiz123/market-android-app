@@ -4,35 +4,23 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import br.com.market.core.callbacks.IShowDialogCallback
 import br.com.market.core.enums.EnumDialogType
+import br.com.market.core.ui.states.Field
 import br.com.market.core.ui.states.IDialogUIState
+import br.com.market.core.ui.states.ILoadingUIState
 import br.com.market.core.ui.states.IValidationUIState
 import br.com.market.domain.BrandDomain
 import br.com.market.domain.ProductDomain
 import br.com.market.domain.ProductImageDomain
-import br.com.market.enums.EnumUnit
 
 data class ProductUIState(
     var categoryId: String? = null,
     var brandDomain: BrandDomain? = null,
     var productDomain: ProductDomain? = null,
-
-    val productName: String = "",
-    val onProductNameChange: (String) -> Unit = { },
-    val productNameErrorMessage: String = "",
-
-    val productPrice: String = "",
-    val onProductPriceChange: (String) -> Unit = { },
-    val productPriceErrorMessage: String = "",
-
-    val productQuantity: String = "",
-    val onProductQuantityChange: (String) -> Unit = { },
-    val productQuantityErrorMessage: String = "",
-
-    var productQuantityUnit: EnumUnit? = null,
-    val productQuantityUnitErrorMessage: String = "",
-
+    val name: Field = Field(),
+    val price: Field = Field(),
+    val quantity: Field = Field(),
+    val quantityUnit: Field = Field(),
     var images: SnapshotStateList<ProductImageDomain> = mutableStateListOf(),
-
     override val onValidate: () -> Boolean = { false },
     override val dialogType: EnumDialogType = EnumDialogType.ERROR,
     override val dialogMessage: String = "",
@@ -41,5 +29,7 @@ data class ProductUIState(
     override val onShowDialog: IShowDialogCallback? = null,
     override val onConfirm: () -> Unit = { },
     override val onCancel: () -> Unit = { },
-    override var internalErrorMessage: String = ""
-): IValidationUIState, IDialogUIState
+    override var internalErrorMessage: String = "",
+    override val showLoading: Boolean = false,
+    override val onToggleLoading: () -> Unit = { }
+): IValidationUIState, IDialogUIState, ILoadingUIState

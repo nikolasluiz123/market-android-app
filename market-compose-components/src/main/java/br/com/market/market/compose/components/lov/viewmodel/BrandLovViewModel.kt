@@ -44,7 +44,7 @@ class BrandLovViewModel @Inject constructor(
 
 
     override fun onSimpleFilterChange(value: String?) {
-        filter.simpleFilter = value
+        filter.quickFilter = value
 
         _uiState.value = _uiState.value.copy(
             brands = getDataFlow(filter)

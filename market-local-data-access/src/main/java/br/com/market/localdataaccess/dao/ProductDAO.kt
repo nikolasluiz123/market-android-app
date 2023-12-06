@@ -1,14 +1,20 @@
 package br.com.market.localdataaccess.dao
 
 import androidx.paging.PagingSource
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.RawQuery
+import androidx.room.Transaction
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
+import br.com.market.core.filter.ProductFilter
 import br.com.market.domain.ProductImageReadDomain
 import br.com.market.models.Product
 import br.com.market.models.StorageOperationHistory
 import br.com.market.models.User
-import java.util.*
+import java.util.StringJoiner
 
 @Dao
 abstract class ProductDAO : AbstractBaseDAO() {
@@ -22,18 +28,12 @@ abstract class ProductDAO : AbstractBaseDAO() {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun save(products: List<Product>)
 
-    suspend fun findProducts(
-        categoryId: String,
-        brandId: String,
-        limit: Int,
-        offset: Int,
-        simpleFilter: String?
-    ): List<ProductImageReadDomain> {
+    fun findProducts(filters: ProductFilter): PagingSource<Int, ProductImageReadDomain> {
         val params = mutableListOf<Any>()
 
         val select = StringJoiner("\r\n")
         with(select) {
-            add(" select p.id as productId, ")
+            add(" select p.id as id, ")
             add("        p.name as productName, ")
             add("        p.price as productPrice, ")
             add("        p.quantity as productQuantity, ")
@@ -54,23 +54,19 @@ abstract class ProductDAO : AbstractBaseDAO() {
         val where = StringJoiner("\r\n")
         with(where) {
             add(" where cb.category_id = ? and cb.brand_id = ? and p.active ")
-            params.add(categoryId)
-            params.add(brandId)
+            params.add(filters.categoryId)
+            params.add(filters.brandId)
 
-            if (!simpleFilter.isNullOrBlank()) {
+            if (!filters.quickFilter.isNullOrBlank()) {
                 add(" and p.name like ? ")
-                params.add("%${simpleFilter}%")
+                params.add("%${filters.quickFilter}%")
             }
         }
 
         val orderBy = StringJoiner("\r\n")
         with(orderBy) {
             add(" order by p.name ")
-            add(" limit ? offset ? ")
         }
-
-        params.add(limit)
-        params.add(offset)
 
         val sql = StringJoiner("\r\n")
         with(sql) {
@@ -84,7 +80,7 @@ abstract class ProductDAO : AbstractBaseDAO() {
     }
 
     @RawQuery(observedEntities = [StorageOperationHistory::class, Product::class, User::class])
-    abstract suspend fun executeQueryFindProducts(query: SupportSQLiteQuery): List<ProductImageReadDomain>
+    abstract fun executeQueryFindProducts(query: SupportSQLiteQuery): PagingSource<Int, ProductImageReadDomain>
 
     @Transaction
     open suspend fun toggleActiveProductAndImages(productId: String, sync: Boolean) {

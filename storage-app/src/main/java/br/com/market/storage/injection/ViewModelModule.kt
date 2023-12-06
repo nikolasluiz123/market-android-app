@@ -5,6 +5,8 @@ import br.com.market.localdataaccess.dao.BrandDAO
 import br.com.market.localdataaccess.dao.CompanyDAO
 import br.com.market.localdataaccess.dao.DeviceDAO
 import br.com.market.localdataaccess.dao.MarketDAO
+import br.com.market.localdataaccess.dao.ProductDAO
+import br.com.market.localdataaccess.dao.ProductImageDAO
 import br.com.market.localdataaccess.dao.UserDAO
 import br.com.market.localdataaccess.dao.remotekeys.BrandRemoteKeysDAO
 import br.com.market.localdataaccess.database.AppDatabase
@@ -42,8 +44,18 @@ class ViewModelModule {
         brandRemoteKeysDAO: BrandRemoteKeysDAO,
         brandDAO: BrandDAO,
         marketDAO: MarketDAO,
+        productDAO: ProductDAO,
+        productImageDAO: ProductImageDAO,
         webClient: BrandWebClient
-    ): BrandRepository = BrandRepository(appDatabase, brandRemoteKeysDAO, brandDAO, marketDAO, webClient)
+    ): BrandRepository = BrandRepository(
+        appDatabase = appDatabase,
+        brandRemoteKeysDAO = brandRemoteKeysDAO,
+        brandDAO = brandDAO,
+        marketDAO = marketDAO,
+        productDAO = productDAO,
+        productImageDAO = productImageDAO,
+        webClient = webClient
+    )
 
     /**
      * Função para instanciar um UserRepository.

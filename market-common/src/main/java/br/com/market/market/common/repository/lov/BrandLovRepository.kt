@@ -3,12 +3,14 @@ package br.com.market.market.common.repository.lov
 import android.content.Context
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
+import br.com.market.core.filter.BrandFilter
 import br.com.market.core.pagination.PagingConfigUtils
 import br.com.market.domain.BrandDomain
 import br.com.market.localdataaccess.dao.BrandDAO
+import br.com.market.localdataaccess.dao.ProductDAO
+import br.com.market.localdataaccess.dao.ProductImageDAO
 import br.com.market.localdataaccess.dao.remotekeys.BrandRemoteKeysDAO
 import br.com.market.localdataaccess.database.AppDatabase
-import br.com.market.core.filter.BrandFilter
 import br.com.market.market.common.mediator.BrandRemoteMediator
 import br.com.market.market.common.repository.BaseRepository
 import br.com.market.market.common.repository.IPagedRemoteSearchRepository
@@ -19,6 +21,8 @@ class BrandLovRepository @Inject constructor(
     private val appDatabase: AppDatabase,
     private val brandRemoteKeysDAO: BrandRemoteKeysDAO,
     private val brandDAO: BrandDAO,
+    private val productDAO: ProductDAO,
+    private val productImageDAO: ProductImageDAO,
     private val brandWebClient: BrandWebClient
 ) : BaseRepository(), IPagedRemoteSearchRepository<BrandFilter, BrandDomain> {
 
@@ -32,9 +36,11 @@ class BrandLovRepository @Inject constructor(
                 context = context,
                 remoteKeysDAO = brandRemoteKeysDAO,
                 brandDAO = brandDAO,
+                productDAO = productDAO,
+                productImageDAO = productImageDAO,
                 brandWebClient = brandWebClient,
                 marketId = filters.marketId!!,
-                simpleFilter = filters.simpleFilter,
+                simpleFilter = filters.quickFilter,
                 categoryId = filters.categoryId
             )
         )

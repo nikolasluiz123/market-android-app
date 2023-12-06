@@ -9,6 +9,8 @@ import br.com.market.domain.CategoryDomain
 import br.com.market.localdataaccess.dao.BrandDAO
 import br.com.market.localdataaccess.dao.CategoryDAO
 import br.com.market.localdataaccess.dao.MarketDAO
+import br.com.market.localdataaccess.dao.ProductDAO
+import br.com.market.localdataaccess.dao.ProductImageDAO
 import br.com.market.localdataaccess.dao.remotekeys.CategoryRemoteKeysDAO
 import br.com.market.localdataaccess.database.AppDatabase
 import br.com.market.market.common.mediator.CategoryRemoteMediator
@@ -38,6 +40,8 @@ class CategoryRepository @Inject constructor(
     private val marketDAO: MarketDAO,
     private val categoryDAO: CategoryDAO,
     private val brandDAO: BrandDAO,
+    private val productDAO: ProductDAO,
+    private val productImageDAO: ProductImageDAO,
     private val categoryWebClient: CategoryWebClient,
 ) : BaseRepository(), IPagedRemoteSearchRepository<BaseSearchFilter, CategoryDomain> {
 
@@ -52,9 +56,11 @@ class CategoryRepository @Inject constructor(
                 remoteKeysDAO = categoryRemoteKeysDAO,
                 categoryDAO = categoryDAO,
                 brandDAO = brandDAO,
+                productDAO = productDAO,
+                productImageDAO = productImageDAO,
                 categoryWebClient = categoryWebClient,
                 marketId = filters.marketId!!,
-                simpleFilter = filters.simpleFilter
+                simpleFilter = filters.quickFilter
             )
         )
     }

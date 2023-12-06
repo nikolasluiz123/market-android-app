@@ -2,13 +2,15 @@ package br.com.market.storage.ui.viewmodels.brand
 
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import br.com.market.core.extensions.navParamToString
+import br.com.market.core.filter.ProductFilter
 import br.com.market.core.ui.states.Field
 import br.com.market.domain.BrandDomain
 import br.com.market.domain.ProductImageReadDomain
+import br.com.market.market.common.repository.MarketRepository
+import br.com.market.market.common.viewmodel.BaseSearchViewModel
 import br.com.market.sdo.BrandAndReferencesSDO
 import br.com.market.servicedataaccess.responses.types.SingleValueResponse
 import br.com.market.storage.R
@@ -24,7 +26,7 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -36,8 +38,9 @@ class BrandViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val categoryRepository: CategoryRepository,
     private val brandRepository: BrandRepository,
-    private val productRepository: ProductRepository
-) : ViewModel() {
+    private val productRepository: ProductRepository,
+    private val marketRepository: MarketRepository
+    ) : BaseSearchViewModel<ProductImageReadDomain, ProductFilter>() {
 
     private val _uiState: MutableStateFlow<BrandUIState> = MutableStateFlow(BrandUIState())
     val uiState get() = _uiState.asStateFlow()
@@ -48,7 +51,6 @@ class BrandViewModel @Inject constructor(
     init {
         _uiState.update { currentState ->
             currentState.copy(
-                products = getProducts(),
                 name = Field(onChange = { _uiState.value = _uiState.value.copy(name = _uiState.value.name.copy(value = it)) }),
                 onShowDialog = { type, message, onConfirm, onCancel ->
                     _uiState.value = _uiState.value.copy(
@@ -97,38 +99,47 @@ class BrandViewModel @Inject constructor(
         val categoryId = categoryId?.navParamToString()
         val brandId = brandId?.navParamToString()
 
-        if (!categoryId.isNullOrEmpty()) {
-            viewModelScope.launch {
-                val findCategoryResponse = categoryRepository.findById(categoryId)
-
-                if (findCategoryResponse.success) {
-                    _uiState.update { currentState -> currentState.copy(categoryDomain = findCategoryResponse.value) }
-
-                    if (!brandId.isNullOrEmpty()) {
-                        loadBrand(categoryId, brandId, onError)
-                    }
-                } else {
-                    withContext(Main) { onError(findCategoryResponse.error ?: "") }
-                }
+        viewModelScope.launch {
+            loadCategory(categoryId = categoryId, onError = onError) {
+                loadBrand(categoryId = categoryId!!, brandId = brandId, onError = onError)
             }
         }
     }
 
-    private suspend fun loadBrand(categoryId: String, brandId: String, onError: (String) -> Unit) {
-        val findBrandResponse = brandRepository.findBrandAndReferencesBy(categoryId, brandId)
+    private suspend fun loadCategory(categoryId: String?, onError: (String) -> Unit, onSuccess: suspend () -> Unit) {
+        if (!categoryId.isNullOrEmpty()) {
+            val findCategoryResponse = categoryRepository.findById(categoryId)
 
-        if (findBrandResponse.success) {
-            val brandDomain = getBrandDomainFrom(findBrandResponse)
-
-            _uiState.update { currentState ->
-                currentState.copy(
-                    brandDomain = brandDomain,
-                    name = _uiState.value.name.copy(value = brandDomain.name),
-                    active = findBrandResponse.value!!.categoryBrand.active
-                )
+            if (findCategoryResponse.success) {
+                _uiState.update { currentState -> currentState.copy(categoryDomain = findCategoryResponse.value) }
+                onSuccess()
+            } else {
+                withContext(Main) { onError(findCategoryResponse.error ?: "") }
             }
-        } else {
-            withContext(Main) { onError(findBrandResponse.error ?: "") }
+        }
+    }
+
+    private suspend fun loadBrand(categoryId: String, brandId: String?, onError: (String) -> Unit) {
+        if (!brandId.isNullOrEmpty()) {
+            val findBrandResponse = brandRepository.findBrandAndReferencesBy(categoryId, brandId)
+
+            if (findBrandResponse.success) {
+                val brandDomain = getBrandDomainFrom(findBrandResponse)
+
+                val marketId = marketRepository.findFirst().first()?.id!!
+                filter = ProductFilter(marketId = marketId, categoryId = categoryId, brandId = brandId)
+
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        brandDomain = brandDomain,
+                        name = _uiState.value.name.copy(value = brandDomain.name),
+                        active = findBrandResponse.value!!.categoryBrand.active,
+                        products = getDataFlow(filter)
+                    )
+                }
+            } else {
+                withContext(Main) { onError(findBrandResponse.error ?: "") }
+            }
         }
     }
 
@@ -141,17 +152,6 @@ class BrandViewModel @Inject constructor(
                 synchronized = true,
                 name = brand.name!!
             )
-        }
-    }
-
-    private fun getProducts(simpleFilterText: String? = null): Flow<PagingData<ProductImageReadDomain>> {
-        val categoryId = categoryId?.navParamToString()
-        val brandId = brandId?.navParamToString()
-
-        return if (categoryId != null && brandId != null) {
-            productRepository.findProducts(categoryId = categoryId, brandId = brandId, simpleFilter = simpleFilterText)
-        } else {
-            emptyFlow()
         }
     }
 
@@ -190,11 +190,12 @@ class BrandViewModel @Inject constructor(
         }
     }
 
-    fun updateList(simpleFilterText: String? = null) {
-        _uiState.update { currentState ->
-            currentState.copy(
-                products = getProducts(simpleFilterText)
-            )
-        }
+    override fun onSimpleFilterChange(value: String?) {
+        filter.quickFilter = value
+        _uiState.value = _uiState.value.copy(products = getDataFlow(filter))
+    }
+
+    override fun getDataFlow(filter: ProductFilter): Flow<PagingData<ProductImageReadDomain>> {
+        return productRepository.getConfiguredPager(context, filter).flow
     }
 }

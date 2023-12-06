@@ -100,20 +100,18 @@ class CategoryViewModel @Inject constructor(
     }
 
     private fun validateName(onValidChange: (Boolean) -> Unit) {
-        viewModelScope.launch {
-            when {
-                _uiState.value.nameField.valueIsEmpty() -> {
-                    onValidChange(false)
+        when {
+            _uiState.value.nameField.valueIsEmpty() -> {
+                onValidChange(false)
 
-                    _uiState.value = _uiState.value.copy(
-                        nameField = _uiState.value.nameField.copy(errorMessage = context.getString(R.string.category_screen_category_name_required_validation_message))
-                    )
-                }
-                else -> {
-                    _uiState.value = _uiState.value.copy(
-                        nameField = _uiState.value.nameField.copy(errorMessage = "")
-                    )
-                }
+                _uiState.value = _uiState.value.copy(
+                    nameField = _uiState.value.nameField.copy(errorMessage = context.getString(R.string.category_screen_category_name_required_validation_message))
+                )
+            }
+            else -> {
+                _uiState.value = _uiState.value.copy(
+                    nameField = _uiState.value.nameField.copy(errorMessage = "")
+                )
             }
         }
     }
@@ -155,11 +153,8 @@ class CategoryViewModel @Inject constructor(
     }
 
     override fun onSimpleFilterChange(value: String?) {
-        filter.simpleFilter = value
-
-        _uiState.value = _uiState.value.copy(
-            brands = getDataFlow(filter)
-        )
+        filter.quickFilter = value
+        _uiState.value = _uiState.value.copy(brands = getDataFlow(filter))
     }
 
     override fun getDataFlow(filter: BrandFilter): Flow<PagingData<BrandDomain>> {

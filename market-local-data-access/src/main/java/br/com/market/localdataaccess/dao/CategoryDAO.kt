@@ -37,9 +37,9 @@ abstract class CategoryDAO : AbstractBaseDAO() {
         val where = StringJoiner("\r\n")
         where.add(" where c.active ")
 
-        if (!filter.simpleFilter.isNullOrBlank()) {
+        if (!filter.quickFilter.isNullOrBlank()) {
             where.add(" and c.name like ? ")
-            params.add("%${filter.simpleFilter}%")
+            params.add("%${filter.quickFilter}%")
         }
 
         val orderBy = StringJoiner("\r\n")
@@ -69,9 +69,9 @@ abstract class CategoryDAO : AbstractBaseDAO() {
         val where = StringJoiner("\r\n")
         where.add(" where c.active ")
 
-        if (!filter.simpleFilter.isNullOrBlank()) {
+        if (!filter.quickFilter.isNullOrBlank()) {
             where.add(" and c.name like ? ")
-            params.add("%${filter.simpleFilter}%")
+            params.add("%${filter.quickFilter}%")
         }
 
         val orderBy = StringJoiner("\r\n")

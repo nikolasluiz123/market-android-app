@@ -1,6 +1,7 @@
 package br.com.market.market.common.mediator
 
 import android.content.Context
+import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -79,9 +80,10 @@ abstract class BaseRemoteMediator<DOMAIN : BaseDomain, KEY : BaseRemoteKeyModel,
             val limit = state.config.pageSize
             val offset = page * limit
             val response = getDataOfService(limit, offset)
-            val endOfPaginationReached = response.values.isEmpty()
 
             if (response.success) {
+                val endOfPaginationReached = response.values.isEmpty()
+
                 database.withTransaction {
                     if (loadType == LoadType.REFRESH) {
                         onLoadDataRefreshType()
@@ -133,6 +135,7 @@ abstract class BaseRemoteMediator<DOMAIN : BaseDomain, KEY : BaseRemoteKeyModel,
         return state.pages.lastOrNull {
             it.data.isNotEmpty()
         }?.data?.lastOrNull()?.let { domain ->
+            Log.i("Teste", "getRemoteKeyForLastItem: domain = $domain id = ${domain.id}")
             getRemoteKeyByID(domain.id!!)
         }
     }

@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="message_load_data_exception">Ocorreu um erro inesperado ao realizar o carregamento dos dados.</string>
+    <string name="message_load_data_exception">Ocorreu um erro inesperado ao realizar o carregamento dos dados. Se o erro persistir contate o administrador.</string>
 </resources>

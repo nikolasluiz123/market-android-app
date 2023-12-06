@@ -144,7 +144,9 @@ fun StorageAppNavHost(
             onBackClick = navController::popBackStack,
             onStorageButtonClick = navController::navigateToMovementsSearchScreen,
             onProductImageClick = navController::navigateToImageViewerScreen,
-            onBottomSheetLoadImageLinkClick = navController::navigateToLoadImageLinkScreen
+            onBottomSheetLoadImageLinkClick = navController::navigateToLoadImageLinkScreen,
+            textInputCallback = navController::navigateToInputText,
+            numberInputCallback = navController::navigateToInputNumber
         )
 
         movementsSearchScreen(

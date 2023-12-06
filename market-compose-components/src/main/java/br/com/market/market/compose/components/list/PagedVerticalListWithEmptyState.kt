@@ -7,6 +7,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 
 /**
@@ -42,7 +43,7 @@ fun <T : Any> PagedVerticalListWithEmptyState(
     ConstraintLayout(modifier = modifier.fillMaxSize()) {
         val (lazyColumnRef, emptyText) = createRefs()
 
-        if (pagingItems.itemCount > 0) {
+        if (pagingItems.itemCount > 0 || pagingItems.loadState.refresh is LoadState.Error) {
             PagedVerticalList(
                 modifier = Modifier
                     .fillMaxSize()

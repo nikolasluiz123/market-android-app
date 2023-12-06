@@ -1,46 +1,59 @@
 package br.com.market.storage.repository
 
+import android.content.Context
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
-import androidx.paging.PagingData
+import br.com.market.core.filter.ProductFilter
 import br.com.market.core.pagination.PagingConfigUtils
 import br.com.market.domain.ProductDomain
 import br.com.market.domain.ProductImageDomain
+import br.com.market.domain.ProductImageReadDomain
 import br.com.market.localdataaccess.dao.BrandDAO
 import br.com.market.localdataaccess.dao.MarketDAO
 import br.com.market.localdataaccess.dao.ProductDAO
 import br.com.market.localdataaccess.dao.ProductImageDAO
+import br.com.market.localdataaccess.dao.remotekeys.ProductRemoteKeysDAO
+import br.com.market.localdataaccess.database.AppDatabase
+import br.com.market.market.common.mediator.lov.ProductRemoteMediator
 import br.com.market.market.common.repository.BaseRepository
-import br.com.market.domain.ProductImageReadDomain
+import br.com.market.market.common.repository.IPagedRemoteSearchRepository
 import br.com.market.models.Product
 import br.com.market.models.ProductImage
-import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
+import br.com.market.servicedataaccess.services.params.ProductServiceSearchParams
 import br.com.market.servicedataaccess.webclients.ProductWebClient
-import br.com.market.storage.pagination.ProductPagingSource
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class ProductRepository @Inject constructor(
+    private val appDatabase: AppDatabase,
+    private val productRemoteKeyDAO: ProductRemoteKeysDAO,
     private val productDAO: ProductDAO,
     private val marketDAO: MarketDAO,
     private val productImageDAO: ProductImageDAO,
     private val brandDAO: BrandDAO,
     private val webClient: ProductWebClient
-): BaseRepository() {
+): BaseRepository(), IPagedRemoteSearchRepository<ProductFilter, ProductImageReadDomain> {
 
-    fun findProducts(categoryId: String, brandId: String, simpleFilter: String?): Flow<PagingData<ProductImageReadDomain>> {
+    @OptIn(ExperimentalPagingApi::class)
+    override fun getConfiguredPager(context: Context, filters: ProductFilter): Pager<Int, ProductImageReadDomain> {
         return Pager(
-            config = PagingConfigUtils.defaultPagingConfig(),
-            pagingSourceFactory = {
-                ProductPagingSource(
-                    dao = productDAO,
-                    categoryId = categoryId,
-                    brandId = brandId,
-                    simpleFilter = simpleFilter
+            config = PagingConfigUtils.customConfig(20),
+            pagingSourceFactory = { productDAO.findProducts(filters) },
+            remoteMediator = ProductRemoteMediator(
+                database = appDatabase,
+                context = context,
+                remoteKeysDAO = productRemoteKeyDAO,
+                productDAO = productDAO,
+                productImageDAO = productImageDAO,
+                webClient = webClient,
+                params = ProductServiceSearchParams(
+                    categoryId = filters.categoryId,
+                    brandId = filters.brandId,
+                    quickFilter = filters.quickFilter
                 )
-            }
-        ).flow
+            )
+        )
     }
 
     suspend fun findProductDomain(productId: String): ProductDomain {
@@ -190,46 +203,4 @@ class ProductRepository @Inject constructor(
         productImageDAO.toggleActive(id = imageId, sync = response.getObjectSynchronized())
     }
 
-    suspend fun sync(): MarketServiceResponse {
-        val response = sendProductsToRemoteDB()
-        return if (response.success) updateProductsOfLocalDB() else response
-    }
-
-    private suspend fun sendProductsToRemoteDB(): MarketServiceResponse {
-        val productsNotSynchronized = productDAO.findProductsNotSynchronized()
-        val productImagesNotSynchronized = productImageDAO.findProductImagesNotSynchronized()
-        val response = webClient.sync(productsNotSynchronized, productImagesNotSynchronized)
-
-        if (response.success) {
-            val productsSynchronized = productsNotSynchronized.map { it.copy(synchronized = true) }
-            productDAO.save(productsSynchronized)
-
-            val productImagesSynchronized = productImagesNotSynchronized.map { it.copy(synchronized = true) }
-            productImageDAO.save(productImagesSynchronized)
-        }
-
-        return response
-    }
-
-    private suspend fun updateProductsOfLocalDB(): MarketServiceResponse {
-        val marketId = marketDAO.findFirst().first()?.id!!
-
-        var response = importPagingData(
-            onWebServiceFind = { limit, offset ->
-                webClient.findProducts(marketId = marketId, limit = limit, offset = offset)
-            },
-            onPersistData = productDAO::save
-        )
-
-        if (response.success) {
-            response = importPagingData(
-                onWebServiceFind = { limit, offset ->
-                    webClient.findProductImages(marketId = marketId, limit = limit, offset = offset)
-                },
-                onPersistData = productImageDAO::save
-            )
-        }
-
-        return response
-    }
 }

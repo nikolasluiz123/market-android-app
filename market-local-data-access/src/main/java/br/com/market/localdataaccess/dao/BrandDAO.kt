@@ -46,9 +46,9 @@ abstract class BrandDAO : AbstractBaseDAO() {
             params.add(filter.categoryId!!)
         }
 
-        if (!filter.simpleFilter.isNullOrBlank()) {
+        if (!filter.quickFilter.isNullOrBlank()) {
             where.add(" and b.name like ? ")
-            params.add("%${filter.simpleFilter}%")
+            params.add("%${filter.quickFilter}%")
         }
 
         val orderBy = StringJoiner("\r\n")
@@ -75,9 +75,9 @@ abstract class BrandDAO : AbstractBaseDAO() {
         val where = StringJoiner("\r\n")
         where.add(" where b.active ")
 
-        if (!filter.simpleFilter.isNullOrBlank()) {
+        if (!filter.quickFilter.isNullOrBlank()) {
             where.add(" and p.name like ? ")
-            params.add("%${filter.simpleFilter}%")
+            params.add("%${filter.quickFilter}%")
         }
 
         val orderBy = StringJoiner("\r\n")

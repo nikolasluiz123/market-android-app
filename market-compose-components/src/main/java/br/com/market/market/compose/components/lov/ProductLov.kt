@@ -22,7 +22,6 @@ import br.com.market.market.compose.components.lov.items.ProductLovListItem
 import br.com.market.market.compose.components.lov.state.ProductLovUIState
 import br.com.market.market.compose.components.lov.viewmodel.ProductLovViewModel
 import br.com.market.market.compose.components.topappbar.SimpleMarketTopAppBar
-import java.util.*
 
 @Composable
 fun ProductLov(
