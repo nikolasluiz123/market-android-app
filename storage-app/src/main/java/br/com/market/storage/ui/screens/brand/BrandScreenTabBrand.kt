@@ -21,7 +21,9 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import br.com.market.core.callbacks.IServiceOperationCallback
 import br.com.market.core.callbacks.ITextInputNavigationCallback
+import br.com.market.core.enums.EnumDialogType
 import br.com.market.core.inputs.arguments.InputArgs
 import br.com.market.core.theme.MarketTheme
 import br.com.market.domain.BrandDomain
@@ -42,7 +44,7 @@ import kotlinx.coroutines.launch
 fun BrandScreenTaBrand(
     state: BrandUIState = BrandUIState(),
     onUpdateEditMode: (Boolean) -> Unit = { },
-    onToggleActive: () -> Unit = { },
+    toggleActive: IServiceOperationCallback? = null,
     onSaveBrandClick: (Boolean) -> Unit = { },
     isEdit: Boolean = false,
     textInputCallback: ITextInputNavigationCallback? = null,
@@ -68,24 +70,58 @@ fun BrandScreenTaBrand(
                         IconButtonInactivate(
                             enabled = isEditMode,
                             onClick = {
-                                onToggleActive()
-                                isActive = false
+                                state.onShowDialog?.onShow(
+                                    type = EnumDialogType.CONFIRMATION,
+                                    message = context.getString(R.string.brand_screen_tab_brand_inactivate_question),
+                                    onConfirm = {
+                                        state.onToggleLoading()
+                                        toggleActive?.onExecute(
+                                            onSuccess = {
+                                                isActive = false
 
-                                scope.launch {
-                                    snackbarHostState.showSnackbar(context.getString(R.string.brand_screen_tab_brand_inactivate_success_message))
-                                }
+                                                scope.launch {
+                                                    snackbarHostState.showSnackbar(context.getString(R.string.brand_screen_tab_brand_inactivate_success_message))
+                                                }
+                                                state.onToggleLoading()
+                                            },
+                                            onError = {
+                                                state.onHideDialog()
+                                                state.onToggleLoading()
+                                                state.onShowDialog.onShow(type = EnumDialogType.ERROR, message = it, onConfirm = {}, onCancel = {})
+                                            }
+                                        )
+                                    },
+                                    onCancel = { }
+                                )
                             }
                         )
                     } else {
                         IconButtonReactivate(
                             enabled = isEditMode,
                             onClick = {
-                                onToggleActive()
-                                isActive = true
+                                state.onShowDialog?.onShow(
+                                    type = EnumDialogType.CONFIRMATION,
+                                    message = context.getString(R.string.brand_screen_tab_brand_reactivate_question),
+                                    onConfirm = {
+                                        state.onToggleLoading()
+                                        toggleActive?.onExecute(
+                                            onSuccess = {
+                                                isActive = true
 
-                                scope.launch {
-                                    snackbarHostState.showSnackbar(context.getString(R.string.brand_screen_tab_brand_reactivate_success_message))
-                                }
+                                                scope.launch {
+                                                    snackbarHostState.showSnackbar(context.getString(R.string.brand_screen_tab_brand_reactivate_success_message))
+                                                }
+                                                state.onToggleLoading()
+                                            },
+                                            onError = {
+                                                state.onHideDialog()
+                                                state.onToggleLoading()
+                                                state.onShowDialog.onShow(type = EnumDialogType.ERROR, message = it, onConfirm = {}, onCancel = {})
+                                            }
+                                        )
+                                    },
+                                    onCancel = { }
+                                )
                             }
                         )
                     }

@@ -1,7 +1,6 @@
 package br.com.market.servicedataaccess.services
 
 import br.com.market.sdo.BrandAndReferencesSDO
-import br.com.market.sdo.CategoryBrandSDO
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
 import br.com.market.servicedataaccess.responses.types.ReadResponse
 import br.com.market.servicedataaccess.responses.types.SingleValueResponse
@@ -19,8 +18,12 @@ interface IBrandService {
     @POST("brand")
     suspend fun save(@Header("Authorization") token: String, @Body brandAndReferencesSDO: BrandAndReferencesSDO): Response<PersistenceResponse>
 
-    @POST("brand/toggleActive")
-    suspend fun toggleActive(@Header("Authorization") token: String, @Body categoryBrandSDO: CategoryBrandSDO): Response<PersistenceResponse>
+    @POST("brand/toggleActive/{categoryId}/{brandId}")
+    suspend fun toggleActive(
+        @Header("Authorization") token: String,
+        @Path("categoryId") categoryId: String,
+        @Path("brandId") brandId: String
+    ): Response<PersistenceResponse>
 
     @GET("brand")
     suspend fun getListBrand(

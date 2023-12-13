@@ -29,7 +29,7 @@ class ImageViewerViewModel @Inject constructor(
         productImageId?.navParamToString()?.let { id ->
             viewModelScope.launch {
                 val productImageDomain = productRepository.findProductImageDomain(id)
-                val productDomain = productRepository.findProductDomain(productImageDomain?.productId!!)
+                val productDomain = productRepository.findProductByLocalId(productImageDomain?.productId!!)
 
                 _uiState.update { currentState ->
                     currentState.copy(

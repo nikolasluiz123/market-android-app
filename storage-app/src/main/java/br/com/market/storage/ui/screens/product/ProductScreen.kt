@@ -334,7 +334,7 @@ fun ProductScreen(
                     horizontalChainWeight = 0.5F
                 },
                 labelResId = R.string.product_screen_label_measure,
-                field = state.quantityUnit,
+                field =  state.quantityUnit,
                 onNavigateClick = { showSelectOneQuantityUnit = true }
             )
 

@@ -169,10 +169,15 @@ class BrandViewModel @Inject constructor(
         }
     }
 
-    fun toggleActive() {
+    fun toggleActive(onSuccess: () -> Unit, onError: (message: String) -> Unit) {
         _uiState.value.brandDomain?.id?.let { id ->
             viewModelScope.launch {
-                brandRepository.toggleActive(brandId = id, categoryId = categoryId.navParamToString()!!)
+                val response = brandRepository.toggleActive(
+                    brandId = id,
+                    categoryId = categoryId.navParamToString()!!
+                )
+
+                if (response.success) onSuccess() else onError(response.error ?: "")
             }
         }
     }

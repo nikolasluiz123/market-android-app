@@ -12,6 +12,7 @@ import androidx.sqlite.db.SupportSQLiteQuery
 import br.com.market.core.filter.ProductFilter
 import br.com.market.domain.ProductImageReadDomain
 import br.com.market.models.Product
+import br.com.market.models.ProductImage
 import br.com.market.models.StorageOperationHistory
 import br.com.market.models.User
 import java.util.StringJoiner
@@ -23,10 +24,25 @@ abstract class ProductDAO : AbstractBaseDAO() {
     abstract suspend fun findProductById(productId: String): Product
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun save(product: Product)
+    abstract suspend fun saveProduct(product: Product)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun save(products: List<Product>)
+    abstract suspend fun saveProducts(products: List<Product>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract suspend fun saveImages(images: List<ProductImage>)
+
+    @Transaction
+    open suspend fun saveProductAndImages(product: Product, images: List<ProductImage>) {
+        saveProduct(product)
+        saveImages(images)
+    }
+
+    @Transaction
+    open suspend fun saveProductsAndImages(products: List<Product>, images: List<ProductImage>) {
+        saveProducts(products)
+        saveImages(images)
+    }
 
     fun findProducts(filters: ProductFilter): PagingSource<Int, ProductImageReadDomain> {
         val params = mutableListOf<Any>()
@@ -83,16 +99,16 @@ abstract class ProductDAO : AbstractBaseDAO() {
     abstract fun executeQueryFindProducts(query: SupportSQLiteQuery): PagingSource<Int, ProductImageReadDomain>
 
     @Transaction
-    open suspend fun toggleActiveProductAndImages(productId: String, sync: Boolean) {
-        toggleActiveProduct(productId = productId, sync = sync)
-        toggleActiveProductImages(productId = productId, sync = sync)
+    open suspend fun toggleActiveProductAndImages(productId: String) {
+        toggleActiveProduct(productId = productId)
+        toggleActiveProductImages(productId = productId)
     }
 
-    @Query("update products set active = not active, synchronized = :sync where id = :productId")
-    abstract suspend fun toggleActiveProduct(productId: String, sync: Boolean)
+    @Query("update products set active = not active where id = :productId")
+    abstract suspend fun toggleActiveProduct(productId: String)
 
-    @Query("update products_images set active = not active, principal = 0, synchronized = :sync where product_id = :productId")
-    abstract suspend fun toggleActiveProductImages(productId: String, sync: Boolean)
+    @Query("update products_images set active = not active, principal = 0 where product_id = :productId")
+    abstract suspend fun toggleActiveProductImages(productId: String)
 
     @Query("select * from products where synchronized = 0")
     abstract suspend fun findProductsNotSynchronized(): List<Product>
@@ -149,6 +165,49 @@ abstract class ProductDAO : AbstractBaseDAO() {
     @RawQuery(observedEntities = [StorageOperationHistory::class, Product::class, User::class])
     abstract fun executeQueryFindProductsToSell(query: SupportSQLiteQuery): PagingSource<Int, ProductImageReadDomain>
 
+    @Transaction
+    open suspend fun clearAll() {
+        clearAllImages()
+        clearAllProducts()
+    }
+
     @Query("delete from products")
-    abstract suspend fun clearAll()
+    abstract suspend fun clearAllProducts()
+
+    @Query("delete from products_images")
+    abstract suspend fun clearAllImages()
+
+    @Query("select * from products_images where product_id = :productId and active")
+    abstract suspend fun findProductImagesBy(productId: String): List<ProductImage>
+
+    @Query("select * from products_images where id = :id and active")
+    abstract suspend fun findProductImageBy(id: String?): ProductImage?
+
+    @Transaction
+    open suspend fun updateImage(image: ProductImage) {
+        if (image.principal) {
+            updateFlagPrincipalProductImages(productId = image.productId!!, productImageId = image.id)
+        }
+
+        saveImages(listOf(image))
+    }
+    @Query("update products_images set principal = 0 " +
+            "where product_id = :productId " +
+            "and id != :productImageId " +
+            "and active ")
+    abstract suspend fun updateFlagPrincipalProductImages(productId: String, productImageId: String)
+
+    open suspend fun toggleActive(imageId: String, productId: String) {
+        val images = findProductImagesBy(productId).toMutableList()
+        val imageToToggleActive = images.find { it.id == imageId }!!
+        images.remove(imageToToggleActive)
+
+        if (imageToToggleActive.principal) {
+            val image = images[0]
+            image.principal = true
+
+            updateImage(image)
+        }
+    }
+
 }

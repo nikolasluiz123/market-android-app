@@ -5,6 +5,7 @@ import br.com.market.sdo.ProductClientSDO
 import br.com.market.sdo.ProductImageSDO
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
 import br.com.market.servicedataaccess.responses.types.ReadResponse
+import br.com.market.servicedataaccess.responses.types.SingleValueResponse
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -26,7 +27,8 @@ interface IProductService {
     @POST("product/image/toggleActive")
     suspend fun toggleActiveProductImage(
         @Header("Authorization") token: String,
-        @Query("productImageLocalId") productImageLocalId: String
+        @Query("productId") productId: String,
+        @Query("imageId") imageId: String
     ): Response<PersistenceResponse>
 
     @GET("product/client")
@@ -42,4 +44,10 @@ interface IProductService {
         @Header("Authorization") token: String,
         @Query("jsonParams") jsonParams: String
     ): Response<ReadResponse<ProductAndReferencesSDO>>
+
+    @GET("product/{productId}")
+    suspend fun findProductByLocalId(
+        @Header("Authorization") token: String,
+        @Query("productId") productId: String
+    ): Response<SingleValueResponse<ProductAndReferencesSDO>>
 }

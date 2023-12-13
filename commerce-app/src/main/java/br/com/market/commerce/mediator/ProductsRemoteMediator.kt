@@ -12,7 +12,6 @@ import br.com.market.localdataaccess.dao.CategoryDAO
 import br.com.market.localdataaccess.dao.CompanyDAO
 import br.com.market.localdataaccess.dao.MarketDAO
 import br.com.market.localdataaccess.dao.ProductDAO
-import br.com.market.localdataaccess.dao.ProductImageDAO
 import br.com.market.localdataaccess.dao.remotekeys.ProductRemoteKeysDAO
 import br.com.market.localdataaccess.database.AppDatabase
 import br.com.market.models.Address
@@ -39,7 +38,6 @@ class ProductsRemoteMediator(
     private val marketDAO: MarketDAO,
     private val companyDAO: CompanyDAO,
     private val productDAO: ProductDAO,
-    private val imageDAO: ProductImageDAO,
     private val remoteKeysDAO: ProductRemoteKeysDAO,
     private val addressDAO: AddressDAO,
     private val simpleFilter: String?
@@ -85,7 +83,6 @@ class ProductsRemoteMediator(
                 database.withTransaction {
                     if (loadType == LoadType.REFRESH) {
                         remoteKeysDAO.clearRemoteKeys()
-                        imageDAO.clearAll()
                         productDAO.clearAll()
                         brandDAO.clearAll()
                         categoryDAO.clearAll()
@@ -124,10 +121,8 @@ class ProductsRemoteMediator(
                     brandDAO.saveCategoryBrands(categoryBrands)
 
                     val products = getProductsFrom(response)
-                    productDAO.save(products)
-
                     val images = getImagesFrom(response)
-                    imageDAO.save(images)
+                    productDAO.saveProductsAndImages(products, images)
                 }
             }
 

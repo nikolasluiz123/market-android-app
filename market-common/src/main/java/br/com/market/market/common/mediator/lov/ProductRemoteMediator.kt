@@ -3,7 +3,6 @@ package br.com.market.market.common.mediator.lov
 import android.content.Context
 import br.com.market.domain.ProductImageReadDomain
 import br.com.market.localdataaccess.dao.ProductDAO
-import br.com.market.localdataaccess.dao.ProductImageDAO
 import br.com.market.localdataaccess.dao.remotekeys.ProductRemoteKeysDAO
 import br.com.market.localdataaccess.database.AppDatabase
 import br.com.market.market.common.mediator.BaseRemoteMediator
@@ -20,7 +19,6 @@ class ProductRemoteMediator(
     context: Context,
     private val remoteKeysDAO: ProductRemoteKeysDAO,
     private val productDAO: ProductDAO,
-    private val productImageDAO: ProductImageDAO,
     private val webClient: ProductWebClient,
     private val params: ProductServiceSearchParams
 
@@ -34,7 +32,6 @@ class ProductRemoteMediator(
 
     override suspend fun onLoadDataRefreshType() {
         remoteKeysDAO.clearRemoteKeys()
-        productImageDAO.clearAll()
         productDAO.clearAll()
     }
 
@@ -42,10 +39,9 @@ class ProductRemoteMediator(
         remoteKeysDAO.insertAll(remoteKeys)
 
         val products = getProductsFrom(response)
-        productDAO.save(products)
-
         val images = getProductsImagesFrom(response)
-        productImageDAO.save(images)
+
+        productDAO.saveProductsAndImages(products, images)
     }
     override fun getRemoteKeysFromServiceData(ids: List<String>, prevKey: Int?, nextKey: Int?, currentPage: Int): List<ProductRemoteKeys> {
         return ids.map { id ->

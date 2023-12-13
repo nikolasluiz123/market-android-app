@@ -9,8 +9,10 @@ import br.com.market.sdo.ProductImageSDO
 import br.com.market.sdo.ProductSDO
 import br.com.market.servicedataaccess.responses.extensions.getPersistenceResponseBody
 import br.com.market.servicedataaccess.responses.extensions.getReadResponseBody
+import br.com.market.servicedataaccess.responses.extensions.getSingleValueResponseBody
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
 import br.com.market.servicedataaccess.responses.types.ReadResponse
+import br.com.market.servicedataaccess.responses.types.SingleValueResponse
 import br.com.market.servicedataaccess.services.IProductService
 import br.com.market.servicedataaccess.services.params.ProductServiceSearchParams
 import com.google.gson.Gson
@@ -81,10 +83,10 @@ class ProductWebClient @Inject constructor(
         )
     }
 
-    suspend fun toggleActiveProductImage(productImageLocalId: String): PersistenceResponse {
+    suspend fun toggleActiveProductImage(productId: String, imageId: String): PersistenceResponse {
         return persistenceServiceErrorHandlingBlock(
             codeBlock = {
-                service.toggleActiveProductImage(getToken(), productImageLocalId).getPersistenceResponseBody()
+                service.toggleActiveProductImage(getToken(), productId, imageId).getPersistenceResponseBody()
             }
         )
     }
@@ -103,6 +105,14 @@ class ProductWebClient @Inject constructor(
         return readServiceErrorHandlingBlock(
             codeBlock = {
                 service.getListProducts(getToken(), jsonParams).getReadResponseBody()
+            }
+        )
+    }
+
+    suspend fun findProductByLocalId(productId: String): SingleValueResponse<ProductAndReferencesSDO> {
+        return singleValueServiceErrorHandlingBlock(
+            codeBlock = {
+                service.findProductByLocalId(getToken(), productId).getSingleValueResponseBody()
             }
         )
     }

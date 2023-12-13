@@ -8,7 +8,6 @@ import br.com.market.core.pagination.PagingConfigUtils
 import br.com.market.domain.BrandDomain
 import br.com.market.localdataaccess.dao.BrandDAO
 import br.com.market.localdataaccess.dao.ProductDAO
-import br.com.market.localdataaccess.dao.ProductImageDAO
 import br.com.market.localdataaccess.dao.remotekeys.BrandRemoteKeysDAO
 import br.com.market.localdataaccess.database.AppDatabase
 import br.com.market.market.common.mediator.BrandRemoteMediator
@@ -22,7 +21,6 @@ class BrandLovRepository @Inject constructor(
     private val brandRemoteKeysDAO: BrandRemoteKeysDAO,
     private val brandDAO: BrandDAO,
     private val productDAO: ProductDAO,
-    private val productImageDAO: ProductImageDAO,
     private val brandWebClient: BrandWebClient
 ) : BaseRepository(), IPagedRemoteSearchRepository<BrandFilter, BrandDomain> {
 
@@ -37,7 +35,6 @@ class BrandLovRepository @Inject constructor(
                 remoteKeysDAO = brandRemoteKeysDAO,
                 brandDAO = brandDAO,
                 productDAO = productDAO,
-                productImageDAO = productImageDAO,
                 brandWebClient = brandWebClient,
                 marketId = filters.marketId!!,
                 simpleFilter = filters.quickFilter,

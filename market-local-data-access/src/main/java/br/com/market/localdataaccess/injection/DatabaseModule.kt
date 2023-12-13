@@ -10,7 +10,6 @@ import br.com.market.localdataaccess.dao.CompanyDAO
 import br.com.market.localdataaccess.dao.DeviceDAO
 import br.com.market.localdataaccess.dao.MarketDAO
 import br.com.market.localdataaccess.dao.ProductDAO
-import br.com.market.localdataaccess.dao.ProductImageDAO
 import br.com.market.localdataaccess.dao.StorageOperationsHistoryDAO
 import br.com.market.localdataaccess.dao.UserDAO
 import br.com.market.localdataaccess.dao.remotekeys.BrandRemoteKeysDAO
@@ -58,9 +57,6 @@ class DatabaseModule {
 
     @Provides
     fun provideProductDAO(appDatabase: AppDatabase): ProductDAO = appDatabase.productDAO()
-
-    @Provides
-    fun provideProductImageDAO(appDatabase: AppDatabase): ProductImageDAO = appDatabase.productImageDAO()
 
     @Provides
     fun provideStorageOperationsHistoryDAO(appDatabase: AppDatabase): StorageOperationsHistoryDAO = appDatabase.storageOperationsHistoryDAO()

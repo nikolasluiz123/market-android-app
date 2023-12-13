@@ -67,18 +67,10 @@ class BrandWebClient @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun toggleActive(categoryBrand: CategoryBrand): PersistenceResponse {
+    suspend fun toggleActive(categoryId: String, brandId: String): PersistenceResponse {
         return persistenceServiceErrorHandlingBlock(
             codeBlock = {
-                val categoryBrandSDO = CategoryBrandSDO(
-                    localId = categoryBrand.id,
-                    active = categoryBrand.active,
-                    localCategoryId = categoryBrand.categoryId!!,
-                    localBrandId = categoryBrand.brandId!!,
-                    marketId = categoryBrand.marketId
-                )
-
-                service.toggleActive(getToken(), categoryBrandSDO).getPersistenceResponseBody()
+                service.toggleActive(getToken(), categoryId, brandId).getPersistenceResponseBody()
             }
         )
     }

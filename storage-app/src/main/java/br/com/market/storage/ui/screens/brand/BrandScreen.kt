@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import br.com.market.core.callbacks.IServiceOperationCallback
 import br.com.market.core.callbacks.ITextInputNavigationCallback
 import br.com.market.core.enums.EnumDialogType
 import br.com.market.core.theme.MarketTheme
@@ -58,9 +59,7 @@ fun BrandScreen(
     BrandScreen(
         state = state,
         onBackClick = onBackClick,
-        onToggleActive = {
-            viewModel.toggleActive()
-        },
+        onToggleActive = viewModel::toggleActive,
         onSaveBrandClick = {
             viewModel.saveBrand()
         },
@@ -82,7 +81,7 @@ fun BrandScreen(
 fun BrandScreen(
     state: BrandUIState = BrandUIState(),
     onBackClick: () -> Unit = { },
-    onToggleActive: () -> Unit = { },
+    onToggleActive: IServiceOperationCallback? = null,
     onSaveBrandClick: (Boolean) -> Unit = { },
     onNavToBrandLov: (categoryId: String) -> Unit = { },
     onFabAddProductClick: (String, String) -> Unit = { _, _ -> },
@@ -214,7 +213,7 @@ fun BrandScreen(
                         BrandScreenTaBrand(
                             state = state,
                             onUpdateEditMode = { isEditMode = it },
-                            onToggleActive = onToggleActive,
+                            toggleActive = onToggleActive,
                             onSaveBrandClick = onSaveBrandClick,
                             isEdit = isEditMode,
                             onNavToBrandLov = onNavToBrandLov,

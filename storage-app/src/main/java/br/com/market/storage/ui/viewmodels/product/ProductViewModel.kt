@@ -9,7 +9,13 @@ import br.com.market.core.enums.EnumDialogType
 import br.com.market.core.extensions.format
 import br.com.market.core.extensions.navParamToString
 import br.com.market.core.ui.states.Field
+import br.com.market.domain.BrandDomain
+import br.com.market.domain.ProductDomain
 import br.com.market.domain.ProductImageDomain
+import br.com.market.enums.EnumUnit
+import br.com.market.sdo.BrandAndReferencesSDO
+import br.com.market.sdo.ProductAndReferencesSDO
+import br.com.market.servicedataaccess.responses.types.SingleValueResponse
 import br.com.market.storage.R
 import br.com.market.storage.repository.BrandRepository
 import br.com.market.storage.repository.ProductRepository
@@ -19,10 +25,12 @@ import br.com.market.storage.ui.navigation.product.argumentProductId
 import br.com.market.storage.ui.states.product.ProductUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,7 +55,9 @@ class ProductViewModel @Inject constructor(
                 name = Field(onChange = { _uiState.value = _uiState.value.copy(name = _uiState.value.name.copy(value = it)) }),
                 price = Field(onChange = { _uiState.value = _uiState.value.copy(price = _uiState.value.price.copy(value = it)) }),
                 quantity = Field(onChange = { _uiState.value = _uiState.value.copy(quantity = _uiState.value.quantity.copy(value = it)) }),
-                quantityUnit = Field(onChange = { _uiState.value = _uiState.value.copy(quantityUnit = _uiState.value.quantityUnit.copy(value = it)) }),
+                quantityUnit = Field(onChange = {
+                    _uiState.value = _uiState.value.copy(quantityUnit = _uiState.value.quantityUnit.copy(value = it))
+                }),
                 onShowDialog = { type, message, onConfirm, onCancel ->
                     _uiState.value = _uiState.value.copy(
                         dialogType = type,
@@ -73,27 +83,103 @@ class ProductViewModel @Inject constructor(
             )
         }
 
-        productId?.navParamToString()?.let { id ->
-            viewModelScope.launch {
-                val productDomain = productRepository.findProductDomain(id)
+        loadScreen { _uiState.value = _uiState.value.copy(internalErrorMessage = it) }
+    }
+
+    private fun loadScreen(onError: (String) -> Unit) {
+        val categoryId = categoryId?.navParamToString()
+        val brandId = brandId?.navParamToString()
+        val productId = productId?.navParamToString()
+
+
+        viewModelScope.launch {
+            loadBrand(categoryId = categoryId, brandId = brandId, onError = onError) {
+                loadProduct(productId = productId, onError = onError)
+            }
+        }
+    }
+
+    private suspend fun loadBrand(
+        categoryId: String?,
+        brandId: String?,
+        onError: (String) -> Unit,
+        onSuccess: suspend () -> Unit
+    ) {
+        if (!categoryId.isNullOrEmpty() && !brandId.isNullOrEmpty()) {
+            val response = brandRepository.findBrandAndReferencesBy(categoryId, brandId)
+
+            if (response.success) {
+                val brandDomain = getBrandDomainFrom(response)
+
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        brandDomain = brandDomain,
+                        categoryBrandId = response.value?.categoryBrand?.localId!!
+                    )
+                }
+
+                onSuccess()
+            } else {
+                withContext(Main) { onError(response.error ?: "") }
+            }
+        }
+    }
+
+    private fun getBrandDomainFrom(response: SingleValueResponse<BrandAndReferencesSDO>): BrandDomain {
+        return response.value!!.run {
+            BrandDomain(
+                id = brand.localId,
+                active = brand.active,
+                marketId = brand.marketId,
+                synchronized = true,
+                name = brand.name!!
+            )
+        }
+    }
+
+    private suspend fun loadProduct(productId: String?, onError: (String) -> Unit) {
+        productId?.let { id ->
+            val response = productRepository.findProductByLocalId(productId = id)
+
+            if (response.success) {
+                val productDomain = getProductDomainFrom(response)
+
                 _uiState.update { currentState ->
                     currentState.copy(
                         productDomain = productDomain,
                         name = _uiState.value.name.copy(value = productDomain.name!!),
                         price = _uiState.value.price.copy(value = productDomain.price!!.format()),
-                        quantity = _uiState.value.quantity.copy(value =  productDomain.quantity!!.format()),
+                        quantity = _uiState.value.quantity.copy(value = productDomain.quantity!!.format()),
                         quantityUnit = _uiState.value.quantityUnit.copy(value = productDomain.quantityUnit!!.toString()),
                         images = productDomain.images.toMutableStateList()
                     )
                 }
+
+            } else {
+                withContext(Main) { onError(response.error ?: "") }
             }
         }
+    }
 
-        brandId?.navParamToString()?.let { id ->
-            viewModelScope.launch {
-                val brandDomain = brandRepository.findById(id)
-                _uiState.update { currentState -> currentState.copy(brandDomain = brandDomain) }
-            }
+    private fun getProductDomainFrom(response: SingleValueResponse<ProductAndReferencesSDO>): ProductDomain {
+        return response.value!!.run {
+            ProductDomain(
+                id = product.localId,
+                marketId = product.marketId,
+                name = product.name,
+                price = product.price,
+                quantity = product.quantity,
+                quantityUnit = product.quantityUnit,
+                images = productImages.map {
+                    ProductImageDomain(
+                        id = it.localId,
+                        marketId = it.marketId,
+                        byteArray = it.bytes,
+                        productId = it.productLocalId,
+                        principal = it.principal
+                    )
+                }.toMutableList()
+            )
         }
     }
 
@@ -119,6 +205,7 @@ class ProductViewModel @Inject constructor(
                     name = _uiState.value.name.copy(errorMessage = context.getString(R.string.product_screen_product_name_required_validation_message))
                 )
             }
+
             else -> {
                 _uiState.value = _uiState.value.copy(
                     name = _uiState.value.name.copy(errorMessage = "")
@@ -136,6 +223,7 @@ class ProductViewModel @Inject constructor(
                     price = _uiState.value.price.copy(errorMessage = context.getString(R.string.product_screen_product_price_required_validation_message))
                 )
             }
+
             else -> {
                 _uiState.value = _uiState.value.copy(
                     price = _uiState.value.price.copy(errorMessage = "")
@@ -153,6 +241,7 @@ class ProductViewModel @Inject constructor(
                     quantity = _uiState.value.quantity.copy(errorMessage = context.getString(R.string.product_screen_product_quantity_required_validation_message))
                 )
             }
+
             else -> {
                 _uiState.value = _uiState.value.copy(
                     quantity = _uiState.value.quantity.copy(errorMessage = "")
@@ -166,7 +255,7 @@ class ProductViewModel @Inject constructor(
             onValidChange(false)
 
             _uiState.value = _uiState.value.copy(
-                quantityUnit = _uiState.value.quantityUnit.copy(errorMessage =  context.getString(R.string.product_screen_product_quantity_unity_required_validation_message))
+                quantityUnit = _uiState.value.quantityUnit.copy(errorMessage = context.getString(R.string.product_screen_product_quantity_unity_required_validation_message))
             )
         } else {
             _uiState.value = _uiState.value.copy(
@@ -176,23 +265,31 @@ class ProductViewModel @Inject constructor(
     }
 
     fun saveProduct() {
-//        _uiState.value.productDomain = if(_uiState.value.productDomain == null) {
-//            ProductDomain(
-//
-//            )
-//        } else {
-//
-//        }
+        val unit = EnumUnit.entries.first { context.getString(it.labelResId) == _uiState.value.quantityUnit.value }
 
-        _uiState.value.productDomain?.let { productDomain ->
-            viewModelScope.launch {
-                productRepository.saveProduct(categoryId!!.navParamToString()!!, _uiState.value.brandDomain?.id!!, productDomain)
+        _uiState.value.productDomain = if (_uiState.value.productDomain == null) {
+            ProductDomain(
+                name = _uiState.value.name.value,
+                price = _uiState.value.price.value.toDouble(),
+                quantity = _uiState.value.quantity.value.toDouble(),
+                quantityUnit = unit,
+                images = _uiState.value.images
+            )
+        } else {
+            _uiState.value.productDomain!!.copy(
+                name = _uiState.value.name.value,
+                price = _uiState.value.price.value.toDouble(),
+                quantity = _uiState.value.quantity.value.toDouble(),
+                quantityUnit = unit,
+                images = _uiState.value.images
+            )
+        }
 
-                _uiState.update { currentState ->
-                    val domain = currentState.productDomain
-                    currentState.copy(productDomain = domain?.copy(active = domain.active))
-                }
-            }
+        viewModelScope.launch {
+            productRepository.save(
+                categoryBrandId = _uiState.value.categoryBrandId!!,
+                domain = _uiState.value.productDomain!!
+            )
         }
     }
 

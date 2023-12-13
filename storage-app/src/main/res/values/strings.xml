@@ -115,4 +115,6 @@
     <string name="product_screen_title_input_name">Digite o Nome</string>
     <string name="product_screen_title_input_quantity">Digite a Quantidade</string>
     <string name="product_screen_title_input_price">Digite o Preço</string>
+    <string name="brand_screen_tab_brand_inactivate_question">Confirma a inativação da marca?</string>
+    <string name="brand_screen_tab_brand_reactivate_question">Confirma a reativação da marca?</string>
 </resources>

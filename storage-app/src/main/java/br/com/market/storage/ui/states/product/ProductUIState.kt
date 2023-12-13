@@ -14,6 +14,7 @@ import br.com.market.domain.ProductImageDomain
 
 data class ProductUIState(
     var categoryId: String? = null,
+    var categoryBrandId: String? = null,
     var brandDomain: BrandDomain? = null,
     var productDomain: ProductDomain? = null,
     val name: Field = Field(),

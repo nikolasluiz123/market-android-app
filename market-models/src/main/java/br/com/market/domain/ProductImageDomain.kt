@@ -10,7 +10,6 @@ data class ProductImageDomain(
     var byteArray: ByteArray? = null,
     val productId: String? = null,
     var principal: Boolean = false,
-    var remoteId: Long? = null
 ) : MarketRestrictionDomain() {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

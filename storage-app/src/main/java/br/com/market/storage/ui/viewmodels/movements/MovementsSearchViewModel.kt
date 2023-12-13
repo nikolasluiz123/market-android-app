@@ -69,7 +69,7 @@ class MovementsSearchViewModel @Inject constructor(
 
         productId.navParamToString()?.let { productId ->
             viewModelScope.launch {
-                productRepository.findProductDomain(productId).apply {
+                productRepository.findProductByLocalId(productId).apply {
                     _uiState.update { currentState ->
                         currentState.copy(
                             productName = name,

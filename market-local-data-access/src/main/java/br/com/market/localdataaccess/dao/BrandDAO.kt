@@ -190,8 +190,8 @@ abstract class BrandDAO : AbstractBaseDAO() {
      *
      * @author Nikolas Luiz Schmitt
      */
-    @Query("update categories_brands set active = :active, synchronized = :sync where brand_id = :brandId and category_id = :categoryId ")
-    abstract suspend fun updateActive(brandId: String, categoryId: String, active: Boolean, sync: Boolean)
+    @Query("update categories_brands set active = not active where brand_id = :brandId and category_id = :categoryId ")
+    abstract suspend fun updateActive(brandId: String, categoryId: String)
 
     /**
      * Função que facilita a mudança de ativo e inativo.
@@ -202,13 +202,8 @@ abstract class BrandDAO : AbstractBaseDAO() {
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun toggleActive(categoryBrand: CategoryBrand) {
-        updateActive(
-            brandId = categoryBrand.brandId!!,
-            categoryId = categoryBrand.categoryId!!,
-            active = !categoryBrand.active,
-            sync = categoryBrand.synchronized
-        )
+    suspend fun toggleActive(brandId: String, categoryId: String) {
+        updateActive(brandId = brandId, categoryId = categoryId)
     }
 
     /**

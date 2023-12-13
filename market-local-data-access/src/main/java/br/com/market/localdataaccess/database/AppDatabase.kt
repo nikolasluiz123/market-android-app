@@ -15,7 +15,6 @@ import br.com.market.localdataaccess.dao.CompanyDAO
 import br.com.market.localdataaccess.dao.DeviceDAO
 import br.com.market.localdataaccess.dao.MarketDAO
 import br.com.market.localdataaccess.dao.ProductDAO
-import br.com.market.localdataaccess.dao.ProductImageDAO
 import br.com.market.localdataaccess.dao.StorageOperationsHistoryDAO
 import br.com.market.localdataaccess.dao.UserDAO
 import br.com.market.localdataaccess.dao.remotekeys.BrandRemoteKeysDAO
@@ -24,7 +23,27 @@ import br.com.market.localdataaccess.dao.remotekeys.MarketRemoteKeysDAO
 import br.com.market.localdataaccess.dao.remotekeys.ProductRemoteKeysDAO
 import br.com.market.localdataaccess.dao.remotekeys.UserRemoteKeysDAO
 import br.com.market.localdataaccess.dao.report.StorageOperationsReportDAO
-import br.com.market.models.*
+import br.com.market.models.Address
+import br.com.market.models.Brand
+import br.com.market.models.Card
+import br.com.market.models.CartItem
+import br.com.market.models.Category
+import br.com.market.models.CategoryBrand
+import br.com.market.models.Client
+import br.com.market.models.Company
+import br.com.market.models.DeliveryMan
+import br.com.market.models.DeliveryManQueue
+import br.com.market.models.Device
+import br.com.market.models.Market
+import br.com.market.models.Product
+import br.com.market.models.ProductImage
+import br.com.market.models.ProductRating
+import br.com.market.models.PurchaseCart
+import br.com.market.models.StorageOperationHistory
+import br.com.market.models.ThemeDefinitions
+import br.com.market.models.User
+import br.com.market.models.Vehicle
+import br.com.market.models.VehicleCapacity
 import br.com.market.models.keys.BrandRemoteKeys
 import br.com.market.models.keys.CategoryRemoteKeys
 import br.com.market.models.keys.MarketRemoteKeys
@@ -74,8 +93,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDAO(): CategoryDAO
 
     abstract fun productDAO(): ProductDAO
-
-    abstract fun productImageDAO(): ProductImageDAO
 
     abstract fun storageOperationsHistoryDAO(): StorageOperationsHistoryDAO
 

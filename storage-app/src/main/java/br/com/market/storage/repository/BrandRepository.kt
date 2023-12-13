@@ -9,7 +9,6 @@ import br.com.market.domain.BrandDomain
 import br.com.market.localdataaccess.dao.BrandDAO
 import br.com.market.localdataaccess.dao.MarketDAO
 import br.com.market.localdataaccess.dao.ProductDAO
-import br.com.market.localdataaccess.dao.ProductImageDAO
 import br.com.market.localdataaccess.dao.remotekeys.BrandRemoteKeysDAO
 import br.com.market.localdataaccess.database.AppDatabase
 import br.com.market.market.common.mediator.BrandRemoteMediator
@@ -40,7 +39,6 @@ class BrandRepository @Inject constructor(
     private val brandDAO: BrandDAO,
     private val marketDAO: MarketDAO,
     private val productDAO: ProductDAO,
-    private val productImageDAO: ProductImageDAO,
     private val webClient: BrandWebClient
 ) : BaseRepository(), IPagedRemoteSearchRepository<BrandFilter, BrandDomain> {
 
@@ -57,7 +55,6 @@ class BrandRepository @Inject constructor(
                 simpleFilter = filters.quickFilter,
                 brandDAO = brandDAO,
                 productDAO = productDAO,
-                productImageDAO = productImageDAO,
                 brandWebClient = webClient,
                 categoryId = filters.categoryId
             )
@@ -175,13 +172,11 @@ class BrandRepository @Inject constructor(
      * @author Nikolas Luiz Schmitt
      */
     suspend fun toggleActive(brandId: String, categoryId: String): PersistenceResponse {
-        val categoryBrand = brandDAO.findCategoryBrandBy(brandId = brandId, categoryId = categoryId)!!
+        val response = webClient.toggleActive(categoryId, brandId)
 
-        val response = webClient.toggleActive(categoryBrand)
-
-        categoryBrand.synchronized = response.getObjectSynchronized()
-
-        brandDAO.toggleActive(categoryBrand)
+        if (response.success) {
+            brandDAO.toggleActive(categoryId, brandId)
+        }
 
         return response
     }

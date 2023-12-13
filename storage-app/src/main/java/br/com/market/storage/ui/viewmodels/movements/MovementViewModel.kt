@@ -126,7 +126,7 @@ class MovementViewModel @Inject constructor(
 
         productId?.navParamToString()?.let { id ->
             viewModelScope.launch {
-                val productDomain = productRepository.findProductDomain(id)
+                val productDomain = productRepository.findProductByLocalId(id)
                 _uiState.update { currentState -> currentState.copy(productDomain = productDomain) }
             }
         }
@@ -157,7 +157,7 @@ class MovementViewModel @Inject constructor(
 
     fun loadProductById(productId: String) {
         viewModelScope.launch {
-            val productDomain = productRepository.findProductDomain(productId)
+            val productDomain = productRepository.findProductByLocalId(productId)
 
             _uiState.update { currentState ->
                 currentState.copy(

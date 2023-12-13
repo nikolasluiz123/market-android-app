@@ -11,7 +11,6 @@ import br.com.market.domain.ProductImageReadDomain
 import br.com.market.localdataaccess.dao.BrandDAO
 import br.com.market.localdataaccess.dao.MarketDAO
 import br.com.market.localdataaccess.dao.ProductDAO
-import br.com.market.localdataaccess.dao.ProductImageDAO
 import br.com.market.localdataaccess.dao.remotekeys.ProductRemoteKeysDAO
 import br.com.market.localdataaccess.database.AppDatabase
 import br.com.market.market.common.mediator.lov.ProductRemoteMediator
@@ -19,10 +18,13 @@ import br.com.market.market.common.repository.BaseRepository
 import br.com.market.market.common.repository.IPagedRemoteSearchRepository
 import br.com.market.models.Product
 import br.com.market.models.ProductImage
+import br.com.market.sdo.ProductAndReferencesSDO
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
+import br.com.market.servicedataaccess.responses.types.SingleValueResponse
 import br.com.market.servicedataaccess.services.params.ProductServiceSearchParams
 import br.com.market.servicedataaccess.webclients.ProductWebClient
 import kotlinx.coroutines.flow.first
+import java.net.HttpURLConnection
 import javax.inject.Inject
 
 class ProductRepository @Inject constructor(
@@ -30,7 +32,6 @@ class ProductRepository @Inject constructor(
     private val productRemoteKeyDAO: ProductRemoteKeysDAO,
     private val productDAO: ProductDAO,
     private val marketDAO: MarketDAO,
-    private val productImageDAO: ProductImageDAO,
     private val brandDAO: BrandDAO,
     private val webClient: ProductWebClient
 ): BaseRepository(), IPagedRemoteSearchRepository<ProductFilter, ProductImageReadDomain> {
@@ -45,7 +46,6 @@ class ProductRepository @Inject constructor(
                 context = context,
                 remoteKeysDAO = productRemoteKeyDAO,
                 productDAO = productDAO,
-                productImageDAO = productImageDAO,
                 webClient = webClient,
                 params = ProductServiceSearchParams(
                     categoryId = filters.categoryId,
@@ -56,34 +56,12 @@ class ProductRepository @Inject constructor(
         )
     }
 
-    suspend fun findProductDomain(productId: String): ProductDomain {
-        val product = productDAO.findProductById(productId)
-        val images = productImageDAO.findProductImagesBy(productId)
-
-        return ProductDomain(
-            id = product.id,
-            active = product.active,
-            synchronized = product.synchronized,
-            name = product.name,
-            price = product.price,
-            quantity = product.quantity,
-            quantityUnit = product.quantityUnit,
-            images = images.map {
-                ProductImageDomain(
-                    id = it.id,
-                    active = it.active,
-                    marketId = it.marketId,
-                    synchronized = it.synchronized,
-                    byteArray = it.bytes,
-                    productId = it.productId,
-                    principal = it.principal
-                )
-            }.toMutableList()
-        )
+    suspend fun findProductByLocalId(productId: String): SingleValueResponse<ProductAndReferencesSDO> {
+        return webClient.findProductByLocalId(productId)
     }
 
     suspend fun findProductImageDomain(productImageId: String): ProductImageDomain? {
-        return productImageDAO.findProductImageBy(productImageId)?.run {
+        return productDAO.findProductImageBy(productImageId)?.run {
             ProductImageDomain(
                 id = id,
                 active = active,
@@ -96,65 +74,91 @@ class ProductRepository @Inject constructor(
         }
     }
 
-    suspend fun saveProduct(categoryId: String, brandId: String, domain: ProductDomain): PersistenceResponse {
+    suspend fun save(domain: ProductDomain, categoryBrandId: String): PersistenceResponse {
+        return if (domain.id != null) {
+            editProduct(domain)
+        } else {
+            createProduct(domain, categoryBrandId)
+        }
+    }
+
+    private suspend fun createProduct(domain: ProductDomain, categoryBrandId: String): PersistenceResponse {
         val marketId = marketDAO.findFirst().first()?.id!!
 
-        val product = if (domain.id != null) {
-            productDAO.findProductById(productId = domain.id!!).copy(
-                name = domain.name!!,
-                price = domain.price!!,
-                quantity = domain.quantity!!,
-                quantityUnit = domain.quantityUnit,
-            )
-        } else {
+        val product = domain.run {
             Product(
-                name = domain.name!!,
-                price = domain.price!!,
-                quantity = domain.quantity!!,
-                quantityUnit = domain.quantityUnit,
-                categoryBrandId = brandDAO.findCategoryBrandBy(brandId = brandId, categoryId = categoryId)!!.id,
+                name = name!!,
+                price = price!!,
+                quantityUnit = quantityUnit,
+                quantity = quantity!!,
+                categoryBrandId = categoryBrandId,
                 marketId = marketId
             )
         }
 
-        domain.id = product.id
-
-        val productImages = domain.images.map {
-            productImageDAO.findProductImageBy(it.id)?.copy(
-                active = it.active,
-                marketId = it.marketId,
-                synchronized = it.synchronized,
+        val images = domain.images.map {
+            ProductImage(
                 bytes = it.byteArray,
                 productId = product.id,
-                principal = it.principal
-            ) ?: ProductImage(
-                active = it.active,
-                marketId = marketId,
-                synchronized = it.synchronized,
-                bytes = it.byteArray,
-                productId = product.id,
-                principal = it.principal
+                principal = it.principal,
+                marketId = marketId
             )
         }
 
-        domain.images.forEach { imageDomain ->
-            productImages.forEach { imageModel ->
-                if (imageDomain.byteArray.contentEquals(imageModel.bytes)) {
-                    imageDomain.id = imageModel.id
-                }
-            }
+        return saveProduct(product, images)
+    }
+
+    private suspend fun saveProduct(product: Product, images: List<ProductImage>): PersistenceResponse {
+        val response = webClient.save(product = product, images = images)
+
+        return if (response.success) {
+            productDAO.saveProductAndImages(product, images)
+            PersistenceResponse(code = HttpURLConnection.HTTP_OK, success = true)
+        } else {
+            PersistenceResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, error = response.error)
         }
+    }
 
-        val response = webClient.save(product = product, images = productImages)
+    private suspend fun editProduct(domain: ProductDomain): PersistenceResponse {
+        val response = webClient.findProductByLocalId(productId = domain.id!!)
 
-        val objectSynchronized = response.getObjectSynchronized()
-        product.synchronized = objectSynchronized
-        productImages.forEach { it.synchronized = objectSynchronized }
+        return if (response.success) {
+            val product = getProductWithUpdatedInfo(response, domain)
+            val images = getImagesWithUpdatedInfo(response, domain)
 
-        productDAO.save(product = product)
-        productImageDAO.save(images = productImages)
+            saveProduct(product, images)
+        } else {
+            PersistenceResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, error = response.error)
+        }
+    }
 
-        return response
+    private fun getProductWithUpdatedInfo(response: SingleValueResponse<ProductAndReferencesSDO>, domain: ProductDomain): Product {
+        return response.value!!.run {
+            Product(
+                id = product.localId,
+                name = domain.name!!,
+                price = domain.price!!,
+                quantity = domain.quantity!!,
+                quantityUnit = domain.quantityUnit,
+                categoryBrandId = product.categoryBrandLocalId,
+                marketId = product.marketId,
+                active = product.active
+            )
+        }
+    }
+
+    private fun getImagesWithUpdatedInfo(response: SingleValueResponse<ProductAndReferencesSDO>, domain: ProductDomain): List<ProductImage> {
+        return response.value!!.productImages.map { sdo ->
+            val image = domain.images.first { image -> image.id == sdo.localId }
+
+            ProductImage(
+                id = sdo.localId,
+                bytes = image.byteArray,
+                productId = sdo.productLocalId,
+                principal = image.principal,
+                marketId = sdo.marketId
+            )
+        }
     }
 
     suspend fun updateImage(productImageDomain: ProductImageDomain): PersistenceResponse {
@@ -173,34 +177,27 @@ class ProductRepository @Inject constructor(
         val response = webClient.updateProductImage(productImage)
         productImage.synchronized = response.getObjectSynchronized()
 
-        productImageDAO.updateImage(image = productImage)
+        productDAO.updateImage(image = productImage)
 
         return response
     }
 
-    suspend fun toggleActiveProduct(productId: String) {
+    suspend fun toggleActiveProduct(productId: String): PersistenceResponse {
         val response = webClient.toggleActiveProduct(productId)
-        val synchronized = response.getObjectSynchronized()
 
-        productDAO.toggleActiveProductAndImages(productId = productId, sync = synchronized)
+        if (response.success) {
+            productDAO.toggleActiveProductAndImages(productId = productId)
+        }
+
+        return response
     }
 
     suspend fun toggleActiveProductImage(imageId: String, productId: String) {
-        val images = productImageDAO.findProductImagesBy(productId).toMutableList()
-        val imageToToggleActive = images.find { it.id == imageId && it.active }!!
-        images.remove(imageToToggleActive)
+        val response = webClient.toggleActiveProductImage(productId, imageId)
 
-        if (imageToToggleActive.active && imageToToggleActive.principal) {
-            val image = images[0]
-            image.principal = true
-
-            val response = webClient.updateProductImage(productImage = image)
-            image.synchronized = response.getObjectSynchronized()
-            productImageDAO.updateImage(image = image)
+        if (response.success) {
+            productDAO.toggleActive(imageId, productId)
         }
-
-        val response = webClient.toggleActiveProductImage(imageId)
-        productImageDAO.toggleActive(id = imageId, sync = response.getObjectSynchronized())
     }
 
 }

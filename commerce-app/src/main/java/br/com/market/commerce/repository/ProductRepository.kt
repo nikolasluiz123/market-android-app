@@ -11,7 +11,6 @@ import br.com.market.localdataaccess.dao.CategoryDAO
 import br.com.market.localdataaccess.dao.CompanyDAO
 import br.com.market.localdataaccess.dao.MarketDAO
 import br.com.market.localdataaccess.dao.ProductDAO
-import br.com.market.localdataaccess.dao.ProductImageDAO
 import br.com.market.localdataaccess.dao.remotekeys.ProductRemoteKeysDAO
 import br.com.market.localdataaccess.database.AppDatabase
 import br.com.market.servicedataaccess.webclients.ProductWebClient
@@ -25,7 +24,6 @@ class ProductRepository @Inject constructor(
     private val marketDAO: MarketDAO,
     private val companyDAO: CompanyDAO,
     private val productDAO: ProductDAO,
-    private val imageDAO: ProductImageDAO,
     private val remoteKeysDAO: ProductRemoteKeysDAO,
     private val addressDAO: AddressDAO,
 ) {
@@ -36,9 +34,16 @@ class ProductRepository @Inject constructor(
             config = PagingConfigUtils.customConfig(20),
             pagingSourceFactory = { productDAO.findProductsToSell(simpleFilter) },
             remoteMediator = ProductsRemoteMediator(
-                database, webClient, categoryDAO, brandDAO, marketDAO,
-                companyDAO, productDAO, imageDAO, remoteKeysDAO, addressDAO,
-                simpleFilter
+                database = database,
+                webClient = webClient,
+                categoryDAO = categoryDAO,
+                brandDAO = brandDAO,
+                marketDAO = marketDAO,
+                companyDAO = companyDAO,
+                productDAO = productDAO,
+                remoteKeysDAO = remoteKeysDAO,
+                addressDAO = addressDAO,
+                simpleFilter = simpleFilter
             )
         )
     }

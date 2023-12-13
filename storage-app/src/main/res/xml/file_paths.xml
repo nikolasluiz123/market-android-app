@@ -3,4 +3,6 @@
    <external-path
        name="shared_reports"
        path="Documents/market/storage/reports" />
+
+   <external-files-path name="my_images" path="/" />
 </paths>
