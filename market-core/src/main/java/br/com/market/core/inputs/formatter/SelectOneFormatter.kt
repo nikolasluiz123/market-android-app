@@ -10,7 +10,7 @@ package br.com.market.core.inputs.formatter
  * @constructor Cria uma instância de [SelectOneFormatter].
  * @author Nikolas Luiz Schmitt
  */
-class SelectOneFormatter : IFormatter {
+class SelectOneFormatter : IFormatter<Pair<String, Int>?> {
 
     /**
      * Converte um valor do tipo [Pair] (contendo uma string e um inteiro) em uma representação de texto
@@ -19,8 +19,11 @@ class SelectOneFormatter : IFormatter {
      * @param value O valor a ser formatado, deve ser um [Pair] contendo uma string e um inteiro.
      * @return A primeira parte do par (Pair) como uma representação formatada em texto, ou null se o valor for nulo.
      */
-    @Suppress("UNCHECKED_CAST")
-    override fun formatToString(value: Any?): String? {
-        return (value as Pair<String, Int>?)?.first
+    override fun formatToString(value: Pair<String, Int>?): String? {
+        return value?.first
+    }
+
+    override fun formatStringToValue(formatedValue: String?): Pair<String, Int>? {
+        TODO("Not yet implemented")
     }
 }

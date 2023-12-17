@@ -75,7 +75,7 @@ class CategoryViewModel @Inject constructor(
     private fun loadCategory(onError: (String) -> Unit) {
         categoryId?.navParamToString()?.let { categoryId ->
             viewModelScope.launch {
-                _uiState.value.onToggleLoading()
+                withContext(Main) { _uiState.value.onToggleLoading() }
 
                 val response = categoryRepository.findById(categoryId)
 
@@ -94,7 +94,7 @@ class CategoryViewModel @Inject constructor(
                     withContext(Main) { onError(response.error ?: "") }
                 }
 
-                _uiState.value.onToggleLoading()
+                withContext(Main) { _uiState.value.onToggleLoading() }
             }
         }
     }

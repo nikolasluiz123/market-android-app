@@ -9,7 +9,7 @@ package br.com.market.core.inputs.formatter
  * @constructor Cria uma instância de [InputTextFormatter].
  * @author Nikolas Luiz Schmitt
  */
-open class InputTextFormatter : IFormatter {
+open class InputTextFormatter : IFormatter<String?> {
 
     /**
      * Converte um valor do tipo String em uma representação de texto formatada para uso em filtros avançados.
@@ -18,7 +18,11 @@ open class InputTextFormatter : IFormatter {
      * @return A representação formatada em texto do valor, com espaços em branco no início e no final removidos,
      *         ou null se o valor for nulo.
      */
-    override fun formatToString(value: Any?): String? {
-        return value?.toString()?.trim()
+    override fun formatToString(value: String?): String? {
+        return value?.trim()
+    }
+
+    override fun formatStringToValue(formatedValue: String?): String? {
+        TODO("Not yet implemented")
     }
 }

@@ -1,6 +1,7 @@
 package br.com.market.core.inputs
 
 import br.com.market.core.inputs.formatter.IFormatter
+import br.com.market.core.inputs.values.FilterValue
 
 /**
  * Representação de um item de filtro avançado comum.
@@ -26,13 +27,16 @@ import br.com.market.core.inputs.formatter.IFormatter
  * @property visible Indica se o item de filtro é visível na interface do usuário.
  * @property value O valor associado ao item de filtro.
  */
-data class CommonAdvancedFilterItem(
+data class CommonAdvancedFilterItem<T>(
     val labelResId: Int,
-    val formatter: IFormatter,
+    val formatter: IFormatter<T>,
     val identifier: String,
     val labelsReference: Int? = null,
     var checked: Boolean = false,
     val enabled: Boolean = true,
     val visible: Boolean = true,
-    var value: Any? = null
-)
+    var value: T? = null
+) {
+
+    fun toFilterValue(): FilterValue<T> = FilterValue(checked, value)
+}

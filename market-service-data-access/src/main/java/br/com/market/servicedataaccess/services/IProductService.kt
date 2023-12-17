@@ -48,6 +48,6 @@ interface IProductService {
     @GET("product/{productId}")
     suspend fun findProductByLocalId(
         @Header("Authorization") token: String,
-        @Query("productId") productId: String
+        @Path("productId") productId: String
     ): Response<SingleValueResponse<ProductAndReferencesSDO>>
 }

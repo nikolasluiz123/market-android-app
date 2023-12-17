@@ -1,10 +1,14 @@
 package br.com.market.market.compose.components.dialog
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import br.com.market.core.R
 import br.com.market.core.enums.EnumDialogType
@@ -18,11 +22,17 @@ fun MarketDialog(
     onConfirm: () -> Unit = { },
     onCancel: () -> Unit = { }
 ) {
+    val scrollState = rememberScrollState()
+
     if (show) {
         AlertDialog(
             onDismissRequest = onDismissRequest,
             title = { Text(text = stringResource(type.titleResId), style = MaterialTheme.typography.headlineMedium) },
-            text = { Text(text = message, style = MaterialTheme.typography.bodyMedium) },
+            text = {
+                Box(modifier = Modifier.verticalScroll(state = scrollState)) {
+                    Text(text = message, style = MaterialTheme.typography.bodyMedium)
+                }
+            },
             confirmButton = {
                 when (type) {
                     EnumDialogType.ERROR -> {

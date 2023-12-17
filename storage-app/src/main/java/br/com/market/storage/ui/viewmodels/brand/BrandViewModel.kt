@@ -155,7 +155,7 @@ class BrandViewModel @Inject constructor(
         }
     }
 
-    fun saveBrand() {
+    fun saveBrand(onSuccess: () -> Unit, onError: (message: String) -> Unit) {
         _uiState.value.brandDomain = if (_uiState.value.brandDomain == null) {
             BrandDomain(name = _uiState.value.name.value)
         } else {
@@ -164,7 +164,11 @@ class BrandViewModel @Inject constructor(
 
         _uiState.value.brandDomain?.let { brandDomain ->
             viewModelScope.launch {
-                brandRepository.save(_uiState.value.categoryDomain?.id!!, brandDomain)
+                val response = brandRepository.save(_uiState.value.categoryDomain?.id!!, brandDomain)
+
+                withContext(Main) {
+                    if (response.success) onSuccess() else onError(response.error ?: "")
+                }
             }
         }
     }

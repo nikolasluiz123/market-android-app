@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import br.com.market.core.enums.EnumDialogType
 import br.com.market.core.extensions.format
 import br.com.market.core.extensions.navParamToString
+import br.com.market.core.inputs.formatter.InputNumberFormatter
 import br.com.market.core.ui.states.Field
 import br.com.market.domain.BrandDomain
 import br.com.market.domain.ProductDomain
@@ -91,11 +92,14 @@ class ProductViewModel @Inject constructor(
         val brandId = brandId?.navParamToString()
         val productId = productId?.navParamToString()
 
-
         viewModelScope.launch {
+            withContext(Main) { _uiState.value.onToggleLoading() }
+
             loadBrand(categoryId = categoryId, brandId = brandId, onError = onError) {
                 loadProduct(productId = productId, onError = onError)
             }
+
+            withContext(Main) { _uiState.value.onToggleLoading() }
         }
     }
 
@@ -150,7 +154,7 @@ class ProductViewModel @Inject constructor(
                         name = _uiState.value.name.copy(value = productDomain.name!!),
                         price = _uiState.value.price.copy(value = productDomain.price!!.format()),
                         quantity = _uiState.value.quantity.copy(value = productDomain.quantity!!.format()),
-                        quantityUnit = _uiState.value.quantityUnit.copy(value = productDomain.quantityUnit!!.toString()),
+                        quantityUnit = _uiState.value.quantityUnit.copy(value = context.getString(productDomain.quantityUnit!!.labelResId)),
                         images = productDomain.images.toMutableStateList()
                     )
                 }
@@ -264,13 +268,14 @@ class ProductViewModel @Inject constructor(
         }
     }
 
-    fun saveProduct() {
+    fun saveProduct(onSuccess: () -> Unit, onError: (message: String) -> Unit) {
         val unit = EnumUnit.entries.first { context.getString(it.labelResId) == _uiState.value.quantityUnit.value }
+        val price = InputNumberFormatter(integer = false).formatStringToValue(_uiState.value.price.value)!!.toDouble()
 
         _uiState.value.productDomain = if (_uiState.value.productDomain == null) {
             ProductDomain(
                 name = _uiState.value.name.value,
-                price = _uiState.value.price.value.toDouble(),
+                price = price,
                 quantity = _uiState.value.quantity.value.toDouble(),
                 quantityUnit = unit,
                 images = _uiState.value.images
@@ -278,7 +283,7 @@ class ProductViewModel @Inject constructor(
         } else {
             _uiState.value.productDomain!!.copy(
                 name = _uiState.value.name.value,
-                price = _uiState.value.price.value.toDouble(),
+                price = price,
                 quantity = _uiState.value.quantity.value.toDouble(),
                 quantityUnit = unit,
                 images = _uiState.value.images
@@ -286,10 +291,14 @@ class ProductViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            productRepository.save(
+            val response = productRepository.save(
                 categoryBrandId = _uiState.value.categoryBrandId!!,
                 domain = _uiState.value.productDomain!!
             )
+
+            withContext(Main) {
+                if (response.success) onSuccess() else onError(response.error ?: "")
+            }
         }
     }
 

@@ -6,21 +6,39 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import br.com.market.core.theme.*
+import br.com.market.core.enums.EnumDialogType
+import br.com.market.core.theme.MarketTheme
 import br.com.market.domain.ProductImageDomain
 import br.com.market.market.compose.components.CoilImageViewer
 import br.com.market.market.compose.components.MarketBottomAppBar
+import br.com.market.market.compose.components.MarketSnackBar
 import br.com.market.market.compose.components.bottomsheet.BottomSheetLoadImage
 import br.com.market.market.compose.components.button.fab.FloatingActionButtonSave
 import br.com.market.market.compose.components.button.icons.IconButtonInactivate
+import br.com.market.market.compose.components.dialog.MarketDialog
+import br.com.market.market.compose.components.loading.MarketLinearProgressIndicator
 import br.com.market.market.compose.components.topappbar.SimpleMarketTopAppBar
 import br.com.market.storage.ui.states.ImageViewerUIState
 import br.com.market.storage.ui.viewmodels.ImageViewerViewModel
@@ -58,8 +76,17 @@ fun ImageViewerScreen(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
+    LaunchedEffect(state.internalErrorMessage) {
+        if (state.internalErrorMessage.isNotEmpty()) {
+            state.onShowDialog?.onShow(type = EnumDialogType.ERROR, message = state.internalErrorMessage, onConfirm = {}, onCancel = {})
+            state.internalErrorMessage = ""
+        }
+    }
+
     Scaffold(
         topBar = {
+            MarketLinearProgressIndicator(show = state.showLoading)
+
             SimpleMarketTopAppBar(
                 title = "Imagem do Produto",
                 subtitle = state.productName,
@@ -81,9 +108,7 @@ fun ImageViewerScreen(
         },
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState) {
-                Snackbar(modifier = Modifier.padding(8.dp)) {
-                    Text(text = it.visuals.message)
-                }
+                MarketSnackBar(it)
             }
         }
     ) { padding ->
@@ -93,6 +118,16 @@ fun ImageViewerScreen(
                 .fillMaxSize()
         ) {
             val (headerRef, imageRef) = createRefs()
+
+            MarketDialog(
+                type = state.dialogType,
+                show = state.showDialog,
+                onDismissRequest = { state.onHideDialog() },
+                message = state.dialogMessage,
+                onConfirm = state.onConfirm,
+                onCancel = state.onCancel
+            )
+
             ConstraintLayout(
                 Modifier
                     .fillMaxWidth()

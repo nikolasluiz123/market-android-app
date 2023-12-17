@@ -9,7 +9,7 @@ package br.com.market.core.inputs.formatter
  * @constructor Cria uma instância de [LovFormatter].
  * @author Nikolas Luiz Schmitt
  */
-class LovFormatter : IFormatter {
+class LovFormatter : IFormatter<Pair<String, String?>?> {
 
     /**
      * Converte um valor do tipo [Pair] em uma representação de texto formatada para uso em filtros avançados.
@@ -17,6 +17,8 @@ class LovFormatter : IFormatter {
      * @param value O valor a ser formatado, deve ser um [Pair] contendo dois elementos.
      * @return A segunda parte do par (Pair) como uma representação formatada em texto, ou null se o valor for nulo.
      */
-    @Suppress("UNCHECKED_CAST")
-    override fun formatToString(value: Any?): String? = (value as Pair<String, String>?)?.second
+    override fun formatToString(value: Pair<String, String?>?): String? = value?.second
+    override fun formatStringToValue(formatedValue: String?): Pair<String, String>? {
+        TODO("Not yet implemented")
+    }
 }

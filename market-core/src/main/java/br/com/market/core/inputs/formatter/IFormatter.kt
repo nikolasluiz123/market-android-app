@@ -8,7 +8,7 @@ package br.com.market.core.inputs.formatter
  *
  * @author Nikolas Luiz Schmitt
  */
-interface IFormatter {
+interface IFormatter<T> {
 
     /**
      * Converte o valor fornecido em uma representação de texto formatada para uso em filtros avançados.
@@ -16,6 +16,8 @@ interface IFormatter {
      * @param value O valor a ser formatado.
      * @return A representação formatada em texto do valor, ou null se o valor for nulo.
      */
-    fun formatToString(value: Any?): String?
+    fun formatToString(value: T?): String?
+
+    fun formatStringToValue(formatedValue: String?): T?
 
 }

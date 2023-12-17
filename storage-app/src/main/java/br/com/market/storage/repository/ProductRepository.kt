@@ -105,6 +105,8 @@ class ProductRepository @Inject constructor(
             )
         }
 
+        domain.id = product.id
+
         return saveProduct(product, images)
     }
 
@@ -175,9 +177,10 @@ class ProductRepository @Inject constructor(
         }
 
         val response = webClient.updateProductImage(productImage)
-        productImage.synchronized = response.getObjectSynchronized()
 
-        productDAO.updateImage(image = productImage)
+        if (response.success) {
+            productDAO.updateImage(image = productImage)
+        }
 
         return response
     }

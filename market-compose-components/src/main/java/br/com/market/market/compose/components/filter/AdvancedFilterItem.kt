@@ -34,9 +34,9 @@ import br.com.market.market.compose.components.LabeledText
  * @see LabeledText
  */
 @Composable
-fun AdvancedFilterItem(
-    item: CommonAdvancedFilterItem,
-    onItemClick: ((Any?) -> Unit) -> Unit
+fun <T> AdvancedFilterItem(
+    item: CommonAdvancedFilterItem<T?>,
+    onItemClick: ((T?) -> Unit) -> Unit
 ) {
     ConstraintLayout(
         modifier = Modifier

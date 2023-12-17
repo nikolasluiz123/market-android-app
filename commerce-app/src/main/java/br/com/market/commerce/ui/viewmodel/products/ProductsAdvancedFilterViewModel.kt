@@ -28,7 +28,7 @@ class ProductsAdvancedFilterViewModel @Inject constructor(
 
     val uiState get() = _uiState.asStateFlow()
     private val filterJson: String? = savedStateHandle[argumentProductsAdvancedFilterJson]
-    private val filters = mutableListOf<CommonAdvancedFilterItem>()
+    private val filters = mutableListOf<CommonAdvancedFilterItem<Any?>>()
 
     init {
         val gson = GsonBuilder()
@@ -49,7 +49,7 @@ class ProductsAdvancedFilterViewModel @Inject constructor(
         }
     }
 
-    private fun getFilteredFilters(filterText: String?): List<CommonAdvancedFilterItem> {
+    private fun getFilteredFilters(filterText: String?): List<CommonAdvancedFilterItem<Any?>> {
         if (filterText.isNullOrEmpty()) {
             return filters
         }

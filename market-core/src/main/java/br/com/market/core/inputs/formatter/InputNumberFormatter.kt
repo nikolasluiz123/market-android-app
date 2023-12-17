@@ -18,7 +18,7 @@ class InputNumberFormatter(
     private val integer: Boolean,
     private val minFractionDigits: Int = 2,
     private val maxFractionDigits: Int = 2
-) : IFormatter {
+) : IFormatter<Number?> {
 
     /**
      * Converte um valor numérico em uma representação de texto formatada para uso em filtros avançados.
@@ -26,15 +26,29 @@ class InputNumberFormatter(
      * @param value O valor numérico a ser formatado.
      * @return A representação formatada em texto do valor numérico, ou null se o valor for nulo.
      */
-    override fun formatToString(value: Any?): String? {
+    override fun formatToString(value: Number?): String? {
         return if (integer) {
             (value as Long?)?.toString()
         } else {
-            (value as Double?)?.let {
-                DecimalFormat.getNumberInstance().run {
+            value?.let {
+                DecimalFormat().run {
                     minimumFractionDigits = minFractionDigits
                     maximumFractionDigits = maxFractionDigits
                     format(it)
+                }
+            }
+        }
+    }
+
+    override fun formatStringToValue(formatedValue: String?): Number? {
+        return if (integer) {
+            formatedValue?.toLong()
+        } else {
+            formatedValue?.let {
+                DecimalFormat().run {
+                    minimumFractionDigits = minFractionDigits
+                    maximumFractionDigits = maxFractionDigits
+                    parse(it)
                 }
             }
         }

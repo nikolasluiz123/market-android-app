@@ -45,7 +45,7 @@ fun BrandScreenTaBrand(
     state: BrandUIState = BrandUIState(),
     onUpdateEditMode: (Boolean) -> Unit = { },
     toggleActive: IServiceOperationCallback? = null,
-    onSaveBrandClick: (Boolean) -> Unit = { },
+    saveBrandCallback: IServiceOperationCallback? = null,
     isEdit: Boolean = false,
     textInputCallback: ITextInputNavigationCallback? = null,
     onNavToBrandLov: (categoryId: String) -> Unit = { }
@@ -129,7 +129,7 @@ fun BrandScreenTaBrand(
                 floatingActionButton = {
                     FloatingActionButtonSave(
                         onClick = {
-                            isEditMode = saveBrand(state, isActive, isEditMode, onSaveBrandClick, scope, snackbarHostState, context)
+                            isEditMode = saveBrand(state, isActive, isEditMode, saveBrandCallback, scope, snackbarHostState, context)
                             onUpdateEditMode(isEditMode)
                         }
                     )
@@ -196,12 +196,13 @@ private fun saveBrand(
     state: BrandUIState,
     isActive: Boolean,
     isEditMode: Boolean,
-    onSaveBrandClick: (Boolean) -> Unit,
+    saveBrandCallback: IServiceOperationCallback?,
     scope: CoroutineScope,
     snackbarHostState: SnackbarHostState,
     context: Context
 ): Boolean {
     if (state.onValidate() && isActive) {
+        state.onToggleLoading()
 
         state.brandDomain = if (isEditMode) {
             state.brandDomain?.copy(name = state.name.value)
@@ -209,11 +210,23 @@ private fun saveBrand(
             BrandDomain(name = state.name.value)
         }
 
-        onSaveBrandClick(isEditMode)
-
-        scope.launch {
-            snackbarHostState.showSnackbar(context.getString(R.string.brand_screen_tab_brand_save_success_message))
-        }
+        saveBrandCallback?.onExecute(
+            onSuccess = {
+                state.onToggleLoading()
+                scope.launch {
+                    snackbarHostState.showSnackbar(context.getString(R.string.brand_screen_tab_brand_save_success_message))
+                }
+            },
+            onError = { message ->
+                state.onToggleLoading()
+                state.onShowDialog?.onShow(
+                    type = EnumDialogType.ERROR,
+                    message = message,
+                    onConfirm = {},
+                    onCancel = {}
+                )
+            }
+        )
     }
 
     return state.brandDomain != null

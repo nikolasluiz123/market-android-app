@@ -111,6 +111,8 @@ class BrandRepository @Inject constructor(
         val brand = Brand(name = domain.name, marketId = marketId)
         val categoryBrand = CategoryBrand(categoryId = categoryId, brandId = brand.id, marketId = marketId)
 
+        domain.id = brand.id
+
         return saveBrand(brand, categoryBrand)
     }
 

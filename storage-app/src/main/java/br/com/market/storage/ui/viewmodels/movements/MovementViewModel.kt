@@ -7,7 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.market.core.enums.EnumDateTimePatterns
 import br.com.market.core.extensions.navParamToString
+import br.com.market.domain.ProductDomain
+import br.com.market.domain.ProductImageDomain
 import br.com.market.enums.EnumOperationType
+import br.com.market.sdo.ProductAndReferencesSDO
+import br.com.market.servicedataaccess.responses.types.SingleValueResponse
 import br.com.market.storage.R
 import br.com.market.storage.repository.BrandRepository
 import br.com.market.storage.repository.ProductRepository
@@ -126,8 +130,8 @@ class MovementViewModel @Inject constructor(
 
         productId?.navParamToString()?.let { id ->
             viewModelScope.launch {
-                val productDomain = productRepository.findProductByLocalId(id)
-                _uiState.update { currentState -> currentState.copy(productDomain = productDomain) }
+                val response = productRepository.findProductByLocalId(id)
+                _uiState.update { currentState -> currentState.copy(productDomain = getProductDomainFrom(response)) }
             }
         }
 
@@ -155,9 +159,32 @@ class MovementViewModel @Inject constructor(
         }
     }
 
+    private fun getProductDomainFrom(response: SingleValueResponse<ProductAndReferencesSDO>): ProductDomain {
+        return response.value!!.run {
+            ProductDomain(
+                id = product.localId,
+                marketId = product.marketId,
+                name = product.name,
+                price = product.price,
+                quantity = product.quantity,
+                quantityUnit = product.quantityUnit,
+                images = productImages.map {
+                    ProductImageDomain(
+                        id = it.localId,
+                        marketId = it.marketId,
+                        byteArray = it.bytes,
+                        productId = it.productLocalId,
+                        principal = it.principal
+                    )
+                }.toMutableList()
+            )
+        }
+    }
+
     fun loadProductById(productId: String) {
         viewModelScope.launch {
-            val productDomain = productRepository.findProductByLocalId(productId)
+            val response = productRepository.findProductByLocalId(productId)
+            val productDomain = getProductDomainFrom(response)
 
             _uiState.update { currentState ->
                 currentState.copy(

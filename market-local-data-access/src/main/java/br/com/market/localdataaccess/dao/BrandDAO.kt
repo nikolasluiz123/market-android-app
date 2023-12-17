@@ -76,7 +76,7 @@ abstract class BrandDAO : AbstractBaseDAO() {
         where.add(" where b.active ")
 
         if (!filter.quickFilter.isNullOrBlank()) {
-            where.add(" and p.name like ? ")
+            where.add(" and b.name like ? ")
             params.add("%${filter.quickFilter}%")
         }
 

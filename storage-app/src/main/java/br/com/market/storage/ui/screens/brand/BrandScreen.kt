@@ -60,9 +60,7 @@ fun BrandScreen(
         state = state,
         onBackClick = onBackClick,
         onToggleActive = viewModel::toggleActive,
-        onSaveBrandClick = {
-            viewModel.saveBrand()
-        },
+        saveBrandCallback = viewModel::saveBrand,
         onNavToBrandLov = { categoryId ->
             onNavToBrandLov(categoryId) { brandId ->
                 viewModel.findBrandById(brandId)
@@ -82,7 +80,7 @@ fun BrandScreen(
     state: BrandUIState = BrandUIState(),
     onBackClick: () -> Unit = { },
     onToggleActive: IServiceOperationCallback? = null,
-    onSaveBrandClick: (Boolean) -> Unit = { },
+    saveBrandCallback: IServiceOperationCallback? = null,
     onNavToBrandLov: (categoryId: String) -> Unit = { },
     onFabAddProductClick: (String, String) -> Unit = { _, _ -> },
     onProductClick: (String, String, String) -> Unit = { _, _, _ -> },
@@ -214,7 +212,7 @@ fun BrandScreen(
                             state = state,
                             onUpdateEditMode = { isEditMode = it },
                             toggleActive = onToggleActive,
-                            onSaveBrandClick = onSaveBrandClick,
+                            saveBrandCallback = saveBrandCallback,
                             isEdit = isEditMode,
                             onNavToBrandLov = onNavToBrandLov,
                             textInputCallback = textInputCallback

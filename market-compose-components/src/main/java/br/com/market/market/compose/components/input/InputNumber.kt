@@ -28,6 +28,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.core.text.isDigitsOnly
 import br.com.market.core.R
+import br.com.market.core.inputs.formatter.InputNumberFormatter
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.states.input.InputNumberUIState
 import br.com.market.market.compose.components.button.icons.IconButtonClear
@@ -176,7 +177,7 @@ private fun getNumber(state: InputNumberUIState): Number? {
         return null
     }
 
-    return if (state.integer) state.value.toLong() else state.value.toDouble()
+    return InputNumberFormatter(state.integer).formatStringToValue(state.value)
 }
 
 

@@ -22,18 +22,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import br.com.market.core.R
-import br.com.market.core.extensions.getDateRangeFilterValue
-import br.com.market.core.extensions.getEnumFilterValue
-import br.com.market.core.extensions.getLongFilterValue
-import br.com.market.core.extensions.getLovPairFilterValue
-import br.com.market.core.extensions.getStringFilterValue
 import br.com.market.core.inputs.CommonAdvancedFilterItem
 import br.com.market.core.inputs.arguments.DateTimeRangeInputArgs
 import br.com.market.core.inputs.arguments.InputArgs
 import br.com.market.core.inputs.arguments.InputNumberArgs
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.states.filter.AdvancedFilterUIState
-import br.com.market.enums.EnumOperationType
 import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
 import br.com.market.market.compose.components.SelectOneOption
 import br.com.market.market.compose.components.filter.AdvancedFilterItem
@@ -71,6 +65,7 @@ fun MovementSearchAdvancedFilterScreen(
     )
 }
 
+@Suppress("UNCHECKED_CAST")
 @Composable
 fun MovementSearchAdvancedFilterScreen(
     state: AdvancedFilterUIState = AdvancedFilterUIState(),
@@ -101,7 +96,7 @@ fun MovementSearchAdvancedFilterScreen(
         ) {
             LazyVerticalListWithEmptyState(items = state.filters) { item ->
                 MovementSearchAdvancedFilterItem(
-                    item = item,
+                    item = item as CommonAdvancedFilterItem<Any?>,
                     onNavigateToTextFilter = onNavigateToTextFilter,
                     onNavigateToDateRangeFilter = onNavigateToDateRangeFilter,
                     onNavigateToNumberFilter = onNavigateToNumberFilter,
@@ -115,7 +110,7 @@ fun MovementSearchAdvancedFilterScreen(
 
                 if (openSelectOneOptionFilter) {
                     OpenSelectOneOptionFilter(
-                        item = item,
+                        item = item as CommonAdvancedFilterItem<Pair<String, Int>?>,
                         onDismiss = { openSelectOneOptionFilter = false },
                         onItemClick = {
                             callbackSelectOne!!.invoke(it)
@@ -145,7 +140,7 @@ fun MovementSearchAdvancedFilterScreen(
                 items = state.filters
             ) { item ->
                 MovementSearchAdvancedFilterItem(
-                    item = item,
+                    item = item as CommonAdvancedFilterItem<Any?>,
                     onNavigateToTextFilter = onNavigateToTextFilter,
                     onNavigateToDateRangeFilter = onNavigateToDateRangeFilter,
                     onNavigateToNumberFilter = onNavigateToNumberFilter,
@@ -159,7 +154,7 @@ fun MovementSearchAdvancedFilterScreen(
 
                 if (openSelectOneOptionFilter) {
                     OpenSelectOneOptionFilter(
-                        item = item,
+                        item = item as CommonAdvancedFilterItem<Pair<String, Int>?>,
                         onDismiss = { openSelectOneOptionFilter = false },
                         onItemClick = {
                             callbackSelectOne!!.invoke(it)
@@ -179,13 +174,34 @@ fun MovementSearchAdvancedFilterScreen(
 
                     state.filters.map { item ->
                         when (item.identifier) {
-                            PRODUCT_NAME.name -> filter.productName = item.getStringFilterValue()
-                            DESCRIPTION.name -> filter.description = item.getStringFilterValue()
-                            DATE_PREVISION.name -> filter.datePrevision = item.getDateRangeFilterValue()
-                            DATE_REALIZATION.name -> filter.dateRealization = item.getDateRangeFilterValue()
-                            OPERATION_TYPE.name -> filter.operationType = item.getEnumFilterValue(EnumOperationType.values())
-                            QUANTITY.name -> filter.quantity = item.getLongFilterValue()
-                            RESPONSIBLE.name -> filter.responsible = item.getLovPairFilterValue()
+                            PRODUCT_NAME.name -> {
+                                item as CommonAdvancedFilterItem<String?>
+                                filter.productName = item.toFilterValue()
+                            }
+                            DESCRIPTION.name -> {
+                                item as CommonAdvancedFilterItem<String?>
+                                filter.description = item.toFilterValue()
+                            }
+                            DATE_PREVISION.name -> {
+                                item as CommonAdvancedFilterItem<Pair<LocalDateTime?, LocalDateTime?>?>
+                                filter.datePrevision = item.toFilterValue()
+                            }
+                            DATE_REALIZATION.name -> {
+                                item as CommonAdvancedFilterItem<Pair<LocalDateTime?, LocalDateTime?>?>
+                                filter.dateRealization = item.toFilterValue()
+                            }
+                            OPERATION_TYPE.name -> {
+                                item as CommonAdvancedFilterItem<Pair<String, Int>?>
+                                filter.operationType = item.toFilterValue()
+                            }
+                            QUANTITY.name -> {
+                                item as CommonAdvancedFilterItem<Long?>
+                                filter.quantity = item.toFilterValue()
+                            }
+                            RESPONSIBLE.name -> {
+                                item as CommonAdvancedFilterItem<Pair<String, String?>?>
+                                filter.responsible = item.toFilterValue()
+                            }
                         }
                     }
 
@@ -214,7 +230,7 @@ fun MovementSearchAdvancedFilterScreen(
 
 @Composable
 private fun OpenSelectOneOptionFilter(
-    item: CommonAdvancedFilterItem,
+    item: CommonAdvancedFilterItem<Pair<String, Int>?>,
     onDismiss: () -> Unit,
     onItemClick: (Pair<String, Int>) -> Unit
 ) {
@@ -233,15 +249,15 @@ private fun OpenSelectOneOptionFilter(
 }
 
 @Composable
-fun MovementSearchAdvancedFilterItem(
-    item: CommonAdvancedFilterItem,
-    onNavigateToTextFilter: (InputArgs, (Any) -> Unit) -> Unit,
-    onNavigateToDateRangeFilter: (DateTimeRangeInputArgs, (Any) -> Unit) -> Unit,
-    onNavigateToNumberFilter: (InputNumberArgs, (Number?) -> Unit) -> Unit,
-    onNavigateToUserLovFilter: ((Any) -> Unit) -> Unit,
-    onOperationTypeClick: ((Any) -> Unit) -> Unit
+fun <T> MovementSearchAdvancedFilterItem(
+    item: CommonAdvancedFilterItem<T?>,
+    onNavigateToTextFilter: (InputArgs, (T) -> Unit) -> Unit,
+    onNavigateToDateRangeFilter: (DateTimeRangeInputArgs, (T) -> Unit) -> Unit,
+    onNavigateToNumberFilter: (InputNumberArgs, (T?) -> Unit) -> Unit,
+    onNavigateToUserLovFilter: ((T) -> Unit) -> Unit,
+    onOperationTypeClick: ((T) -> Unit) -> Unit
 ) {
-    AdvancedFilterItem(
+    AdvancedFilterItem<T?>(
         item = item,
         onItemClick = { callback ->
             when (item.identifier) {

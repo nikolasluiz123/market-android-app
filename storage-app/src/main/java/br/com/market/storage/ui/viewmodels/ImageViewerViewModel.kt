@@ -9,10 +9,12 @@ import br.com.market.storage.repository.ProductRepository
 import br.com.market.storage.ui.navigation.argumentProductImageId
 import br.com.market.storage.ui.states.ImageViewerUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,17 +28,45 @@ class ImageViewerViewModel @Inject constructor(
     private var productImageId = savedStateHandle.get<String>(argumentProductImageId)
 
     init {
+        _uiState.update { currentState ->
+            currentState.copy(
+                onShowDialog = { type, message, onConfirm, onCancel ->
+                    _uiState.value = _uiState.value.copy(
+                        dialogType = type,
+                        dialogMessage = message,
+                        showDialog = true,
+                        onConfirm = onConfirm,
+                        onCancel = onCancel
+                    )
+                },
+                onHideDialog = { _uiState.value = _uiState.value.copy(showDialog = false) },
+                onToggleLoading = { _uiState.value = _uiState.value.copy(showLoading = !_uiState.value.showLoading) },
+            )
+        }
+
+        loadScreen { _uiState.value = _uiState.value.copy(internalErrorMessage = it)  }
+    }
+
+    private fun loadScreen(onError: (String) -> Unit) {
         productImageId?.navParamToString()?.let { id ->
             viewModelScope.launch {
-                val productImageDomain = productRepository.findProductImageDomain(id)
-                val productDomain = productRepository.findProductByLocalId(productImageDomain?.productId!!)
+                _uiState.value.onToggleLoading()
 
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        productImageDomain = productImageDomain,
-                        productName = productDomain.name
-                    )
+                val productImageDomain = productRepository.findProductImageDomain(id)
+                val response = productRepository.findProductByLocalId(productImageDomain?.productId!!)
+
+                if (response.success) {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            productImageDomain = productImageDomain,
+                            productName = response.value!!.product.name
+                        )
+                    }
+                } else {
+                    withContext(Main) { onError(response.error ?: "") }
                 }
+
+                _uiState.value.onToggleLoading()
             }
         }
     }

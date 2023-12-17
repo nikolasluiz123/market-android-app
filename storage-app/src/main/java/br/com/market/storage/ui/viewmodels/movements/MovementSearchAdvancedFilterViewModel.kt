@@ -5,13 +5,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import br.com.market.core.extensions.fromJsonNavParamToArgs
 import br.com.market.core.extensions.searchWordsInText
+import br.com.market.core.gson.adapter.LocalDateTimeAdapter
 import br.com.market.core.inputs.CommonAdvancedFilterItem
 import br.com.market.core.inputs.formatter.DateTimeRangeFormatter
-import br.com.market.core.inputs.formatter.LovFormatter
 import br.com.market.core.inputs.formatter.InputNumberFormatter
-import br.com.market.core.inputs.formatter.SelectOneFormatter
 import br.com.market.core.inputs.formatter.InputTextFormatter
-import br.com.market.core.gson.adapter.LocalDateTimeAdapter
+import br.com.market.core.inputs.formatter.LovFormatter
+import br.com.market.core.inputs.formatter.SelectOneFormatter
 import br.com.market.core.ui.states.filter.AdvancedFilterUIState
 import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
 import br.com.market.storage.R
@@ -35,7 +35,7 @@ class MovementSearchAdvancedFilterViewModel @Inject constructor(
 
     val uiState get() = _uiState.asStateFlow()
     private val filterJson: String? = savedStateHandle[argumentMovementSearchAdvancedFilterJson]
-    private val filters = mutableListOf<CommonAdvancedFilterItem>()
+    private val filters = mutableListOf<CommonAdvancedFilterItem<*>>()
 
     init {
         val gson = GsonBuilder()
@@ -120,7 +120,7 @@ class MovementSearchAdvancedFilterViewModel @Inject constructor(
         }
     }
 
-    private fun getFilteredFilters(filterText: String?): List<CommonAdvancedFilterItem> {
+    private fun getFilteredFilters(filterText: String?): List<CommonAdvancedFilterItem<*>> {
         if (filterText.isNullOrEmpty()) {
             return filters
         }

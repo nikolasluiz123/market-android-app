@@ -1,5 +1,6 @@
 package br.com.market.storage.ui.screens.product
 
+import android.content.Context
 import android.net.Uri
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -29,11 +30,11 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import br.com.market.core.callbacks.INumberInputNavigationCallback
+import br.com.market.core.callbacks.IServiceOperationCallback
 import br.com.market.core.callbacks.ITextInputNavigationCallback
 import br.com.market.core.enums.EnumDialogType
 import br.com.market.core.extensions.launchImageOnly
 import br.com.market.core.extensions.openCamera
-import br.com.market.core.extensions.parseToDouble
 import br.com.market.core.extensions.processBytesOfImage
 import br.com.market.core.extensions.requestCameraPermission
 import br.com.market.core.extensions.requestGalleryPermission
@@ -47,7 +48,6 @@ import br.com.market.core.ui.components.bottomsheet.loadimage.EnumOptionsBottomS
 import br.com.market.core.utils.MediaUtils.openCameraLauncher
 import br.com.market.core.utils.MediaUtils.openGalleryLauncher
 import br.com.market.core.utils.PermissionUtils.requestPermissionLauncher
-import br.com.market.domain.ProductDomain
 import br.com.market.enums.EnumUnit
 import br.com.market.market.compose.components.FormField
 import br.com.market.market.compose.components.MarketBottomAppBar
@@ -85,7 +85,7 @@ fun ProductScreen(
         onBackClick = onBackClick,
         onToggleActive = viewModel::toggleProductActive,
         onStorageButtonClick = onStorageButtonClick,
-        onSaveProductClick = viewModel::saveProduct,
+        saveProductCallback = viewModel::saveProduct,
         onProductImageClick = onProductImageClick,
         onAddProductImage = viewModel::addImage,
         onToggleActiveProductImage = viewModel::toggleImageActive,
@@ -102,7 +102,7 @@ fun ProductScreen(
     onBackClick: () -> Unit = { },
     onToggleActive: () -> Unit = { },
     onStorageButtonClick: (String, String, String) -> Unit = { _, _, _ -> },
-    onSaveProductClick: () -> Unit = { },
+    saveProductCallback: IServiceOperationCallback? = null,
     onProductImageClick: (String) -> Unit = { },
     onAddProductImage: (ByteArray) -> Unit = { },
     onToggleActiveProductImage: (ByteArray, String?) -> Unit = { _, _ -> },
@@ -182,7 +182,7 @@ fun ProductScreen(
                 floatingActionButton = {
                     FloatingActionButtonSave(
                         onClick = {
-                            isEditMode = saveProduct(state, isActive, isEditMode, onSaveProductClick, scope, snackbarHostState)
+                            isEditMode = saveProduct(state, isActive, saveProductCallback, scope, snackbarHostState, context)
                         }
                     )
                 }
@@ -419,36 +419,31 @@ fun ProductScreen(
 private fun saveProduct(
     state: ProductUIState,
     isActive: Boolean,
-    isEditMode: Boolean,
-    onSaveProductClick: () -> Unit,
+    saveProductCallback: IServiceOperationCallback?,
     scope: CoroutineScope,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
+    context: Context
 ): Boolean {
     if (state.onValidate() && isActive) {
+        state.onToggleLoading()
 
-        state.productDomain = if (isEditMode) {
-            state.productDomain?.copy(
-                name = state.name.value,
-                price = state.price.value.parseToDouble(),
-                quantity = state.quantity.value.parseToDouble(),
-                quantityUnit = /*state.quantityUnit.value*/ null,
-                images = state.images
-            )
-        } else {
-            ProductDomain(
-                name = state.name.value,
-                price = state.price.value.parseToDouble(),
-                quantity = state.quantity.value.parseToDouble(),
-                quantityUnit = /* state.quantityUnit.value */ null,
-                images = state.images
-            )
-        }
-
-        onSaveProductClick()
-
-        scope.launch {
-            snackbarHostState.showSnackbar("Produto Salvo com Sucesso")
-        }
+        saveProductCallback?.onExecute(
+            onSuccess = {
+                state.onToggleLoading()
+                scope.launch {
+                    snackbarHostState.showSnackbar(context.getString(R.string.product_screen_save_success_message))
+                }
+            },
+            onError = { message ->
+                state.onToggleLoading()
+                state.onShowDialog?.onShow(
+                    type = EnumDialogType.ERROR,
+                    message = message,
+                    onConfirm = {},
+                    onCancel = {}
+                )
+            }
+        )
     }
 
     return state.productDomain != null
