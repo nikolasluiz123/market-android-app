@@ -8,7 +8,7 @@ import androidx.room.RawQuery
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import br.com.market.enums.EnumOperationType
-import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
+import br.com.market.market.common.filter.MovementSearchScreenFilters
 import br.com.market.domain.StorageOperationHistoryReadDomain
 import br.com.market.models.Product
 import br.com.market.models.StorageOperationHistory
@@ -37,7 +37,7 @@ abstract class StorageOperationsHistoryDAO : AbstractBaseDAO() {
         brandId: String,
         productId: String? = null,
         simpleFilter: String? = null,
-        advancedFilter: MovementSearchScreenFilters
+        advancedFilter: br.com.market.market.common.filter.MovementSearchScreenFilters
     ): List<StorageOperationHistoryReadDomain> {
         val params = mutableListOf<Any>()
 

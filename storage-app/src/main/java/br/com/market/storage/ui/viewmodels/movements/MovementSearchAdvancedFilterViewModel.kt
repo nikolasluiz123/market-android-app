@@ -13,7 +13,7 @@ import br.com.market.core.inputs.formatter.InputTextFormatter
 import br.com.market.core.inputs.formatter.LovFormatter
 import br.com.market.core.inputs.formatter.SelectOneFormatter
 import br.com.market.core.ui.states.filter.AdvancedFilterUIState
-import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
+import br.com.market.core.filter.MovementFilters
 import br.com.market.storage.R
 import br.com.market.storage.filter.enums.EnumMovementsSearchScreenFilters
 import br.com.market.storage.ui.navigation.movement.argumentMovementSearchAdvancedFilterJson
@@ -42,7 +42,7 @@ class MovementSearchAdvancedFilterViewModel @Inject constructor(
             .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeAdapter())
             .create()
 
-        filterJson?.fromJsonNavParamToArgs(MovementSearchScreenFilters::class.java, gson)?.let { filter ->
+        filterJson?.fromJsonNavParamToArgs(MovementFilters::class.java, gson)?.let { filter ->
             filters.add(
                 CommonAdvancedFilterItem(
                     labelResId = R.string.movements_search_screen_label_filter_product_name,

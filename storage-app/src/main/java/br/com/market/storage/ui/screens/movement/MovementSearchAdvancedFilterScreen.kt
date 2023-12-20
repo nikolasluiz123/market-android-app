@@ -28,7 +28,7 @@ import br.com.market.core.inputs.arguments.InputArgs
 import br.com.market.core.inputs.arguments.InputNumberArgs
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.states.filter.AdvancedFilterUIState
-import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
+import br.com.market.core.filter.MovementFilters
 import br.com.market.market.compose.components.SelectOneOption
 import br.com.market.market.compose.components.filter.AdvancedFilterItem
 import br.com.market.market.compose.components.filter.SimpleFilter
@@ -50,7 +50,7 @@ fun MovementSearchAdvancedFilterScreen(
     onNavigateToDateRangeFilter: (DateTimeRangeInputArgs, (Any) -> Unit) -> Unit,
     onNavigateToNumberFilter: (InputNumberArgs, (Number?) -> Unit) -> Unit,
     onNavigateToUserLovFilter: ((Any) -> Unit) -> Unit,
-    onApplyFilters: (MovementSearchScreenFilters) -> Unit
+    onApplyFilters: (MovementFilters) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -74,7 +74,7 @@ fun MovementSearchAdvancedFilterScreen(
     onNavigateToDateRangeFilter: (DateTimeRangeInputArgs, (Any) -> Unit) -> Unit = { _, _ -> },
     onNavigateToNumberFilter: (InputNumberArgs, (Number?) -> Unit) -> Unit = { _, _ -> },
     onNavigateToUserLovFilter: ((Any) -> Unit) -> Unit = { },
-    onApplyFilters: (MovementSearchScreenFilters) -> Unit = { },
+    onApplyFilters: (MovementFilters) -> Unit = { },
 ) {
     ConstraintLayout(Modifier.fillMaxSize()) {
         val (listRef, searchBarRef, searchDividerRef, buttonApplyRef, buttonClearRef) = createRefs()
@@ -170,7 +170,7 @@ fun MovementSearchAdvancedFilterScreen(
                     bottom.linkTo(parent.bottom, margin = 8.dp)
                 },
                 onClick = {
-                    val filter = MovementSearchScreenFilters()
+                    val filter = MovementFilters()
 
                     state.filters.map { item ->
                         when (item.identifier) {
@@ -218,7 +218,7 @@ fun MovementSearchAdvancedFilterScreen(
                     bottom.linkTo(parent.bottom, margin = 8.dp)
                 },
                 onClick = {
-                    onApplyFilters(MovementSearchScreenFilters())
+                    onApplyFilters(MovementFilters())
                 },
                 colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.Transparent),
             ) {

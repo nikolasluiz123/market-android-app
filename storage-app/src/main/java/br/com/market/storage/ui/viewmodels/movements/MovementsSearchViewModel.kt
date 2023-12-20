@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.market.core.extensions.navParamToString
-import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
+import br.com.market.core.filter.MovementFilters
 import br.com.market.market.pdf.generator.reports.StorageOperationsReportGenerator
 import br.com.market.storage.repository.BrandRepository
 import br.com.market.storage.repository.ProductRepository
@@ -38,7 +38,7 @@ class MovementsSearchViewModel @Inject constructor(
     private val brandId: String? = savedStateHandle[argumentBrandId]
     private val productId: String? = savedStateHandle[argumentProductId]
 
-    var filter: MovementSearchScreenFilters = MovementSearchScreenFilters()
+    var filter: MovementFilters = MovementFilters()
         private set
 
     init {
@@ -83,7 +83,7 @@ class MovementsSearchViewModel @Inject constructor(
         }
     }
 
-    fun updateList(advancedFilter: MovementSearchScreenFilters = MovementSearchScreenFilters(), simpleFilterText: String? = null) {
+    fun updateList(advancedFilter: MovementFilters = MovementFilters(), simpleFilterText: String? = null) {
         filter = advancedFilter
 
         _uiState.update { currentState ->

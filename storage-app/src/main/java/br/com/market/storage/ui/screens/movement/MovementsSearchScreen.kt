@@ -29,7 +29,7 @@ import br.com.market.core.R.drawable.*
 import br.com.market.core.theme.MarketTheme
 import br.com.market.core.ui.components.buttons.fab.SubActionFabItem
 import br.com.market.enums.EnumOperationType
-import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
+import br.com.market.core.filter.MovementFilters
 import br.com.market.market.compose.components.MarketBottomAppBar
 import br.com.market.market.compose.components.button.fab.MarketFloatingActionButtonMultiActions
 import br.com.market.market.compose.components.button.fab.SmallFabActions
@@ -54,7 +54,7 @@ fun MovementsSearchScreen(
     onAddMovementClick: (String, String, EnumOperationType, String?) -> Unit,
     onBackClick: () -> Unit,
     onMovementClick: (StorageOperationHistoryReadDomain) -> Unit,
-    onAdvancedFiltersClick: (MovementSearchScreenFilters, (MovementSearchScreenFilters) -> Unit) -> Unit,
+    onAdvancedFiltersClick: (MovementFilters, (MovementFilters) -> Unit) -> Unit,
     onNavigateToReportList: (directory: String) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()

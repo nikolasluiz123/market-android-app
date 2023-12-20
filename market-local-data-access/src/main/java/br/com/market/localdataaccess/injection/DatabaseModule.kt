@@ -16,6 +16,7 @@ import br.com.market.localdataaccess.dao.remotekeys.BrandRemoteKeysDAO
 import br.com.market.localdataaccess.dao.remotekeys.CategoryRemoteKeysDAO
 import br.com.market.localdataaccess.dao.remotekeys.MarketRemoteKeysDAO
 import br.com.market.localdataaccess.dao.remotekeys.ProductRemoteKeysDAO
+import br.com.market.localdataaccess.dao.remotekeys.StorageOperationsHistoryRemoteKeysDAO
 import br.com.market.localdataaccess.dao.remotekeys.UserRemoteKeysDAO
 import br.com.market.localdataaccess.dao.report.StorageOperationsReportDAO
 import br.com.market.localdataaccess.database.AppDatabase
@@ -107,6 +108,10 @@ class DatabaseModule {
     @Provides
     @Singleton
     fun provideUserRemoteKeysDAO(appDatabase: AppDatabase): UserRemoteKeysDAO = appDatabase.userRemoteKeysDAO()
+
+    @Provides
+    @Singleton
+    fun provideStorageOperationsHistoryRemoteKeysDAO(appDatabase: AppDatabase): StorageOperationsHistoryRemoteKeysDAO = appDatabase.storageOperationsHistoryRemoteKeysDAO()
 
     /**
      * função para criar o DataBase uma única vez.

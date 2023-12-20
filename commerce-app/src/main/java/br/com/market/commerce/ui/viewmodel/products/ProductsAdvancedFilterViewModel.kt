@@ -9,7 +9,7 @@ import br.com.market.core.extensions.searchWordsInText
 import br.com.market.core.gson.adapter.LocalDateTimeAdapter
 import br.com.market.core.inputs.CommonAdvancedFilterItem
 import br.com.market.core.ui.states.filter.AdvancedFilterUIState
-import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
+import br.com.market.core.filter.MovementFilters
 import com.google.gson.GsonBuilder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -35,7 +35,7 @@ class ProductsAdvancedFilterViewModel @Inject constructor(
             .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeAdapter())
             .create()
 
-        filterJson?.fromJsonNavParamToArgs(MovementSearchScreenFilters::class.java, gson)?.let { filter ->
+        filterJson?.fromJsonNavParamToArgs(MovementFilters::class.java, gson)?.let { filter ->
 
             _uiState.update { currentState ->
                 currentState.copy(filters = filters)

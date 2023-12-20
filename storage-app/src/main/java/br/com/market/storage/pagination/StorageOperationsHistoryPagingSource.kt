@@ -2,7 +2,7 @@ package br.com.market.storage.pagination
 
 import br.com.market.core.pagination.BasePagingSource
 import br.com.market.localdataaccess.dao.StorageOperationsHistoryDAO
-import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
+import br.com.market.core.filter.MovementFilters
 import br.com.market.domain.StorageOperationHistoryReadDomain
 
 class StorageOperationsHistoryPagingSource(
@@ -11,7 +11,7 @@ class StorageOperationsHistoryPagingSource(
     private val categoryId: String,
     private val brandId: String,
     private val simpleFilter: String?,
-    private val advancedFilter: MovementSearchScreenFilters
+    private val advancedFilter: MovementFilters
 ) : BasePagingSource<StorageOperationHistoryReadDomain>() {
 
     override suspend fun getData(limit: Int, offset: Int): List<StorageOperationHistoryReadDomain> {

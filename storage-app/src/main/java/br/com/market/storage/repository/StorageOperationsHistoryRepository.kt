@@ -4,13 +4,12 @@ import androidx.paging.Pager
 import androidx.paging.PagingData
 import br.com.market.core.pagination.PagingConfigUtils
 import br.com.market.domain.StorageOperationHistoryDomain
+import br.com.market.domain.StorageOperationHistoryReadDomain
 import br.com.market.localdataaccess.dao.MarketDAO
 import br.com.market.localdataaccess.dao.StorageOperationsHistoryDAO
-import br.com.market.localdataaccess.filter.MovementSearchScreenFilters
+import br.com.market.core.filter.MovementFilters
 import br.com.market.market.common.repository.BaseRepository
-import br.com.market.domain.StorageOperationHistoryReadDomain
 import br.com.market.models.StorageOperationHistory
-import br.com.market.servicedataaccess.responses.types.MarketServiceResponse
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
 import br.com.market.servicedataaccess.webclients.StorageOperationsHistoryWebClient
 import br.com.market.storage.pagination.StorageOperationsHistoryPagingSource
@@ -29,7 +28,7 @@ class StorageOperationsHistoryRepository @Inject constructor(
         categoryId: String,
         brandId: String,
         simpleFilter: String?,
-        advancedFilter: MovementSearchScreenFilters
+        advancedFilter: MovementFilters
     ): Flow<PagingData<StorageOperationHistoryReadDomain>> {
         return Pager(
             config = PagingConfigUtils.defaultPagingConfig(),
@@ -101,34 +100,6 @@ class StorageOperationsHistoryRepository @Inject constructor(
         dao.save(storageOperationHistory)
 
         return response
-    }
-
-    suspend fun sync(): MarketServiceResponse {
-        val response = sendStorageOperationsHistoryToRemoteDB()
-        return if (response.success) updateStorageOperationsHistoryOfLocalDB() else response
-    }
-
-    private suspend fun sendStorageOperationsHistoryToRemoteDB(): MarketServiceResponse {
-        val storageOperationsHistoryNotSynchronized = dao.findStorageOperationsHistoryNotSynchronized()
-        val response = webClient.sync(storageOperationsHistoryNotSynchronized)
-
-        if (response.success) {
-            val storageOperationsHistorySynchronized = storageOperationsHistoryNotSynchronized.map { it.copy(synchronized = true) }
-            dao.save(storageOperationsHistorySynchronized)
-        }
-
-        return response
-    }
-
-    private suspend fun updateStorageOperationsHistoryOfLocalDB(): MarketServiceResponse {
-        val marketId = marketDAO.findFirst().first()?.id!!
-
-        return importPagingData(
-            onWebServiceFind = { limit, offset ->
-                webClient.findStorageOperationsHistory(marketId = marketId, limit = limit, offset = offset)
-            },
-            onPersistData = dao::save
-        )
     }
 
     suspend fun inactivate(id: String) {
