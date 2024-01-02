@@ -188,7 +188,7 @@ class BrandViewModel @Inject constructor(
 
     fun findBrandById(brandId: String) {
         viewModelScope.launch {
-            val brandDomain = brandRepository.findById(brandId)
+            val brandDomain = brandRepository.cacheFindById(brandId)
 
             _uiState.update { currentState ->
                 currentState.copy(

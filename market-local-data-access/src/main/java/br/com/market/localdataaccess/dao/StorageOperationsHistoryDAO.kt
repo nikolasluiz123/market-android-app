@@ -1,5 +1,6 @@
 package br.com.market.localdataaccess.dao
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -7,9 +8,9 @@ import androidx.room.Query
 import androidx.room.RawQuery
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
-import br.com.market.enums.EnumOperationType
-import br.com.market.market.common.filter.MovementSearchScreenFilters
+import br.com.market.core.filter.MovementFilters
 import br.com.market.domain.StorageOperationHistoryReadDomain
+import br.com.market.enums.EnumOperationType
 import br.com.market.models.Product
 import br.com.market.models.StorageOperationHistory
 import br.com.market.models.User
@@ -27,18 +28,7 @@ abstract class StorageOperationsHistoryDAO : AbstractBaseDAO() {
     @Query("select * from storage_operations_history where id = :id")
     abstract suspend fun findById(id: String): StorageOperationHistory
 
-    @Query("select * from storage_operations_history where synchronized = 0")
-    abstract suspend fun findStorageOperationsHistoryNotSynchronized(): List<StorageOperationHistory>
-
-    suspend fun findStorageOperationsHistory(
-        limit: Int,
-        offset: Int,
-        categoryId: String,
-        brandId: String,
-        productId: String? = null,
-        simpleFilter: String? = null,
-        advancedFilter: br.com.market.market.common.filter.MovementSearchScreenFilters
-    ): List<StorageOperationHistoryReadDomain> {
+    fun findStorageOperationsHistory(filter: MovementFilters): PagingSource<Int, StorageOperationHistoryReadDomain> {
         val params = mutableListOf<Any>()
 
         val select = StringJoiner("\r\n")
@@ -73,39 +63,39 @@ abstract class StorageOperationsHistoryDAO : AbstractBaseDAO() {
             add(" and category.id = ? ")
             add(" and brand.id = ? ")
 
-            params.add(categoryId)
-            params.add(brandId)
+            params.add(filter.categoryId!!)
+            params.add(filter.brandId!!)
 
-            if (!productId.isNullOrBlank()) {
+            if (!filter.productId.isNullOrBlank()) {
                 add(" and product.id = ? ")
-                params.add(productId)
+                params.add(filter.productId!!)
             }
 
-            if (!simpleFilter.isNullOrBlank()) {
+            if (!filter.quickFilter.isNullOrBlank()) {
                 add(" and ( ")
                 add("       product.name like ? or ")
                 add("       user.name like ? or ")
                 add("       operation.description like ? ")
                 add("     ) ")
 
-                params.add("%${simpleFilter}%")
-                params.add("%${simpleFilter}%")
-                params.add("%${simpleFilter}%")
+                params.add("%${filter.quickFilter}%")
+                params.add("%${filter.quickFilter}%")
+                params.add("%${filter.quickFilter}%")
             }
 
-            if (advancedFilter.productName.isFilterApplied()) {
+            if (filter.productName.isFilterApplied()) {
                 add(" and product.name like ? ")
-                params.add("%${advancedFilter.productName.value}%")
+                params.add("%${filter.productName.value}%")
             }
 
-            if (advancedFilter.description.isFilterApplied()) {
+            if (filter.description.isFilterApplied()) {
                 add(" and operation.description like ? ")
-                params.add("%${advancedFilter.description.value}%")
+                params.add("%${filter.description.value}%")
             }
 
-            if (advancedFilter.datePrevision.isFilterApplied()) {
-                val dateFrom = advancedFilter.datePrevision.value?.first?.toString()
-                val dateTo = advancedFilter.datePrevision.value?.second?.toString()
+            if (filter.datePrevision.isFilterApplied()) {
+                val dateFrom = filter.datePrevision.value?.first?.toString()
+                val dateTo = filter.datePrevision.value?.second?.toString()
 
                 when {
                     dateFrom != null && dateTo != null -> {
@@ -124,9 +114,9 @@ abstract class StorageOperationsHistoryDAO : AbstractBaseDAO() {
                 }
             }
 
-            if (advancedFilter.dateRealization.isFilterApplied()) {
-                val dateFrom = advancedFilter.dateRealization.value?.first?.toString()
-                val dateTo = advancedFilter.dateRealization.value?.second?.toString()
+            if (filter.dateRealization.isFilterApplied()) {
+                val dateFrom = filter.dateRealization.value?.first?.toString()
+                val dateTo = filter.dateRealization.value?.second?.toString()
 
                 when {
                     dateFrom != null && dateTo != null -> {
@@ -145,19 +135,19 @@ abstract class StorageOperationsHistoryDAO : AbstractBaseDAO() {
                 }
             }
 
-            if (advancedFilter.operationType.isFilterApplied()) {
+            if (filter.operationType.isFilterApplied()) {
                 add(" and operation.operation_type = ? ")
-                params.add(advancedFilter.operationType.value!!)
+                params.add(filter.operationType.value!!)
             }
 
-            if (advancedFilter.quantity.isFilterApplied()) {
+            if (filter.quantity.isFilterApplied()) {
                 add(" and operation.quantity = ? ")
-                params.add(advancedFilter.quantity.value!!)
+                params.add(filter.quantity.value!!)
             }
 
-            if (advancedFilter.responsible.isFilterApplied()) {
+            if (filter.responsible.isFilterApplied()) {
                 add(" and user.id = ? ")
-                params.add(advancedFilter.responsible.value?.second!!)
+                params.add(filter.responsible.value?.second!!)
             }
         }
 
@@ -170,8 +160,6 @@ abstract class StorageOperationsHistoryDAO : AbstractBaseDAO() {
         }
 
         params.add(EnumOperationType.ScheduledInput.name)
-        params.add(limit)
-        params.add(offset)
 
         val sql = StringJoiner("\r\n")
         with(sql) {
@@ -185,7 +173,7 @@ abstract class StorageOperationsHistoryDAO : AbstractBaseDAO() {
     }
 
     @RawQuery(observedEntities = [StorageOperationHistory::class, Product::class, User::class])
-    abstract suspend fun executeQueryFindStorageOperationsHistory(query: SupportSQLiteQuery): List<StorageOperationHistoryReadDomain>
+    abstract fun executeQueryFindStorageOperationsHistory(query: SupportSQLiteQuery): PagingSource<Int, StorageOperationHistoryReadDomain>
 
     @Query("update storage_operations_history set active = 0, synchronized = :sync where id = :id")
     abstract suspend fun inactivate(id: String, sync: Boolean)
@@ -226,4 +214,7 @@ abstract class StorageOperationsHistoryDAO : AbstractBaseDAO() {
 
     @RawQuery(observedEntities = [StorageOperationHistory::class])
     abstract suspend fun executeQuerySum(query: SupportSQLiteQuery): Int
+
+    @Query("delete from storage_operations_history")
+    abstract suspend fun clearAll()
 }

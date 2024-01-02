@@ -60,6 +60,30 @@ class ProductRepository @Inject constructor(
         return webClient.findProductByLocalId(productId)
     }
 
+    suspend fun cacheFindById(productId: String): ProductDomain {
+        return productDAO.findProductById(productId).run {
+            ProductDomain(
+                id = id,
+                active = active,
+                marketId = marketId,
+                name = name,
+                price = price,
+                quantity = quantity,
+                quantityUnit = quantityUnit,
+                images = productDAO.findProductImagesBy(id).map {
+                    ProductImageDomain(
+                        id = it.id,
+                        active = it.active,
+                        marketId = it.marketId,
+                        byteArray = it.bytes,
+                        productId = it.productId,
+                        principal = it.principal
+                    )
+                }.toMutableList()
+            )
+        }
+    }
+
     suspend fun findProductImageDomain(productImageId: String): ProductImageDomain? {
         return productDAO.findProductImageBy(productImageId)?.run {
             ProductImageDomain(

@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 abstract class BaseSearchViewModel<DOMAIN: BaseDomain, FILTER: BaseSearchFilter>: ViewModel(){
 
-    protected lateinit var filter: FILTER
+    lateinit var filter: FILTER
 
     abstract fun onSimpleFilterChange(value: String?)
 

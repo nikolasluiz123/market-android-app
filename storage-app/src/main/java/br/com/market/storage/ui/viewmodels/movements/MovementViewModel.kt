@@ -137,7 +137,7 @@ class MovementViewModel @Inject constructor(
 
         brandId?.navParamToString()?.let { id ->
             viewModelScope.launch {
-                val brandDomain = brandRepository.findById(id)
+                val brandDomain = brandRepository.cacheFindById(id)
                 _uiState.update { currentState -> currentState.copy(brandDomain = brandDomain) }
             }
         }

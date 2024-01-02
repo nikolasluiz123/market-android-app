@@ -53,7 +53,7 @@ class RetrofitModule {
 
         return Retrofit
             .Builder()
-            .baseUrl("http://192.168.0.49:8080/api/v1/")
+            .baseUrl("http://192.168.0.41:8080/api/v1/")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(client)
             .build()

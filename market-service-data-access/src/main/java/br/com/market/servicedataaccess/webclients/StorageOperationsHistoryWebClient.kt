@@ -4,8 +4,12 @@ import android.content.Context
 import br.com.market.models.StorageOperationHistory
 import br.com.market.sdo.StorageOperationHistorySDO
 import br.com.market.servicedataaccess.responses.extensions.getPersistenceResponseBody
+import br.com.market.servicedataaccess.responses.extensions.getReadResponseBody
 import br.com.market.servicedataaccess.responses.types.PersistenceResponse
+import br.com.market.servicedataaccess.responses.types.ReadResponse
 import br.com.market.servicedataaccess.services.IStorageOperationsHistoryService
+import br.com.market.servicedataaccess.services.params.StorageOperationsHistoryServiceSearchParams
+import com.google.gson.Gson
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -41,6 +45,16 @@ class StorageOperationsHistoryWebClient @Inject constructor(
         return persistenceServiceErrorHandlingBlock(
             codeBlock = {
                 service.inactivate(getToken(), localId).getPersistenceResponseBody()
+            }
+        )
+    }
+
+    suspend fun getListStorageOperations(params: StorageOperationsHistoryServiceSearchParams): ReadResponse<StorageOperationHistorySDO> {
+        val jsonParams = Gson().toJson(params)
+
+        return readServiceErrorHandlingBlock(
+            codeBlock = {
+                service.getListStorageOperations(token = getToken(), jsonParams = jsonParams).getReadResponseBody()
             }
         )
     }

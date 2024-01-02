@@ -59,7 +59,7 @@ fun FormField(
                 },
                 text = stringResource(id = labelResId),
                 style = MaterialTheme.typography.titleSmall,
-                color = MaterialTheme.colorScheme.onSecondary
+                color = MaterialTheme.colorScheme.onBackground
             )
 
             if (additionalAction != null) {

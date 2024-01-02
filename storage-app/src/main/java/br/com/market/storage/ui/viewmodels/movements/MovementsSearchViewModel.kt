@@ -1,10 +1,13 @@
 package br.com.market.storage.ui.viewmodels.movements
 
+import android.content.Context
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import br.com.market.core.extensions.navParamToString
 import br.com.market.core.filter.MovementFilters
+import br.com.market.domain.StorageOperationHistoryReadDomain
+import br.com.market.market.common.viewmodel.BaseSearchViewModel
 import br.com.market.market.pdf.generator.reports.StorageOperationsReportGenerator
 import br.com.market.storage.repository.BrandRepository
 import br.com.market.storage.repository.ProductRepository
@@ -14,7 +17,9 @@ import br.com.market.storage.ui.navigation.category.argumentCategoryId
 import br.com.market.storage.ui.navigation.product.argumentProductId
 import br.com.market.storage.ui.states.MovementsSearchUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -24,12 +29,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MovementsSearchViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     savedStateHandle: SavedStateHandle,
     private val brandRepository: BrandRepository,
     private val productRepository: ProductRepository,
     private val storageOperationsHistoryRepository: StorageOperationsHistoryRepository,
     private val reportGenerator: StorageOperationsReportGenerator
-) : ViewModel() {
+) : BaseSearchViewModel<StorageOperationHistoryReadDomain, MovementFilters>() {
 
     private val _uiState: MutableStateFlow<MovementsSearchUIState> = MutableStateFlow(MovementsSearchUIState())
     val uiState get() = _uiState.asStateFlow()
@@ -38,64 +44,54 @@ class MovementsSearchViewModel @Inject constructor(
     private val brandId: String? = savedStateHandle[argumentBrandId]
     private val productId: String? = savedStateHandle[argumentProductId]
 
-    var filter: MovementFilters = MovementFilters()
-        private set
-
     init {
+        filter = MovementFilters(
+            categoryId = categoryId.navParamToString()!!,
+            brandId = brandId.navParamToString()!!,
+            productId = productId.navParamToString()
+        )
+
         _uiState.update { currentState ->
             currentState.copy(
                 categoryId = categoryId.navParamToString(),
                 brandId = brandId.navParamToString(),
                 productId = productId.navParamToString(),
-                operations = storageOperationsHistoryRepository.findStorageOperationHistory(
-                    productId = productId.navParamToString(),
-                    categoryId = categoryId.navParamToString()!!,
-                    brandId = brandId.navParamToString()!!,
-                    simpleFilter = null,
-                    advancedFilter = filter
-                ),
+                operations = getDataFlow(filter),
             )
         }
 
-        brandId.navParamToString()?.let { brandId ->
-            viewModelScope.launch {
-                brandRepository.findById(brandId).apply {
-                    _uiState.update { currentState ->
-                        currentState.copy(brandName = name)
-                    }
-                }
-            }
-        }
+        loadScreen()
+    }
 
-        productId.navParamToString()?.let { productId ->
-            viewModelScope.launch {
-                val response = productRepository.findProductByLocalId(productId)
+    private fun loadScreen() {
+        val brandId = brandId.navParamToString()
+        val productId = productId.navParamToString()
 
-                productRepository.findProductByLocalId(productId).apply {
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            productName = response.value!!.product.name,
-                            productQuantity = storageOperationsHistoryRepository.findProductStorageQuantity(productId)
-                        )
-                    }
-                }
+        viewModelScope.launch {
+            loadBrand(brandId = brandId) {
+                loadProduct(productId = productId)
             }
         }
     }
 
-    fun updateList(advancedFilter: MovementFilters = MovementFilters(), simpleFilterText: String? = null) {
-        filter = advancedFilter
+    private suspend fun loadBrand(brandId: String?, onSuccess: suspend () -> Unit) {
+        if (!brandId.isNullOrEmpty()) {
+            val name = brandRepository.cacheFindById(brandId).name
+            _uiState.update { currentState -> currentState.copy(brandName = name) }
+            onSuccess()
+        }
+    }
 
-        _uiState.update { currentState ->
-            currentState.copy(
-                operations = storageOperationsHistoryRepository.findStorageOperationHistory(
-                    productId = productId.navParamToString(),
-                    categoryId = categoryId.navParamToString()!!,
-                    brandId = brandId.navParamToString()!!,
-                    simpleFilter = simpleFilterText,
-                    advancedFilter = filter
+    private suspend fun loadProduct(productId: String?) {
+        if (!productId.isNullOrEmpty()) {
+            val product = productRepository.cacheFindById(productId = productId)
+
+            _uiState.update { currentState ->
+                currentState.copy(
+                    productName = product.name,
+                    productQuantity = storageOperationsHistoryRepository.findProductStorageQuantity(productId)
                 )
-            )
+            }
         }
     }
 
@@ -121,5 +117,22 @@ class MovementsSearchViewModel @Inject constructor(
                 onFinish()
             }
         }
+    }
+
+    fun onAdvancedFilterScreenCallback(filters: MovementFilters) {
+        filter = filters
+
+        _uiState.update {
+            it.copy(operations = getDataFlow(filter))
+        }
+    }
+
+    override fun onSimpleFilterChange(value: String?) {
+        filter.quickFilter = value
+        _uiState.value = _uiState.value.copy(operations = getDataFlow(filter))
+    }
+
+    override fun getDataFlow(filter: MovementFilters): Flow<PagingData<StorageOperationHistoryReadDomain>> {
+        return storageOperationsHistoryRepository.getConfiguredPager(context, filter).flow
     }
 }

@@ -61,7 +61,7 @@ import br.com.market.models.keys.UserRemoteKeys
  * @author Nikolas Luiz Schmitt
  */
 @Database(
-    version = 25,
+    version = 26,
     entities = [
         Address::class, Brand::class, Card::class, CartItem::class, Category::class, CategoryBrand::class, Client::class, Company::class,
         DeliveryMan::class, DeliveryManQueue::class, Product::class, ProductImage::class, ProductRating::class, PurchaseCart::class,

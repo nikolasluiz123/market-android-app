@@ -64,13 +64,9 @@ fun MovementsSearchScreen(
         onAddMovementClick = onAddMovementClick,
         onBackClick = onBackClick,
         onMovementClick = onMovementClick,
-        onSimpleFilterChange = {
-            viewModel.updateList(simpleFilterText = it)
-        },
+        onSimpleFilterChange = viewModel::onSimpleFilterChange,
         onAdvancedFiltersClick = {
-            onAdvancedFiltersClick(viewModel.filter) {
-                viewModel.updateList(advancedFilter = it)
-            }
+            onAdvancedFiltersClick(viewModel.filter, viewModel::onAdvancedFilterScreenCallback)
         },
         hasFilterApplied = viewModel.hasAdvancedFilterApplied(),
         onReportGenerateClick = viewModel::generateReport,

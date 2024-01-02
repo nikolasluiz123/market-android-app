@@ -1,10 +1,17 @@
 package br.com.market.storage.ui.screens
 
+import android.R.attr.label
+import android.R.attr.text
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -12,10 +19,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
+import androidx.core.content.ContextCompat.getSystemService
 import br.com.market.core.theme.MarketTheme
 import br.com.market.market.compose.components.CoilImageViewer
 import br.com.market.market.compose.components.LabeledText
@@ -24,6 +36,7 @@ import br.com.market.storage.R
 import br.com.market.storage.ui.states.AboutUIState
 import br.com.market.storage.ui.viewmodels.AboutViewModel
 import java.util.UUID
+
 
 @Composable
 fun AboutScreen(
@@ -43,6 +56,8 @@ fun AboutScreen(
     state: AboutUIState = AboutUIState(),
     onBackClick: () -> Unit = { },
 ) {
+    val context = LocalContext.current
+
     Scaffold(
         topBar = {
             SimpleMarketTopAppBar(
@@ -52,16 +67,26 @@ fun AboutScreen(
             )
         }
     ) { padding ->
-        ConstraintLayout(Modifier.padding(padding).fillMaxSize()) {
-            val (imageLogoRef, companyNameRef, marketNameRef, marketAddressRef, deviceIdRef, deviceNameRef) = createRefs()
+        ConstraintLayout(
+            Modifier
+                .padding(padding)
+                .fillMaxSize()
+        ) {
+            val (imageLogoRef, companyNameRef, marketNameRef,
+                marketAddressRef, deviceIdRef, deviceNameRef,
+                btnCopyIdRef) = createRefs()
 
             CoilImageViewer(
-                containerModifier = Modifier.constrainAs(imageLogoRef) {
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    top.linkTo(parent.top, margin = 8.dp)
-                }.fillMaxWidth(),
-                imageModifier = Modifier.fillMaxWidth().height(200.dp),
+                containerModifier = Modifier
+                    .constrainAs(imageLogoRef) {
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        top.linkTo(parent.top, margin = 8.dp)
+                    }
+                    .fillMaxWidth(),
+                imageModifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp),
                 data = state.imageLogo,
                 contentScale = ContentScale.Fit
             )
@@ -94,7 +119,7 @@ fun AboutScreen(
             )
 
             LabeledText(
-                modifier = Modifier.constrainAs(deviceIdRef) {
+                modifier = Modifier.constrainAs(deviceNameRef) {
                     linkTo(start = companyNameRef.start, end = parent.end, bias = 0.0F)
                     top.linkTo(marketAddressRef.bottom, margin = 16.dp)
                 },
@@ -102,14 +127,39 @@ fun AboutScreen(
                 value = state.deviceName
             )
 
+            createHorizontalChain(deviceIdRef, btnCopyIdRef)
+
             LabeledText(
-                modifier = Modifier.constrainAs(deviceNameRef) {
-                    linkTo(start = deviceIdRef.start, end = parent.end, bias = 0.0F)
-                    top.linkTo(deviceIdRef.bottom, margin = 16.dp)
-                },
+                modifier = Modifier.constrainAs(deviceIdRef) {
+                    linkTo(start = deviceNameRef.start, end = parent.end, bias = 0.0F)
+                    top.linkTo(deviceNameRef.bottom, margin = 16.dp)
+
+                    width = Dimension.fillToConstraints
+                    horizontalChainWeight = 0.8f
+                }.padding(start = 8.dp),
                 label = "Identificador",
                 value = state.deviceId
             )
+
+            IconButton(
+                modifier = Modifier.constrainAs(btnCopyIdRef) {
+                    end.linkTo(parent.end)
+                    top.linkTo(deviceIdRef.top)
+                    bottom.linkTo(deviceIdRef.bottom)
+
+                    width = Dimension.fillToConstraints
+                    horizontalChainWeight = 0.2f
+                }.padding(start = 8.dp, end = 8.dp),
+                onClick = {
+                    val clipBoardService = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                    clipBoardService.setPrimaryClip(ClipData.newPlainText("deviceId", state.deviceId))
+                }
+            ) {
+                Icon(
+                    painter = painterResource(androidx.appcompat.R.drawable.abc_ic_menu_copy_mtrl_am_alpha),
+                    contentDescription = "Copiar Identificador"
+                )
+            }
         }
     }
 }

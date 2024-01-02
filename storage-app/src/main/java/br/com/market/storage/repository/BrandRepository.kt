@@ -146,7 +146,7 @@ class BrandRepository @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun findById(brandId: String): BrandDomain {
+    suspend fun cacheFindById(brandId: String): BrandDomain {
         val brand = brandDAO.findBrandById(brandId)
 
         return BrandDomain(
