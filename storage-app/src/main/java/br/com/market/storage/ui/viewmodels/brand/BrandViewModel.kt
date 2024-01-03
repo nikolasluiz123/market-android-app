@@ -73,7 +73,7 @@ class BrandViewModel @Inject constructor(
             )
         }
 
-        loadScreen { _uiState.value = _uiState.value.copy(internalErrorMessage = it) }
+        loadScreen()
     }
 
     private fun validateName(onValidChange: (Boolean) -> Unit) {
@@ -95,50 +95,40 @@ class BrandViewModel @Inject constructor(
         }
     }
 
-    private fun loadScreen(onError: (String) -> Unit) {
+    private fun loadScreen() {
         val categoryId = categoryId?.navParamToString()
         val brandId = brandId?.navParamToString()
 
         viewModelScope.launch {
-            loadCategory(categoryId = categoryId, onError = onError) {
-                loadBrand(categoryId = categoryId!!, brandId = brandId, onError = onError)
+            loadCategory(categoryId = categoryId) {
+                loadBrand(categoryId = categoryId!!, brandId = brandId)
             }
         }
     }
 
-    private suspend fun loadCategory(categoryId: String?, onError: (String) -> Unit, onSuccess: suspend () -> Unit) {
+    private suspend fun loadCategory(categoryId: String?, onSuccess: suspend () -> Unit) {
         if (!categoryId.isNullOrEmpty()) {
-            val findCategoryResponse = categoryRepository.findById(categoryId)
-
-            if (findCategoryResponse.success) {
-                _uiState.update { currentState -> currentState.copy(categoryDomain = findCategoryResponse.value) }
-                onSuccess()
-            } else {
-                withContext(Main) { onError(findCategoryResponse.error ?: "") }
-            }
+            val categoryDomain = categoryRepository.cacheFindById(categoryId)
+            _uiState.update { currentState -> currentState.copy(categoryDomain = categoryDomain) }
+            onSuccess()
         }
     }
 
-    private suspend fun loadBrand(categoryId: String, brandId: String?, onError: (String) -> Unit) {
+    private suspend fun loadBrand(categoryId: String, brandId: String?) {
         if (!brandId.isNullOrEmpty()) {
-            val findBrandResponse = brandRepository.findBrandAndReferencesBy(categoryId, brandId)
+            val categoryBrand = brandRepository.cacheFindCategoryBrandBy(categoryId = categoryId, brandId = brandId)!!
+            val brandDomain = brandRepository.cacheFindBrandDomainById(brandId = brandId)
+            val marketId = marketRepository.findFirst().first()?.id!!
 
-            if (findBrandResponse.success) {
-                val brandDomain = getBrandDomainFrom(findBrandResponse)
+            filter = ProductFilter(marketId = marketId, categoryId = categoryId, brandId = brandId)
 
-                val marketId = marketRepository.findFirst().first()?.id!!
-                filter = ProductFilter(marketId = marketId, categoryId = categoryId, brandId = brandId)
-
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        brandDomain = brandDomain,
-                        name = _uiState.value.name.copy(value = brandDomain.name),
-                        active = findBrandResponse.value!!.categoryBrand.active,
-                        products = getDataFlow(filter)
-                    )
-                }
-            } else {
-                withContext(Main) { onError(findBrandResponse.error ?: "") }
+            _uiState.update { currentState ->
+                currentState.copy(
+                    brandDomain = brandDomain,
+                    name = _uiState.value.name.copy(value = brandDomain.name),
+                    active = categoryBrand.active,
+                    products = getDataFlow(filter)
+                )
             }
         }
     }
@@ -188,7 +178,7 @@ class BrandViewModel @Inject constructor(
 
     fun findBrandById(brandId: String) {
         viewModelScope.launch {
-            val brandDomain = brandRepository.cacheFindById(brandId)
+            val brandDomain = brandRepository.cacheFindBrandDomainById(brandId)
 
             _uiState.update { currentState ->
                 currentState.copy(

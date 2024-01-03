@@ -76,7 +76,7 @@ class MovementsSearchViewModel @Inject constructor(
 
     private suspend fun loadBrand(brandId: String?, onSuccess: suspend () -> Unit) {
         if (!brandId.isNullOrEmpty()) {
-            val name = brandRepository.cacheFindById(brandId).name
+            val name = brandRepository.cacheFindBrandDomainById(brandId).name
             _uiState.update { currentState -> currentState.copy(brandName = name) }
             onSuccess()
         }

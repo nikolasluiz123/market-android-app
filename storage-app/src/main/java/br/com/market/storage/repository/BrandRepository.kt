@@ -122,7 +122,7 @@ class BrandRepository @Inject constructor(
      *
      * @author Nikolas Luiz Schmitt
      */
-    suspend fun cacheFindById(brandId: String): BrandDomain {
+    suspend fun cacheFindBrandDomainById(brandId: String): BrandDomain {
         val brand = brandDAO.findBrandById(brandId)!!
 
         return BrandDomain(
@@ -130,7 +130,11 @@ class BrandRepository @Inject constructor(
         )
     }
 
-    suspend fun findBrandAndReferencesBy(categoryId: String, brandId: String): SingleValueResponse<BrandAndReferencesSDO> {
+    suspend fun cacheFindCategoryBrandBy(categoryId: String, brandId: String): CategoryBrand? {
+        return brandDAO.findCategoryBrandBy(categoryId = categoryId, brandId = brandId)
+    }
+
+    suspend fun cacheFindBrandAndReferencesBy(categoryId: String, brandId: String): SingleValueResponse<BrandAndReferencesSDO> {
         return webClient.findBrandByLocalId(categoryId, brandId)
     }
 

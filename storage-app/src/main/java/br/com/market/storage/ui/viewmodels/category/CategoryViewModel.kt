@@ -67,31 +67,25 @@ class CategoryViewModel @Inject constructor(
             )
         }
 
-        loadCategory {
-            _uiState.value = _uiState.value.copy(internalErrorMessage = it)
-        }
+        loadCategory()
     }
 
-    private fun loadCategory(onError: (String) -> Unit) {
+    private fun loadCategory() {
         categoryId?.navParamToString()?.let { categoryId ->
             viewModelScope.launch {
                 withContext(Main) { _uiState.value.onToggleLoading() }
 
-                val response = categoryRepository.findById(categoryId)
+                val categoryDomain = categoryRepository.cacheFindById(categoryId)
+                val marketId = marketRepository.findFirst().first()?.id!!
 
-                if (response.success) {
-                    val marketId = marketRepository.findFirst().first()?.id!!
-                    filter = BrandFilter(marketId = marketId, categoryId = categoryId)
+                filter = BrandFilter(marketId = marketId, categoryId = categoryId)
 
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            categoryDomain = response.value,
-                            nameField = _uiState.value.nameField.copy(value = response.value?.name!!),
-                            brands = getDataFlow(filter)
-                        )
-                    }
-                } else {
-                    withContext(Main) { onError(response.error ?: "") }
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        categoryDomain = categoryDomain,
+                        nameField = _uiState.value.nameField.copy(value = categoryDomain.name),
+                        brands = getDataFlow(filter)
+                    )
                 }
 
                 withContext(Main) { _uiState.value.onToggleLoading() }

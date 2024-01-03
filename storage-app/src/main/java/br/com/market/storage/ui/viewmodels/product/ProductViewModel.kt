@@ -10,11 +10,9 @@ import br.com.market.core.extensions.format
 import br.com.market.core.extensions.navParamToString
 import br.com.market.core.inputs.formatter.InputNumberFormatter
 import br.com.market.core.ui.states.Field
-import br.com.market.domain.BrandDomain
 import br.com.market.domain.ProductDomain
 import br.com.market.domain.ProductImageDomain
 import br.com.market.enums.EnumUnit
-import br.com.market.sdo.BrandAndReferencesSDO
 import br.com.market.sdo.ProductAndReferencesSDO
 import br.com.market.servicedataaccess.responses.types.SingleValueResponse
 import br.com.market.storage.R
@@ -95,8 +93,8 @@ class ProductViewModel @Inject constructor(
         viewModelScope.launch {
             withContext(Main) { _uiState.value.onToggleLoading() }
 
-            loadBrand(categoryId = categoryId, brandId = brandId, onError = onError) {
-                loadProduct(productId = productId, onError = onError)
+            loadBrand(categoryId = categoryId, brandId = brandId) {
+                loadProduct(productId = productId)
             }
 
             withContext(Main) { _uiState.value.onToggleLoading() }
@@ -106,84 +104,37 @@ class ProductViewModel @Inject constructor(
     private suspend fun loadBrand(
         categoryId: String?,
         brandId: String?,
-        onError: (String) -> Unit,
         onSuccess: suspend () -> Unit
     ) {
         if (!categoryId.isNullOrEmpty() && !brandId.isNullOrEmpty()) {
-            val response = brandRepository.findBrandAndReferencesBy(categoryId, brandId)
+            val categoryBrand = brandRepository.cacheFindCategoryBrandBy(categoryId = categoryId, brandId = brandId)!!
+            val brandDomain = brandRepository.cacheFindBrandDomainById(brandId = brandId)
 
-            if (response.success) {
-                val brandDomain = getBrandDomainFrom(response)
-
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        brandDomain = brandDomain,
-                        categoryBrandId = response.value?.categoryBrand?.localId!!
-                    )
-                }
-
-                onSuccess()
-            } else {
-                withContext(Main) { onError(response.error ?: "") }
+            _uiState.update { currentState ->
+                currentState.copy(
+                    brandDomain = brandDomain,
+                    categoryBrandId = categoryBrand.id
+                )
             }
+
+            onSuccess()
         }
     }
 
-    private fun getBrandDomainFrom(response: SingleValueResponse<BrandAndReferencesSDO>): BrandDomain {
-        return response.value!!.run {
-            BrandDomain(
-                id = brand.localId,
-                active = brand.active,
-                marketId = brand.marketId,
-                synchronized = true,
-                name = brand.name!!
-            )
-        }
-    }
-
-    private suspend fun loadProduct(productId: String?, onError: (String) -> Unit) {
+    private suspend fun loadProduct(productId: String?) {
         productId?.let { id ->
-            val response = productRepository.findProductByLocalId(productId = id)
+            val productDomain = productRepository.cacheFindById(id)
 
-            if (response.success) {
-                val productDomain = getProductDomainFrom(response)
-
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        productDomain = productDomain,
-                        name = _uiState.value.name.copy(value = productDomain.name!!),
-                        price = _uiState.value.price.copy(value = productDomain.price!!.format()),
-                        quantity = _uiState.value.quantity.copy(value = productDomain.quantity!!.format()),
-                        quantityUnit = _uiState.value.quantityUnit.copy(value = context.getString(productDomain.quantityUnit!!.labelResId)),
-                        images = productDomain.images.toMutableStateList()
-                    )
-                }
-
-            } else {
-                withContext(Main) { onError(response.error ?: "") }
+            _uiState.update { currentState ->
+                currentState.copy(
+                    productDomain = productDomain,
+                    name = _uiState.value.name.copy(value = productDomain.name!!),
+                    price = _uiState.value.price.copy(value = productDomain.price!!.format()),
+                    quantity = _uiState.value.quantity.copy(value = productDomain.quantity!!.format()),
+                    quantityUnit = _uiState.value.quantityUnit.copy(value = context.getString(productDomain.quantityUnit!!.labelResId)),
+                    images = productDomain.images.toMutableStateList()
+                )
             }
-        }
-    }
-
-    private fun getProductDomainFrom(response: SingleValueResponse<ProductAndReferencesSDO>): ProductDomain {
-        return response.value!!.run {
-            ProductDomain(
-                id = product.localId,
-                marketId = product.marketId,
-                name = product.name,
-                price = product.price,
-                quantity = product.quantity,
-                quantityUnit = product.quantityUnit,
-                images = productImages.map {
-                    ProductImageDomain(
-                        id = it.localId,
-                        marketId = it.marketId,
-                        byteArray = it.bytes,
-                        productId = it.productLocalId,
-                        principal = it.principal
-                    )
-                }.toMutableList()
-            )
         }
     }
 
