@@ -77,55 +77,31 @@ class BrandRepository @Inject constructor(
      * @author Nikolas Luiz Schmitt
      */
     suspend fun save(categoryId: String, domain: BrandDomain): PersistenceResponse {
-        return if (domain.id != null) {
-            editBrand(domain, categoryId)
+        val brand = brandDAO.findBrandById(brandId = domain.id)
+        val categoryBrand = brandDAO.findCategoryBrandBy(brandId = domain.id, categoryId = categoryId)
+
+        return if (brand != null && categoryBrand != null) {
+            editBrand(domain, brand, categoryBrand)
         } else {
-            createBrand(domain, categoryId)
+            createBrand(domain, brand, categoryId)
         }
     }
 
-    private suspend fun editBrand(domain: BrandDomain, categoryId: String): PersistenceResponse {
-        val findResponse = webClient.findBrandByLocalId(categoryId, domain.id!!)
-
-        return if (findResponse.success) {
-            val brand = getBrandWithUpdatedInfo(findResponse, domain)
-
-            val categoryBrand = findResponse.value?.categoryBrand!!.run {
-                CategoryBrand(
-                    id = localId,
-                    categoryId = localCategoryId,
-                    brandId = localBrandId,
-                    marketId = marketId
-                )
-            }
-
-            saveBrand(brand, categoryBrand)
-        } else {
-            PersistenceResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, error = findResponse.error)
-        }
+    private suspend fun editBrand(domain: BrandDomain, brand: Brand, categoryBrand: CategoryBrand): PersistenceResponse {
+        val updatedBrand = brand.copy(name = domain.name)
+        return saveBrand(updatedBrand, categoryBrand)
     }
 
-    private suspend fun createBrand(domain: BrandDomain, categoryId: String): PersistenceResponse {
+    private suspend fun createBrand(domain: BrandDomain, brand: Brand?, categoryId: String): PersistenceResponse {
         val marketId = marketDAO.findFirst().first()?.id!!
 
-        val brand = Brand(name = domain.name, marketId = marketId)
-        val categoryBrand = CategoryBrand(categoryId = categoryId, brandId = brand.id, marketId = marketId)
+        val brandToCreate = brand ?: Brand(name = domain.name, marketId = marketId)
 
-        domain.id = brand.id
+        val categoryBrand = CategoryBrand(categoryId = categoryId, brandId = brandToCreate.id, marketId = marketId)
 
-        return saveBrand(brand, categoryBrand)
-    }
+        domain.id = brandToCreate.id
 
-    private suspend fun getBrandWithUpdatedInfo(findResponse: SingleValueResponse<BrandAndReferencesSDO>, domain: BrandDomain): Brand {
-        val sdo = findResponse.value!!
-
-        return sdo.copy(brand = sdo.brand.copy(name = domain.name)).run {
-            Brand(
-                id = brand.localId,
-                name = domain.name,
-                marketId = marketDAO.findFirst().first()?.id!!
-            )
-        }
+        return saveBrand(brandToCreate, categoryBrand)
     }
 
     private suspend fun saveBrand(brand: Brand, categoryBrand: CategoryBrand): PersistenceResponse {
@@ -147,7 +123,7 @@ class BrandRepository @Inject constructor(
      * @author Nikolas Luiz Schmitt
      */
     suspend fun cacheFindById(brandId: String): BrandDomain {
-        val brand = brandDAO.findBrandById(brandId)
+        val brand = brandDAO.findBrandById(brandId)!!
 
         return BrandDomain(
             id = brand.id, name = brand.name!!, active = brand.active, marketId = brand.marketId, synchronized = brand.synchronized
@@ -174,10 +150,10 @@ class BrandRepository @Inject constructor(
      * @author Nikolas Luiz Schmitt
      */
     suspend fun toggleActive(brandId: String, categoryId: String): PersistenceResponse {
-        val response = webClient.toggleActive(categoryId, brandId)
+        val response = webClient.toggleActive(categoryId = categoryId, brandId = brandId)
 
         if (response.success) {
-            brandDAO.toggleActive(categoryId, brandId)
+            brandDAO.toggleActive(brandId = brandId, categoryId = categoryId)
         }
 
         return response

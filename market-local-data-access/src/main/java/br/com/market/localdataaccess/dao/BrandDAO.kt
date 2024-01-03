@@ -176,10 +176,10 @@ abstract class BrandDAO : AbstractBaseDAO() {
      * @author Nikolas Luiz Schmitt
      */
     @Query("select * from brands where id = :brandId")
-    abstract suspend fun findBrandById(brandId: String): Brand
+    abstract suspend fun findBrandById(brandId: String?): Brand?
 
     @Query("select * from categories_brands where brand_id = :brandId and category_id = :categoryId ")
-    abstract suspend fun findCategoryBrandBy(brandId: String, categoryId: String): CategoryBrand?
+    abstract suspend fun findCategoryBrandBy(brandId: String?, categoryId: String): CategoryBrand?
 
     /**
      * Função para atualizar a flag [active] de uma marca com o [brandId] informado
