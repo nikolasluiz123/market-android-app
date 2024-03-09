@@ -221,13 +221,16 @@ class ProductViewModel @Inject constructor(
 
     fun saveProduct(onSuccess: () -> Unit, onError: (message: String) -> Unit) {
         val unit = EnumUnit.entries.first { context.getString(it.labelResId) == _uiState.value.quantityUnit.value }
-        val price = InputNumberFormatter(integer = false).formatStringToValue(_uiState.value.price.value)!!.toDouble()
+        val inputNumberFormatter = InputNumberFormatter(integer = false)
+
+        val price = inputNumberFormatter.formatStringToValue(_uiState.value.price.value)!!.toDouble()
+        val quantity = inputNumberFormatter.formatStringToValue(_uiState.value.quantity.value)!!.toDouble()
 
         _uiState.value.productDomain = if (_uiState.value.productDomain == null) {
             ProductDomain(
                 name = _uiState.value.name.value,
                 price = price,
-                quantity = _uiState.value.quantity.value.toDouble(),
+                quantity = quantity,
                 quantityUnit = unit,
                 images = _uiState.value.images
             )
@@ -235,7 +238,7 @@ class ProductViewModel @Inject constructor(
             _uiState.value.productDomain!!.copy(
                 name = _uiState.value.name.value,
                 price = price,
-                quantity = _uiState.value.quantity.value.toDouble(),
+                quantity = quantity,
                 quantityUnit = unit,
                 images = _uiState.value.images
             )
