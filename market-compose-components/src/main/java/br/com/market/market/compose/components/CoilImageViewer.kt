@@ -63,7 +63,7 @@ fun CoilImageViewer(
                 }
             },
             error = {
-                if (data == null) {
+                if (data == null || data.toString().isEmpty()) {
                     Box(modifier = imageModifier) {
                         Image(
                             painter = painterResource(id = R.drawable.placeholder),

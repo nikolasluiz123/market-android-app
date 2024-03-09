@@ -135,7 +135,6 @@ abstract class BaseRemoteMediator<DOMAIN : BaseDomain, KEY : BaseRemoteKeyModel,
         return state.pages.lastOrNull {
             it.data.isNotEmpty()
         }?.data?.lastOrNull()?.let { domain ->
-            Log.i("Teste", "getRemoteKeyForLastItem: domain = $domain id = ${domain.id}")
             getRemoteKeyByID(domain.id!!)
         }
     }

@@ -1,5 +1,6 @@
 package br.com.market.market.compose.components.input.viewmodel
 
+import android.util.Log
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -31,6 +32,7 @@ class InputNumberViewModel @Inject constructor(
             .create()
 
         jsonArgs?.fromJsonNavParamToArgs(InputNumberArgs::class.java, gson)?.let { args ->
+            Log.i("Teste", "args: ${args.keyboardOptions}")
             _uiState.update { currentState ->
                 currentState.copy(
                     titleResId = args.titleResId,

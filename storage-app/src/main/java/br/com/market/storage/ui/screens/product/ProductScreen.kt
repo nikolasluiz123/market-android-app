@@ -25,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -288,7 +289,12 @@ fun ProductScreen(
                         args = InputNumberArgs(
                             titleResId = R.string.product_screen_title_input_price,
                             value = state.price.value,
-                            integer = false
+                            integer = false,
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Decimal,
+                                imeAction = ImeAction.Done,
+                                autoCorrect = false
+                            )
                         ),
                         callback = {
                             val formatter = InputNumberFormatter(integer = false)

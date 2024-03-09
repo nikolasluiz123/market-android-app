@@ -1,11 +1,10 @@
-package br.com.market.market.common.mediator.lov
+package br.com.market.market.common.mediator
 
 import android.content.Context
 import br.com.market.domain.ProductImageReadDomain
 import br.com.market.localdataaccess.dao.ProductDAO
 import br.com.market.localdataaccess.dao.remotekeys.ProductRemoteKeysDAO
 import br.com.market.localdataaccess.database.AppDatabase
-import br.com.market.market.common.mediator.BaseRemoteMediator
 import br.com.market.models.Product
 import br.com.market.models.ProductImage
 import br.com.market.models.keys.ProductRemoteKeys

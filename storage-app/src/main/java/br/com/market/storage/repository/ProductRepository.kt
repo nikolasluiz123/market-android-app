@@ -13,7 +13,7 @@ import br.com.market.localdataaccess.dao.MarketDAO
 import br.com.market.localdataaccess.dao.ProductDAO
 import br.com.market.localdataaccess.dao.remotekeys.ProductRemoteKeysDAO
 import br.com.market.localdataaccess.database.AppDatabase
-import br.com.market.market.common.mediator.lov.ProductRemoteMediator
+import br.com.market.market.common.mediator.ProductRemoteMediator
 import br.com.market.market.common.repository.BaseRepository
 import br.com.market.market.common.repository.IPagedRemoteSearchRepository
 import br.com.market.models.Product
