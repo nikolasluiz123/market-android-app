@@ -2,6 +2,7 @@ package br.com.market.storage.ui.component
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import br.com.market.domain.ProductImageDomain
 import br.com.market.market.compose.components.gallery.HorizontalGallery
 
@@ -12,7 +13,8 @@ fun ProductImageHorizontalGallery(
     onLoadClick: () -> Unit,
     maxImages: Int = 3,
     onImageClick: (String) -> Unit,
-    onDeleteButtonClick: (ByteArray, String?) -> Unit
+    onDeleteButtonClick: (ByteArray, String?) -> Unit,
+    contentScale: ContentScale = ContentScale.Crop
 ) {
     HorizontalGallery(
         images = images.map { it.byteArray!! }.toMutableList(),
@@ -31,7 +33,8 @@ fun ProductImageHorizontalGallery(
                 imageDomain?.byteArray!!,
                 imageDomain.id
             )
-        }
+        },
+        contentScale = contentScale
     )
 }
 

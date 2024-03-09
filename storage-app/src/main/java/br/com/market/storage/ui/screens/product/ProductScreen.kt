@@ -21,6 +21,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -218,6 +219,13 @@ fun ProductScreen(
             )
 
             ProductImageHorizontalGallery(
+                modifier = Modifier
+                    .constrainAs(galleryRef) {
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        top.linkTo(parent.top)
+                    }
+                    .padding(8.dp),
                 images = state.images,
                 onLoadClick = { openBottomSheet = true },
                 onImageClick = {
@@ -239,13 +247,7 @@ fun ProductScreen(
                     onToggleActiveProductImage(byteArray, id)
                     state.images.removeIf { image -> image.byteArray.contentEquals(byteArray) }
                 },
-                modifier = Modifier
-                    .constrainAs(galleryRef) {
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        top.linkTo(parent.top)
-                    }
-                    .padding(8.dp)
+                contentScale = ContentScale.Fit
             )
 
             FormField(
@@ -319,10 +321,10 @@ fun ProductScreen(
                         args = InputNumberArgs(
                             titleResId = R.string.product_screen_title_input_quantity,
                             value = state.quantity.value,
-                            integer = true
+                            integer = false
                         ),
                         callback = {
-                            val formatter = InputNumberFormatter(integer = true)
+                            val formatter = InputNumberFormatter(integer = false)
                             state.quantity.onChange(formatter.formatToString(it) ?: "")
                         }
                     )

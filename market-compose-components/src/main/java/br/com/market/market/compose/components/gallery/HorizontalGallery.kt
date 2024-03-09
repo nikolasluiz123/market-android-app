@@ -15,6 +15,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -41,7 +42,8 @@ fun HorizontalGallery(
     modifier: Modifier = Modifier,
     maxImages: Int = 3,
     onImageClick: (Any) -> Unit = { },
-    onDeleteButtonClick: (Any) -> Unit = { }
+    onDeleteButtonClick: (Any) -> Unit = { },
+    contentScale: ContentScale = ContentScale.Crop
 ) {
     ConstraintLayout(modifier) {
         val (buttonLoadRef, imageRef) = createRefs()
@@ -73,7 +75,8 @@ fun HorizontalGallery(
                         .clickable { onImageClick(it) },
                     showDeleteButton = it !is Int,
                     onDeleteButtonClick = { onDeleteButtonClick(it) },
-                    data = it
+                    data = it,
+                    contentScale = contentScale
                 )
             }
         }
@@ -109,7 +112,7 @@ fun HorizontalGalleryPreview() {
                     R.drawable.imagem_grande_teste,
                     R.drawable.imagem_grande_teste
                 ),
-                onLoadClick = { }
+                onLoadClick = { },
             )
         }
     }
