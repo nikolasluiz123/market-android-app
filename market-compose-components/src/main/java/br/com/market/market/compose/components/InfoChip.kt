@@ -31,7 +31,10 @@ fun InfoChip(
         label = { Text(label, style = MaterialTheme.typography.labelMedium) },
         icon = icon,
         shape = RoundedCornerShape(percent = 100),
-        border = SuggestionChipDefaults.suggestionChipBorder(borderColor = borderColor),
+        border =  SuggestionChipDefaults.suggestionChipBorder(
+            enabled = true,
+            borderColor = borderColor
+        ),
         colors = SuggestionChipDefaults.suggestionChipColors(
             containerColor = backgroundColor, labelColor = labelColor, iconContentColor = iconColor
         ),

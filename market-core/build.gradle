@@ -50,8 +50,7 @@ dependencies {
 //    implementation "androidx.camera:camera-lifecycle:$camerax_version"
 //    implementation "androidx.camera:camera-view:$cameraview_version"
 
-    def accompanistPermissionsVersion = '0.23.1'
-    implementation "com.google.accompanist:accompanist-permissions:$accompanistPermissionsVersion"
+    implementation "com.google.accompanist:accompanist-permissions:$accompanist_permissions"
 
     implementation "androidx.datastore:datastore-preferences:$data_store_version"
 

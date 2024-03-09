@@ -96,9 +96,11 @@ fun BrandLov(
                     BrandList(pagingData, onItemClick)
                 }
                 if (!active) {
-                    Divider(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp))
+                    HorizontalDivider(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp)
+                    )
                 }
             }
         }
@@ -121,7 +123,7 @@ private fun BrandList(
                 onItemClick(brandDomain.id!!)
             }
         )
-        Divider(modifier = Modifier.fillMaxWidth())
+        HorizontalDivider(modifier = Modifier.fillMaxWidth())
     }
 }
 

@@ -2,7 +2,7 @@ package br.com.market.storage.ui.screens.category
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -73,19 +73,18 @@ fun CategoryScreenTabBrand(
                             onItemClick(state.categoryDomain?.id!!, it.id!!)
                         }
                     )
-                    Divider(modifier = Modifier.fillMaxWidth())
+                    HorizontalDivider(modifier = Modifier.fillMaxWidth())
                 }
             }
 
             if (!searchActive) {
-                Divider(
-                    Modifier
-                        .fillMaxWidth()
-                        .constrainAs(searchDividerRef) {
-                            linkTo(start = parent.start, end = parent.end, bias = 0F)
-                            top.linkTo(searchBarRef.bottom)
-                        }
-                        .padding(top = 8.dp)
+                HorizontalDivider(Modifier
+                    .fillMaxWidth()
+                    .constrainAs(searchDividerRef) {
+                        linkTo(start = parent.start, end = parent.end, bias = 0F)
+                        top.linkTo(searchBarRef.bottom)
+                    }
+                    .padding(top = 8.dp)
                 )
 
                 PagedVerticalListWithEmptyState(
@@ -104,7 +103,7 @@ fun CategoryScreenTabBrand(
                             onItemClick(state.categoryDomain?.id!!, it.id!!)
                         }
                     )
-                    Divider(modifier = Modifier.fillMaxWidth())
+                    HorizontalDivider(modifier = Modifier.fillMaxWidth())
                 }
             }
         }

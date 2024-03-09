@@ -4,8 +4,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -172,19 +172,18 @@ fun MovementsSearchScreen(
                             onMovementClick(it)
                         }
                     )
-                    Divider(modifier = Modifier.fillMaxWidth())
+                    HorizontalDivider(modifier = Modifier.fillMaxWidth())
                 }
             }
 
             if (!searchActive) {
-                Divider(
-                    Modifier
-                        .fillMaxWidth()
-                        .constrainAs(searchDividerRef) {
-                            linkTo(start = parent.start, end = parent.end, bias = 0F)
-                            top.linkTo(searchBarRef.bottom)
-                        }
-                        .padding(top = 8.dp)
+                HorizontalDivider(Modifier
+                    .fillMaxWidth()
+                    .constrainAs(searchDividerRef) {
+                        linkTo(start = parent.start, end = parent.end, bias = 0F)
+                        top.linkTo(searchBarRef.bottom)
+                    }
+                    .padding(top = 8.dp)
                 )
 
                 if (!state.productName.isNullOrBlank()) {
@@ -197,13 +196,12 @@ fun MovementsSearchScreen(
                         state = state
                     )
 
-                    Divider(
-                        Modifier
-                            .fillMaxWidth()
-                            .constrainAs(headerDivider) {
-                                linkTo(start = parent.start, end = parent.end, bias = 0F)
-                                top.linkTo(headerRef.bottom)
-                            }
+                    HorizontalDivider(Modifier
+                        .fillMaxWidth()
+                        .constrainAs(headerDivider) {
+                            linkTo(start = parent.start, end = parent.end, bias = 0F)
+                            top.linkTo(headerRef.bottom)
+                        }
                     )
                 }
 
@@ -213,7 +211,8 @@ fun MovementsSearchScreen(
                         .constrainAs(listRef) {
                             linkTo(start = parent.start, end = parent.end, bias = 0F)
 
-                            val constraintTop = if (state.productName.isNullOrBlank()) searchDividerRef.bottom else headerRef.bottom
+                            val constraintTop =
+                                if (state.productName.isNullOrBlank()) searchDividerRef.bottom else headerRef.bottom
                             linkTo(top = constraintTop, bottom = parent.bottom, bias = 0F)
                         }
                         .padding(bottom = 74.dp)
@@ -230,7 +229,7 @@ fun MovementsSearchScreen(
                             onMovementClick(it)
                         }
                     )
-                    Divider(modifier = Modifier.fillMaxWidth())
+                    HorizontalDivider(modifier = Modifier.fillMaxWidth())
                 }
             }
 

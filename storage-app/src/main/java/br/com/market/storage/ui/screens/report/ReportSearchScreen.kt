@@ -4,8 +4,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -113,18 +113,17 @@ fun ReportSearchScreen(
                         onReportClick(report)
                         openBottomSheet = true
                     }
-                    Divider(modifier = Modifier.fillMaxWidth())
+                    HorizontalDivider(modifier = Modifier.fillMaxWidth())
                 }
             }
 
             if (!searchActive) {
-                Divider(
-                    Modifier
-                        .fillMaxWidth()
-                        .constrainAs(searchDividerRef) {
-                            linkTo(start = parent.start, end = parent.end, bias = 0F)
-                            top.linkTo(searchBarRef.bottom)
-                        }
+                HorizontalDivider(Modifier
+                    .fillMaxWidth()
+                    .constrainAs(searchDividerRef) {
+                        linkTo(start = parent.start, end = parent.end, bias = 0F)
+                        top.linkTo(searchBarRef.bottom)
+                    }
                 )
 
                 LazyVerticalListWithEmptyState(
@@ -140,7 +139,7 @@ fun ReportSearchScreen(
                         onReportClick(report)
                         openBottomSheet = true
                     }
-                    Divider(modifier = Modifier.fillMaxWidth())
+                    HorizontalDivider(modifier = Modifier.fillMaxWidth())
                 }
             }
 

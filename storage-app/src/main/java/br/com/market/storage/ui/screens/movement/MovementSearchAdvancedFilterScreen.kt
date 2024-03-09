@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -106,7 +106,7 @@ fun MovementSearchAdvancedFilterScreen(
                         openSelectOneOptionFilter = true
                     }
                 )
-                Divider(Modifier.fillMaxWidth())
+                HorizontalDivider(Modifier.fillMaxWidth())
 
                 if (openSelectOneOptionFilter) {
                     OpenSelectOneOptionFilter(
@@ -122,20 +122,24 @@ fun MovementSearchAdvancedFilterScreen(
         }
 
         if (!searchActive) {
-            Divider(
-                Modifier
-                    .fillMaxWidth()
-                    .constrainAs(searchDividerRef) {
-                        linkTo(start = parent.start, end = parent.end, bias = 0F)
-                        top.linkTo(searchBarRef.bottom)
-                    }
-                    .padding(top = 8.dp)
+            HorizontalDivider(Modifier
+                .fillMaxWidth()
+                .constrainAs(searchDividerRef) {
+                    linkTo(start = parent.start, end = parent.end, bias = 0F)
+                    top.linkTo(searchBarRef.bottom)
+                }
+                .padding(top = 8.dp)
             )
 
             LazyVerticalListWithEmptyState(
                 modifier = Modifier.constrainAs(listRef) {
                     linkTo(start = parent.start, end = parent.end, bias = 0F)
-                    linkTo(top = searchDividerRef.bottom, bottom = buttonApplyRef.top, bottomMargin = 8.dp, bias = 0f)
+                    linkTo(
+                        top = searchDividerRef.bottom,
+                        bottom = buttonApplyRef.top,
+                        bottomMargin = 8.dp,
+                        bias = 0f
+                    )
                 },
                 items = state.filters
             ) { item ->
@@ -150,7 +154,7 @@ fun MovementSearchAdvancedFilterScreen(
                         openSelectOneOptionFilter = true
                     }
                 )
-                Divider(Modifier.fillMaxWidth())
+                HorizontalDivider(Modifier.fillMaxWidth())
 
                 if (openSelectOneOptionFilter) {
                     OpenSelectOneOptionFilter(
@@ -178,26 +182,32 @@ fun MovementSearchAdvancedFilterScreen(
                                 item as CommonAdvancedFilterItem<String?>
                                 filter.productName = item.toFilterValue()
                             }
+
                             DESCRIPTION.name -> {
                                 item as CommonAdvancedFilterItem<String?>
                                 filter.description = item.toFilterValue()
                             }
+
                             DATE_PREVISION.name -> {
                                 item as CommonAdvancedFilterItem<Pair<LocalDateTime?, LocalDateTime?>?>
                                 filter.datePrevision = item.toFilterValue()
                             }
+
                             DATE_REALIZATION.name -> {
                                 item as CommonAdvancedFilterItem<Pair<LocalDateTime?, LocalDateTime?>?>
                                 filter.dateRealization = item.toFilterValue()
                             }
+
                             OPERATION_TYPE.name -> {
                                 item as CommonAdvancedFilterItem<Pair<String, Int>?>
                                 filter.operationType = item.toFilterValue()
                             }
+
                             QUANTITY.name -> {
                                 item as CommonAdvancedFilterItem<Long?>
                                 filter.quantity = item.toFilterValue()
                             }
+
                             RESPONSIBLE.name -> {
                                 item as CommonAdvancedFilterItem<Pair<String, String?>?>
                                 filter.responsible = item.toFilterValue()

@@ -83,14 +83,13 @@ fun ProductLov(
             }
 
             if (!searchActive) {
-                Divider(
-                    Modifier
-                        .fillMaxWidth()
-                        .constrainAs(searchDividerRef) {
-                            linkTo(start = parent.start, end = parent.end, bias = 0F)
-                            top.linkTo(searchBarRef.bottom)
-                        }
-                        .padding(top = 8.dp)
+                HorizontalDivider(Modifier
+                    .fillMaxWidth()
+                    .constrainAs(searchDividerRef) {
+                        linkTo(start = parent.start, end = parent.end, bias = 0F)
+                        top.linkTo(searchBarRef.bottom)
+                    }
+                    .padding(top = 8.dp)
                 )
 
                 ProductList(
@@ -126,7 +125,7 @@ private fun ProductList(
                 onItemClick(productTuple.id!!)
             }
         )
-        Divider(modifier = Modifier.fillMaxWidth())
+        HorizontalDivider(modifier = Modifier.fillMaxWidth())
     }
 }
 

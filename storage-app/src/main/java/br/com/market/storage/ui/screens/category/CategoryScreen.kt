@@ -11,8 +11,8 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -129,13 +129,12 @@ fun CategoryScreen(
                 onCancel = state.onCancel
             )
 
-            Divider(
-                modifier = Modifier
-                    .constrainAs(tabDividerRef) {
-                        linkTo(start = parent.start, end = parent.end, bias = 0f)
-                        top.linkTo(parent.top)
-                    }
-                    .fillMaxWidth(),
+            HorizontalDivider(modifier = Modifier
+                .constrainAs(tabDividerRef) {
+                    linkTo(start = parent.start, end = parent.end, bias = 0f)
+                    top.linkTo(parent.top)
+                }
+                .fillMaxWidth(),
                 color = MaterialTheme.colorScheme.onSecondary
             )
 
@@ -149,7 +148,7 @@ fun CategoryScreen(
                 containerColor = MaterialTheme.colorScheme.secondary,
                 contentColor = MaterialTheme.colorScheme.onSecondary,
                 divider = {
-                    Divider(color = MaterialTheme.colorScheme.onSecondary)
+                    HorizontalDivider(color = MaterialTheme.colorScheme.onSecondary)
                 }
             ) {
                 tabTitles.forEachIndexed { index, title ->
@@ -195,7 +194,8 @@ fun CategoryScreen(
                 flingBehavior = PagerDefaults.flingBehavior(state = pagerState),
                 key = null,
                 pageNestedScrollConnection = PagerDefaults.pageNestedScrollConnection(
-                    Orientation.Horizontal
+                    state = pagerState,
+                    orientation = Orientation.Horizontal
                 )
             ) { index ->
                 tabIndex = index

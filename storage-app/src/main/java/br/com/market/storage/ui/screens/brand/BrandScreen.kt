@@ -10,8 +10,8 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -137,7 +137,7 @@ fun BrandScreen(
                 onCancel = state.onCancel
             )
 
-            Divider(
+            HorizontalDivider(
                 modifier = Modifier.constrainAs(tabDividerRef) {
                     linkTo(start = parent.start, end = parent.end, bias = 0f)
                     top.linkTo(parent.top)
@@ -155,7 +155,7 @@ fun BrandScreen(
                 containerColor = MaterialTheme.colorScheme.secondary,
                 contentColor = MaterialTheme.colorScheme.onSecondary,
                 divider = {
-                    Divider(color = MaterialTheme.colorScheme.onSecondary)
+                    HorizontalDivider(color = MaterialTheme.colorScheme.onSecondary)
                 }
             ) {
                 tabTitles.forEachIndexed { index, title ->
@@ -201,9 +201,10 @@ fun BrandScreen(
                 flingBehavior = PagerDefaults.flingBehavior(state = pagerState),
                 key = null,
                 pageNestedScrollConnection = PagerDefaults.pageNestedScrollConnection(
-                    Orientation.Horizontal
+                    state = pagerState,
+                    orientation = Orientation.Horizontal
                 )
-            ) {index ->
+            ) { index ->
                 tabIndex = index
 
                 when (tabIndex) {
@@ -218,14 +219,22 @@ fun BrandScreen(
                             textInputCallback = textInputCallback
                         )
                     }
+
                     1 -> {
                         BrandScreenTabProduct(
                             state = state,
                             onFabAddClick = {
-                                onFabAddProductClick(state.categoryDomain?.id!!, state.brandDomain?.id!!)
+                                onFabAddProductClick(
+                                    state.categoryDomain?.id!!,
+                                    state.brandDomain?.id!!
+                                )
                             },
                             onProductClick = { productId ->
-                                onProductClick(state.categoryDomain?.id!!, state.brandDomain?.id!!, productId)
+                                onProductClick(
+                                    state.categoryDomain?.id!!,
+                                    state.brandDomain?.id!!,
+                                    productId
+                                )
                             },
                             onStorageButtonClick = onStorageButtonClick,
                             onSimpleFilterChange = onSimpleFilterChange

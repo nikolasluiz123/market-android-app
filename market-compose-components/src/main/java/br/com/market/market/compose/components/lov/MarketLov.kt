@@ -96,9 +96,11 @@ fun MarketLov(
                     MarketList(pagingData, onItemClick)
                 }
                 if (!active) {
-                    Divider(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp))
+                    HorizontalDivider(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp)
+                    )
                 }
             }
         }
@@ -122,7 +124,7 @@ private fun MarketList(
                 onItemClick(domain.id!!)
             }
         )
-        Divider(modifier = Modifier.fillMaxWidth())
+        HorizontalDivider(modifier = Modifier.fillMaxWidth())
     }
 }
 

@@ -1,6 +1,7 @@
 package br.com.market.market.compose.components.button.icons
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -21,7 +22,8 @@ import br.com.market.core.theme.MarketTheme
 fun IconButtonArrowBack(onClick: () -> Unit = { }) {
     IconButton(onClick = onClick) {
         Icon(
-            imageVector = Icons.Default.ArrowBack, contentDescription = stringResource(br.com.market.core.R.string.label_voltar)
+            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+            contentDescription = stringResource(br.com.market.core.R.string.label_voltar)
         )
     }
 }

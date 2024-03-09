@@ -2,8 +2,8 @@ package br.com.market.commerce.ui.screens.product
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -78,13 +78,12 @@ fun ProductsScreen(
             }
 
             if (!searchActive) {
-                Divider(
-                    Modifier
-                        .fillMaxWidth()
-                        .constrainAs(searchDividerRef) {
-                            linkTo(start = parent.start, end = parent.end, bias = 0F)
-                            top.linkTo(searchBarRef.bottom)
-                        }
+                HorizontalDivider(Modifier
+                    .fillMaxWidth()
+                    .constrainAs(searchDividerRef) {
+                        linkTo(start = parent.start, end = parent.end, bias = 0F)
+                        top.linkTo(searchBarRef.bottom)
+                    }
                 )
 
                 ProductList(
@@ -110,7 +109,7 @@ private fun ProductList(pagingItems: LazyPagingItems<ProductImageReadDomain>, mo
             image = it.imageBytes!!,
             active = it.active,
         )
-        Divider(modifier = Modifier.fillMaxWidth())
+        HorizontalDivider(modifier = Modifier.fillMaxWidth())
     }
 }
 
